@@ -1,0 +1,4196 @@
+{
+   "-1045183535":{
+      "hash":3249783761,
+      "model":914615883,
+      "name":"WEAPON_REVOLVER",
+      "displayName":"WT_REVOLVER",
+      "displayDescription":"WTD_REVOLVER",
+      "localizedName":"Heavy Revolver",
+      "localizedDescription":"A handgun with enough stopping power to drop a crazed rhino, and heavy enough to beat it to death if you're out of ammo. Part of Executives and Other Criminals.",
+      "type":"Pistol",
+      "components":{
+         "384708672":{
+            "hash":384708672,
+            "name":"COMPONENT_REVOLVER_VARMOD_BOSS",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_REV_VARB",
+            "displayDescription":"WCD_REV_VARB",
+            "localizedName":"VIP Variant",
+            "localizedDescription":"Item available to purchase."
+         },
+         "2492708877":{
+            "hash":2492708877,
+            "name":"COMPONENT_REVOLVER_VARMOD_GOON",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_REV_VARG",
+            "displayDescription":"WCD_REV_VARG",
+            "localizedName":"Bodyguard Variant",
+            "localizedDescription":"Item available to purchase."
+         },
+         "3917905123":{
+            "hash":3917905123,
+            "name":"COMPONENT_REVOLVER_CLIP_01",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for regular ammo."
+         }
+      }
+   },
+   "-538741184":{
+      "hash":3756226112,
+      "model":-963831200,
+      "name":"WEAPON_SWITCHBLADE",
+      "displayName":"WT_SWBLADE",
+      "displayDescription":"WTD_SWBLADE",
+      "localizedName":"Switchblade",
+      "localizedDescription":"From your pocket to hilt-deep in the other guy's ribs in under a second: folding knives will never go out of style. Part of Executives and Other Criminals.",
+      "type":"Melee",
+      "components":{
+         "2436343040":{
+            "hash":2436343040,
+            "name":"COMPONENT_SWITCHBLADE_VARMOD_BASE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_SB_BASE",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"Default Handle",
+            "localizedDescription":"Item available to purchase."
+         },
+         "1530822070":{
+            "hash":1530822070,
+            "name":"COMPONENT_SWITCHBLADE_VARMOD_VAR1",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_SB_VAR1",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"VIP Variant",
+            "localizedDescription":"Item available to purchase."
+         },
+         "3885209186":{
+            "hash":3885209186,
+            "name":"COMPONENT_SWITCHBLADE_VARMOD_VAR2",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_SB_VAR2",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"Bodyguard Variant",
+            "localizedDescription":"Item available to purchase."
+         }
+      }
+   },
+   "317205821":{
+      "hash":317205821,
+      "model":1380588314,
+      "name":"WEAPON_AUTOSHOTGUN",
+      "displayName":"WT_AUTOSHGN",
+      "displayDescription":"WTD_AUTOSHGN",
+      "localizedName":"Sweeper Shotgun",
+      "localizedDescription":"How many effective tools for riot control can you tuck into your pants? OK, two. But this is the other one. Part of Bikers.",
+      "type":"Shotgun",
+      "components":{
+
+      }
+   },
+   "-853065399":{
+      "hash":3441901897,
+      "model":-888555534,
+      "name":"WEAPON_BATTLEAXE",
+      "displayName":"WT_BATTLEAXE",
+      "displayDescription":"WTD_BATTLEAXE",
+      "localizedName":"Battle Axe",
+      "localizedDescription":"If it's good enough for medieval foot soldiers, modern border guards and pushy soccer moms, it's good enough for you. Part of Bikers.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "125959754":{
+      "hash":125959754,
+      "model":-1523553483,
+      "name":"WEAPON_COMPACTLAUNCHER",
+      "displayName":"WT_CMPGL",
+      "displayDescription":"WTD_CMPGL",
+      "localizedName":"Compact Grenade Launcher",
+      "localizedDescription":"Focus groups using the regular model suggested it was too accurate and found it awkward to use with one hand on the throttle. Easy fix. Part of Bikers.",
+      "type":"Heavy",
+      "components":{
+
+      }
+   },
+   "-1121678507":{
+      "hash":3173288789,
+      "model":-972823051,
+      "name":"WEAPON_MINISMG",
+      "displayName":"WT_MINISMG",
+      "displayDescription":"WTD_MINISMG",
+      "localizedName":"Mini SMG",
+      "localizedDescription":"Increasingly popular since the marketing team looked beyond spec ops units and started caring about the little guys in low income areas. Part of Bikers.",
+      "type":"SMG",
+      "components":{
+         "2227745491":{
+            "hash":2227745491,
+            "name":"COMPONENT_MINISMG_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_MIMG_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Mini SMG."
+         },
+         "2474561719":{
+            "hash":2474561719,
+            "name":"COMPONENT_MINISMG_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_MIMG_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Mini SMG."
+         }
+      }
+   },
+   "-1169823560":{
+      "hash":3125143736,
+      "model":-173454011,
+      "name":"WEAPON_PIPEBOMB",
+      "displayName":"WT_PIPEBOMB",
+      "displayDescription":"WTD_PIPEBOMB",
+      "localizedName":"Pipe Bomb",
+      "localizedDescription":"Remember, it doesn't count as an IED when you buy it in a store and use it in a first world country. Part of Bikers.",
+      "type":"Thrown",
+      "components":{
+
+      }
+   },
+   "-1810795771":{
+      "hash":2484171525,
+      "model":559432947,
+      "name":"WEAPON_POOLCUE",
+      "displayName":"WT_POOLCUE",
+      "displayDescription":"WTD_POOLCUE",
+      "localizedName":"Pool Cue",
+      "localizedDescription":"Ah, there's no sound as satisfying as the crack of a perfect break, especially when it's the other guy's spine. Part of Bikers.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "419712736":{
+      "hash":419712736,
+      "model":-1145324273,
+      "name":"WEAPON_WRENCH",
+      "displayName":"WT_WRENCH",
+      "displayDescription":"WTD_WRENCH",
+      "localizedName":"Pipe Wrench",
+      "localizedDescription":"Perennial favourite of apocalyptic survivalists and violent fathers the world over, apparently it also doubles as some kind of tool. Part of Bikers.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "-1420407917":{
+      "hash":2874559379,
+      "model":1876445962,
+      "name":"WEAPON_PROXMINE",
+      "displayName":"WT_PRXMINE",
+      "displayDescription":"WTD_PRXMINE",
+      "localizedName":"Proximity Mine",
+      "localizedDescription":"Leave a present for your friends with these motion sensor landmines. Short delay after activation. Part of the Festive Surprise.",
+      "type":"Thrown",
+      "components":{
+
+      }
+   },
+   "1672152130":{
+      "hash":1672152130,
+      "model":1901887007,
+      "name":"WEAPON_HOMINGLAUNCHER",
+      "displayName":"WT_HOMLNCH",
+      "displayDescription":"WTD_HOMLNCH",
+      "localizedName":"Homing Launcher",
+      "localizedDescription":"Infrared guided fire-and-forget missile launcher. For all your moving target needs. Part of the Festive Surprise.",
+      "type":"Heavy",
+      "components":{
+
+      }
+   },
+   "-1075685676":{
+      "hash":3219281620,
+      "model":995074671,
+      "name":"WEAPON_PISTOL_MK2",
+      "displayName":"WT_PIST2",
+      "displayDescription":"WTD_PIST2",
+      "localizedName":"Pistol Mk II",
+      "localizedDescription":"Balance, simplicity, precision: nothing keeps the peace like an extended barrel in the other guy's mouth.",
+      "type":"Pistol",
+      "components":{
+         "2499030370":{
+            "hash":2499030370,
+            "name":"COMPONENT_PISTOL_MK2_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for regular ammo."
+         },
+         "1591132456":{
+            "hash":1591132456,
+            "name":"COMPONENT_PISTOL_MK2_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for regular ammo."
+         },
+         "634039983":{
+            "hash":634039983,
+            "name":"COMPONENT_PISTOL_MK2_CLIP_TRACER",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_TR",
+            "displayDescription":"WCD_CLIP_TR",
+            "localizedName":"Tracer Rounds",
+            "localizedDescription":"Bullets with bright visible markers that match the tint of the gun. Standard capacity."
+         },
+         "733837882":{
+            "hash":733837882,
+            "name":"COMPONENT_PISTOL_MK2_CLIP_INCENDIARY",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_INC",
+            "displayDescription":"WCD_CLIP_INC",
+            "localizedName":"Incendiary Rounds",
+            "localizedDescription":"Bullets which include a chance to set targets on fire when shot. Reduced capacity."
+         },
+         "2248057097":{
+            "hash":2248057097,
+            "name":"COMPONENT_PISTOL_MK2_CLIP_HOLLOWPOINT",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_HP",
+            "displayDescription":"WCD_CLIP_HP",
+            "localizedName":"Hollow Point Rounds",
+            "localizedDescription":"Increased damage to targets without Body Armor. Reduced capacity."
+         },
+         "1329061674":{
+            "hash":1329061674,
+            "name":"COMPONENT_PISTOL_MK2_CLIP_FMJ",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_FMJ",
+            "displayDescription":"WCD_CLIP_FMJ",
+            "localizedName":"Full Metal Jacket Rounds",
+            "localizedDescription":"Increased damage to vehicles. Also penetrates bullet resistant and bulletproof vehicle glass. Reduced capacity."
+         },
+         "2396306288":{
+            "hash":2396306288,
+            "name":"COMPONENT_AT_PI_RAIL",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_PI",
+            "displayDescription":"WCD_SCOPE_PI",
+            "localizedName":"Mounted Scope",
+            "localizedDescription":"Standard-range zoom functionality."
+         },
+         "1140676955":{
+            "hash":1140676955,
+            "name":"COMPONENT_AT_PI_FLSH_02",
+            "attachmentPoint":"FlashLaser",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "1709866683":{
+            "hash":1709866683,
+            "name":"COMPONENT_AT_PI_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "568543123":{
+            "hash":568543123,
+            "name":"COMPONENT_AT_PI_COMP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_COMP",
+            "displayDescription":"WCD_COMP",
+            "localizedName":"Compensator",
+            "localizedDescription":"Reduces recoil for rapid fire."
+         },
+         "1550611612":{
+            "hash":1550611612,
+            "name":"COMPONENT_PISTOL_MK2_CAMO",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_1",
+            "displayDescription":"",
+            "localizedName":"Digital Camo",
+            "localizedDescription":""
+         },
+         "368550800":{
+            "hash":368550800,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_02",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_2",
+            "displayDescription":"",
+            "localizedName":"Brushstroke Camo",
+            "localizedDescription":""
+         },
+         "2525897947":{
+            "hash":2525897947,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_03",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_3",
+            "displayDescription":"",
+            "localizedName":"Woodland Camo",
+            "localizedDescription":""
+         },
+         "24902297":{
+            "hash":24902297,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_04",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_4",
+            "displayDescription":"",
+            "localizedName":"Skull",
+            "localizedDescription":""
+         },
+         "4066925682":{
+            "hash":4066925682,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_05",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_5",
+            "displayDescription":"",
+            "localizedName":"Sessanta Nove",
+            "localizedDescription":""
+         },
+         "3710005734":{
+            "hash":3710005734,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_06",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_6",
+            "displayDescription":"",
+            "localizedName":"Perseus",
+            "localizedDescription":""
+         },
+         "3141791350":{
+            "hash":3141791350,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_07",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_7",
+            "displayDescription":"",
+            "localizedName":"Leopard",
+            "localizedDescription":""
+         },
+         "1301287696":{
+            "hash":1301287696,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_08",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_8",
+            "displayDescription":"",
+            "localizedName":"Zebra",
+            "localizedDescription":""
+         },
+         "1597093459":{
+            "hash":1597093459,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_09",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_9",
+            "displayDescription":"",
+            "localizedName":"Geometric",
+            "localizedDescription":""
+         },
+         "1769871776":{
+            "hash":1769871776,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_10",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_10",
+            "displayDescription":"",
+            "localizedName":"Boom!",
+            "localizedDescription":""
+         },
+         "2467084625":{
+            "hash":2467084625,
+            "name":"COMPONENT_PISTOL_MK2_CAMO_IND_01",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_IND",
+            "displayDescription":"",
+            "localizedName":"Patriotic",
+            "localizedDescription":""
+         }
+      }
+   },
+   "2024373456":{
+      "hash":2024373456,
+      "model":-1747543897,
+      "name":"WEAPON_SMG_MK2",
+      "displayName":"WT_SMG2",
+      "displayDescription":"WTD_SMG2",
+      "localizedName":"SMG Mk II",
+      "localizedDescription":"Lightweight, compact, with a rate of fire to die very messily for: turn any confined space into a kill box at the click of a well-oiled trigger.",
+      "type":"SMG",
+      "components":{
+         "1277460590":{
+            "hash":1277460590,
+            "name":"COMPONENT_SMG_MK2_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for regular ammo."
+         },
+         "3112393518":{
+            "hash":3112393518,
+            "name":"COMPONENT_SMG_MK2_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for regular ammo."
+         },
+         "2146055916":{
+            "hash":2146055916,
+            "name":"COMPONENT_SMG_MK2_CLIP_TRACER",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_TR",
+            "displayDescription":"WCD_CLIP_TR",
+            "localizedName":"Tracer Rounds",
+            "localizedDescription":"Bullets with bright visible markers that match the tint of the gun. Standard capacity."
+         },
+         "3650233061":{
+            "hash":3650233061,
+            "name":"COMPONENT_SMG_MK2_CLIP_INCENDIARY",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_INC",
+            "displayDescription":"WCD_CLIP_INC",
+            "localizedName":"Incendiary Rounds",
+            "localizedDescription":"Bullets which include a chance to set targets on fire when shot. Reduced capacity."
+         },
+         "974903034":{
+            "hash":974903034,
+            "name":"COMPONENT_SMG_MK2_CLIP_HOLLOWPOINT",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_HP",
+            "displayDescription":"WCD_CLIP_HP",
+            "localizedName":"Hollow Point Rounds",
+            "localizedDescription":"Increased damage to targets without Body Armor. Reduced capacity."
+         },
+         "190476639":{
+            "hash":190476639,
+            "name":"COMPONENT_SMG_MK2_CLIP_FMJ",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_FMJ",
+            "displayDescription":"WCD_CLIP_FMJ",
+            "localizedName":"Full Metal Jacket Rounds",
+            "localizedDescription":"Increased damage to vehicles. Also penetrates bullet resistant and bulletproof vehicle glass. Reduced capacity."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2681951826":{
+            "hash":2681951826,
+            "name":"COMPONENT_AT_SIGHTS_SMG",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_HOLO",
+            "displayDescription":"WCD_HOLO",
+            "localizedName":"Holographic Sight",
+            "localizedDescription":"Accurate sight for close quarters combat."
+         },
+         "3842157419":{
+            "hash":3842157419,
+            "name":"COMPONENT_AT_SCOPE_MACRO_02_SMG_MK2",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_MAC2",
+            "displayDescription":"WCD_SCOPE_MAC",
+            "localizedName":"Small Scope",
+            "localizedDescription":"Standard-range zoom functionality."
+         },
+         "1038927834":{
+            "hash":1038927834,
+            "name":"COMPONENT_AT_SCOPE_SMALL_SMG_MK2",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_SML2",
+            "displayDescription":"WCD_SCOPE_SML",
+            "localizedName":"Medium Scope",
+            "localizedDescription":"Medium-range zoom functionality."
+         },
+         "3271853210":{
+            "hash":3271853210,
+            "name":"COMPONENT_AT_PI_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "3113485012":{
+            "hash":3113485012,
+            "name":"COMPONENT_AT_MUZZLE_01",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ1",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Flat Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3362234491":{
+            "hash":3362234491,
+            "name":"COMPONENT_AT_MUZZLE_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ2",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Tactical Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3725708239":{
+            "hash":3725708239,
+            "name":"COMPONENT_AT_MUZZLE_03",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ3",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Fat-End Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3968886988":{
+            "hash":3968886988,
+            "name":"COMPONENT_AT_MUZZLE_04",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ4",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Precision Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "48731514":{
+            "hash":48731514,
+            "name":"COMPONENT_AT_MUZZLE_05",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ5",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Heavy Duty Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "880736428":{
+            "hash":880736428,
+            "name":"COMPONENT_AT_MUZZLE_06",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ6",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Slanted Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "1303784126":{
+            "hash":1303784126,
+            "name":"COMPONENT_AT_MUZZLE_07",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ7",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Split-End Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3641720545":{
+            "hash":3641720545,
+            "name":"COMPONENT_AT_SB_BARREL_01",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR",
+            "displayDescription":"WCD_BARR",
+            "localizedName":"Default Barrel",
+            "localizedDescription":"Stock barrel attachment."
+         },
+         "2774849419":{
+            "hash":2774849419,
+            "name":"COMPONENT_AT_SB_BARREL_02",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR2",
+            "displayDescription":"WCD_BARR2",
+            "localizedName":"Heavy Barrel",
+            "localizedDescription":"Increases damage dealt to long-range targets."
+         },
+         "3298267239":{
+            "hash":3298267239,
+            "name":"COMPONENT_SMG_MK2_CAMO",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_1",
+            "displayDescription":"",
+            "localizedName":"Digital Camo",
+            "localizedDescription":""
+         },
+         "940943685":{
+            "hash":940943685,
+            "name":"COMPONENT_SMG_MK2_CAMO_02",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_2",
+            "displayDescription":"",
+            "localizedName":"Brushstroke Camo",
+            "localizedDescription":""
+         },
+         "1263226800":{
+            "hash":1263226800,
+            "name":"COMPONENT_SMG_MK2_CAMO_03",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_3",
+            "displayDescription":"",
+            "localizedName":"Woodland Camo",
+            "localizedDescription":""
+         },
+         "3966931456":{
+            "hash":3966931456,
+            "name":"COMPONENT_SMG_MK2_CAMO_04",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_4",
+            "displayDescription":"",
+            "localizedName":"Skull",
+            "localizedDescription":""
+         },
+         "1224100642":{
+            "hash":1224100642,
+            "name":"COMPONENT_SMG_MK2_CAMO_05",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_5",
+            "displayDescription":"",
+            "localizedName":"Sessanta Nove",
+            "localizedDescription":""
+         },
+         "899228776":{
+            "hash":899228776,
+            "name":"COMPONENT_SMG_MK2_CAMO_06",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_6",
+            "displayDescription":"",
+            "localizedName":"Perseus",
+            "localizedDescription":""
+         },
+         "616006309":{
+            "hash":616006309,
+            "name":"COMPONENT_SMG_MK2_CAMO_07",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_7",
+            "displayDescription":"",
+            "localizedName":"Leopard",
+            "localizedDescription":""
+         },
+         "2733014785":{
+            "hash":2733014785,
+            "name":"COMPONENT_SMG_MK2_CAMO_08",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_8",
+            "displayDescription":"",
+            "localizedName":"Zebra",
+            "localizedDescription":""
+         },
+         "572063080":{
+            "hash":572063080,
+            "name":"COMPONENT_SMG_MK2_CAMO_09",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_9",
+            "displayDescription":"",
+            "localizedName":"Geometric",
+            "localizedDescription":""
+         },
+         "1170588613":{
+            "hash":1170588613,
+            "name":"COMPONENT_SMG_MK2_CAMO_10",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_10",
+            "displayDescription":"",
+            "localizedName":"Boom!",
+            "localizedDescription":""
+         },
+         "966612367":{
+            "hash":966612367,
+            "name":"COMPONENT_SMG_MK2_CAMO_IND_01",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_IND",
+            "displayDescription":"",
+            "localizedName":"Patriotic",
+            "localizedDescription":""
+         }
+      }
+   },
+   "961495388":{
+      "hash":961495388,
+      "model":1762764713,
+      "name":"WEAPON_ASSAULTRIFLE_MK2",
+      "displayName":"WT_RIFLE_ASL2",
+      "displayDescription":"WTD_RIFLE_ASL2",
+      "localizedName":"Assault Rifle Mk II",
+      "localizedDescription":"The definitive revision of an all-time classic: all it takes is a little work, and looks can kill after all.",
+      "type":"AssaultRifle",
+      "components":{
+         "2249208895":{
+            "hash":2249208895,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for regular ammo."
+         },
+         "3509242479":{
+            "hash":3509242479,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for regular ammo."
+         },
+         "4012669121":{
+            "hash":4012669121,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CLIP_TRACER",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_TR",
+            "displayDescription":"WCD_CLIP_TR",
+            "localizedName":"Tracer Rounds",
+            "localizedDescription":"Bullets with bright visible markers that match the tint of the gun. Standard capacity."
+         },
+         "4218476627":{
+            "hash":4218476627,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CLIP_INCENDIARY",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_INC",
+            "displayDescription":"WCD_CLIP_INC",
+            "localizedName":"Incendiary Rounds",
+            "localizedDescription":"Bullets which include a chance to set targets on fire when shot. Reduced capacity."
+         },
+         "2816286296":{
+            "hash":2816286296,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CLIP_ARMORPIERCING",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_AP",
+            "displayDescription":"WCD_CLIP_AP",
+            "localizedName":"Armor Piercing Rounds",
+            "localizedDescription":"Increased penetration of Body Armor. Reduced capacity."
+         },
+         "1675665560":{
+            "hash":1675665560,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CLIP_FMJ",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_FMJ",
+            "displayDescription":"WCD_CLIP_FMJ",
+            "localizedName":"Full Metal Jacket Rounds",
+            "localizedDescription":"Increased damage to vehicles. Also penetrates bullet resistant and bulletproof vehicle glass. Reduced capacity."
+         },
+         "2640679034":{
+            "hash":2640679034,
+            "name":"COMPONENT_AT_AR_AFGRIP_02",
+            "attachmentPoint":"Grip2",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "1108334355":{
+            "hash":1108334355,
+            "name":"COMPONENT_AT_SIGHTS",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_HOLO",
+            "displayDescription":"WCD_HOLO",
+            "localizedName":"Holographic Sight",
+            "localizedDescription":"Accurate sight for close quarters combat."
+         },
+         "77277509":{
+            "hash":77277509,
+            "name":"COMPONENT_AT_SCOPE_MACRO_MK2",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_SCOPE_MAC2",
+            "displayDescription":"WCD_SCOPE_MAC",
+            "localizedName":"Small Scope",
+            "localizedDescription":"Standard-range zoom functionality."
+         },
+         "3328927042":{
+            "hash":3328927042,
+            "name":"COMPONENT_AT_SCOPE_MEDIUM_MK2",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_SCOPE_MED2",
+            "displayDescription":"WCD_SCOPE_MED",
+            "localizedName":"Large Scope",
+            "localizedDescription":"Extended-range zoom functionality."
+         },
+         "2805810788":{
+            "hash":2805810788,
+            "name":"COMPONENT_AT_AR_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP2",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "3113485012":{
+            "hash":3113485012,
+            "name":"COMPONENT_AT_MUZZLE_01",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ1",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Flat Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3362234491":{
+            "hash":3362234491,
+            "name":"COMPONENT_AT_MUZZLE_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ2",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Tactical Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3725708239":{
+            "hash":3725708239,
+            "name":"COMPONENT_AT_MUZZLE_03",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ3",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Fat-End Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3968886988":{
+            "hash":3968886988,
+            "name":"COMPONENT_AT_MUZZLE_04",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ4",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Precision Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "48731514":{
+            "hash":48731514,
+            "name":"COMPONENT_AT_MUZZLE_05",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ5",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Heavy Duty Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "880736428":{
+            "hash":880736428,
+            "name":"COMPONENT_AT_MUZZLE_06",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ6",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Slanted Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "1303784126":{
+            "hash":1303784126,
+            "name":"COMPONENT_AT_MUZZLE_07",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ7",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Split-End Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "1134861606":{
+            "hash":1134861606,
+            "name":"COMPONENT_AT_AR_BARREL_01",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR",
+            "displayDescription":"WCD_BARR",
+            "localizedName":"Default Barrel",
+            "localizedDescription":"Stock barrel attachment."
+         },
+         "1447477866":{
+            "hash":1447477866,
+            "name":"COMPONENT_AT_AR_BARREL_02",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR2",
+            "displayDescription":"WCD_BARR2",
+            "localizedName":"Heavy Barrel",
+            "localizedDescription":"Increases damage dealt to long-range targets."
+         },
+         "2434475183":{
+            "hash":2434475183,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_1",
+            "displayDescription":"",
+            "localizedName":"Digital Camo",
+            "localizedDescription":""
+         },
+         "937772107":{
+            "hash":937772107,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_02",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_2",
+            "displayDescription":"",
+            "localizedName":"Brushstroke Camo",
+            "localizedDescription":""
+         },
+         "1401650071":{
+            "hash":1401650071,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_03",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_3",
+            "displayDescription":"",
+            "localizedName":"Woodland Camo",
+            "localizedDescription":""
+         },
+         "628662130":{
+            "hash":628662130,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_04",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_4",
+            "displayDescription":"",
+            "localizedName":"Skull",
+            "localizedDescription":""
+         },
+         "3309920045":{
+            "hash":3309920045,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_05",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_5",
+            "displayDescription":"",
+            "localizedName":"Sessanta Nove",
+            "localizedDescription":""
+         },
+         "3482022833":{
+            "hash":3482022833,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_06",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_6",
+            "displayDescription":"",
+            "localizedName":"Perseus",
+            "localizedDescription":""
+         },
+         "2847614993":{
+            "hash":2847614993,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_07",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_7",
+            "displayDescription":"",
+            "localizedName":"Leopard",
+            "localizedDescription":""
+         },
+         "4234628436":{
+            "hash":4234628436,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_08",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_8",
+            "displayDescription":"",
+            "localizedName":"Zebra",
+            "localizedDescription":""
+         },
+         "2088750491":{
+            "hash":2088750491,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_09",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_9",
+            "displayDescription":"",
+            "localizedName":"Geometric",
+            "localizedDescription":""
+         },
+         "2781053842":{
+            "hash":2781053842,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_10",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_10",
+            "displayDescription":"",
+            "localizedName":"Boom!",
+            "localizedDescription":""
+         },
+         "3115408816":{
+            "hash":3115408816,
+            "name":"COMPONENT_ASSAULTRIFLE_MK2_CAMO_IND_01",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_IND",
+            "displayDescription":"",
+            "localizedName":"Patriotic",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-86904375":{
+      "hash":4208062921,
+      "model":1520780799,
+      "name":"WEAPON_CARBINERIFLE_MK2",
+      "displayName":"WT_RIFLE_CBN2",
+      "displayDescription":"WTD_RIFLE_CBN2",
+      "localizedName":"Carbine Rifle Mk II",
+      "localizedDescription":"This is bespoke, artisan firepower: you couldn't deliver a hail of bullets with more love and care if you inserted them by hand.",
+      "type":"AssaultRifle",
+      "components":{
+         "1283078430":{
+            "hash":1283078430,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for regular ammo."
+         },
+         "1574296533":{
+            "hash":1574296533,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for regular ammo."
+         },
+         "391640422":{
+            "hash":391640422,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CLIP_TRACER",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_TR",
+            "displayDescription":"WCD_CLIP_TR",
+            "localizedName":"Tracer Rounds",
+            "localizedDescription":"Bullets with bright visible markers that match the tint of the gun. Standard capacity."
+         },
+         "1025884839":{
+            "hash":1025884839,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CLIP_INCENDIARY",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_INC",
+            "displayDescription":"WCD_CLIP_INC",
+            "localizedName":"Incendiary Rounds",
+            "localizedDescription":"Bullets which include a chance to set targets on fire when shot. Reduced capacity."
+         },
+         "626875735":{
+            "hash":626875735,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CLIP_ARMORPIERCING",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_AP",
+            "displayDescription":"WCD_CLIP_AP",
+            "localizedName":"Armor Piercing Rounds",
+            "localizedDescription":"Increased penetration of Body Armor. Reduced capacity."
+         },
+         "1141059345":{
+            "hash":1141059345,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CLIP_FMJ",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_FMJ",
+            "displayDescription":"WCD_CLIP_FMJ",
+            "localizedName":"Full Metal Jacket Rounds",
+            "localizedDescription":"Increased damage to vehicles. Also penetrates bullet resistant and bulletproof vehicle glass. Reduced capacity."
+         },
+         "2640679034":{
+            "hash":2640679034,
+            "name":"COMPONENT_AT_AR_AFGRIP_02",
+            "attachmentPoint":"Grip2",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "1108334355":{
+            "hash":1108334355,
+            "name":"COMPONENT_AT_SIGHTS",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_HOLO",
+            "displayDescription":"WCD_HOLO",
+            "localizedName":"Holographic Sight",
+            "localizedDescription":"Accurate sight for close quarters combat."
+         },
+         "77277509":{
+            "hash":77277509,
+            "name":"COMPONENT_AT_SCOPE_MACRO_MK2",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_SCOPE_MAC2",
+            "displayDescription":"WCD_SCOPE_MAC",
+            "localizedName":"Small Scope",
+            "localizedDescription":"Standard-range zoom functionality."
+         },
+         "3328927042":{
+            "hash":3328927042,
+            "name":"COMPONENT_AT_SCOPE_MEDIUM_MK2",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_SCOPE_MED2",
+            "displayDescription":"WCD_SCOPE_MED",
+            "localizedName":"Large Scope",
+            "localizedDescription":"Extended-range zoom functionality."
+         },
+         "2205435306":{
+            "hash":2205435306,
+            "name":"COMPONENT_AT_AR_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "3113485012":{
+            "hash":3113485012,
+            "name":"COMPONENT_AT_MUZZLE_01",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ1",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Flat Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3362234491":{
+            "hash":3362234491,
+            "name":"COMPONENT_AT_MUZZLE_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ2",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Tactical Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3725708239":{
+            "hash":3725708239,
+            "name":"COMPONENT_AT_MUZZLE_03",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ3",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Fat-End Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3968886988":{
+            "hash":3968886988,
+            "name":"COMPONENT_AT_MUZZLE_04",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ4",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Precision Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "48731514":{
+            "hash":48731514,
+            "name":"COMPONENT_AT_MUZZLE_05",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ5",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Heavy Duty Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "880736428":{
+            "hash":880736428,
+            "name":"COMPONENT_AT_MUZZLE_06",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ6",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Slanted Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "1303784126":{
+            "hash":1303784126,
+            "name":"COMPONENT_AT_MUZZLE_07",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ7",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Split-End Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "2201368575":{
+            "hash":2201368575,
+            "name":"COMPONENT_AT_CR_BARREL_01",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR",
+            "displayDescription":"WCD_BARR",
+            "localizedName":"Default Barrel",
+            "localizedDescription":"Stock barrel attachment."
+         },
+         "2335983627":{
+            "hash":2335983627,
+            "name":"COMPONENT_AT_CR_BARREL_02",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR2",
+            "displayDescription":"WCD_BARR2",
+            "localizedName":"Heavy Barrel",
+            "localizedDescription":"Increases damage dealt to long-range targets."
+         },
+         "1272803094":{
+            "hash":1272803094,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_1",
+            "displayDescription":"",
+            "localizedName":"Digital Camo",
+            "localizedDescription":""
+         },
+         "1080719624":{
+            "hash":1080719624,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_02",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_2",
+            "displayDescription":"",
+            "localizedName":"Brushstroke Camo",
+            "localizedDescription":""
+         },
+         "792221348":{
+            "hash":792221348,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_03",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_3",
+            "displayDescription":"",
+            "localizedName":"Woodland Camo",
+            "localizedDescription":""
+         },
+         "3842785869":{
+            "hash":3842785869,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_04",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_4",
+            "displayDescription":"",
+            "localizedName":"Skull",
+            "localizedDescription":""
+         },
+         "3548192559":{
+            "hash":3548192559,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_05",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_5",
+            "displayDescription":"",
+            "localizedName":"Sessanta Nove",
+            "localizedDescription":""
+         },
+         "2250671235":{
+            "hash":2250671235,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_06",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_6",
+            "displayDescription":"",
+            "localizedName":"Perseus",
+            "localizedDescription":""
+         },
+         "4095795318":{
+            "hash":4095795318,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_07",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_7",
+            "displayDescription":"",
+            "localizedName":"Leopard",
+            "localizedDescription":""
+         },
+         "2866892280":{
+            "hash":2866892280,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_08",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_8",
+            "displayDescription":"",
+            "localizedName":"Zebra",
+            "localizedDescription":""
+         },
+         "2559813981":{
+            "hash":2559813981,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_09",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_9",
+            "displayDescription":"",
+            "localizedName":"Geometric",
+            "localizedDescription":""
+         },
+         "1796459838":{
+            "hash":1796459838,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_10",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_10",
+            "displayDescription":"",
+            "localizedName":"Boom!",
+            "localizedDescription":""
+         },
+         "3663056191":{
+            "hash":3663056191,
+            "name":"COMPONENT_CARBINERIFLE_MK2_CAMO_IND_01",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_IND",
+            "displayDescription":"",
+            "localizedName":"Patriotic",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-608341376":{
+      "hash":3686625920,
+      "model":-1325136207,
+      "name":"WEAPON_COMBATMG_MK2",
+      "displayName":"WT_MG_CBT2",
+      "displayDescription":"WTD_MG_CBT2",
+      "localizedName":"Combat MG Mk II",
+      "localizedDescription":"You can never have too much of a good thing: after all, if the first shot counts, then the next hundred or so must count for double.",
+      "type":"MG",
+      "components":{
+         "1227564412":{
+            "hash":1227564412,
+            "name":"COMPONENT_COMBATMG_MK2_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for regular ammo."
+         },
+         "400507625":{
+            "hash":400507625,
+            "name":"COMPONENT_COMBATMG_MK2_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for regular ammo."
+         },
+         "4133787461":{
+            "hash":4133787461,
+            "name":"COMPONENT_COMBATMG_MK2_CLIP_TRACER",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_TR",
+            "displayDescription":"WCD_CLIP_TR",
+            "localizedName":"Tracer Rounds",
+            "localizedDescription":"Bullets with bright visible markers that match the tint of the gun. Standard capacity."
+         },
+         "3274096058":{
+            "hash":3274096058,
+            "name":"COMPONENT_COMBATMG_MK2_CLIP_INCENDIARY",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_INC",
+            "displayDescription":"WCD_CLIP_INC",
+            "localizedName":"Incendiary Rounds",
+            "localizedDescription":"Bullets which include a chance to set targets on fire when shot. Reduced capacity."
+         },
+         "696788003":{
+            "hash":696788003,
+            "name":"COMPONENT_COMBATMG_MK2_CLIP_ARMORPIERCING",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_AP",
+            "displayDescription":"WCD_CLIP_AP",
+            "localizedName":"Armor Piercing Rounds",
+            "localizedDescription":"Increased penetration of Body Armor. Reduced capacity."
+         },
+         "1475288264":{
+            "hash":1475288264,
+            "name":"COMPONENT_COMBATMG_MK2_CLIP_FMJ",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_FMJ",
+            "displayDescription":"WCD_CLIP_FMJ",
+            "localizedName":"Full Metal Jacket Rounds",
+            "localizedDescription":"Increased damage to vehicles. Also penetrates bullet resistant and bulletproof vehicle glass. Reduced capacity."
+         },
+         "2640679034":{
+            "hash":2640679034,
+            "name":"COMPONENT_AT_AR_AFGRIP_02",
+            "attachmentPoint":"Grip2",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "1108334355":{
+            "hash":1108334355,
+            "name":"COMPONENT_AT_SIGHTS",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_HOLO",
+            "displayDescription":"WCD_HOLO",
+            "localizedName":"Holographic Sight",
+            "localizedDescription":"Accurate sight for close quarters combat."
+         },
+         "1060929921":{
+            "hash":1060929921,
+            "name":"COMPONENT_AT_SCOPE_SMALL_MK2",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_SCOPE_SML2",
+            "displayDescription":"WCD_SCOPE_SML",
+            "localizedName":"Medium Scope",
+            "localizedDescription":"Medium-range zoom functionality."
+         },
+         "3328927042":{
+            "hash":3328927042,
+            "name":"COMPONENT_AT_SCOPE_MEDIUM_MK2",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_SCOPE_MED2",
+            "displayDescription":"WCD_SCOPE_MED",
+            "localizedName":"Large Scope",
+            "localizedDescription":"Extended-range zoom functionality."
+         },
+         "3113485012":{
+            "hash":3113485012,
+            "name":"COMPONENT_AT_MUZZLE_01",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ1",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Flat Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3362234491":{
+            "hash":3362234491,
+            "name":"COMPONENT_AT_MUZZLE_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ2",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Tactical Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3725708239":{
+            "hash":3725708239,
+            "name":"COMPONENT_AT_MUZZLE_03",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ3",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Fat-End Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3968886988":{
+            "hash":3968886988,
+            "name":"COMPONENT_AT_MUZZLE_04",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ4",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Precision Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "48731514":{
+            "hash":48731514,
+            "name":"COMPONENT_AT_MUZZLE_05",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ5",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Heavy Duty Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "880736428":{
+            "hash":880736428,
+            "name":"COMPONENT_AT_MUZZLE_06",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ6",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Slanted Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "1303784126":{
+            "hash":1303784126,
+            "name":"COMPONENT_AT_MUZZLE_07",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ7",
+            "displayDescription":"WCD_MUZZ",
+            "localizedName":"Split-End Muzzle Brake",
+            "localizedDescription":"Reduces recoil during rapid fire."
+         },
+         "3276730932":{
+            "hash":3276730932,
+            "name":"COMPONENT_AT_MG_BARREL_01",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR",
+            "displayDescription":"WCD_BARR",
+            "localizedName":"Default Barrel",
+            "localizedDescription":"Stock barrel attachment."
+         },
+         "3051509595":{
+            "hash":3051509595,
+            "name":"COMPONENT_AT_MG_BARREL_02",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR2",
+            "displayDescription":"WCD_BARR2",
+            "localizedName":"Heavy Barrel",
+            "localizedDescription":"Increases damage dealt to long-range targets."
+         },
+         "1249283253":{
+            "hash":1249283253,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_1",
+            "displayDescription":"",
+            "localizedName":"Digital Camo",
+            "localizedDescription":""
+         },
+         "3437259709":{
+            "hash":3437259709,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_02",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_2",
+            "displayDescription":"",
+            "localizedName":"Brushstroke Camo",
+            "localizedDescription":""
+         },
+         "3197423398":{
+            "hash":3197423398,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_03",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_3",
+            "displayDescription":"",
+            "localizedName":"Woodland Camo",
+            "localizedDescription":""
+         },
+         "1980349969":{
+            "hash":1980349969,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_04",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_4",
+            "displayDescription":"",
+            "localizedName":"Skull",
+            "localizedDescription":""
+         },
+         "1219453777":{
+            "hash":1219453777,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_05",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_5",
+            "displayDescription":"",
+            "localizedName":"Sessanta Nove",
+            "localizedDescription":""
+         },
+         "2441508106":{
+            "hash":2441508106,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_06",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_6",
+            "displayDescription":"",
+            "localizedName":"Perseus",
+            "localizedDescription":""
+         },
+         "2220186280":{
+            "hash":2220186280,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_07",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_7",
+            "displayDescription":"",
+            "localizedName":"Leopard",
+            "localizedDescription":""
+         },
+         "457967755":{
+            "hash":457967755,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_08",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_8",
+            "displayDescription":"",
+            "localizedName":"Zebra",
+            "localizedDescription":""
+         },
+         "235171324":{
+            "hash":235171324,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_09",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_9",
+            "displayDescription":"",
+            "localizedName":"Geometric",
+            "localizedDescription":""
+         },
+         "42685294":{
+            "hash":42685294,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_10",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_10",
+            "displayDescription":"",
+            "localizedName":"Boom!",
+            "localizedDescription":""
+         },
+         "3607349581":{
+            "hash":3607349581,
+            "name":"COMPONENT_COMBATMG_MK2_CAMO_IND_01",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_IND",
+            "displayDescription":"",
+            "localizedName":"Patriotic",
+            "localizedDescription":""
+         }
+      }
+   },
+   "177293209":{
+      "hash":177293209,
+      "model":619715967,
+      "name":"WEAPON_HEAVYSNIPER_MK2",
+      "displayName":"WT_SNIP_HVY2",
+      "displayDescription":"WTD_SNIP_HVY2",
+      "localizedName":"Heavy Sniper Mk II",
+      "localizedDescription":"Far away, yet always intimate: if you're looking for a secure foundation for that long-distance relationship, this is it.",
+      "type":"Sniper",
+      "components":{
+         "4196276776":{
+            "hash":4196276776,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for regular ammo."
+         },
+         "752418717":{
+            "hash":752418717,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for regular ammo."
+         },
+         "247526935":{
+            "hash":247526935,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CLIP_INCENDIARY",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_INC",
+            "displayDescription":"WCD_CLIP_INC",
+            "localizedName":"Incendiary Rounds",
+            "localizedDescription":"Bullets which include a chance to set targets on fire when shot. Reduced capacity."
+         },
+         "4164277972":{
+            "hash":4164277972,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CLIP_ARMORPIERCING",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_AP",
+            "displayDescription":"WCD_CLIP_AP",
+            "localizedName":"Armor Piercing Rounds",
+            "localizedDescription":"Increased penetration of Body Armor. Reduced capacity."
+         },
+         "1005144310":{
+            "hash":1005144310,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CLIP_FMJ",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_FMJ",
+            "displayDescription":"WCD_CLIP_FMJ",
+            "localizedName":"Full Metal Jacket Rounds",
+            "localizedDescription":"Increased damage to vehicles. Also penetrates bullet resistant and bulletproof vehicle glass. Reduced capacity."
+         },
+         "2313935527":{
+            "hash":2313935527,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CLIP_EXPLOSIVE",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_EX",
+            "displayDescription":"WCD_CLIP_EX",
+            "localizedName":"Explosive Rounds",
+            "localizedDescription":"Bullets which explode on impact. Reduced capacity."
+         },
+         "2193687427":{
+            "hash":2193687427,
+            "name":"COMPONENT_AT_SCOPE_LARGE_MK2",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_LRG2",
+            "displayDescription":"WCD_SCOPE_LRG",
+            "localizedName":"Zoom Scope",
+            "localizedDescription":"Long-range zoom functionality."
+         },
+         "3159677559":{
+            "hash":3159677559,
+            "name":"COMPONENT_AT_SCOPE_MAX",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_MAX",
+            "displayDescription":"WCD_SCOPE_MAX",
+            "localizedName":"Advanced Scope",
+            "localizedDescription":"Maximum zoom functionality."
+         },
+         "3061846192":{
+            "hash":3061846192,
+            "name":"COMPONENT_AT_SCOPE_NV",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_NV",
+            "displayDescription":"WCD_SCOPE_NV",
+            "localizedName":"Night Vision Scope",
+            "localizedDescription":"Long-range zoom with toggleable night vision."
+         },
+         "776198721":{
+            "hash":776198721,
+            "name":"COMPONENT_AT_SCOPE_THERMAL",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_TH",
+            "displayDescription":"WCD_SCOPE_TH",
+            "localizedName":"Thermal Scope",
+            "localizedDescription":"Long-range zoom with toggleable thermal vision."
+         },
+         "2890063729":{
+            "hash":2890063729,
+            "name":"COMPONENT_AT_SR_SUPP_03",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_SR_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "1602080333":{
+            "hash":1602080333,
+            "name":"COMPONENT_AT_MUZZLE_08",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ8",
+            "displayDescription":"WCD_MUZZ_SR",
+            "localizedName":"Squared Muzzle Brake",
+            "localizedDescription":"Reduces recoil when firing."
+         },
+         "1764221345":{
+            "hash":1764221345,
+            "name":"COMPONENT_AT_MUZZLE_09",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_MUZZ9",
+            "displayDescription":"WCD_MUZZ_SR",
+            "localizedName":"Bell-End Muzzle Brake",
+            "localizedDescription":"Reduces recoil when firing."
+         },
+         "2425761975":{
+            "hash":2425761975,
+            "name":"COMPONENT_AT_SR_BARREL_01",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR",
+            "displayDescription":"WCD_BARR",
+            "localizedName":"Default Barrel",
+            "localizedDescription":"Stock barrel attachment."
+         },
+         "277524638":{
+            "hash":277524638,
+            "name":"COMPONENT_AT_SR_BARREL_02",
+            "attachmentPoint":"2982890265",
+            "displayName":"WCT_BARR2",
+            "displayDescription":"WCD_BARR2",
+            "localizedName":"Heavy Barrel",
+            "localizedDescription":"Increases damage dealt to long-range targets."
+         },
+         "4164123906":{
+            "hash":4164123906,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_1",
+            "displayDescription":"",
+            "localizedName":"Digital Camo",
+            "localizedDescription":""
+         },
+         "3317620069":{
+            "hash":3317620069,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_02",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_2",
+            "displayDescription":"",
+            "localizedName":"Brushstroke Camo",
+            "localizedDescription":""
+         },
+         "3916506229":{
+            "hash":3916506229,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_03",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_3",
+            "displayDescription":"",
+            "localizedName":"Woodland Camo",
+            "localizedDescription":""
+         },
+         "329939175":{
+            "hash":329939175,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_04",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_4",
+            "displayDescription":"",
+            "localizedName":"Skull",
+            "localizedDescription":""
+         },
+         "643374672":{
+            "hash":643374672,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_05",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_5",
+            "displayDescription":"",
+            "localizedName":"Sessanta Nove",
+            "localizedDescription":""
+         },
+         "807875052":{
+            "hash":807875052,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_06",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_6",
+            "displayDescription":"",
+            "localizedName":"Perseus",
+            "localizedDescription":""
+         },
+         "2893163128":{
+            "hash":2893163128,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_07",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_7",
+            "displayDescription":"",
+            "localizedName":"Leopard",
+            "localizedDescription":""
+         },
+         "3198471901":{
+            "hash":3198471901,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_08",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_8",
+            "displayDescription":"",
+            "localizedName":"Zebra",
+            "localizedDescription":""
+         },
+         "3447155842":{
+            "hash":3447155842,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_09",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_9",
+            "displayDescription":"",
+            "localizedName":"Geometric",
+            "localizedDescription":""
+         },
+         "2881858759":{
+            "hash":2881858759,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_10",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_10",
+            "displayDescription":"",
+            "localizedName":"Boom!",
+            "localizedDescription":""
+         },
+         "1815270123":{
+            "hash":1815270123,
+            "name":"COMPONENT_HEAVYSNIPER_MK2_CAMO_IND_01",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_CAMO_IND",
+            "displayDescription":"",
+            "localizedName":"Patriotic",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-1951375401":{
+      "hash":2343591895,
+      "model":-2016486256,
+      "name":"WEAPON_FLASHLIGHT",
+      "displayName":"WT_FLASHLIGHT",
+      "displayDescription":"WTD_FLASHLIGHT",
+      "localizedName":"Flashlight",
+      "localizedDescription":"Intensify your fear of the dark with this short range, battery-powered light source. Handy for blunt force trauma. Part of The Halloween Surprise.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "1198879012":{
+      "hash":1198879012,
+      "model":1349014803,
+      "name":"WEAPON_FLAREGUN",
+      "displayName":"WT_FLAREGUN",
+      "displayDescription":"WTD_FLAREGUN",
+      "localizedName":"Flare Gun",
+      "localizedDescription":"Use to signal distress or drunken excitement. Warning: pointing directly at individuals may cause spontaneous combustion. Part of The Heists Update.",
+      "type":"Pistol",
+      "components":{
+
+      }
+   },
+   "-581044007":{
+      "hash":3713923289,
+      "model":-1713889927,
+      "name":"WEAPON_MACHETE",
+      "displayName":"WT_MACHETE",
+      "displayDescription":"WTD_MACHETE",
+      "localizedName":"Machete",
+      "localizedDescription":"America's West African arms trade isn't just about giving. Rediscover the simple life with this rusty cleaver. Part of Lowriders.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "-619010992":{
+      "hash":3675956304,
+      "model":-331545829,
+      "name":"WEAPON_MACHINEPISTOL",
+      "displayName":"WT_MCHPIST",
+      "displayDescription":"WTD_MCHPIST",
+      "localizedName":"Machine Pistol",
+      "localizedDescription":"This fully automatic is the snare drum to your twin-engine V8 bass: no drive-by sounds quite right without it. Part of Lowriders.",
+      "type":"SMG",
+      "components":{
+         "1198425599":{
+            "hash":1198425599,
+            "name":"COMPONENT_MACHINEPISTOL_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_MCHP_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Machine Pistol."
+         },
+         "3106695545":{
+            "hash":3106695545,
+            "name":"COMPONENT_MACHINEPISTOL_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_MCHP_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Machine Pistol."
+         },
+         "3271853210":{
+            "hash":3271853210,
+            "name":"COMPONENT_AT_PI_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "2850671348":{
+            "hash":2850671348,
+            "name":"COMPONENT_MACHINEPISTOL_CLIP_03",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_DRM",
+            "displayDescription":"WCD_CLIP3",
+            "localizedName":"Drum Magazine",
+            "localizedDescription":"Expanded capacity and slower reload."
+         }
+      }
+   },
+   "-275439685":{
+      "hash":4019527611,
+      "model":222483357,
+      "name":"WEAPON_DBSHOTGUN",
+      "displayName":"WT_DBSHGN",
+      "displayDescription":"WTD_DBSHGN",
+      "localizedName":"Double Barrel Shotgun",
+      "localizedDescription":"Do one thing, do it well. Who needs a high rate of fire when your first shot turns the other guy into a fine mist? Part of Lowriders: Custom Classics.",
+      "type":"Shotgun",
+      "components":{
+
+      }
+   },
+   "1649403952":{
+      "hash":1649403952,
+      "model":1931114084,
+      "name":"WEAPON_COMPACTRIFLE",
+      "displayName":"WT_CMPRIFLE",
+      "displayDescription":"WTD_CMPRIFLE",
+      "localizedName":"Compact Rifle",
+      "localizedDescription":"Half the size, all the power, double the recoil: there's no riskier way to say \"I'm compensating for something\". Part of Lowriders: Custom Classics.",
+      "type":"AssaultRifle",
+      "components":{
+         "1363085923":{
+            "hash":1363085923,
+            "name":"COMPONENT_COMPACTRIFLE_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CMPR_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Compact Rifle."
+         },
+         "1509923832":{
+            "hash":1509923832,
+            "name":"COMPONENT_COMPACTRIFLE_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_CMPR_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Compact Rifle."
+         },
+         "3322377230":{
+            "hash":3322377230,
+            "name":"COMPONENT_COMPACTRIFLE_CLIP_03",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_DRM",
+            "displayDescription":"WCD_CLIP3",
+            "localizedName":"Drum Magazine",
+            "localizedDescription":"Expanded capacity and slower reload."
+         }
+      }
+   },
+   "171789620":{
+      "hash":171789620,
+      "model":-1393014804,
+      "name":"WEAPON_COMBATPDW",
+      "displayName":"WT_COMBATPDW",
+      "displayDescription":"WTD_COMBATPDW",
+      "localizedName":"Combat PDW",
+      "localizedDescription":"Who said personal weaponry couldn't be worthy of military personnel? Thanks to our lobbyists, not Congress. Integral suppressor. Part of the Ill-Gotten Gains Update Part 1.",
+      "type":"SMG",
+      "components":{
+         "1125642654":{
+            "hash":1125642654,
+            "name":"COMPONENT_COMBATPDW_CLIP_01",
+            "attachmentPoint":"Clip2",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_PDW_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Combat PDW."
+         },
+         "860508675":{
+            "hash":860508675,
+            "name":"COMPONENT_COMBATPDW_CLIP_02",
+            "attachmentPoint":"Clip2",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_PDW_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Combat PDW."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "2855028148":{
+            "hash":2855028148,
+            "name":"COMPONENT_AT_SCOPE_SMALL",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_SCOPE_SML",
+            "displayDescription":"WCD_SCOPE_SML",
+            "localizedName":"Scope",
+            "localizedDescription":"Medium-range zoom functionality."
+         },
+         "1857603803":{
+            "hash":1857603803,
+            "name":"COMPONENT_COMBATPDW_CLIP_03",
+            "attachmentPoint":"Clip2",
+            "displayName":"WCT_CLIP_DRM",
+            "displayDescription":"WCD_CLIP3",
+            "localizedName":"Drum Magazine",
+            "localizedDescription":"Expanded capacity and slower reload."
+         }
+      }
+   },
+   "-656458692":{
+      "hash":3638508604,
+      "model":-1288968684,
+      "name":"WEAPON_KNUCKLE",
+      "displayName":"WT_KNUCKLE",
+      "displayDescription":"WTD_KNUCKLE",
+      "localizedName":"Knuckle Duster",
+      "localizedDescription":"Perfect for knocking out gold teeth, or as a gift to the trophy partner who has everything. Part of The Ill-Gotten Gains Update Part 2.",
+      "type":"Unarmed",
+      "components":{
+         "4081463091":{
+            "hash":4081463091,
+            "name":"COMPONENT_KNUCKLE_VARMOD_BASE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_01",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"Base Model",
+            "localizedDescription":"Item available to purchase."
+         },
+         "3323197061":{
+            "hash":3323197061,
+            "name":"COMPONENT_KNUCKLE_VARMOD_PIMP",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_02",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"The Pimp",
+            "localizedDescription":"Item available to purchase."
+         },
+         "4007263587":{
+            "hash":4007263587,
+            "name":"COMPONENT_KNUCKLE_VARMOD_BALLAS",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_BG",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"The Ballas",
+            "localizedDescription":"Item available to purchase."
+         },
+         "1351683121":{
+            "hash":1351683121,
+            "name":"COMPONENT_KNUCKLE_VARMOD_DOLLAR",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_DLR",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"The Hustler",
+            "localizedDescription":"Item available to purchase."
+         },
+         "2539772380":{
+            "hash":2539772380,
+            "name":"COMPONENT_KNUCKLE_VARMOD_DIAMOND",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_DMD",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"The Rock",
+            "localizedDescription":"Item available to purchase."
+         },
+         "2112683568":{
+            "hash":2112683568,
+            "name":"COMPONENT_KNUCKLE_VARMOD_HATE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_HT",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"The Hater",
+            "localizedDescription":"Item available to purchase."
+         },
+         "1062111910":{
+            "hash":1062111910,
+            "name":"COMPONENT_KNUCKLE_VARMOD_LOVE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_LV",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"The Lover",
+            "localizedDescription":"Item available to purchase."
+         },
+         "146278587":{
+            "hash":146278587,
+            "name":"COMPONENT_KNUCKLE_VARMOD_PLAYER",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_PC",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"The Player",
+            "localizedDescription":"Item available to purchase."
+         },
+         "3800804335":{
+            "hash":3800804335,
+            "name":"COMPONENT_KNUCKLE_VARMOD_KING",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_SLG",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"The King",
+            "localizedDescription":"Item available to purchase."
+         },
+         "2062808965":{
+            "hash":2062808965,
+            "name":"COMPONENT_KNUCKLE_VARMOD_VAGOS",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_KNUCK_VG",
+            "displayDescription":"WCD_VAR_DESC",
+            "localizedName":"The Vagos",
+            "localizedDescription":"Item available to purchase."
+         }
+      }
+   },
+   "-598887786":{
+      "hash":3696079510,
+      "model":-103789861,
+      "name":"WEAPON_MARKSMANPISTOL",
+      "displayName":"WT_MKPISTOL",
+      "displayDescription":"WTD_MKPISTOL",
+      "localizedName":"Marksman Pistol",
+      "localizedDescription":"Not for the risk averse. Make it count as you'll be reloading as much as you shoot. Part of The Ill-Gotten Gains Update Part 2.",
+      "type":"Pistol",
+      "components":{
+
+      }
+   },
+   "-102323637":{
+      "hash":4192643659,
+      "model":1150762982,
+      "name":"WEAPON_BOTTLE",
+      "displayName":"WT_BOTTLE",
+      "displayDescription":"WTD_BOTTLE",
+      "localizedName":"Bottle",
+      "localizedDescription":"It's not clever and it's not pretty but, most of the time, neither is the guy coming at you with a knife. When all else fails, this gets the job done. Part of the Beach Bum Pack.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "-1076751822":{
+      "hash":3218215474,
+      "model":339962010,
+      "name":"WEAPON_SNSPISTOL",
+      "displayName":"WT_SNSPISTOL",
+      "displayDescription":"WTD_SNSPISTOL",
+      "localizedName":"SNS Pistol",
+      "localizedDescription":"Like condoms or hairspray, this fits in your pocket for a night out in a Vinewood club. It's half as accurate as a champagne cork but twice as deadly. Part of the Beach Bum Pack.",
+      "type":"Pistol",
+      "components":{
+         "4169150169":{
+            "hash":4169150169,
+            "name":"COMPONENT_SNSPISTOL_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_SNSP_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for SNS Pistol."
+         },
+         "2063610803":{
+            "hash":2063610803,
+            "name":"COMPONENT_SNSPISTOL_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_SNSP_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for SNS Pistol."
+         },
+         "2150886575":{
+            "hash":2150886575,
+            "name":"COMPONENT_SNSPISTOL_VARMOD_LOWRIDER",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_WOOD",
+            "displayDescription":"WCD_VAR_SNS",
+            "localizedName":"Etched Wood Grip Finish",
+            "localizedDescription":"Item available to purchase."
+         }
+      }
+   },
+   "-771403250":{
+      "hash":3523564046,
+      "model":1927398017,
+      "name":"WEAPON_HEAVYPISTOL",
+      "displayName":"WT_HVYPISTOL",
+      "displayDescription":"WTD_HVYPISTOL",
+      "localizedName":"Heavy Pistol",
+      "localizedDescription":"The heavyweight champion of the magazine fed, semi-automatic handgun world. Delivers a serious forearm workout every time. Part of The Business Update.",
+      "type":"Pistol",
+      "components":{
+         "222992026":{
+            "hash":222992026,
+            "name":"COMPONENT_HEAVYPISTOL_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_HPST_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Heavy Pistol."
+         },
+         "1694090795":{
+            "hash":1694090795,
+            "name":"COMPONENT_HEAVYPISTOL_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_HPST_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Heavy Pistol."
+         },
+         "899381934":{
+            "hash":899381934,
+            "name":"COMPONENT_AT_PI_FLSH",
+            "attachmentPoint":"FlashLaser",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "3271853210":{
+            "hash":3271853210,
+            "name":"COMPONENT_AT_PI_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "2053798779":{
+            "hash":2053798779,
+            "name":"COMPONENT_HEAVYPISTOL_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_WOOD",
+            "displayDescription":"WCD_VAR_HPST",
+            "localizedName":"Etched Wood Grip Finish",
+            "localizedDescription":"Item available to purchase."
+         }
+      }
+   },
+   "-1063057011":{
+      "hash":3231910285,
+      "model":-1745643757,
+      "name":"WEAPON_SPECIALCARBINE",
+      "displayName":"WT_SPCARBINE",
+      "displayDescription":"WTD_SPCARBINE",
+      "localizedName":"Special Carbine",
+      "localizedDescription":"Combining accuracy, maneuverability and low recoil, this is an extremely versatile assault rifle for any combat situation. Part of The Business Update.",
+      "type":"AssaultRifle",
+      "components":{
+         "3334989185":{
+            "hash":3334989185,
+            "name":"COMPONENT_SPECIALCARBINE_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_SCRB_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Special Carbine."
+         },
+         "2089537806":{
+            "hash":2089537806,
+            "name":"COMPONENT_SPECIALCARBINE_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_SCRB_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Special Carbine."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2698550338":{
+            "hash":2698550338,
+            "name":"COMPONENT_AT_SCOPE_MEDIUM",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_LRG",
+            "displayDescription":"WCD_SCOPE_LRG",
+            "localizedName":"Scope",
+            "localizedDescription":"Long-range zoom functionality."
+         },
+         "2805810788":{
+            "hash":2805810788,
+            "name":"COMPONENT_AT_AR_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP2",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "1801039530":{
+            "hash":1801039530,
+            "name":"COMPONENT_SPECIALCARBINE_CLIP_03",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_DRM",
+            "displayDescription":"WCD_CLIP3",
+            "localizedName":"Drum Magazine",
+            "localizedDescription":"Expanded capacity and slower reload."
+         },
+         "1929467122":{
+            "hash":1929467122,
+            "name":"COMPONENT_SPECIALCARBINE_VARMOD_LOWRIDER",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_ETCHM",
+            "displayDescription":"WCD_VAR_SCAR",
+            "localizedName":"Etched Gun Metal Finish",
+            "localizedDescription":"Item available to purchase."
+         }
+      }
+   },
+   "2132975508":{
+      "hash":2132975508,
+      "model":-1288559573,
+      "name":"WEAPON_BULLPUPRIFLE",
+      "displayName":"WT_BULLRIFLE",
+      "displayDescription":"WTD_BULLRIFLE",
+      "localizedName":"Bullpup Rifle",
+      "localizedDescription":"The latest Chinese import taking America by storm, this rifle is known for its balanced handling. Lightweight and very controllable in automatic fire. Part of The High Life Update.",
+      "type":"AssaultRifle",
+      "components":{
+         "3315675008":{
+            "hash":3315675008,
+            "name":"COMPONENT_BULLPUPRIFLE_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_BRIF_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Bullpup Rifle."
+         },
+         "3009973007":{
+            "hash":3009973007,
+            "name":"COMPONENT_BULLPUPRIFLE_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_BRIF_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Bullpup Rifle."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2855028148":{
+            "hash":2855028148,
+            "name":"COMPONENT_AT_SCOPE_SMALL",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_SCOPE_SML",
+            "displayDescription":"WCD_SCOPE_SML",
+            "localizedName":"Scope",
+            "localizedDescription":"Medium-range zoom functionality."
+         },
+         "2205435306":{
+            "hash":2205435306,
+            "name":"COMPONENT_AT_AR_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "2824322168":{
+            "hash":2824322168,
+            "name":"COMPONENT_BULLPUPRIFLE_VARMOD_LOW",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_METAL",
+            "displayDescription":"WCD_VAR_BPR",
+            "localizedName":"Gilded Gun Metal Finish",
+            "localizedDescription":"Item available to purchase."
+         }
+      }
+   },
+   "-1834847097":{
+      "hash":2460120199,
+      "model":601713565,
+      "name":"WEAPON_DAGGER",
+      "displayName":"WT_DAGGER",
+      "displayDescription":"WTD_DAGGER",
+      "localizedName":"Antique Cavalry Dagger",
+      "localizedDescription":"You've been rocking the pirate-chic look for a while, but no vicious weapon to complete the look? Get this dagger with guarded hilt. Part of The \"I'm Not a Hipster\" Update.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "137902532":{
+      "hash":137902532,
+      "model":-1124046276,
+      "name":"WEAPON_VINTAGEPISTOL",
+      "displayName":"WT_VPISTOL",
+      "displayDescription":"WTD_VPISTOL",
+      "localizedName":"Vintage Pistol",
+      "localizedDescription":"What you really need is a more recognizable gun. Stand out from the crowd at an armed robbery with this engraved pistol. Part of The \"I'm Not a Hipster\" Update.",
+      "type":"Pistol",
+      "components":{
+         "1168357051":{
+            "hash":1168357051,
+            "name":"COMPONENT_VINTAGEPISTOL_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_VPST_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Vintage Pistol."
+         },
+         "867832552":{
+            "hash":867832552,
+            "name":"COMPONENT_VINTAGEPISTOL_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_VPST_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Vintage Pistol."
+         },
+         "3271853210":{
+            "hash":3271853210,
+            "name":"COMPONENT_AT_PI_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         }
+      }
+   },
+   "2138347493":{
+      "hash":2138347493,
+      "model":491091384,
+      "name":"WEAPON_FIREWORK",
+      "displayName":"WT_FIREWRK",
+      "displayDescription":"WTD_FIREWRK",
+      "localizedName":"Firework Launcher",
+      "localizedDescription":"Put the flair back in flare with this firework launcher, guaranteed to raise some oohs and aahs from the crowd. Part of the Independence Day Special.",
+      "type":"Heavy",
+      "components":{
+         "3840197261":{
+            "hash":3840197261,
+            "name":"COMPONENT_FIREWORK_CLIP_01",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_FWRK_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Firework Launcher."
+         }
+      }
+   },
+   "-1466123874":{
+      "hash":2828843422,
+      "model":1652015642,
+      "name":"WEAPON_MUSKET",
+      "displayName":"WT_MUSKET",
+      "displayDescription":"WTD_MUSKET",
+      "localizedName":"Musket",
+      "localizedDescription":"Armed with nothing but muskets and a superiority complex, the Brits took over half the world. Own the gun that built an empire. Part of the Independence Day Special.",
+      "type":"Sniper",
+      "components":{
+         "1322387263":{
+            "hash":1322387263,
+            "name":"COMPONENT_MUSKET_CLIP_01",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_MSKT_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Musket."
+         }
+      }
+   },
+   "984333226":{
+      "hash":984333226,
+      "model":-1209868881,
+      "name":"WEAPON_HEAVYSHOTGUN",
+      "displayName":"WT_HVYSHGN",
+      "displayDescription":"WTD_HVYSHGN",
+      "localizedName":"Heavy Shotgun",
+      "localizedDescription":"The weapon to reach for when you absolutely need to make a horrible mess of the room. Best used near easy-wipe surfaces only. Part of the Last Team Standing Update.",
+      "type":"Shotgun",
+      "components":{
+         "844049759":{
+            "hash":844049759,
+            "name":"COMPONENT_HEAVYSHOTGUN_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_HVSG_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Heavy Shotgun."
+         },
+         "2535257853":{
+            "hash":2535257853,
+            "name":"COMPONENT_HEAVYSHOTGUN_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_HVSG_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Heavy Shotgun."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2805810788":{
+            "hash":2805810788,
+            "name":"COMPONENT_AT_AR_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP2",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "2294798931":{
+            "hash":2294798931,
+            "name":"COMPONENT_HEAVYSHOTGUN_CLIP_03",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_DRM",
+            "displayDescription":"WCD_CLIP3",
+            "localizedName":"Drum Magazine",
+            "localizedDescription":"Expanded capacity and slower reload."
+         }
+      }
+   },
+   "-952879014":{
+      "hash":3342088282,
+      "model":-1711248638,
+      "name":"WEAPON_MARKSMANRIFLE",
+      "displayName":"WT_MKRIFLE",
+      "displayDescription":"WTD_MKRIFLE",
+      "localizedName":"Marksman Rifle",
+      "localizedDescription":"Whether you're up close or a disconcertingly long way away, this weapon will get the job done. A multi-range tool for tools. Part of the Last Team Standing Update.",
+      "type":"Sniper",
+      "components":{
+         "3627761985":{
+            "hash":3627761985,
+            "name":"COMPONENT_MARKSMANRIFLE_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_MKRF_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Marksman Rifle."
+         },
+         "3439143621":{
+            "hash":3439143621,
+            "name":"COMPONENT_MARKSMANRIFLE_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_MKRF_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Marksman Rifle."
+         },
+         "471997210":{
+            "hash":471997210,
+            "name":"COMPONENT_AT_SCOPE_LARGE_FIXED_ZOOM",
+            "attachmentPoint":"Scope2",
+            "displayName":"WCT_SCOPE_LRG",
+            "displayDescription":"WCD_SCOPE_LRF",
+            "localizedName":"Scope",
+            "localizedDescription":"Long-range fixed zoom functionality."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2205435306":{
+            "hash":2205435306,
+            "name":"COMPONENT_AT_AR_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "371102273":{
+            "hash":371102273,
+            "name":"COMPONENT_MARKSMANRIFLE_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_MKRF",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":"Item available to purchase."
+         }
+      }
+   },
+   "1627465347":{
+      "hash":1627465347,
+      "model":574348740,
+      "name":"WEAPON_GUSENBERG",
+      "displayName":"WT_GUSNBRG",
+      "displayDescription":"WTD_GUSNBRG",
+      "localizedName":"Gusenberg Sweeper",
+      "localizedDescription":"Complete your look with a Prohibition gun. Looks great being fired from an Albany Roosevelt or paired with a pinstripe suit. Part of the Valentine's Day Massacre Special.",
+      "type":"MG",
+      "components":{
+         "484812453":{
+            "hash":484812453,
+            "name":"COMPONENT_GUSENBERG_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_GSNB_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Gusenberg Sweeper."
+         },
+         "3939025520":{
+            "hash":3939025520,
+            "name":"COMPONENT_GUSENBERG_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_GSNB_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Gusenberg Sweeper."
+         }
+      }
+   },
+   "-102973651":{
+      "hash":4191993645,
+      "model":1653948529,
+      "name":"WEAPON_HATCHET",
+      "displayName":"WT_HATCHET",
+      "displayDescription":"WTD_HATCHET",
+      "localizedName":"Hatchet",
+      "localizedDescription":"Make kindling... of your pals with this easy to wield, easy to hide hatchet. Exclusive content for returning players.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "1834241177":{
+      "hash":1834241177,
+      "model":-1876506235,
+      "name":"WEAPON_RAILGUN",
+      "displayName":"WT_RAILGUN",
+      "displayDescription":"WTD_RAILGUN",
+      "localizedName":"Railgun",
+      "localizedDescription":"All you need to know is - magnets, and it does horrible things to the things it's pointed at. Exclusive content for returning players.",
+      "type":"Heavy",
+      "components":{
+
+      }
+   },
+   "-1569615261":{
+      "hash":2725352035,
+      "model":0,
+      "name":"WEAPON_UNARMED",
+      "displayName":"WT_UNARMED",
+      "displayDescription":"WTD_UNARMED",
+      "localizedName":"Unarmed",
+      "localizedDescription":"",
+      "type":"Unarmed",
+      "components":{
+
+      }
+   },
+   "-1716189206":{
+      "hash":2578778090,
+      "model":-1982443329,
+      "name":"WEAPON_KNIFE",
+      "displayName":"WT_KNIFE",
+      "displayDescription":"WTD_KNIFE",
+      "localizedName":"Knife",
+      "localizedDescription":"This carbon steel 7\" bladed knife is dual edged with a serrated spine to provide improved stabbing and thrusting capabilities.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "1737195953":{
+      "hash":1737195953,
+      "model":-1634978236,
+      "name":"WEAPON_NIGHTSTICK",
+      "displayName":"WT_NGTSTK",
+      "displayDescription":"WTD_NGTSTK",
+      "localizedName":"Nightstick",
+      "localizedDescription":"24\" polycarbonate side-handled nightstick.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "1317494643":{
+      "hash":1317494643,
+      "model":64104227,
+      "name":"WEAPON_HAMMER",
+      "displayName":"WT_HAMMER",
+      "displayDescription":"WTD_HAMMER",
+      "localizedName":"Hammer",
+      "localizedDescription":"A robust, multi-purpose hammer with wooden handle and curved claw, this old classic still nails the competition.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "-1786099057":{
+      "hash":2508868239,
+      "model":32653987,
+      "name":"WEAPON_BAT",
+      "displayName":"WT_BAT",
+      "displayDescription":"WTD_BAT",
+      "localizedName":"Baseball Bat",
+      "localizedDescription":"Aluminum baseball bat with leather grip. Lightweight yet powerful for all you big hitters out there.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "1141786504":{
+      "hash":1141786504,
+      "model":-580196246,
+      "name":"WEAPON_GOLFCLUB",
+      "displayName":"WT_GOLFCLUB",
+      "displayDescription":"WTD_GOLFCLUB",
+      "localizedName":"Golf Club",
+      "localizedDescription":"Standard length, mid iron golf club with rubber grip for a lethal short game.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "-2067956739":{
+      "hash":2227010557,
+      "model":1862268168,
+      "name":"WEAPON_CROWBAR",
+      "displayName":"WT_CROWBAR",
+      "displayDescription":"WTD_CROWBAR",
+      "localizedName":"Crowbar",
+      "localizedDescription":"Heavy-duty crowbar forged from high quality, tempered steel for that extra leverage you need to get the job done.",
+      "type":"Melee",
+      "components":{
+
+      }
+   },
+   "453432689":{
+      "hash":453432689,
+      "model":1467525553,
+      "name":"WEAPON_PISTOL",
+      "displayName":"WT_PIST",
+      "displayDescription":"WTD_PIST",
+      "localizedName":"Pistol",
+      "localizedDescription":"",
+      "type":"Pistol",
+      "components":{
+         "4275109233":{
+            "hash":4275109233,
+            "name":"COMPONENT_PISTOL_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_P_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Pistol."
+         },
+         "3978713628":{
+            "hash":3978713628,
+            "name":"COMPONENT_PISTOL_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_P_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Pistol."
+         },
+         "899381934":{
+            "hash":899381934,
+            "name":"COMPONENT_AT_PI_FLSH",
+            "attachmentPoint":"FlashLaser",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "3271853210":{
+            "hash":3271853210,
+            "name":"COMPONENT_AT_PI_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "1709866683":{
+            "hash":1709866683,
+            "name":"COMPONENT_AT_PI_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "3610841222":{
+            "hash":3610841222,
+            "name":"COMPONENT_PISTOL_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_GOLD",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "1593441988":{
+      "hash":1593441988,
+      "model":403140669,
+      "name":"WEAPON_COMBATPISTOL",
+      "displayName":"WT_PIST_CBT",
+      "displayDescription":"WTD_PIST_CBT",
+      "localizedName":"Combat Pistol",
+      "localizedDescription":"A compact, lightweight, semi-automatic pistol designed for law enforcement and personal defense. 12-round magazine with option to extend to 16 rounds.",
+      "type":"Pistol",
+      "components":{
+         "119648377":{
+            "hash":119648377,
+            "name":"COMPONENT_COMBATPISTOL_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CP_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Combat Pistol."
+         },
+         "3598405421":{
+            "hash":3598405421,
+            "name":"COMPONENT_COMBATPISTOL_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_CP_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Combat Pistol."
+         },
+         "899381934":{
+            "hash":899381934,
+            "name":"COMPONENT_AT_PI_FLSH",
+            "attachmentPoint":"FlashLaser",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "3271853210":{
+            "hash":3271853210,
+            "name":"COMPONENT_AT_PI_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "3328527730":{
+            "hash":3328527730,
+            "name":"COMPONENT_COMBATPISTOL_VARMOD_LOWRIDER",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_GOLD",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "584646201":{
+      "hash":584646201,
+      "model":905830540,
+      "name":"WEAPON_APPISTOL",
+      "displayName":"WT_PIST_AP",
+      "displayDescription":"WTD_PIST_AP",
+      "localizedName":"AP Pistol",
+      "localizedDescription":"High-penetration, fully-automatic pistol. Holds 18 rounds in magazine with option to extend to 36 rounds.",
+      "type":"Pistol",
+      "components":{
+         "834974250":{
+            "hash":834974250,
+            "name":"COMPONENT_APPISTOL_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_AP_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for AP Pistol."
+         },
+         "614078421":{
+            "hash":614078421,
+            "name":"COMPONENT_APPISTOL_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_AP_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for AP Pistol."
+         },
+         "899381934":{
+            "hash":899381934,
+            "name":"COMPONENT_AT_PI_FLSH",
+            "attachmentPoint":"FlashLaser",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "3271853210":{
+            "hash":3271853210,
+            "name":"COMPONENT_AT_PI_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "2608252716":{
+            "hash":2608252716,
+            "name":"COMPONENT_APPISTOL_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_METAL",
+            "displayDescription":"WCD_VAR_METAL",
+            "localizedName":"Gilded Gun Metal Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-1716589765":{
+      "hash":2578377531,
+      "model":-178484015,
+      "name":"WEAPON_PISTOL50",
+      "displayName":"WT_PIST_50",
+      "displayDescription":"WTD_PIST_50",
+      "localizedName":"Pistol .50",
+      "localizedDescription":"High-impact pistol that delivers immense power but with extremely strong recoil. Holds 9 rounds in magazine.",
+      "type":"Pistol",
+      "components":{
+         "580369945":{
+            "hash":580369945,
+            "name":"COMPONENT_PISTOL50_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_P50_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Pistol .50."
+         },
+         "3654528146":{
+            "hash":3654528146,
+            "name":"COMPONENT_PISTOL50_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_P50_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Pistol .50."
+         },
+         "899381934":{
+            "hash":899381934,
+            "name":"COMPONENT_AT_PI_FLSH",
+            "attachmentPoint":"FlashLaser",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2805810788":{
+            "hash":2805810788,
+            "name":"COMPONENT_AT_AR_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP2",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "2008591151":{
+            "hash":2008591151,
+            "name":"COMPONENT_PISTOL50_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_SIL",
+            "displayDescription":"WCD_VAR_SIL",
+            "localizedName":"Platinum Pearl Deluxe Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "324215364":{
+      "hash":324215364,
+      "model":-1056713654,
+      "name":"WEAPON_MICROSMG",
+      "displayName":"WT_SMG_MCR",
+      "displayDescription":"WTD_SMG_MCR",
+      "localizedName":"Micro SMG",
+      "localizedDescription":"Combines compact design with a high rate of fire at approximately 700-900 rounds per minute.",
+      "type":"SMG",
+      "components":{
+         "3410538224":{
+            "hash":3410538224,
+            "name":"COMPONENT_MICROSMG_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCDMSMG_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Micro SMG."
+         },
+         "283556395":{
+            "hash":283556395,
+            "name":"COMPONENT_MICROSMG_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCDMSMG_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Micro SMG."
+         },
+         "899381934":{
+            "hash":899381934,
+            "name":"COMPONENT_AT_PI_FLSH",
+            "attachmentPoint":"FlashLaser",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2637152041":{
+            "hash":2637152041,
+            "name":"COMPONENT_AT_SCOPE_MACRO",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_MAC",
+            "displayDescription":"WCD_SCOPE_MAC",
+            "localizedName":"Scope",
+            "localizedDescription":"Standard-range zoom functionality."
+         },
+         "2805810788":{
+            "hash":2805810788,
+            "name":"COMPONENT_AT_AR_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP2",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "1215999497":{
+            "hash":1215999497,
+            "name":"COMPONENT_MICROSMG_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_GOLD",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "736523883":{
+      "hash":736523883,
+      "model":-500057996,
+      "name":"WEAPON_SMG",
+      "displayName":"WT_SMG",
+      "displayDescription":"WTD_SMG",
+      "localizedName":"SMG",
+      "localizedDescription":"This is known as a good all-round submachine gun. Lightweight with an accurate sight and 30-round magazine capacity.",
+      "type":"SMG",
+      "components":{
+         "643254679":{
+            "hash":643254679,
+            "name":"COMPONENT_SMG_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_SMG_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for SMG."
+         },
+         "889808635":{
+            "hash":889808635,
+            "name":"COMPONENT_SMG_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_SMG_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for SMG."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2637152041":{
+            "hash":2637152041,
+            "name":"COMPONENT_AT_SCOPE_MACRO",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_MAC",
+            "displayDescription":"WCD_SCOPE_MAC",
+            "localizedName":"Scope",
+            "localizedDescription":"Standard-range zoom functionality."
+         },
+         "3271853210":{
+            "hash":3271853210,
+            "name":"COMPONENT_AT_PI_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_PI_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "2043113590":{
+            "hash":2043113590,
+            "name":"COMPONENT_SMG_CLIP_03",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_DRM",
+            "displayDescription":"WCD_CLIP_DRM",
+            "localizedName":"Drum Magazine",
+            "localizedDescription":""
+         },
+         "1019656791":{
+            "hash":1019656791,
+            "name":"COMPONENT_AT_SCOPE_MACRO_02",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_MAC",
+            "displayDescription":"WCD_SCOPE_MAC",
+            "localizedName":"Scope",
+            "localizedDescription":"Standard-range zoom functionality."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "663170192":{
+            "hash":663170192,
+            "name":"COMPONENT_SMG_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_GOLD",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-270015777":{
+      "hash":4024951519,
+      "model":-473574177,
+      "name":"WEAPON_ASSAULTSMG",
+      "displayName":"WT_SMG_ASL",
+      "displayDescription":"WTD_SMG_ASL",
+      "localizedName":"Assault SMG",
+      "localizedDescription":"A high-capacity submachine gun that is both compact and lightweight. Holds up to 30 bullets in one magazine.",
+      "type":"SMG",
+      "components":{
+         "2366834608":{
+            "hash":2366834608,
+            "name":"COMPONENT_ASSAULTSMG_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_INVALID",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Invalid Attachment Weapon Description."
+         },
+         "3141985303":{
+            "hash":3141985303,
+            "name":"COMPONENT_ASSAULTSMG_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_INVALID",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Invalid Attachment Weapon Description."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2637152041":{
+            "hash":2637152041,
+            "name":"COMPONENT_AT_SCOPE_MACRO",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_MAC",
+            "displayDescription":"WCD_SCOPE_MAC",
+            "localizedName":"Scope",
+            "localizedDescription":"Standard-range zoom functionality."
+         },
+         "2805810788":{
+            "hash":2805810788,
+            "name":"COMPONENT_AT_AR_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP2",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "663517359":{
+            "hash":663517359,
+            "name":"COMPONENT_ASSAULTSMG_VARMOD_LOWRIDER",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_GOLD",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-1074790547":{
+      "hash":3220176749,
+      "model":273925117,
+      "name":"WEAPON_ASSAULTRIFLE",
+      "displayName":"WT_RIFLE_ASL",
+      "displayDescription":"WTD_RIFLE_ASL",
+      "localizedName":"Assault Rifle",
+      "localizedDescription":"This standard assault rifle boasts a large capacity magazine and long distance accuracy.",
+      "type":"AssaultRifle",
+      "components":{
+         "3193891350":{
+            "hash":3193891350,
+            "name":"COMPONENT_ASSAULTRIFLE_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_AR_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Assault Rifle."
+         },
+         "2971750299":{
+            "hash":2971750299,
+            "name":"COMPONENT_ASSAULTRIFLE_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_AR_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Assault Rifle."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2637152041":{
+            "hash":2637152041,
+            "name":"COMPONENT_AT_SCOPE_MACRO",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_MAC",
+            "displayDescription":"WCD_SCOPE_MAC",
+            "localizedName":"Scope",
+            "localizedDescription":"Standard-range zoom functionality."
+         },
+         "2805810788":{
+            "hash":2805810788,
+            "name":"COMPONENT_AT_AR_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP2",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "3689981245":{
+            "hash":3689981245,
+            "name":"COMPONENT_ASSAULTRIFLE_CLIP_03",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_DRM",
+            "displayDescription":"WCD_CLIP_DRM",
+            "localizedName":"Drum Magazine",
+            "localizedDescription":""
+         },
+         "1319990579":{
+            "hash":1319990579,
+            "name":"COMPONENT_ASSAULTRIFLE_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_GOLD",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-2084633992":{
+      "hash":2210333304,
+      "model":1026431720,
+      "name":"WEAPON_CARBINERIFLE",
+      "displayName":"WT_RIFLE_CBN",
+      "displayDescription":"WTD_RIFLE_CBN",
+      "localizedName":"Carbine Rifle",
+      "localizedDescription":"Combining long distance accuracy with a high-capacity magazine, the carbine rifle can be relied on to make the hit.",
+      "type":"AssaultRifle",
+      "components":{
+         "2680042476":{
+            "hash":2680042476,
+            "name":"COMPONENT_CARBINERIFLE_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_CR_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Carbine Rifle."
+         },
+         "2433783441":{
+            "hash":2433783441,
+            "name":"COMPONENT_CARBINERIFLE_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_CR_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Carbine Rifle."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "1967214384":{
+            "hash":1967214384,
+            "name":"COMPONENT_AT_RAILCOVER_01",
+            "attachmentPoint":"Rail",
+            "displayName":"WCT_RAIL",
+            "displayDescription":"WCD_AT_RAIL",
+            "localizedName":"",
+            "localizedDescription":""
+         },
+         "2698550338":{
+            "hash":2698550338,
+            "name":"COMPONENT_AT_SCOPE_MEDIUM",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_LRG",
+            "displayDescription":"WCD_SCOPE_LRG",
+            "localizedName":"Scope",
+            "localizedDescription":"Long-range zoom functionality."
+         },
+         "2205435306":{
+            "hash":2205435306,
+            "name":"COMPONENT_AT_AR_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "3127044405":{
+            "hash":3127044405,
+            "name":"COMPONENT_CARBINERIFLE_CLIP_03",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP_BOX",
+            "displayDescription":"WCD_CLIP_BOX",
+            "localizedName":"Box Magazine",
+            "localizedDescription":""
+         },
+         "3634075224":{
+            "hash":3634075224,
+            "name":"COMPONENT_CARBINERIFLE_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_GOLD",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-1357824103":{
+      "hash":2937143193,
+      "model":-1707584974,
+      "name":"WEAPON_ADVANCEDRIFLE",
+      "displayName":"WT_RIFLE_ADV",
+      "displayDescription":"WTD_RIFLE_ADV",
+      "localizedName":"Advanced Rifle",
+      "localizedDescription":"The most lightweight and compact of all assault rifles, without compromising accuracy and rate of fire.",
+      "type":"AssaultRifle",
+      "components":{
+         "4203716879":{
+            "hash":4203716879,
+            "name":"COMPONENT_ADVANCEDRIFLE_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_AR_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Assault Rifle."
+         },
+         "2395064697":{
+            "hash":2395064697,
+            "name":"COMPONENT_ADVANCEDRIFLE_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_AR_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Assault Rifle."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2855028148":{
+            "hash":2855028148,
+            "name":"COMPONENT_AT_SCOPE_SMALL",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_SCOPE_SML",
+            "displayDescription":"WCD_SCOPE_SML",
+            "localizedName":"Scope",
+            "localizedDescription":"Medium-range zoom functionality."
+         },
+         "2205435306":{
+            "hash":2205435306,
+            "name":"COMPONENT_AT_AR_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "930927479":{
+            "hash":930927479,
+            "name":"COMPONENT_ADVANCEDRIFLE_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_METAL",
+            "displayDescription":"WCD_VAR_METAL",
+            "localizedName":"Gilded Gun Metal Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-1660422300":{
+      "hash":2634544996,
+      "model":-2056364402,
+      "name":"WEAPON_MG",
+      "displayName":"WT_MG",
+      "displayDescription":"WTD_MG",
+      "localizedName":"MG",
+      "localizedDescription":"General purpose machine gun that combines rugged design with dependable performance. Long range penetrative power. Very effective against large groups.",
+      "type":"MG",
+      "components":{
+         "4097109892":{
+            "hash":4097109892,
+            "name":"COMPONENT_MG_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_MG_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for MG."
+         },
+         "2182449991":{
+            "hash":2182449991,
+            "name":"COMPONENT_MG_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_MG_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for MG."
+         },
+         "2855028148":{
+            "hash":2855028148,
+            "name":"COMPONENT_AT_SCOPE_SMALL",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_SCOPE_SML",
+            "displayDescription":"WCD_SCOPE_SML",
+            "localizedName":"Scope",
+            "localizedDescription":"Medium-range zoom functionality."
+         },
+         "1006677997":{
+            "hash":1006677997,
+            "name":"COMPONENT_AT_SCOPE_SMALL_02",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_SML",
+            "displayDescription":"WCD_SCOPE_SML",
+            "localizedName":"Scope",
+            "localizedDescription":"Medium-range zoom functionality."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "3604658878":{
+            "hash":3604658878,
+            "name":"COMPONENT_MG_VARMOD_LOWRIDER",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_GOLD",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "2144741730":{
+      "hash":2144741730,
+      "model":-739394447,
+      "name":"WEAPON_COMBATMG",
+      "displayName":"WT_MG_CBT",
+      "displayDescription":"WTD_MG_CBT",
+      "localizedName":"Combat MG",
+      "localizedDescription":"Lightweight, compact machine gun that combines excellent maneuverability with a high rate of fire to devastating effect.",
+      "type":"MG",
+      "components":{
+         "3791631178":{
+            "hash":3791631178,
+            "name":"COMPONENT_COMBATMG_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCDCMG_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Combat MG."
+         },
+         "3603274966":{
+            "hash":3603274966,
+            "name":"COMPONENT_COMBATMG_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCDCMG_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Combat MG."
+         },
+         "2698550338":{
+            "hash":2698550338,
+            "name":"COMPONENT_AT_SCOPE_MEDIUM",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_LRG",
+            "displayDescription":"WCD_SCOPE_LRG",
+            "localizedName":"Scope",
+            "localizedDescription":"Long-range zoom functionality."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "2466172125":{
+            "hash":2466172125,
+            "name":"COMPONENT_COMBATMG_VARMOD_LOWRIDER",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_ETCHM",
+            "displayDescription":"WCD_VAR_ETCHM",
+            "localizedName":"Etched Gun Metal Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "487013001":{
+      "hash":487013001,
+      "model":689760839,
+      "name":"WEAPON_PUMPSHOTGUN",
+      "displayName":"WT_SG_PMP",
+      "displayDescription":"WTD_SG_PMP",
+      "localizedName":"Pump Shotgun",
+      "localizedDescription":"Standard shotgun ideal for short-range combat. A high-projectile spread makes up for its lower accuracy at long range.",
+      "type":"Shotgun",
+      "components":{
+         "3513717816":{
+            "hash":3513717816,
+            "name":"COMPONENT_PUMPSHOTGUN_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_INVALID",
+            "displayDescription":"WCD_INVALID",
+            "localizedName":"",
+            "localizedDescription":"Invalid Attachment Weapon Description."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "3859329886":{
+            "hash":3859329886,
+            "name":"COMPONENT_AT_SR_SUPP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_SR_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "2732039643":{
+            "hash":2732039643,
+            "name":"COMPONENT_PUMPSHOTGUN_VARMOD_LOWRIDER",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_GOLD",
+            "displayDescription":"WCD_VAR_GOLD",
+            "localizedName":"Yusuf Amir Luxury Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "2017895192":{
+      "hash":2017895192,
+      "model":-675841386,
+      "name":"WEAPON_SAWNOFFSHOTGUN",
+      "displayName":"WT_SG_SOF",
+      "displayDescription":"WTD_SG_SOF",
+      "localizedName":"Sawed-Off Shotgun",
+      "localizedDescription":"This single-barrel, sawed-off shotgun compensates for its low range and ammo capacity with devastating efficiency in close combat.",
+      "type":"Shotgun",
+      "components":{
+         "3352699429":{
+            "hash":3352699429,
+            "name":"COMPONENT_SAWNOFFSHOTGUN_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_INVALID",
+            "displayDescription":"WCD_INVALID",
+            "localizedName":"",
+            "localizedDescription":"Invalid Attachment Weapon Description."
+         },
+         "2242268665":{
+            "hash":2242268665,
+            "name":"COMPONENT_SAWNOFFSHOTGUN_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_METAL",
+            "displayDescription":"WCD_VAR_METAL",
+            "localizedName":"Gilded Gun Metal Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "-494615257":{
+      "hash":3800352039,
+      "model":1255410010,
+      "name":"WEAPON_ASSAULTSHOTGUN",
+      "displayName":"WT_SG_ASL",
+      "displayDescription":"WTD_SG_ASL",
+      "localizedName":"Assault Shotgun",
+      "localizedDescription":"Fully automatic shotgun with 8 round magazine and high rate of fire.",
+      "type":"Shotgun",
+      "components":{
+         "2498239431":{
+            "hash":2498239431,
+            "name":"COMPONENT_ASSAULTSHOTGUN_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_AS_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":"Standard capacity for Assault Shotgun."
+         },
+         "2260565874":{
+            "hash":2260565874,
+            "name":"COMPONENT_ASSAULTSHOTGUN_CLIP_02",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP2",
+            "displayDescription":"WCD_AS_CLIP2",
+            "localizedName":"Extended Clip",
+            "localizedDescription":"Extended capacity for Assault Shotgun."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2205435306":{
+            "hash":2205435306,
+            "name":"COMPONENT_AT_AR_SUPP",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         }
+      }
+   },
+   "-1654528753":{
+      "hash":2640438543,
+      "model":-1598212834,
+      "name":"WEAPON_BULLPUPSHOTGUN",
+      "displayName":"WT_SG_BLP",
+      "displayDescription":"WTD_SG_BLP",
+      "localizedName":"Bullpup Shotgun",
+      "localizedDescription":"More than makes up for its slow, pump-action rate of fire with its range and spread.  Decimates anything in its projectile path.",
+      "type":"Shotgun",
+      "components":{
+         "3377353998":{
+            "hash":3377353998,
+            "name":"COMPONENT_BULLPUPSHOTGUN_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_INVALID",
+            "displayDescription":"WCD_INVALID",
+            "localizedName":"",
+            "localizedDescription":"Invalid Attachment Weapon Description."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "2805810788":{
+            "hash":2805810788,
+            "name":"COMPONENT_AT_AR_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP2",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         }
+      }
+   },
+   "911657153":{
+      "hash":911657153,
+      "model":1609356763,
+      "name":"WEAPON_STUNGUN",
+      "displayName":"WT_STUN",
+      "displayDescription":"WTD_STUN",
+      "localizedName":"Stun Gun",
+      "localizedDescription":"Fires a projectile that administers a voltage capable of temporarily stunning an assailant. Takes approximately 4 seconds to recharge after firing.",
+      "type":"Stungun",
+      "components":{
+
+      }
+   },
+   "100416529":{
+      "hash":100416529,
+      "model":346403307,
+      "name":"WEAPON_SNIPERRIFLE",
+      "displayName":"WT_SNIP_RIF",
+      "displayDescription":"WTD_SNIP_RIF",
+      "localizedName":"Sniper Rifle",
+      "localizedDescription":"Standard sniper rifle. Ideal for situations that require accuracy at long range. Limitations include slow reload speed and very low rate of fire.",
+      "type":"Sniper",
+      "components":{
+         "2613461129":{
+            "hash":2613461129,
+            "name":"COMPONENT_SNIPERRIFLE_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_SR_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":""
+         },
+         "2805810788":{
+            "hash":2805810788,
+            "name":"COMPONENT_AT_AR_SUPP_02",
+            "attachmentPoint":"Supp",
+            "displayName":"WCT_SUPP",
+            "displayDescription":"WCD_AR_SUPP2",
+            "localizedName":"Suppressor",
+            "localizedDescription":"Reduces noise and muzzle flash."
+         },
+         "3527687644":{
+            "hash":3527687644,
+            "name":"COMPONENT_AT_SCOPE_LARGE",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_LRG",
+            "displayDescription":"WCD_SCOPE_LRG",
+            "localizedName":"Scope",
+            "localizedDescription":"Long-range zoom functionality."
+         },
+         "3159677559":{
+            "hash":3159677559,
+            "name":"COMPONENT_AT_SCOPE_MAX",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_MAX",
+            "displayDescription":"WCD_SCOPE_MAX",
+            "localizedName":"Advanced Scope",
+            "localizedDescription":"Maximum zoom functionality."
+         },
+         "1077065191":{
+            "hash":1077065191,
+            "name":"COMPONENT_SNIPERRIFLE_VARMOD_LUXE",
+            "attachmentPoint":"GunRoot",
+            "displayName":"WCT_VAR_WOOD",
+            "displayDescription":"WCD_VAR_WOOD",
+            "localizedName":"Etched Wood Grip Finish",
+            "localizedDescription":""
+         }
+      }
+   },
+   "205991906":{
+      "hash":205991906,
+      "model":-746966080,
+      "name":"WEAPON_HEAVYSNIPER",
+      "displayName":"WT_SNIP_HVY",
+      "displayDescription":"WTD_SNIP_HVY",
+      "localizedName":"Heavy Sniper",
+      "localizedDescription":"Features armor-piercing rounds for heavy damage. Comes with laser scope as standard.",
+      "type":"Sniper",
+      "components":{
+         "1198478068":{
+            "hash":1198478068,
+            "name":"COMPONENT_HEAVYSNIPER_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_CLIP1",
+            "displayDescription":"WCD_HS_CLIP1",
+            "localizedName":"Default Clip",
+            "localizedDescription":""
+         },
+         "3527687644":{
+            "hash":3527687644,
+            "name":"COMPONENT_AT_SCOPE_LARGE",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_LRG",
+            "displayDescription":"WCD_SCOPE_LRG",
+            "localizedName":"Scope",
+            "localizedDescription":"Long-range zoom functionality."
+         },
+         "3159677559":{
+            "hash":3159677559,
+            "name":"COMPONENT_AT_SCOPE_MAX",
+            "attachmentPoint":"Scope",
+            "displayName":"WCT_SCOPE_MAX",
+            "displayDescription":"WCD_SCOPE_MAX",
+            "localizedName":"Advanced Scope",
+            "localizedDescription":"Maximum zoom functionality."
+         }
+      }
+   },
+   "-1568386805":{
+      "hash":2726580491,
+      "model":-606683246,
+      "name":"WEAPON_GRENADELAUNCHER",
+      "displayName":"WT_GL",
+      "displayDescription":"WTD_GL",
+      "localizedName":"Grenade Launcher",
+      "localizedDescription":"A compact, lightweight grenade launcher with semi-automatic functionality. Holds up to 10 rounds.",
+      "type":"Heavy",
+      "components":{
+         "296639639":{
+            "hash":296639639,
+            "name":"COMPONENT_GRENADELAUNCHER_CLIP_01",
+            "attachmentPoint":"Grip",
+            "displayName":"WCT_INVALID",
+            "displayDescription":"WCD_INVALID",
+            "localizedName":"",
+            "localizedDescription":"Invalid Attachment Weapon Description."
+         },
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "2855028148":{
+            "hash":2855028148,
+            "name":"COMPONENT_AT_SCOPE_SMALL",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_SCOPE_SML",
+            "displayDescription":"WCD_SCOPE_SML",
+            "localizedName":"Scope",
+            "localizedDescription":"Medium-range zoom functionality."
+         }
+      }
+   },
+   "1305664598":{
+      "hash":1305664598,
+      "model":-606683246,
+      "name":"WEAPON_GRENADELAUNCHER_SMOKE",
+      "displayName":"WT_GL_SMOKE",
+      "displayDescription":"WTD_GL_SMOKE",
+      "localizedName":"Tear Gas Launcher",
+      "localizedDescription":"",
+      "type":"Heavy",
+      "components":{
+         "2076495324":{
+            "hash":2076495324,
+            "name":"COMPONENT_AT_AR_FLSH",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_FLASH",
+            "displayDescription":"WCD_FLASH",
+            "localizedName":"Flashlight",
+            "localizedDescription":"Aids low light target acquisition."
+         },
+         "202788691":{
+            "hash":202788691,
+            "name":"COMPONENT_AT_AR_AFGRIP",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_GRIP",
+            "displayDescription":"WCD_GRIP",
+            "localizedName":"Grip",
+            "localizedDescription":"Improves weapon accuracy."
+         },
+         "2855028148":{
+            "hash":2855028148,
+            "name":"COMPONENT_AT_SCOPE_SMALL",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_SCOPE_SML",
+            "displayDescription":"WCD_SCOPE_SML",
+            "localizedName":"Scope",
+            "localizedDescription":"Medium-range zoom functionality."
+         }
+      }
+   },
+   "-1312131151":{
+      "hash":2982836145,
+      "model":-218858073,
+      "name":"WEAPON_RPG",
+      "displayName":"WT_RPG",
+      "displayDescription":"WTD_RPG",
+      "localizedName":"RPG",
+      "localizedDescription":"A portable, shoulder-launched, anti-tank weapon that fires explosive warheads. Very effective for taking down vehicles or large groups of assailants.",
+      "type":"Heavy",
+      "components":{
+         "1319465907":{
+            "hash":1319465907,
+            "name":"COMPONENT_RPG_CLIP_01",
+            "attachmentPoint":"Invalid",
+            "displayName":"WCT_INVALID",
+            "displayDescription":"WCD_INVALID",
+            "localizedName":"",
+            "localizedDescription":"Invalid Attachment Weapon Description."
+         }
+      }
+   },
+   "1119849093":{
+      "hash":1119849093,
+      "model":422658457,
+      "name":"WEAPON_MINIGUN",
+      "displayName":"WT_MINIGUN",
+      "displayDescription":"WTD_MINIGUN",
+      "localizedName":"Minigun",
+      "localizedDescription":"A devastating 6-barrel machine gun that features Gatling-style rotating barrels. Very high rate of fire (2000 to 6000 rounds per minute).",
+      "type":"Heavy",
+      "components":{
+         "3370020614":{
+            "hash":3370020614,
+            "name":"COMPONENT_MINIGUN_CLIP_01",
+            "attachmentPoint":"Clip",
+            "displayName":"WCT_INVALID",
+            "displayDescription":"WCD_INVALID",
+            "localizedName":"",
+            "localizedDescription":"Invalid Attachment Weapon Description."
+         }
+      }
+   },
+   "-1813897027":{
+      "hash":2481070269,
+      "model":290600267,
+      "name":"WEAPON_GRENADE",
+      "displayName":"WT_GNADE",
+      "displayDescription":"WTD_GNADE",
+      "localizedName":"Grenade",
+      "localizedDescription":"Standard fragmentation grenade. Pull pin, throw, then find cover. Ideal for eliminating clustered assailants.",
+      "type":"Thrown",
+      "components":{
+
+      }
+   },
+   "741814745":{
+      "hash":741814745,
+      "model":-1110203649,
+      "name":"WEAPON_STICKYBOMB",
+      "displayName":"WT_GNADE_STK",
+      "displayDescription":"WTD_GNADE_STK",
+      "localizedName":"Sticky Bomb",
+      "localizedDescription":"A plastic explosive charge fitted with a remote detonator. Can be thrown and then detonated or attached to a vehicle then detonated.",
+      "type":"Thrown",
+      "components":{
+
+      }
+   },
+   "-37975472":{
+      "hash":4256991824,
+      "model":1591549914,
+      "name":"WEAPON_SMOKEGRENADE",
+      "displayName":"WT_GNADE_SMK",
+      "displayDescription":"WTD_GNADE_SMK",
+      "localizedName":"Tear Gas",
+      "localizedDescription":"Tear gas grenade, particularly effective at incapacitating multiple assailants. Sustained exposure can be lethal.",
+      "type":"Thrown",
+      "components":{
+
+      }
+   },
+   "-1600701090":{
+      "hash":2694266206,
+      "model":1591549914,
+      "name":"WEAPON_BZGAS",
+      "displayName":"WT_BZGAS",
+      "displayDescription":"WTD_BZGAS",
+      "localizedName":"BZ Gas",
+      "localizedDescription":"",
+      "type":"Thrown",
+      "components":{
+
+      }
+   },
+   "615608432":{
+      "hash":615608432,
+      "model":-880609331,
+      "name":"WEAPON_MOLOTOV",
+      "displayName":"WT_MOLOTOV",
+      "displayDescription":"WTD_MOLOTOV",
+      "localizedName":"Molotov",
+      "localizedDescription":"Crude yet highly effective incendiary weapon. No happy hour with this cocktail.",
+      "type":"Thrown",
+      "components":{
+
+      }
+   },
+   "101631238":{
+      "hash":101631238,
+      "model":-171327159,
+      "name":"WEAPON_FIREEXTINGUISHER",
+      "displayName":"WT_FIRE",
+      "displayDescription":"WTD_FIRE",
+      "localizedName":"Fire Extinguisher",
+      "localizedDescription":"",
+      "type":"FireExtinguisher",
+      "components":{
+
+      }
+   },
+   "883325847":{
+      "hash":883325847,
+      "model":242383520,
+      "name":"WEAPON_PETROLCAN",
+      "displayName":"WT_PETROL",
+      "displayDescription":"WTD_PETROL",
+      "localizedName":"Jerry Can",
+      "localizedDescription":"Leaves a trail of gasoline that can be ignited.",
+      "type":"PetrolCan",
+      "components":{
+
+      }
+   },
+   "-1491061156":{
+      "hash":2803906140,
+      "model":0,
+      "name":"GADGET_NIGHTVISION",
+      "displayName":"WT_NV",
+      "displayDescription":"WTD_NV",
+      "localizedName":"Nightvision Goggles",
+      "localizedDescription":"",
+      "type":"NightVision",
+      "components":{
+
+      }
+   },
+   "-72657034":{
+      "hash":4222310262,
+      "model":0,
+      "name":"GADGET_PARACHUTE",
+      "displayName":"WT_PARA",
+      "displayDescription":"WTD_PARA",
+      "localizedName":"Parachute",
+      "localizedDescription":"This nylon sports parachute features a ram-air parafoil design for increased control over direction and speed.",
+      "type":"Parachute",
+      "components":{
+
+      }
+   },
+   "600439132":{
+      "hash":600439132,
+      "model":-383950123,
+      "name":"WEAPON_BALL",
+      "displayName":"WT_BALL",
+      "displayDescription":"WTD_BALL",
+      "localizedName":"Ball",
+      "localizedDescription":"",
+      "type":"Thrown",
+      "components":{
+
+      }
+   },
+   "1233104067":{
+      "hash":1233104067,
+      "model":-1564193152,
+      "name":"WEAPON_FLARE",
+      "displayName":"WT_FLARE",
+      "displayDescription":"WTD_FLARE",
+      "localizedName":"Flare",
+      "localizedDescription":"",
+      "type":"Thrown",
+      "components":{
+
+      }
+   }
+}

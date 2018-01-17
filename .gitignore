@@ -1,0 +1,10 @@
+*.lnk
+*.bat
+*.sh
+*.config
+log
+errors
+CitizenMP.Server.exe
+CitizenMP.Server.exe.config
+NLog.config
+/cache/

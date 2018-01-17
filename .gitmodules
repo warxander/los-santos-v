@@ -1,0 +1,6 @@
+[submodule "resources/mysql-async"]
+	path = resources/mysql-async
+	url = https://github.com/brouznouf/fivem-mysql-async
+[submodule "resources/warmenu"]
+	path = resources/warmenu
+	url = https://github.com/adikanchukov/warmenu
