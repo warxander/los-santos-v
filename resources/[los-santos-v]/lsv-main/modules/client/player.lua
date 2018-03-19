@@ -50,6 +50,8 @@ function Player.GetPlayerWeapons()
 				end
 			end
 
+			playerWeapon.tintIndex = GetPedWeaponTintIndex(player, weaponHash)
+
 			table.insert(result, playerWeapon)
 		end
 	end
@@ -62,13 +64,17 @@ function Player.GiveWeapons(weapons)
 	local player = PlayerPedId()
 
 	for _, weapon in pairs(weapons) do
-		GiveWeaponToPed(player, GetHashKey(weapon.id), weapon.ammo, false, weapon.selected or false)
+		local weaponHash = GetHashKey(weapon.id)
+
+		GiveWeaponToPed(player, weaponHash, weapon.ammo, false, weapon.selected or false)
 
 		for _, component in pairs(weapon.components) do
 			if component.owned then
 				GiveWeaponComponentToPed(player, GetHashKey(weapon.id), component.hash)
 			end
 		end
+
+		SetPedWeaponTintIndex(player, weaponHash, weapon.tintIndex)
 	end
 end
 
