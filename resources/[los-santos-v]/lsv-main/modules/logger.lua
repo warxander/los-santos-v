@@ -30,3 +30,9 @@ function Logger:Warning(message)
 end
 
 
+function Logger:Debug(message)
+	if not Settings.debug then return end
+	log("Debug", self.name, message)
+end
+
+
