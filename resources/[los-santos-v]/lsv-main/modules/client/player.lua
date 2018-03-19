@@ -134,11 +134,11 @@ function Player.SpawnVehicle(model, coords, name)
 	SetBlipColour(Player.vehicleBlip, 14)
 	SetBlipFlashes(Player.vehicleBlip, true)
 
-   if name then
-      BeginTextCommandSetBlipName("STRING")
-      AddTextComponentSubstringPlayerName(name..' (Personal)')
-      EndTextCommandSetBlipName(Player.vehicleBlip)
-   end
+	if name then
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentSubstringPlayerName(name..' (Personal)')
+		EndTextCommandSetBlipName(Player.vehicleBlip)
+	end
 
 	SetTimeout(5000, function()
 		if Player.vehicleBlip then
@@ -151,8 +151,8 @@ end
 function Player.Teleport(position)
 	local playerPed = PlayerPedId()
 
-    ClearPedTasksImmediately(playerPed)
-    SetEntityCoords(playerPed, position.x, position.y, position.z)
+	ClearPedTasksImmediately(playerPed)
+	SetEntityCoords(playerPed, position.x, position.y, position.z)
 
 	RequestCollisionAtCoord(position.x, position.y, position.z)
 	while not HasCollisionLoadedAroundEntity(playerPed) do
