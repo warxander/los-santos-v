@@ -2,7 +2,7 @@ Logger = { }
 Logger.__index = Logger
 
 
-local function printLogMessage(level, name, message)
+local function log(level, name, message)
 	Citizen.Trace('['..os.date('%c')..'] ['..level..'] ['..name..'] '..tostring(message)..'\n')
 end
 
@@ -16,17 +16,17 @@ end
 
 
 function Logger:Info(message)
-	printLogMessage("Info", self.name, message)
+	log("Info", self.name, message)
 end
 
 
 function Logger:Error(message)
-	printLogMessage("Error", self.name, message)
+	log("Error", self.name, message)
 end
 
 
 function Logger:Warning(message)
-	printLogMessage("Warning", self.name, message)
+	log("Warning", self.name, message)
 end
 
 
