@@ -47,17 +47,15 @@ Settings.crateDropSettings = {
 	RP = 50,
 	weaponClipCount = 5,
 	weapons = {
-		--Heavy Weapons
 		{ id = "WEAPON_COMPACTLAUNCHER", name = "Compact Grenade Launcher" },
 		{ id = "WEAPON_GRENADELAUNCHER", name = "Grenade Launcher" },
 		{ id = "WEAPON_RPG", name = "Rocket Laucher" },
 		{ id = "WEAPON_HOMINGLAUNCHER", name = "Homing Laucher" },
 		{ id = "WEAPON_MINIGUN", name = "Minigun" },
-
-		--Sniper Rifles
 		{ id = "WEAPON_HEAVYSNIPER", name = "Heavy Sniper" },
 		{ id = "WEAPON_SNIPERRIFLE", name = "Sniper Rifle" },
 		{ id = "WEAPON_MARKSMANRIFLE", name = "Marksman Rifle" },
+		{ id = "WEAPON_DOUBLEACTION", name = "Double-Action Revolver" },
 	},
 	timeout = 300000,
 	positions = {
