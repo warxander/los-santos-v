@@ -20,6 +20,11 @@ end
 
 
 function Db.UpdateRP(player, RP, callback)
+	if RP == 0 then
+		if callback then callback() end
+		return
+	end
+
 	Db.UpdateValue(player, 'RP', RP, function()
 		if callback then callback() end
 		Scoreboard.UpdateRP(player, RP)
