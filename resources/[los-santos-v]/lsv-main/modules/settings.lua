@@ -99,6 +99,285 @@ Settings.crateDropSettings = {
 }
 
 
+-- Skins
+Settings.skins = {
+	["s_m_y_blackops_01"] = {
+		name = "Default",
+		RP = 0,
+	},
+
+
+
+	["csb_anita"] = {
+		name = "Anita Mendoza",
+		RP = 50000,
+	},
+
+	["csb_anton"] = {
+		name = "Anton Beaudelaire",
+		RP = 50000,
+	},
+
+	["ig_ashley"] = {
+		name = "Ashley Butler",
+		RP = 50000,
+	},
+
+	["ig_casey"] = {
+		name = "Casey",
+		RP = 50000,
+	},
+
+	["ig_clay"] = {
+		name = "Clay Simons",
+		RP = 50000,
+	},
+
+	["ig_clay"] = {
+		name = "Clay Simons",
+		RP = 50000,
+	},
+
+	["cs_debra"] = {
+		name = "Debra",
+		RP = 50000,
+	},
+
+	["csb_hugh"] = {
+		name = "Hugh Harrison",
+		RP = 50000,
+	},
+
+	["ig_jay_norris"] = {
+		name = "Jay Norris",
+		RP = 50000,
+	},
+
+	["cs_johnnyklebitz"] = {
+		name = "Johnny Klebitz",
+		RP = 50000,
+	},
+
+	["ig_karen_daniels"] = {
+		name = "Karen Daniels",
+		RP = 50000,
+	},
+
+	["ig_natalia"] = {
+		name = "Natalia Zverovna",
+		RP = 50000,
+	},
+
+	["ig_ortega"] = {
+		name = "Ortega",
+		RP = 50000,
+	},
+
+	["csb_oscar"] = {
+		name = "Oscar Guzman",
+		RP = 50000,
+	},
+
+	["ig_dreyfuss"] = {
+		name = "Peter Dreyfuss",
+		RP = 50000,
+	},
+
+	["ig_tanisha"] = {
+		name = "Tanisha Jackson",
+		RP = 50000,
+	},
+
+	["ig_terry"] = {
+		name = "Terry Thorpe",
+		RP = 50000,
+	},
+
+	["ig_terry"] = {
+		name = "Terry Thorpe",
+		RP = 50000,
+	},
+
+
+
+	["ig_andreas"] = {
+		name = "Andreas Sanchez",
+		RP = 125000,
+	},
+
+	["ig_taostranslator"] = {
+		name = "Cheng's translator",
+		RP = 125000,
+	},
+
+	["ig_denise"] = {
+		name = "Denise Clinton",
+		RP = 125000,
+	},
+
+	["ig_oneil"] = {
+		name = "Elwood O'Neil",
+		RP = 125000,
+	},
+
+	["ig_fabien"] = {
+		name = "Fabien LaRouche",
+		RP = 125000,
+	},
+
+	["ig_floyd"] = {
+		name = "Floyd Hebert",
+		RP = 125000,
+	},
+
+	["ig_drfriedlander"] = {
+		name = "Isiah Friedlander",
+		RP = 125000,
+	},
+
+	["ig_lazlow"] = {
+		name = "Lazlow Jones",
+		RP = 125000,
+	},
+
+	["ig_patricia"] = {
+		name = "Patricia Madrazo",
+		RP = 125000,
+	},
+
+	["ig_roccopelosi"] = {
+		name = "Rocco Pelosi",
+		RP = 125000,
+	},
+
+	["ig_siemonyetarian"] = {
+		name = "Simeon Yetarian",
+		RP = 125000,
+	},
+
+	["ig_taocheng"] = {
+		name = "Tao Cheng",
+		RP = 125000,
+	},
+
+
+
+	["ig_amandatownley"] = {
+		name = "Amanda De Santa",
+		RP = 250000,
+	},
+
+	["ig_jimmydisanto"] = {
+		name = "Jimmy De Santa",
+		RP = 250000,
+	},
+
+	["ig_tracydisanto"] = {
+		name = "Tracey De Santa",
+		RP = 250000,
+	},
+
+	["ig_brad"] = {
+		name = "Brad Snider",
+		RP = 250000,
+	},
+
+	["ig_stretch"] = {
+		name = "Stretch",
+		RP = 250000,
+	},
+
+	["ig_chengsr"] = {
+		name = "Wei Cheng",
+		RP = 250000,
+	},
+
+	["cs_martinmadrazo"] = {
+		name = "Martin Madrazo",
+		RP = 250000,
+	},
+
+	["ig_solomon"] = {
+		name = "Solomon Richards",
+		RP = 250000,
+	},
+
+	["ig_nervousron"] = {
+		name = "Ron Jakowski",
+		RP = 250000,
+	},
+
+	["ig_wade"] = {
+		name = "Wade Hebert",
+		RP = 250000,
+	},
+
+	["ig_molly"] = {
+		name = "Molly Schultz",
+		RP = 250000,
+	},
+
+
+
+	["ig_lestercrest"] = {
+		name = "Lester Crest",
+		RP = 500000,
+	},
+
+	["ig_davenorton"] = {
+		name = "Dave Norton",
+		RP = 500000,
+	},
+
+	["ig_lamardavis"] = {
+		name = "Lamar Devis",
+		RP = 500000,
+	},
+
+	["ig_lestercrest"] = {
+		name = "Lester Crest",
+		RP = 500000,
+	},
+
+	["ig_davenorton"] = {
+		name = "Dave Norton",
+		RP = 500000,
+	},
+
+	["ig_lamardavis"] = {
+		name = "Lamar Davis",
+		RP = 500000,
+	},
+
+	["ig_stevehains"] = {
+		name = "Steve Haines",
+		RP = 500000,
+	},
+
+	["ig_devin"] = {
+		name = "Devin Weston",
+		RP = 500000,
+	},
+
+
+
+	["player_zero"] = {
+		name = "Michael De Santa",
+		RP = 750000,
+	},
+
+	["player_one"] = {
+		name = "Franklin Clinton",
+		RP = 1000000,
+	},
+
+	["player_two"] = {
+		name = "Trevor Phillips",
+		RP = 1500000,
+	},
+}
+
+
 -- Bounties
 Settings.bountyEventTimeout = 180000
 Settings.bountyEventReward = 25

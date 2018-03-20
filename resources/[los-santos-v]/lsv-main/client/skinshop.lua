@@ -20,6 +20,12 @@ local skinshops = {
 local skinshopColor = Color.GetHudFromBlipColor(Color.Green)
 
 
+local function skinRP(id)
+	if id == Player.skin then return 'Used' end
+	return Settings.skins[id].RP..'RP'
+end
+
+
 function Skinshop.GetPlaces()
 	return skinshops
 end
@@ -30,22 +36,25 @@ AddEventHandler('lsv:init', function()
 		skinshop.blip = Map.CreatePlaceBlip(Blip.Clothes(), skinshop.x, skinshop.y, skinshop.z)
 	end
 
-	WarMenu.CreateMenu('skinshop', 'Select Your Skin')
-	WarMenu.SetSubTitle('skinshop', 'SKINS')
+	WarMenu.CreateMenu('skinshop', 'Profile')
+	WarMenu.SetSubTitle('skinshop', 'Select Your Character')
 	WarMenu.SetTitleBackgroundColor('skinshop', skinshopColor.r, skinshopColor.g, skinshopColor.b)
 	WarMenu.SetMenuButtonPressedSound('skinshop', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
+	local orderedSkins = { }
+	for k, v in pairs(Settings.skins) do
+		table.insert(orderedSkins, { key = k, value = v})
+	end
+
+	table.sort(orderedSkins, function(l, r)
+		return l.value.RP < r.value.RP
+	end)
+
 	while true do
 		if WarMenu.IsMenuOpened('skinshop') then
-			for _, skin in pairs(Skin.GetSkins()) do
-				local owned = nil
-				if skin == Player.skin then owned = 'Owned' end
-				if WarMenu.Button(skin, owned) then
-					if skin == Player.skin then
-						Gui.DisplayNotification('You have already selected this skin.')
-					else
-						TriggerServerEvent('lsv:updatePlayerSkin', skin)
-					end
+			for _, v in ipairs(orderedSkins) do
+				if WarMenu.Button(v.value.name, skinRP(v.key)) and v.key ~= Player.skin then
+					TriggerServerEvent('lsv:updatePlayerSkin', v.key)
 				end
 			end
 
@@ -68,7 +77,7 @@ AddEventHandler('lsv:init', function()
 
 			if Vdist(skinshop.x, skinshop.y, skinshop.z, table.unpack(GetEntityCoords(PlayerPedId(), true))) < Settings.placeMarkerRadius then
 				if not WarMenu.IsAnyMenuOpened() then
-					Gui.DisplayHelpTextThisFrame('Press ~INPUT_PICKUP~ to customize Skin.')
+					Gui.DisplayHelpTextThisFrame('Press ~INPUT_PICKUP~ to browse characters.')
 
 					if IsControlJustReleased(0, 38) then
 						skinshopOpenedMenuIndex = skinshopIndex
@@ -84,6 +93,7 @@ end)
 
 
 RegisterNetEvent('lsv:playerSkinUpdated')
-AddEventHandler('lsv:playerSkinUpdated', function(skin)
-	Skin.ChangePlayerSkin(skin)
+AddEventHandler('lsv:playerSkinUpdated', function(id)
+	if id then Skin.ChangePlayerSkin(id)
+	else Gui.DisplayNotification('~r~You don\'t have enough RP.') end
 end)
