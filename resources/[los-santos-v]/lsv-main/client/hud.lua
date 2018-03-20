@@ -61,13 +61,6 @@ AddEventHandler('lsv:onRPEarnedPerKill', function(RP)
 end)
 
 
-RegisterNetEvent('lsv:onRPLostPerDeath')
-AddEventHandler('lsv:onRPLostPerDeath', function(RP)
-	if RP == 0 then return end
-	Gui.DisplayNotification("- "..tostring(RP).."RP")
-end)
-
-
 -- GUI
 AddEventHandler('lsv:init', function()
 	while true do

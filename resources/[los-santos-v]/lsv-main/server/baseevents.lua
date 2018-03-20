@@ -24,12 +24,9 @@ end
 RegisterServerEvent('baseevents:onPlayerDied')
 AddEventHandler('baseevents:onPlayerDied', function()
 	local player = source
-
-	Db.UpdateRP(player, -Settings.RPPerDeath, function()
-		Db.UpdateDeaths(player, function()
-			Scoreboard.ResetKillstreak(player)
-			TriggerClientEvent('lsv:onPlayerDied', -1, player, true)
-		end)
+	Db.UpdateDeaths(player, function()
+		Scoreboard.ResetKillstreak(player)
+		TriggerClientEvent('lsv:onPlayerDied', -1, player, true)
 	end)
 end)
 
@@ -51,13 +48,11 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 		end)
 	end
 
-	Db.UpdateRP(victim, -Settings.RPPerDeath, function()
-		Db.UpdateDeaths(victim, function()
-			Scoreboard.ResetKillstreak(victim)
-			TriggerClientEvent('lsv:onRPLostPerDeath', victim, Settings.RPPerDeath)
+	Db.UpdateDeaths(victim, function()
+		Scoreboard.ResetKillstreak(victim)
 
-			if killer ~= -1 then return end
-			TriggerClientEvent('lsv:onPlayerDied', -1, victim)
-		end)
+		if killer ~= -1 then return end
+
+		TriggerClientEvent('lsv:onPlayerDied', -1, victim)
 	end)
 end)

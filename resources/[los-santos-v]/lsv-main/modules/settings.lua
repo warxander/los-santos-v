@@ -38,7 +38,6 @@ Settings.pickupMinDistance = 25
 
 -- RP
 Settings.RPPerKill = 2
-Settings.RPPerDeath = 1
 Settings.RPPerKillstreak = 1
 
 
