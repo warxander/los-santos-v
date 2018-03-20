@@ -21,7 +21,7 @@ end)
 AddEventHandler('baseevents:onPlayerKilled', function(killer)
 	local victim = source
 
-	if not bountyPlayerId or victim ~= bountyPlayerId then return end
+	if not bountyPlayerId or victim ~= bountyPlayerId or killer == -1 then return end
 
 	logger:Info('Killed { '..GetPlayerName(bountyPlayerId)..', '..bountyPlayerId..' }')
 
