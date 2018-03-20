@@ -36,16 +36,15 @@ Settings.pickupMaxSpawnRadius = 100
 Settings.pickupMinDistance = 25
 
 
--- Money
-Settings.moneyPerKill = 300
-Settings.moneyPerDeath = 100
-Settings.moneyPerKillstreak = 50
-Settings.repairPersonalVehiclePrice = 500
+-- RP
+Settings.RPPerKill = 2
+Settings.RPPerDeath = 1
+Settings.RPPerKillstreak = 1
 
 
 -- Crate Drops
 Settings.crateDropSettings = {
-	money = 5000,
+	RP = 50,
 	weaponClipCount = 5,
 	weapons = {
 		--Heavy Weapons
@@ -105,143 +104,4 @@ Settings.crateDropSettings = {
 
 -- Bounties
 Settings.bountyEventTimeout = 180000
-Settings.bountyEventReward = 2500
-
-
---Robberies
-Settings.robberySettings = {
-	store = {
-		hash = 'PICKUP_MONEY_PAPER_BAG',
-		money = { min = 2500, max = 5000 },
-		timeout = 300000,
-		wantedLevel = 2
-	},
-	bank = {
-		hash = 'PICKUP_MONEY_CASE',
-		money = { min = 7500, max = 15000 },
-		timeout = 600000,
-		wantedLevel = 4
-	},
-}
-
-
--- Vehicles
--- https://pastebin.com/dutqk6jb
-Settings.vehicleSettings = {
-	superCars = {
-		blipName = "Super",
-		blipSprite = Blip.PersonalVehicleCar(),
-		menuName = "vehicle_super",
-		vehicles = {
-			{ hash = "deluxo", name = "Imponte Deluxo", price = 3550 },
-			{ hash = "stromberg", name = "Ocelot Stromberg", price = 2395 },
-			{ hash = "vigilante", name = "Grotti Vigilante", price = 3750 },
-			{ hash = "sc1", name = "Übermacht SC1", price = 1600 },
-			{ hash = "autarch", name = "Överflöd Autarch", price = 1955 },
-			{ hash = "pfister811", name = "Pfister 811", price = 1135 },
-			{ hash = "adder", name = "Truffade Adder", price = 1000 },
-			{ hash = "banshee", name = "Bravado Banshee 900R", price = 565 },
-			{ hash = "bullet", name = "Bullet", price = 155 },
-			{ hash = "cheetah", name = "Cheetah", price = 650 },
-			{ hash = "fmj", name = "Vapid FMJ", price = 1750 },
-			{ hash = "infernus", name = "Infernus", price = 440 },
-			{ hash = "italigtb", name = "Itali GTB", price = 1189 },
-			{ hash = "nero", name = "Truffade Nero", price = 1440 },
-			{ hash = "osiris", name = "Pegassi Osiris", price = 1950 },
-			{ hash = "penetrator", name = "Penetrator", price = 880 },
-			{ hash = "le7b", name = "Annis RE-7B", price = 2475 },
-			{ hash = "reaper", name = "Pegassi Reaper", price = 1595 },
-			{ hash = "sultanrs", name = "Karin Sultan RS", price = 795 },
-			{ hash = "t20", name = "Progen T20", price = 2200 },
-			{ hash = "tempesta", name = "Pegassi Tempesta", price = 1329 },
-			{ hash = "turismor", name = "Grotti Turismo R", price = 500 },
-			{ hash = "tyrus", name = "Progen Tyrus", price = 2550 },
-			{ hash = "vacca", name = "Pegassi Vacca", price = 240 },
-			{ hash = "Sheava", name = "Emperor ETR1", price = 1995 },
-			{ hash = "prototipo", name = "Grotti X80 Proto", price = 2700 },
-			{ hash = "entityxf", name = "Överflöd Entity XF", price = 795 },
-			{ hash = "zentorno", name = "Pegassi Zentorno", price = 725 },
-		}
-	},
-	motorcycles = {
-		blipName = "Motocycles",
-		blipSprite = Blip.PersonalBikeCar(),
-		menuName = "vehicle_moto",
-		vehicles = {
-			{ hash = "akuma", name = "Dinka Akuma", price = 90 },
-			{ hash = "bagger", name = "Bagger", price = 160 },
-			{ hash = "bati", name = "Pegassi Bati 801", price = 150 },
-			{ hash = "bati2", name = "Pegassi Bati 801RR", price = 150 },
-			{ hash = "carbonrs", name = "Nagasaki Carbon RS", price = 400 },
-			{ hash = "daemon", name = "Daemon", price = 1450 },
-			{ hash = "double", name = "Dinka Double T", price = 120 },
-			{ hash = "faggio", name = "Faggio", price = 50 },
-			{ hash = "hexer", name = "Hexer", price = 150 },
-			{ hash = "nemesis", name = "Principe Nemesis", price = 120 },
-			{ hash = "pcj", name = "PCJ-600", price = 90 },
-			{ hash = "ruffian", name = "Pegassi Ruffian", price = 90 },
-			{ hash = "sanchez", name = "Sanchez", price = 80 },
-			{ hash = "vader", name = "Shitzu Vader", price = 90 },
-		}
-	},
-	helicopters = {
-		blipName = "Helicopters",
-		blipSprite = Blip.Helicopter(),
-		menuName = "vehicle_heli",
-		vehicles = {
-			{ hash = "hunter", name = "FH-1 Hunter", price = 3100 },
-			{ hash = "akula", name = "Akula", price = 2785 },
-			{ hash = "buzzard", name = "Buzzard", price = 1500 },
-			{ hash = "savage", name = "Savage", price = 1950 },
-			{ hash = "annihilator", name = "Annihilator", price = 1825 },
-		}
-	},
-	planes = {
-		blipName = "Planes",
-		blipSprite = Blip.Plane(),
-		menuName = "vehicle_planes",
-		vehicles = {
-			{ hash = "starling", name = "LF-22 Starling", price = 2750 },
-			{ hash = "pyro", name = "Buckingham Pyro", price = 3350 },
-			{ hash = "mogul", name = "Mammoth Mogul", price = 3125 },
-			{ hash = "avenger2", name = "Mammoth Avenger", price = 4785 },
-			{ hash = "bombushka", name = "RM-10 Bombushka", price = 4450 },
-			{ hash = "volatol", name = "Volatol", price = 2800 },
-			{ hash = "deluxo", name = "Imponte Deluxo", price = 3550 },
-			{ hash = "hydra", name = "Hydra", price = 3000 },
-			{ hash = "lazer", name = "Jobuilt P-996 LAZER", price = 6500 },
-		}
-	},
-	boats = {
-		blipName = "Boats",
-		blipSprite = Blip.Boat(),
-		menuName = "vehicle_boats",
-		vehicles = {
-			{ hash = "stromberg", name = "Ocelot Stromberg", price = 2395 },
-			{ hash = "dinghy", name = "Dinghy", price = 125 },
-			{ hash = "jetmax", name = "Cuban Jetmax", price = 299 },
-			{ hash = "submersible", name = "Submersible", price = 1 },
-			{ hash = "marquis", name = "Marquis", price = 414 },
-			{ hash = "seashark", name = "Speedophile Seashark", price = 169 },
-			{ hash = "speeder", name = "Speeder", price = 325 },
-			{ hash = "squalo", name = "Squalo", price = 197 },
-			{ hash = "suntrap", name = "Shitzu Suntrap", price = 256 },
-			{ hash = "toro", name = "Lampadati Toro", price = 1750 },
-			{ hash = "tropic", name = "Tropic", price = 220 },
-			{ hash = "tug", name = "Tug", price = 1250 },
-		}
-	},
-	military = {
-		blipName = "Military",
-		blipSprite = Blip.GunCar(),
-		menuName = "vehicle_military",
-		vehicles = {
-			{ hash = "thruster", name = "Mammoth Thruster", price = 2750 },
-			{ hash = "khanjali", name = "TM-02 Khanjali", price = 28950 },
-			{ hash = "vigilante", name = "Grotti Vigilante", price = 3750 },
-			{ hash = "barrage", name = "HVY Barrage", price = 1595 },
-			{ hash = "chernobog", name = "HVY Chernobog", price = 2490 },
-			{ hash = "rhino", name = "Rhino Tank", price = 15000 },
-		}
-	},
-}
+Settings.bountyEventReward = 25

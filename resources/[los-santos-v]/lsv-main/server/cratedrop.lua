@@ -28,9 +28,9 @@ AddEventHandler('lsv:cratePickedUp', function()
 
 	logger:Info('Picked up by player { '..player..' }')
 
-	Db.UpdateMoney(player, Settings.crateDropSettings.money, function()
+	Db.UpdateRP(player, Settings.crateDropSettings.RP, function()
 		crateDropData = nil
-		TriggerClientEvent('lsv:removeCrate', -1, player, Settings.crateDropSettings.weaponClipCount, Settings.crateDropSettings.money)
+		TriggerClientEvent('lsv:removeCrate', -1, player, Settings.crateDropSettings.weaponClipCount, Settings.crateDropSettings.RP)
 	end)
 end)
 

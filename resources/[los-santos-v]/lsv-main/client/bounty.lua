@@ -11,11 +11,10 @@ AddEventHandler('lsv:setBounty', function(bountyServerPlayerId)
 
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 
-	local bountyReward = '$'..tostring(math.floor(Settings.bountyEventReward))
 	if GetPlayerServerId(PlayerId()) == BountyPlayerId then
-		Gui.DisplayNotification('Watch out, someone has put a Bounty of '..bountyReward..' on you.', 'CHAR_LESTER_DEATHWISH', 'Unknown')
+		Gui.DisplayNotification('Watch out, someone has put a Bounty on you.', 'CHAR_LESTER_DEATHWISH', 'Unknown')
 	else
-		Gui.DisplayNotification('A Bounty of '..bountyReward..' has been set on '..Gui.GetPlayerName(BountyPlayerId, '~p~'))
+		Gui.DisplayNotification('A Bounty has been set on '..Gui.GetPlayerName(BountyPlayerId, '~p~'))
 	end
 end)
 

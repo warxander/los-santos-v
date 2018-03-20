@@ -92,7 +92,7 @@ end)
 
 
 RegisterNetEvent('lsv:removeCrate')
-AddEventHandler('lsv:removeCrate', function(player, weaponClipCount, money)
+AddEventHandler('lsv:removeCrate', function(player, weaponClipCount, RP)
 	if PlayerId() ~= GetPlayerFromServerId(player) then
 		Gui.DisplayNotification(Gui.GetPlayerName(player, '~y~')..' picked up Special Crate.')
 	else
@@ -103,7 +103,7 @@ AddEventHandler('lsv:removeCrate', function(player, weaponClipCount, money)
 		local weaponHash = GetHashKey(weapon.id)
 		GiveWeaponToPed(playerPed, weaponHash, GetWeaponClipSize(weaponHash) * weaponClipCount, false, true)
 
-		Gui.DisplayNotification('Crate Contents:~w~\n+ $'..tostring(money)..'\n+ '..weapon.name..'\n+ Body Armor')
+		Gui.DisplayNotification('Crate Contents:~w~\n+ '..tostring(RP)..'RP\n+ '..weapon.name..'\n+ Body Armor')
 	end
 
 	resetCrateDropData()

@@ -19,11 +19,11 @@ function Db.UpdateValue(player, field, value, callback)
 end
 
 
-function Db.UpdateMoney(player, money, callback)
-	Db.UpdateValue(player, 'Money', money, function()
+function Db.UpdateRP(player, RP, callback)
+	Db.UpdateValue(player, 'RP', RP, function()
 		if callback then callback() end
-		Scoreboard.UpdateMoney(player, money)
-		TriggerClientEvent('lsv:moneyUpdated', player, money)
+		Scoreboard.UpdateRP(player, RP)
+		TriggerClientEvent('lsv:RPUpdated', player, RP)
 	end)
 end
 

@@ -27,7 +27,7 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 
 	bountyPlayerId = nil
 
-	Db.UpdateMoney(killer, Settings.bountyEventReward, function()
+	Db.UpdateRP(killer, Settings.bountyEventReward, function()
 		TriggerClientEvent('lsv:bountyKilled', -1, killer)
 	end)
 end)

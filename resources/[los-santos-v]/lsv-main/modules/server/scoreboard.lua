@@ -1,11 +1,14 @@
 Scoreboard = { }
 
--- Format: { id, name, money, kdRatio, kills, deaths }
+-- Format: { id, name, RP, kdRatio, kills, deaths }
 local scoreboard = { }
 
 local function sortScoreboard(l, r)
 	if not l then return false end
 	if not r then return true end
+
+	if l.RP > r.RP then return true end
+	if l.RP < r.RP then return false end
 
 	if not l.kdRatio then return false end
 	if not r.kdRatio then return true end
@@ -18,8 +21,6 @@ local function sortScoreboard(l, r)
 
 	if l.deaths > r.deaths then return false end
 	if l.deaths < r.deaths then return true end
-	if l.money > r.money then return true end
-	if l.money < r.money then return false end
 
 	return l.name < r.name
 end
@@ -51,7 +52,7 @@ end
 
 
 function Scoreboard.AddPlayer(player, playerStats)
-	table.insert(scoreboard, { ['id'] = player, ['name'] = GetPlayerName(player), ['money'] = playerStats.Money, 
+	table.insert(scoreboard, { ['id'] = player, ['name'] = GetPlayerName(player), ['RP'] = playerStats.RP, 
 		['kdRatio'] = calculateKdRatio(playerStats.Kills, playerStats.Deaths),
 		['kills'] = playerStats.Kills, ['deaths'] = playerStats.Deaths, ['killstreak'] = 0 })
 
@@ -89,12 +90,12 @@ function Scoreboard.GetPlayerStats(player)
 end
 
 
-function Scoreboard.UpdateMoney(player, money)
+function Scoreboard.UpdateRP(player, RP)
 	local playerIndex = findPlayerIndex(player)
 
 	if not playerIndex then return end
 
-	scoreboard[playerIndex].money = scoreboard[playerIndex].money + money
+	scoreboard[playerIndex].RP = scoreboard[playerIndex].RP + RP
 
 	updateScoreboard()
 end

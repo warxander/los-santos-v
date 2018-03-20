@@ -25,7 +25,7 @@ RegisterServerEvent('baseevents:onPlayerDied')
 AddEventHandler('baseevents:onPlayerDied', function()
 	local player = source
 
-	Db.UpdateMoney(player, -Settings.moneyPerDeath, function()
+	Db.UpdateRP(player, -Settings.RPPerDeath, function()
 		Db.UpdateDeaths(player, function()
 			Scoreboard.ResetKillstreak(player)
 			TriggerClientEvent('lsv:onPlayerDied', -1, player, true)
@@ -40,21 +40,21 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 
 	if killer ~= -1 then
 		Db.UpdateKills(killer, function()
-			local killerMoney = Settings.moneyPerKill + (Settings.moneyPerKillstreak * Scoreboard.GetPlayerStats(killer).killstreak)
+			local killerRP = Settings.RPPerKill + (Settings.RPPerKillstreak * Scoreboard.GetPlayerStats(killer).killstreak)
 
 			Scoreboard.UpdateKillstreak(killer)
 
-			Db.UpdateMoney(killer, killerMoney, function()
-				TriggerClientEvent('lsv:onMoneyEarnedPerKill', killer, killerMoney)
+			Db.UpdateRP(killer, killerRP, function()
+				TriggerClientEvent('lsv:onRPEarnedPerKill', killer, killerRP)
 				TriggerClientEvent('lsv:onPlayerKilled', -1, victim, killer, getKilledMessage())
 			end)
 		end)
 	end
 
-	Db.UpdateMoney(victim, -Settings.moneyPerDeath, function()
+	Db.UpdateRP(victim, -Settings.RPPerDeath, function()
 		Db.UpdateDeaths(victim, function()
 			Scoreboard.ResetKillstreak(victim)
-			TriggerClientEvent('lsv:onMoneyLostPerDeath', victim, Settings.moneyPerDeath)
+			TriggerClientEvent('lsv:onRPLostPerDeath', victim, Settings.RPPerDeath)
 
 			if killer ~= -1 then return end
 			TriggerClientEvent('lsv:onPlayerDied', -1, victim)

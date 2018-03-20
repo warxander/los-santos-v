@@ -4,13 +4,10 @@ Player.isLoaded = false
 
 Player.skin = nil
 
-Player.money = 0
+Player.RP = 0
 Player.killstreak = 0
 Player.kills = 0
 Player.deaths = 0
-
-Player.vehicle = nil
-Player.vehicleBlip = nil
 
 Player.meleeWeapon = nil
 Player.primaryWeapon = nil
@@ -114,47 +111,6 @@ function Player.UpdateGadget2(gadget2)
 	GiveWeaponToPed(PlayerPedId(), GetHashKey(Player.gadget2), Weapon.GetSpawningAmmo(GetHashKey(Player.gadget2)), false, true)
 end
 
-
-function Player.SpawnVehicle(model, coords, name)
-	RequestModel(model)
-	while not HasModelLoaded(model) do
-		Citizen.Wait(0)
-	end
-
-	Player.vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, coords.heading, true, false)
-
-	SetVehicleOnGroundProperly(Player.vehicle)
-	SetVehicleNumberPlateText(Player.vehicle, GetPlayerName(PlayerId()))
-	SetVehicleModKit(Player.vehicle, 0)
-	SetVehicleMod(Player.vehicle, 16, 4) --Attempt to set 100% Armour
-	SetEntityAsMissionEntity(Player.vehicle, true, true)
-
-	local vehNetId = NetworkGetNetworkIdFromEntity(Player.vehicle)
-	SetNetworkIdExistsOnAllMachines(vehNetId, true)
-	SetNetworkIdCanMigrate()
-
-	SetModelAsNoLongerNeeded(model)
-
-	Player.vehicleBlip = AddBlipForEntity(Player.vehicle)
-	SetBlipSprite(Player.vehicleBlip, Blip.PersonalVehicleCar())
-	SetBlipHighDetail(Player.vehicleBlip, true)
-	SetBlipColour(Player.vehicleBlip, 14)
-	SetBlipFlashes(Player.vehicleBlip, true)
-
-	if name then
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentSubstringPlayerName(name..' (Personal)')
-		EndTextCommandSetBlipName(Player.vehicleBlip)
-	end
-
-	SetTimeout(5000, function()
-		if Player.vehicleBlip then
-			SetBlipFlashes(Player.vehicleBlip, false)
-		end
-	end)
-end
-
-
 function Player.Teleport(position)
 	local playerPed = PlayerPedId()
 
@@ -169,8 +125,7 @@ function Player.Teleport(position)
 end
 
 
-RegisterNetEvent('lsv:moneyUpdated')
-AddEventHandler('lsv:moneyUpdated', function(money)
-	Player.money = Player.money + money
-	StatSetInt(GetHashKey("MP0_WALLET_BALANCE"), math.floor(Player.money), true)
+RegisterNetEvent('lsv:RPUpdated')
+AddEventHandler('lsv:RPUpdated', function(RP)
+	Player.RP = Player.RP + RP
 end)

@@ -1,15 +1,8 @@
 local function updateLoadout(dbField, weapon, playerSource, callbackEventName)
 	if not weapon then return end
-	local weaponPrice = weapon.price or 0
-	if Scoreboard.GetPlayerStats(playerSource).money >= weaponPrice then
-		Db.UpdateMoney(playerSource, -weaponPrice, function()
-			Db.SetValue(playerSource, dbField, Db.ToString(weapon.id), function()
-				TriggerClientEvent(callbackEventName, playerSource, weapon.id)
-			end)
-		end)
-	else
-		TriggerClientEvent('lsv:updateLoadoutFailed', playerSource)
-	end
+	Db.SetValue(playerSource, dbField, Db.ToString(weapon.id), function()
+		TriggerClientEvent(callbackEventName, playerSource, weapon.id)
+	end)
 end
 
 

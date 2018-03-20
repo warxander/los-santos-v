@@ -22,8 +22,7 @@ AddEventHandler('lsv:playerLoaded', function(playerData)
 
 	Skin.ChangePlayerSkin(playerData.SkinModel)
 
-	Player.money = playerData.Money
-	StatSetInt(GetHashKey("MP0_WALLET_BALANCE"), math.floor(Player.money), true)
+	Player.RP = playerData.RP
 
 	Player.kills = playerData.Kills
 	Player.deaths = playerData.Deaths

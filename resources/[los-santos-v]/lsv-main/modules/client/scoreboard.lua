@@ -87,9 +87,9 @@ function Scoreboard.DisplayThisFrame()
 	Gui.DrawRect(tablePositionHeader, tablePositionWidth, tableHeight, tableHeaderColor)
 	Gui.DrawText("POSITION", { ['x'] = tablePositionHeader.x, ['y'] = tableHeaderText.y }, 0, tableHeaderTextColor, headerScale, false, false, true)
 
-	-- Draw "MONEY" header
+	-- Draw "RP" header
 	Gui.DrawRect(tableMoneyHeader, tableMoneyWidth, tableHeight, tableHeaderColor)
-	Gui.DrawText("MONEY", { ['x'] = tableMoneyHeader.x, ['y'] = tableHeaderText.y }, 0, tableHeaderTextColor, headerScale, false, false, true)
+	Gui.DrawText("RP", { ['x'] = tableMoneyHeader.x, ['y'] = tableHeaderText.y }, 0, tableHeaderTextColor, headerScale, false, false, true)
 
 	-- Draw "KILLSTREAK" header
 	Gui.DrawRect(tableKdRatioHeader, tableKdRatioWidth, tableHeight, tableHeaderColor)
@@ -134,9 +134,9 @@ function Scoreboard.DisplayThisFrame()
 		-- Draw online status (make it real)
 		Gui.DrawRect(onlineStatusPosition, onlineStatusWidth, tableHeight, onlineStatusColor)
 
-		-- Draw money
+		-- Draw RP
 		Gui.DrawRect(moneyPosition, tableMoneyWidth, tableHeight, tableMoneyColor)
-		Gui.DrawText('$'..tostring(scoreboard[index].money), { ['x'] = tableMoneyHeader.x, ['y'] = tableText.y + 0.004 },
+		Gui.DrawText(tostring(scoreboard[index].RP), { ['x'] = tableMoneyHeader.x, ['y'] = tableText.y + 0.004 },
 			0, tableMoneyTextColor, moneyScale, false, false, true)
 
 		-- Draw kdRatio

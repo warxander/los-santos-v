@@ -1,4 +1,4 @@
-local quickGpsLocations = { "None", "Crate Drop", "Ammu-Nation", "Vehicle Shop", "Skin Shop", "Robbery" }
+local quickGpsLocations = { "None", "Crate Drop", "Ammu-Nation", "Skin Shop" }
 local quickGpsCurrentIndex = 1
 local quickGpsSelectedIndex = 1
 local quickGpsBlip = nil
@@ -28,19 +28,6 @@ AddEventHandler('lsv:init', function()
 	WarMenu.CreateSubMenu('inviteToCrew', 'interaction', 'Invite to Crew')
 	WarMenu.CreateSubMenu('reportPlayer', 'interaction', 'Report Player')
 	WarMenu.CreateSubMenu('reportReason', 'reportPlayer', 'Select a reason for reporting')
-end)
-
-
-AddEventHandler('lsv:vehicleControlsExplode', function()
-	local vehicleNetId = NetworkGetNetworkIdFromEntity(Player.vehicle)
-
-	NetworkRequestControlOfNetworkId(vehicleNetId)
-	while not NetworkHasControlOfNetworkId(vehicleNetId) do
-		Citizen.Wait(0)
-		NetworkRequestControlOfNetworkId(vehicleNetId)
-	end
-
-	NetworkExplodeVehicle(Player.vehicle, true, false, false)
 end)
 
 
@@ -77,11 +64,7 @@ AddEventHandler('lsv:init', function()
 					if quickGpsSelectedIndex == 3 then
 						places = AmmuNation.GetPlaces()
 					elseif quickGpsSelectedIndex == 4 then
-						places = VehicleShop.GetPlaces()
-					elseif quickGpsSelectedIndex == 5 then
 						places = Skinshop.GetPlaces()
-					elseif quickGpsSelectedIndex == 6 then
-						places = Robbery.GetPlaces()
 					end
 
 					local minDistance = 0xffffffff
@@ -116,15 +99,6 @@ AddEventHandler('lsv:init', function()
 				else
 					TriggerEvent('lsv:updateWalkStyle', getClipSetBySex(walkStyleSelectedIndex, IsPedMale(PlayerPedId())))
 				end
-			elseif WarMenu.Button('Explode Vehicle') then
-				if Player.vehicle then TriggerEvent('lsv:vehicleControlsExplode')
-				else Gui.DisplayNotification('You don\'t have a Personal Vehicle.') end
-
-				WarMenu.CloseMenu()
-			elseif WarMenu.Button('Repair Personal Vehicle', '$'..tostring(Settings.repairPersonalVehiclePrice)) then
-				if not Player.vehicle then Gui.DisplayNotification('~r~You don\'t have a Personal Vehicle.')
-				elseif not IsVehicleDamaged(Player.vehicle) then Gui.DisplayNotification('Your Personal Vehicle is fully repaired.')
-				else TriggerServerEvent('lsv:repairPersonalVehicle') end
 			elseif WarMenu.MenuButton('Invite To Crew', 'inviteToCrew') then
 			elseif Utils.GetTableLength(Player.crewMembers) ~= 0 and WarMenu.Button('Leave Crew') then
 				TriggerServerEvent('lsv:leaveCrew')

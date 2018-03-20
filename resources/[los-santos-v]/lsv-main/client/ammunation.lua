@@ -23,13 +23,6 @@ function AmmuNation.GetPlaces()
 end
 
 
-local function weaponPrice(weapon, playerWeapon)
-	if weapon.id == playerWeapon then return 'Owned' end
-	if not weapon.price then return 'Free' end
-	return '$'..weapon.price
-end
-
-
 local function updateLoadout(weapon, playerWeapon, slotEvent)
 	if weapon.id == playerWeapon then return end
 	TriggerServerEvent(slotEvent, weapon.id)
@@ -96,7 +89,7 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_melee') then
 			for _, weapon in pairs(Weapon.GetMeleeWeapons()) do
-				if WarMenu.Button(weapon.name, weaponPrice(weapon, Player.meleeWeapon)) then
+				if WarMenu.Button(weapon.name) then
 					updateMeleeWeapon(weapon)
 				end
 			end
@@ -104,7 +97,7 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_primary') then
 			for _, weapon in pairs(Weapon.GetPrimaryWeapons()) do
-				if WarMenu.Button(weapon.name, weaponPrice(weapon, Player.primaryWeapon)) then
+				if WarMenu.Button(weapon.name) then
 					updatePrimaryWeapon(weapon)
 				end
 			end
@@ -112,7 +105,7 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_secondary') then
 			for _, weapon in pairs(Weapon.GetSecondaryWeapons()) do
-				if WarMenu.Button(weapon.name, weaponPrice(weapon, Player.secondaryWeapon)) then
+				if WarMenu.Button(weapon.name) then
 					updateSecondaryWeapon(weapon)
 				end
 			end
@@ -120,14 +113,14 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_gadget1') then
 			for _, gadget in pairs(Weapon.GetGadgets()) do
-				if gadget.id ~= Player.gadget2 and WarMenu.Button(gadget.name, weaponPrice(gadget, Player.gadget1)) then
+				if gadget.id ~= Player.gadget2 and WarMenu.Button(gadget.name) then
 					updateGadget1(gadget)
 				end
 			end
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_gadget2') then
 			for _, gadget in pairs(Weapon.GetGadgets()) do
-				if gadget.id ~= Player.gadget1 and WarMenu.Button(gadget.name, weaponPrice(gadget, Player.gadget2)) then
+				if gadget.id ~= Player.gadget1 and WarMenu.Button(gadget.name) then
 					updateGadget2(gadget)
 				end
 			end
@@ -192,10 +185,4 @@ end)
 RegisterNetEvent('lsv:gadget2Updated')
 AddEventHandler('lsv:gadget2Updated', function(gadget2)
 	Player.UpdateGadget2(gadget2)
-end)
-
-
-RegisterNetEvent('lsv:updateLoadoutFailed')
-AddEventHandler('lsv:updateLoadoutFailed', function()
-	Gui.DisplayNotification('~r~You don\'t have enough money.')
 end)

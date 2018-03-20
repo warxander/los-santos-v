@@ -55,16 +55,16 @@ AddEventHandler('lsv:onPlayerKilled', function(source, killer, message)
 end)
 
 
-RegisterNetEvent('lsv:onMoneyEarnedPerKill')
-AddEventHandler('lsv:onMoneyEarnedPerKill', function(money)
-	Gui.DisplayNotification("You earned ~g~$"..tostring(money).."~w~.")
+RegisterNetEvent('lsv:onRPEarnedPerKill')
+AddEventHandler('lsv:onRPEarnedPerKill', function(RP)
+	Gui.DisplayNotification("+ "..tostring(RP).."RP")
 end)
 
 
-RegisterNetEvent('lsv:onMoneyLostPerDeath')
-AddEventHandler('lsv:onMoneyLostPerDeath', function(money)
-	if money == 0 then return end
-	Gui.DisplayNotification("You lost ~r~$"..tostring(money).."~w~.")
+RegisterNetEvent('lsv:onRPLostPerDeath')
+AddEventHandler('lsv:onRPLostPerDeath', function(RP)
+	if RP == 0 then return end
+	Gui.DisplayNotification("- "..tostring(RP).."RP")
 end)
 
 
