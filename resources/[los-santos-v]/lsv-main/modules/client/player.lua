@@ -23,13 +23,13 @@ function Player.GetPlayerWeapons()
 	local ammoTypes = { }
 	local result = { }
 
-	for _, weapon in pairs(Weapon.GetWeapons()) do
-		local weaponHash = GetHashKey(weapon.id)
+	for id, weapon in pairs(Weapon.GetWeapons()) do
+		local weaponHash = GetHashKey(id)
 
 		if HasPedGotWeapon(player, weaponHash, false) then
 			local playerWeapon = { }
 
-			playerWeapon.id = weapon.id
+			playerWeapon.id = id
 
 			local ammoType = GetPedAmmoTypeFromWeapon(player, weaponHash)
 			if ammoTypes[ammoType] == nil then

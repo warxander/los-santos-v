@@ -23,33 +23,40 @@ function AmmuNation.GetPlaces()
 end
 
 
-local function updateLoadout(weapon, playerWeapon, slotEvent)
-	if weapon.id == playerWeapon then return end
-	TriggerServerEvent(slotEvent, weapon.id)
+local function weaponRP(id, playerWeapon)
+	if id == playerWeapon then return 'Used' end
+	if not Weapon.GetWeapon(id).RP or Player.RP >= Weapon.GetWeapon(id).RP then return '' end
+	return Weapon.GetWeapon(id).RP..'RP'
 end
 
 
-local function updateMeleeWeapon(weapon)
-	updateLoadout(weapon, Player.meleeWeapon, 'lsv:updateMeleeWeapon')
+local function updateLoadout(id, playerWeapon, slotEvent)
+	if id == playerWeapon then return end
+	TriggerServerEvent(slotEvent, id)
 end
 
 
-local function updatePrimaryWeapon(weapon)
-	updateLoadout(weapon, Player.primaryWeapon, 'lsv:updatePrimaryWeapon')
+local function updateMeleeWeapon(id)
+	updateLoadout(id, Player.meleeWeapon, 'lsv:updateMeleeWeapon')
 end
 
 
-local function updateSecondaryWeapon(weapon)
-	updateLoadout(weapon, Player.secondaryWeapon, 'lsv:updateSecondaryWeapon')
+local function updatePrimaryWeapon(id)
+	updateLoadout(id, Player.primaryWeapon, 'lsv:updatePrimaryWeapon')
 end
 
 
-local function updateGadget1(gadget)
-	updateLoadout(gadget, Player.gadget1, 'lsv:updateGadget1')
+local function updateSecondaryWeapon(id)
+	updateLoadout(id, Player.secondaryWeapon, 'lsv:updateSecondaryWeapon')
 end
 
-local function updateGadget2(gadget)
-	updateLoadout(gadget, Player.gadget2, 'lsv:updateGadget2')
+
+local function updateGadget1(id)
+	updateLoadout(id, Player.gadget1, 'lsv:updateGadget1')
+end
+
+local function updateGadget2(id)
+	updateLoadout(id, Player.gadget2, 'lsv:updateGadget2')
 end
 
 
@@ -88,42 +95,44 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_melee') then
-			for _, weapon in pairs(Weapon.GetMeleeWeapons()) do
-				if WarMenu.Button(weapon.name) then
-					updateMeleeWeapon(weapon)
+			for id, weapon in pairs(Weapon.GetWeapons()) do
+				if weapon.melee and WarMenu.Button(weapon.name, weaponRP(id, Player.meleeWeapon)) then
+					updateMeleeWeapon(id)
 				end
 			end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_primary') then
-			for _, weapon in pairs(Weapon.GetPrimaryWeapons()) do
-				if WarMenu.Button(weapon.name) then
-					updatePrimaryWeapon(weapon)
+			for id, weapon in pairs(Weapon.GetWeapons()) do
+				if weapon.primary and WarMenu.Button(weapon.name, weaponRP(id, Player.primaryWeapon)) then
+					updatePrimaryWeapon(id)
 				end
 			end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_secondary') then
-			for _, weapon in pairs(Weapon.GetSecondaryWeapons()) do
-				if WarMenu.Button(weapon.name) then
-					updateSecondaryWeapon(weapon)
+			for id, weapon in pairs(Weapon.GetWeapons()) do
+				if weapon.secondary and WarMenu.Button(weapon.name, weaponRP(id, Player.secondaryWeapon)) then
+					updateSecondaryWeapon(id)
 				end
 			end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_gadget1') then
-			for _, gadget in pairs(Weapon.GetGadgets()) do
-				if gadget.id ~= Player.gadget2 and WarMenu.Button(gadget.name) then
-					updateGadget1(gadget)
+			for id, weapon in pairs(Weapon.GetWeapons()) do
+				if weapon.gadget and id ~= Player.gadget2 and WarMenu.Button(weapon.name, weaponRP(id, Player.gadget1)) then
+					updateGadget1(id)
 				end
 			end
+
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_gadget2') then
-			for _, gadget in pairs(Weapon.GetGadgets()) do
-				if gadget.id ~= Player.gadget1 and WarMenu.Button(gadget.name) then
-					updateGadget2(gadget)
+			for id, weapon in pairs(Weapon.GetWeapons()) do
+				if weapon.gadget and id ~= Player.gadget1 and WarMenu.Button(gadget.name, weaponRP(id, Player.gadget2)) then
+					updateGadget2(id)
 				end
 			end
+
 			WarMenu.Display()
 		end
 
@@ -185,4 +194,10 @@ end)
 RegisterNetEvent('lsv:gadget2Updated')
 AddEventHandler('lsv:gadget2Updated', function(gadget2)
 	Player.UpdateGadget2(gadget2)
+end)
+
+
+RegisterNetEvent('lsv:updateLoadoutFailed')
+AddEventHandler('lsv:updateLoadoutFailed', function()
+	Gui.DisplayNotification('~r~You don\'t have enough RP.')
 end)
