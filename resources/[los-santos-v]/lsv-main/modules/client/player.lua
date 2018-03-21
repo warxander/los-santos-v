@@ -77,6 +77,11 @@ function Player.GiveWeapons(weapons)
 end
 
 
+function Player.SaveWeapons()
+	TriggerServerEvent('lsv:savePlayerWeapons', Player.GetPlayerWeapons())
+end
+
+
 function Player.UpdateMeleeWeapon(meleeWeapon)
 	if Player.meleeWeapon then RemoveWeaponFromPed(PlayerPedId(), GetHashKey(Player.meleeWeapon)) end
 	Player.meleeWeapon = meleeWeapon

@@ -12,7 +12,10 @@ AddEventHandler('playerSpawned', function()
 	if not Player.isLoaded then
 		Player.isLoaded = true
 		TriggerServerEvent('lsv:loadPlayer')
-	else SetCurrentPedWeapon(playerPed, GetHashKey(Player.primaryWeapon), true) end
+	else
+		Player.SaveWeapons()
+		SetCurrentPedWeapon(playerPed, GetHashKey(Player.primaryWeapon), true)
+	end
 end)
 
 
@@ -32,6 +35,8 @@ AddEventHandler('lsv:playerLoaded', function(playerData)
 	Player.UpdateSecondaryWeapon(playerData.SecondaryWeapon)
 	Player.UpdateGadget1(playerData.Gadget1)
 	Player.UpdateGadget2(playerData.Gadget2)
+
+	Player.GiveWeapons(playerData.Weapons)
 
 	SetCurrentPedWeapon(PlayerPedId(), GetHashKey(Player.primaryWeapon), true)
 

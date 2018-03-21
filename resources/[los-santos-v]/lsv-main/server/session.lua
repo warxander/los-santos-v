@@ -3,6 +3,9 @@ local logger = Logger:CreateNamedLogger('Session')
 local function initPlayer(player, playerStats)
 	Scoreboard.AddPlayer(player, playerStats)
 
+	if not playerStats.Weapons then playerStats.Weapons = Settings.defaultPlayerWeapons
+	else playerStats.Weapons = json.decode(playerStats.Weapons) end
+
 	TriggerClientEvent('lsv:playerLoaded', player, playerStats)
 	TriggerClientEvent('lsv:playerConnected', -1, player)
 
@@ -42,6 +45,14 @@ AddEventHandler('lsv:loadPlayer', function()
 			initPlayer(player, data[1])
 		end
 	end)
+end)
+
+
+RegisterServerEvent('lsv:savePlayerWeapons')
+AddEventHandler('lsv:savePlayerWeapons', function(weapons)
+	local player = source
+
+	Db.SetValue(player, 'Weapons', Db.ToString(json.encode(weapons)))
 end)
 
 

@@ -23,6 +23,10 @@ Settings.autoParachutingHeight = 80
 Settings.giveParachuteAtSpawn = true
 Settings.infinitePlayerStamina = true
 Settings.weaponClipCount = 10
+Settings.defaultPlayerWeapons = {
+	{ id = "WEAPON_KNIFE", ammo = 0, components = { } },
+	{ id = "WEAPON_PISTOL", ammo = 80, components = { }, selected = true },
+}
 
 
 -- Crew

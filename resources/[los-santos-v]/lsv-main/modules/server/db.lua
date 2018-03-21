@@ -79,5 +79,5 @@ end
 
 
 function Db.ToString(value)
-	return '\"'..tostring(value)..'\"'
+	return '\''..tostring(value)..'\''
 end
