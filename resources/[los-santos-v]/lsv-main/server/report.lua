@@ -10,12 +10,8 @@ AddEventHandler('lsv:reportPlayer', function(target, reason)
 	local player = source
 
 	PerformHttpRequest(discordUrl, function(statusCode, responeText, headers)
-		if statusCode == 0 or not responeText then
-			TriggerClientEvent('lsv:reportError', player)
-		else
-			table.insert(reportedPlayers, player)
-			TriggerClientEvent('lsv:reportSuccess', player)
-		end
+		if statusCode == 0 or not responeText then TriggerClientEvent('lsv:reportError', player)
+		else TriggerClientEvent('lsv:reportSuccess', player) end
 	end, 'POST', json.encode({content = buildReportMessage(player, target, reason)}), { ['Content-Type'] = 'application/json' })
 end)
 
