@@ -37,12 +37,12 @@ AddEventHandler('lsv:loadPlayer', function()
 	Db.FindPlayer(player, function(data)
 		if Utils.IsTableEmpty(data) then
 			Db.RegisterPlayer(player, function(data)
-				logger:Info('Register { '..playerName..', '..player..' }')
 				initPlayer(player, data[1])
+				logger:Info('Register { '..playerName..', '..player..' }')
 			end)
 		else
-			logger:Info('Loaded { '..playerName..', '..player..' }')
 			initPlayer(player, data[1])
+			logger:Info('Loaded { '..playerName..', '..player..' }')
 		end
 	end)
 end)
