@@ -1,3 +1,6 @@
+-- Components: https://wiki.fivem.net/wiki/Weapon_Components
+-- Tints: https://wiki.fivem.net/wiki/Weapon_Tints
+
 Weapon = { }
 
 
