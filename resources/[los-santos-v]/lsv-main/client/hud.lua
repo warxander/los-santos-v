@@ -12,7 +12,7 @@ AddEventHandler('lsv:init', function()
 	local tipTime = 10000
 	local tipInterval = 20000
 
-	for _, tip in pairs(tips) do
+	for _, tip in ipairs(tips) do
 		SetTimeout(tipTime, function()
 			Gui.DisplayHelpText(tip)
 		end)

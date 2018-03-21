@@ -21,7 +21,7 @@ end
 local function CheckDistanceBetweenPickups(coords)
 	local x, y = table.unpack(coords)
 
-	for _, pickup in pairs(pickups) do
+	for _, pickup in ipairs(pickups) do
 		if math.abs(pickup.x - x) < Settings.pickupMinSpawnRadius or math.abs(pickup.y - y) < Settings.pickupMinSpawnRadius then
 			return false
 		end
@@ -63,7 +63,7 @@ AddEventHandler('lsv:init', function()
 		end
 
 		-- Main pickup logic
-		for i, pickup in pairs(pickups) do
+		for i, pickup in ipairs(pickups) do
 			if pickup['pickup'] then
 				if HasPickupBeenCollected(pickup['pickup']) then
 					pickup['pickup'] = nil

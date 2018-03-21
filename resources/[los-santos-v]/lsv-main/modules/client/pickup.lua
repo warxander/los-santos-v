@@ -91,7 +91,7 @@ end
 
 
 function Pickup.GetName(id)
-	for _, pickup in pairs(pickups) do
+	for _, pickup in ipairs(pickups) do
 		if pickup.id == id then
 			local name = pickup.name
 			if pickup.ammo then name = name.." Ammo" end

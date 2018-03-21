@@ -44,7 +44,7 @@ function Player.GetPlayerWeapons()
 			end
 
 			playerWeapon.components = { }
-			for _, component in pairs(weapon.components) do
+			for _, component in ipairs(weapon.components) do
 				if HasPedGotWeaponComponent(player, weaponHash, component.hash) then
 					table.insert(playerWeapon.components, component.hash)
 				end
@@ -63,12 +63,12 @@ end
 function Player.GiveWeapons(weapons)
 	local player = PlayerPedId()
 
-	for _, weapon in pairs(weapons) do
+	for _, weapon in ipairs(weapons) do
 		local weaponHash = GetHashKey(weapon.id)
 
 		GiveWeaponToPed(player, weaponHash, weapon.ammo, false, weapon.selected or false)
 
-		for _, component in pairs(weapon.components) do
+		for _, component in ipairs(weapon.components) do
 			GiveWeaponComponentToPed(player, GetHashKey(weapon.id), component.hash)
 		end
 

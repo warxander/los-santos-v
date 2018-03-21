@@ -17,7 +17,7 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('reportReason') then
-			for _, reason in pairs(reportingReasons) do
+			for _, reason in ipairs(reportingReasons) do
 				if WarMenu.Button(reason) then
 					TriggerServerEvent('lsv:reportPlayer', reportingPlayer, reason)
 					table.insert(reportedPlayers, reportingPlayer)

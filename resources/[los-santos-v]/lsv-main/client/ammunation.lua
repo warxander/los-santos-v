@@ -61,7 +61,7 @@ end
 
 
 AddEventHandler('lsv:init', function()
-	for _, ammunation in pairs(ammunations) do
+	for _, ammunation in ipairs(ammunations) do
 		ammunation.blip = Map.CreatePlaceBlip(Blip.AmmuNation(), ammunation.x, ammunation.y, ammunation.z)
 	end
 
@@ -147,7 +147,7 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		for ammunationIndex, ammunation in pairs(ammunations) do
+		for ammunationIndex, ammunation in ipairs(ammunations) do
 			Gui.DrawPlaceMarker(ammunation.x, ammunation.y, ammunation.z - 1, Settings.placeMarkerRadius, ammunationColor.r, ammunationColor.g, ammunationColor.b, Settings.placeMarkerOpacity)
 
 			if Vdist(ammunation.x, ammunation.y, ammunation.z, table.unpack(GetEntityCoords(PlayerPedId(), true))) < Settings.placeMarkerRadius then

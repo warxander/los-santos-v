@@ -36,7 +36,7 @@ end
 
 
 local function findPlayerIndex(player) -- TODO Use player server id as key
-	for index, playerStats in pairs(scoreboard) do
+	for index, playerStats in ipairs(scoreboard) do
 		if playerStats.id == player then return index end
 	end
 

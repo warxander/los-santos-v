@@ -69,7 +69,7 @@ AddEventHandler('lsv:init', function()
 
 					local minDistance = 0xffffffff
 					local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
-					for _, place in pairs(places) do
+					for _, place in ipairs(places) do
 						local placeX, placeY, placeZ = table.unpack(GetBlipCoords(place.blip))
 						local distance = GetDistanceBetweenCoords(placeX, placeY, placeZ, playerX, playerY, playerZ, false)
 						if distance < minDistance then
