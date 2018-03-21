@@ -1,5 +1,17 @@
 World = { }
 
+local bountyPlayerId = nil
+
+
+function World.SetBountyPlayerId(playerId)
+	bountyPlayerId = playerId
+end
+
+
+function World.GetBountyPlayerId()
+	return bountyPlayerId
+end
+
 
 function World.SetWantedLevel(level)
 	local disable = level == 0

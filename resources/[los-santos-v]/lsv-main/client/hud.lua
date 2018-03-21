@@ -149,7 +149,7 @@ AddEventHandler('lsv:init', function()
 
 					if IsPedDead then
 						blipSprite = Blip.Dead()
-					elseif BountyPlayerId and GetPlayerServerId(id) == BountyPlayerId then
+					elseif GetPlayerServerId(id) == World.GetBountyPlayerId() then
 						blipSprite = Blip.BountyHit()
 					end
 
