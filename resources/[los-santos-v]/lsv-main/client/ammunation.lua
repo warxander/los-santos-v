@@ -23,116 +23,17 @@ function AmmuNation.GetPlaces()
 end
 
 
-local function weaponRP(id, playerWeapon)
-	if id == playerWeapon then return 'Used' end
-	if not Weapon.GetWeapon(id).RP or Player.RP >= Weapon.GetWeapon(id).RP then return '' end
-	return Weapon.GetWeapon(id).RP..'RP'
-end
-
-
-local function updateLoadout(id, playerWeapon, slotEvent)
-	if id == playerWeapon then return end
-	TriggerServerEvent(slotEvent, id)
-end
-
-
-local function updateMeleeWeapon(id)
-	updateLoadout(id, Player.meleeWeapon, 'lsv:updateMeleeWeapon')
-end
-
-
-local function updatePrimaryWeapon(id)
-	updateLoadout(id, Player.primaryWeapon, 'lsv:updatePrimaryWeapon')
-end
-
-
-local function updateSecondaryWeapon(id)
-	updateLoadout(id, Player.secondaryWeapon, 'lsv:updateSecondaryWeapon')
-end
-
-
-local function updateGadget1(id)
-	updateLoadout(id, Player.gadget1, 'lsv:updateGadget1')
-end
-
-local function updateGadget2(id)
-	updateLoadout(id, Player.gadget2, 'lsv:updateGadget2')
-end
-
-
 AddEventHandler('lsv:init', function()
 	for _, ammunation in ipairs(ammunations) do
 		ammunation.blip = Map.CreatePlaceBlip(Blip.AmmuNation(), ammunation.x, ammunation.y, ammunation.z)
 	end
 
 	WarMenu.CreateMenu('ammunation', 'Ammu-Nation')
-	WarMenu.SetSubTitle('ammunation', 'SLOTS')
+	WarMenu.SetSubTitle('ammunation', 'WEAPONS')
 	WarMenu.SetTitleBackgroundColor('ammunation', ammunationColor.r, ammunationColor.g, ammunationColor.b)
-
-	WarMenu.CreateSubMenu('ammunation_melee', 'ammunation', 'MELEE WEAPONS')
-	WarMenu.SetMenuButtonPressedSound('ammunation_melee', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
-
-	WarMenu.CreateSubMenu('ammunation_primary', 'ammunation', 'PRIMARY WEAPONS')
-	WarMenu.SetMenuButtonPressedSound('ammunation_primary', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
-
-	WarMenu.CreateSubMenu('ammunation_secondary', 'ammunation', 'SECONDARY WEAPONS')
-	WarMenu.SetMenuButtonPressedSound('ammunation_secondary', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
-
-	WarMenu.CreateSubMenu('ammunation_gadget1', 'ammunation', 'GADGET 1')
-	WarMenu.SetMenuButtonPressedSound('ammunation_gadget1', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
-
-	WarMenu.CreateSubMenu('ammunation_gadget2', 'ammunation', 'GADGET 2')
-	WarMenu.SetMenuButtonPressedSound('ammunation_gadget2', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	while true do
 		if WarMenu.IsMenuOpened('ammunation') then
-			if WarMenu.MenuButton('Melee Weapon', 'ammunation_melee') then
-			elseif WarMenu.MenuButton('Primary Weapon', 'ammunation_primary') then
-			elseif WarMenu.MenuButton('Secondary Weapon', 'ammunation_secondary') then
-			elseif WarMenu.MenuButton('Gadget 1', 'ammunation_gadget1') then
-			elseif WarMenu.MenuButton('Gadget 2', 'ammunation_gadget2') then
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_melee') then
-			for id, weapon in pairs(Weapon.GetWeapons()) do
-				if weapon.melee and WarMenu.Button(weapon.name, weaponRP(id, Player.meleeWeapon)) then
-					updateMeleeWeapon(id)
-				end
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_primary') then
-			for id, weapon in pairs(Weapon.GetWeapons()) do
-				if weapon.primary and WarMenu.Button(weapon.name, weaponRP(id, Player.primaryWeapon)) then
-					updatePrimaryWeapon(id)
-				end
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_secondary') then
-			for id, weapon in pairs(Weapon.GetWeapons()) do
-				if weapon.secondary and WarMenu.Button(weapon.name, weaponRP(id, Player.secondaryWeapon)) then
-					updateSecondaryWeapon(id)
-				end
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_gadget1') then
-			for id, weapon in pairs(Weapon.GetWeapons()) do
-				if weapon.gadget and id ~= Player.gadget2 and WarMenu.Button(weapon.name, weaponRP(id, Player.gadget1)) then
-					updateGadget1(id)
-				end
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_gadget2') then
-			for id, weapon in pairs(Weapon.GetWeapons()) do
-				if weapon.gadget and id ~= Player.gadget1 and WarMenu.Button(gadget.name, weaponRP(id, Player.gadget2)) then
-					updateGadget2(id)
-				end
-			end
-
 			WarMenu.Display()
 		end
 
@@ -152,7 +53,7 @@ AddEventHandler('lsv:init', function()
 
 			if Vdist(ammunation.x, ammunation.y, ammunation.z, table.unpack(GetEntityCoords(PlayerPedId(), true))) < Settings.placeMarkerRadius then
 				if not WarMenu.IsAnyMenuOpened() then
-					Gui.DisplayHelpTextThisFrame('Press ~INPUT_PICKUP~ to customize Loadout.')
+					Gui.DisplayHelpTextThisFrame('Press ~INPUT_PICKUP~ to browse weapons.')
 
 					if IsControlJustReleased(0, 38) then
 						ammunationOpenedMenuIndex = ammunationIndex
@@ -164,40 +65,4 @@ AddEventHandler('lsv:init', function()
 			end
 		end
 	end
-end)
-
-
-RegisterNetEvent('lsv:meleeWeaponUpdated')
-AddEventHandler('lsv:meleeWeaponUpdated', function(meleeWeapon)
-	Player.UpdateMeleeWeapon(meleeWeapon)
-end)
-
-
-RegisterNetEvent('lsv:primaryWeaponUpdated')
-AddEventHandler('lsv:primaryWeaponUpdated', function(primaryWeapon)
-	Player.UpdatePrimaryWeapon(primaryWeapon)
-end)
-
-
-RegisterNetEvent('lsv:secondaryWeaponUpdated')
-AddEventHandler('lsv:secondaryWeaponUpdated', function(secondaryWeapon)
-	Player.UpdateSecondaryWeapon(secondaryWeapon)
-end)
-
-
-RegisterNetEvent('lsv:gadget1Updated')
-AddEventHandler('lsv:gadget1Updated', function(gadget1)
-	Player.UpdateGadget1(gadget1)
-end)
-
-
-RegisterNetEvent('lsv:gadget2Updated')
-AddEventHandler('lsv:gadget2Updated', function(gadget2)
-	Player.UpdateGadget2(gadget2)
-end)
-
-
-RegisterNetEvent('lsv:updateLoadoutFailed')
-AddEventHandler('lsv:updateLoadoutFailed', function()
-	Gui.DisplayNotification('~r~You don\'t have enough RP.')
 end)

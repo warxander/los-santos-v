@@ -3,7 +3,7 @@ AddEventHandler('lsv:init', function()
 	local tips = {
 		"Hold ~INPUT_MULTIPLAYER_INFO~ to see Scoreboard.",
 		"Earn ~BLIP_RP~ by killing other players and join Freemode Events.",
-		"Visit ~BLIP_GUN_SHOP~ to customize your Loadout.",
+		"Visit ~BLIP_GUN_SHOP~ to customize your weapons.",
 		"Press ~INPUT_INTERACTION_MENU~ to open Interaction Menu.",
 		"Visit ~BLIP_CLOTHES_STORE~ to customize your Skin.",
 		"Tap ~INPUT_ENTER_CHEAT_CODE~ to toggle Expanded Radar.",

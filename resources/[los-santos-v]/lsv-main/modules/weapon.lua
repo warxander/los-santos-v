@@ -5,63 +5,54 @@ local weapons = {
 	["WEAPON_KNIFE"] = {
 		name = "Knife",
 		components = { },
-		melee = true,
 	},
 
 	["WEAPON_STUNGUN"] = {
 		name = "Stun Gun",
 		components = { },
 		RP = 1000,
-		secondary = true,
 	},
 
 	["WEAPON_FLASHLIGHT"] = {
 		name = "Flashlight",
 		components = { },
 		RP = 1000,
-		melee = true,
 	},
 
 	["WEAPON_NIGHTSTICK"] = {
 		name = "Nightstick",
 		components = { },
 		RP = 5000,
-		melee = true,
 	},
 
 	["WEAPON_HAMMER"] = {
 		name = "Hammer",
 		components = { },
 		RP = 5000,
-		melee = true,
 	},
 
 	["WEAPON_BAT"] = {
 		name = "Bat",
 		components = { },
 		RP = 5000,
-		melee = true,
 	},
 
 	["WEAPON_GOLFCLUB"] = {
 		name = "Golf Club",
 		components = { },
 		RP = 6000,
-		melee = true,
 	},
 
 	["WEAPON_CROWBAR"] = {
 		name = "Crowbar",
 		components = { },
 		RP = 7000,
-		melee = true,
 	},
 
 	["WEAPON_SAWNOFFSHOTGUN"] = {
 		name = "Sawed-Off Shotgun",
 		components = { },
 		RP = 30000,
-		primary = true,
 	},
 
 	["WEAPON_RPG"] = {
@@ -80,49 +71,42 @@ local weapons = {
 		name = "Grenade",
 		components = { },
 		RP = 25000,
-		gadget = true,
 	},
 
 	["WEAPON_STICKYBOMB"] = {
 		name = "Sticky Bomb",
 		components = { },
 		RP = 60000,
-		gadget = true,
 	},
 
 	["WEAPON_SMOKEGRENADE"] = {
 		name = "Tear Gas",
 		components = { },
 		RP = 15000,
-		gadget = true,
 	},
 
 	["WEAPON_MOLOTOV"] = {
 		name = "Molotov Cocktail",
 		components = { },
 		RP = 35000,
-		gadget = true,
 	},
 
 	["WEAPON_BOTTLE"] = {
 		name = "Broken Bottle",
 		components = { },
 		RP = 3000,
-		melee = true,
 	},
 
 	["WEAPON_GUSENBERG"] = {
 		name = "Gusenberg Sweeper",
 		components = { },
 		RP = 146000,
-		primary = true,
 	},
 
 	["WEAPON_DAGGER"] = {
 		name = "Antique Cavalry Dagger",
 		components = { },
 		RP = 20000,
-		melee = true,
 	},
 
 	["WEAPON_MUSKET"] = {
@@ -141,77 +125,66 @@ local weapons = {
 		name = "Proximity Mine",
 		components = { },
 		RP = 100000,
-		gadget = true,
 	},
 
 	["WEAPON_FLAREGUN"] = {
 		name = "Flare Gun",
 		components = { },
 		RP = 37500,
-		secondary = true,
 	},
 
 	["WEAPON_MARKSMANPISTOL"] = {
 		name = "Marksman Pistol",
 		components = { },
 		RP = 43500,
-		primary = true,
 	},
 
 	["WEAPON_KNUCKLE"] = {
 		name = "Knuckle Dusters",
 		components = { },
 		RP = 75000,
-		melee = true,
 	},
 
 	["WEAPON_HATCHET"] = {
 		name = "Hatchet",
 		components = { },
 		RP = 75000,
-		melee = true,
 	},
 
 	["WEAPON_MACHETE"] = {
 		name = "Machete",
 		components = { },
 		RP = 89000,
-		melee = true,
 	},
 
 	["WEAPON_SWITCHBLADE"] = {
 		name = "Switchblade",
 		components = { },
 		RP = 19500,
-		melee = true,
 	},
 
 	["WEAPON_REVOLVER"] = {
 		name = "Heavy Revolver",
 		components = { },
 		RP = 54000,
-		primary = true,
 	},
 
 	["WEAPON_DBSHOTGUN"] = {
 		name = "Double Barrel Shotgun",
 		components = { },
 		RP = 154500,
-		primary = true,
 	},
 
 	["WEAPON_AUTOSHOTGUN"] = {
 		name = "Sweeper Shotgun",
 		components = { },
 		RP = 149000,
-		primary = true,
 	},
 
 	["WEAPON_BATTLEAXE"] = {
 		name = "Battle Axe",
 		components = { },
 		RP = 95000,
-		melee = true,
 	},
 
 	["WEAPON_COMPACTLAUNCHER"] = {
@@ -224,21 +197,18 @@ local weapons = {
 		name = "Pipe Bomb",
 		components = { },
 		RP = 50000,
-		gadget = true,
 	},
 
 	["WEAPON_POOLCUE"] = {
 		name = "Pool Cue",
 		components = { },
 		RP = 62500,
-		melee = true,
 	},
 
 	["WEAPON_WRENCH"] = {
 		name = "Pipe Wrench",
 		components = { },
 		RP = 71500,
-		melee = true,
 	},
 
 	["WEAPON_PISTOL"] = {
@@ -248,7 +218,6 @@ local weapons = {
 			{ owned = nil, hash = 1709866683, name = "Suppressor" },
 		},
 		RP = 0,
-		secondary = true,
 	},
 
 	["WEAPON_MINISMG"] = {
@@ -257,7 +226,6 @@ local weapons = {
 			{ owned = nil, hash = 2474561719, name = "Extended Clip" },
 		},
 		RP = 89000,
-		secondary = true,
 	},
 
 	["WEAPON_MACHINEPISTOL"] = {
@@ -267,7 +235,6 @@ local weapons = {
 			{ owned = nil, hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 62500,
-		secondary = true,
 	},
 
 	["WEAPON_COMPACTRIFLE"] = {
@@ -276,7 +243,6 @@ local weapons = {
 			{ owned = nil, hash = 1509923832, name = "Extended Clip" },
 		},
 		RP = 146500,
-		primary = true,
 	},
 
 	["WEAPON_COMBATPDW"] = {
@@ -287,7 +253,6 @@ local weapons = {
 			{ owned = nil, hash = 2855028148, name = "Scope" },
 		},
 		RP = 117500,
-		secondary = true,
 	},
 
 	["WEAPON_SNSPISTOL"] = {
@@ -296,7 +261,6 @@ local weapons = {
 			{ owned = nil, hash = 2063610803, name = "Extended Clip" },
 		},
 		RP = 27500,
-		secondary = true,
 	},
 
 	["WEAPON_HEAVYPISTOL"] = {
@@ -306,7 +270,6 @@ local weapons = {
 			{ owned = nil, hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 37500,
-		secondary = true,
 	},
 
 	["WEAPON_SPECIALCARBINE"] = {
@@ -318,7 +281,6 @@ local weapons = {
 			{ owned = nil, hash = 202788691, name = "Grip" },
 		},
 		RP = 147500,
-		primary = true,
 	},
 
 	["WEAPON_BULLPUPRIFLE"] = {
@@ -330,7 +292,6 @@ local weapons = {
 			{ owned = nil, hash = 202788691, name = "Grip" },
 		},
 		RP = 145000,
-		primary = true,
 	},
 
 	["WEAPON_VINTAGEPISTOL"] = {
@@ -340,7 +301,6 @@ local weapons = {
 			{ owned = nil, hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 34500,
-		secondary = true,
 	},
 
 	["WEAPON_HEAVYSHOTGUN"] = {
@@ -351,7 +311,6 @@ local weapons = {
 			{ owned = nil, hash = 202788691, name = "Grip" },
 		},
 		RP = 135500,
-		primary = true,
 	},
 
 	["WEAPON_MARKSMANRIFLE"] = {
@@ -372,7 +331,6 @@ local weapons = {
 			{ owned = nil, hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 32000,
-		secondary = true,
 	},
 
 	["WEAPON_APPISTOL"] = {
@@ -382,7 +340,6 @@ local weapons = {
 			{ owned = nil, hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 50000,
-		secondary = true,
 	},
 
 	["WEAPON_DOUBLEACTION"] = {
@@ -398,7 +355,6 @@ local weapons = {
 			{ owned = nil, hash = 2805810788, name = "Suppressor" },
 		},
 		RP = 40000,
-		secondary = true,
 	},
 
 	["WEAPON_MICROSMG"] = {
@@ -409,7 +365,6 @@ local weapons = {
 			{ owned = nil, hash = 2637152041, name = "Scope" },
 		},
 		RP = 37500,
-		secondary = true,
 	},
 
 	["WEAPON_SMG"] = {
@@ -420,7 +375,6 @@ local weapons = {
 			{ owned = nil, hash = 1019656791, name = "Scope" },
 		},
 		RP = 75000,
-		secondary = true,
 	},
 
 	["WEAPON_ASSAULTSMG"] = {
@@ -431,7 +385,6 @@ local weapons = {
 			{ owned = nil, hash = 2637152041, name = "Scope" },
 		},
 		RP = 125500,
-		secondary = true,
 	},
 
 	["WEAPON_ASSAULTRIFLE"] = {
@@ -443,7 +396,6 @@ local weapons = {
 			{ owned = nil, hash = 202788691, name = "Grip" },
 		},
 		RP = 85500,
-		primary = true,
 	},
 
 	["WEAPON_CARBINERIFLE"] = {
@@ -455,7 +407,6 @@ local weapons = {
 			{ owned = nil, hash = 202788691, name = "Grip" },
 		},
 		RP = 130000,
-		primary = true,
 	},
 
 	["WEAPON_ADVANCEDRIFLE"] = {
@@ -466,7 +417,6 @@ local weapons = {
 			{ owned = nil, hash = 2855028148, name = "Scope" },
 		},
 		RP = 142500,
-		primary = true,
 	},
 
 	["WEAPON_MG"] = {
@@ -476,7 +426,6 @@ local weapons = {
 			{ owned = nil, hash = 1006677997, name = "Scope" },
 		},
 		RP = 135000,
-		secondary = true,
 	},
 
 	["WEAPON_COMBATMG"] = {
@@ -486,7 +435,6 @@ local weapons = {
 			{ owned = nil, hash = 2698550338, name = "Scope" },
 		},
 		RP = 148000,
-		secondary = true,
 	},
 
 	["WEAPON_PUMPSHOTGUN"] = {
@@ -495,7 +443,6 @@ local weapons = {
 			{ owned = nil, hash = 3859329886, name = "Suppressor" },
 		},
 		RP = 35000,
-		primary = true,
 	},
 
 	["WEAPON_ASSAULTSHOTGUN"] = {
@@ -506,7 +453,6 @@ local weapons = {
 			{ owned = nil, hash = 202788691, name = "Grip" },
 		},
 		RP = 100000,
-		primary = true,
 	},
 
 	["WEAPON_BULLPUPSHOTGUN"] = {
@@ -516,7 +462,6 @@ local weapons = {
 			{ owned = nil, hash = 202788691, name = "Grip" },
 		},
 		RP = 80000,
-		primary = true,
 	},
 
 	["WEAPON_SNIPERRIFLE"] = {

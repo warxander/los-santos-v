@@ -14,7 +14,6 @@ AddEventHandler('playerSpawned', function()
 		TriggerServerEvent('lsv:loadPlayer')
 	else
 		Player.SaveWeapons()
-		SetCurrentPedWeapon(playerPed, GetHashKey(Player.primaryWeapon), true)
 	end
 end)
 
@@ -30,15 +29,7 @@ AddEventHandler('lsv:playerLoaded', function(playerData)
 	Player.kills = playerData.Kills
 	Player.deaths = playerData.Deaths
 
-	Player.UpdateMeleeWeapon(playerData.MeleeWeapon)
-	Player.UpdatePrimaryWeapon(playerData.PrimaryWeapon)
-	Player.UpdateSecondaryWeapon(playerData.SecondaryWeapon)
-	Player.UpdateGadget1(playerData.Gadget1)
-	Player.UpdateGadget2(playerData.Gadget2)
-
 	Player.GiveWeapons(playerData.Weapons)
-
-	SetCurrentPedWeapon(PlayerPedId(), GetHashKey(Player.primaryWeapon), true)
 
 	TriggerEvent('lsv:init')
 end)

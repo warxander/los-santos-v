@@ -9,12 +9,6 @@ Player.killstreak = 0
 Player.kills = 0
 Player.deaths = 0
 
-Player.meleeWeapon = nil
-Player.primaryWeapon = nil
-Player.secondaryWeapon = nil
-Player.gadget1 = nil
-Player.gadget2 = nil
-
 Player.crewMembers = { } -- { serverPlayerId }
 
 
@@ -81,40 +75,6 @@ function Player.SaveWeapons()
 	TriggerServerEvent('lsv:savePlayerWeapons', Player.GetPlayerWeapons())
 end
 
-
-function Player.UpdateMeleeWeapon(meleeWeapon)
-	if Player.meleeWeapon then RemoveWeaponFromPed(PlayerPedId(), GetHashKey(Player.meleeWeapon)) end
-	Player.meleeWeapon = meleeWeapon
-	GiveWeaponToPed(PlayerPedId(), GetHashKey(Player.meleeWeapon), 1, false, true)
-end
-
-
-function Player.UpdatePrimaryWeapon(primaryWeapon)
-	if Player.primaryWeapon then RemoveWeaponFromPed(PlayerPedId(), GetHashKey(Player.primaryWeapon)) end
-	Player.primaryWeapon = primaryWeapon
-	GiveWeaponToPed(PlayerPedId(), GetHashKey(Player.primaryWeapon), Weapon.GetSpawningAmmo(GetHashKey(Player.primaryWeapon)), false, true)
-end
-
-
-function Player.UpdateSecondaryWeapon(secondaryWeapon)
-	if Player.secondaryWeapon then RemoveWeaponFromPed(PlayerPedId(), GetHashKey(Player.secondaryWeapon)) end
-	Player.secondaryWeapon = secondaryWeapon
-	GiveWeaponToPed(PlayerPedId(), GetHashKey(Player.secondaryWeapon), Weapon.GetSpawningAmmo(GetHashKey(Player.secondaryWeapon)), false, true)
-end
-
-
-function Player.UpdateGadget1(gadget1)
-	if Player.gadget1 then RemoveWeaponFromPed(PlayerPedId(), GetHashKey(Player.gadget1)) end
-	Player.gadget1 = gadget1
-	GiveWeaponToPed(PlayerPedId(), GetHashKey(Player.gadget1), Weapon.GetSpawningAmmo(GetHashKey(Player.gadget1)), false, true)
-end
-
-
-function Player.UpdateGadget2(gadget2)
-	if Player.gadget2 then RemoveWeaponFromPed(PlayerPedId(), GetHashKey(Player.gadget2)) end
-	Player.gadget2 = gadget2
-	GiveWeaponToPed(PlayerPedId(), GetHashKey(Player.gadget2), Weapon.GetSpawningAmmo(GetHashKey(Player.gadget2)), false, true)
-end
 
 function Player.Teleport(position)
 	local playerPed = PlayerPedId()
