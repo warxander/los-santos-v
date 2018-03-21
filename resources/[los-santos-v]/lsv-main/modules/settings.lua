@@ -381,6 +381,49 @@ Settings.skins = {
 	},
 }
 
+-- Weapon tints
+Settings.weaponTints = {
+	[0] = {
+		name = "Normal",
+		RP = 0,
+	},
+
+	[1] = {
+		name = "Green",
+		RP = 2500,
+	},
+
+	[2] = {
+		name = "Gold",
+		RP = 10000,
+	},
+
+	[3] = {
+		name = "Pink",
+		RP = 25000,
+	},
+
+	[4] = {
+		name = "Army",
+		RP = 50000,
+	},
+
+	[5] = {
+		name = "LSPD",
+		RP = 100000,
+	},
+
+	[6] = {
+		name = "Orange",
+		RP = 250000,
+	},
+
+	[7] = {
+		name = "Platinum",
+		RP = 500000,
+	},
+}
+
 
 -- Bounties
 Settings.bountyEventTimeout = 180000

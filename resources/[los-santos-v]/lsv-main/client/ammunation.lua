@@ -18,12 +18,20 @@ local ammunations = {
 local ammunationColor = Color.GetHudFromBlipColor(Color.Red)
 
 
+local function weaponTintRP(weaponTintIndex, weaponHash)
+	if GetPedWeaponTintIndex(PlayerPedId(), weaponHash) == weaponTintIndex then return 'Used' end
+	return Settings.weaponTints[weaponTintIndex].RP..'RP'
+end
+
+
 function AmmuNation.GetPlaces()
 	return ammunations
 end
 
 
 AddEventHandler('lsv:init', function()
+	local selectedWeaponHash = nil
+
 	for _, ammunation in ipairs(ammunations) do
 		ammunation.blip = Map.CreatePlaceBlip(Blip.AmmuNation(), ammunation.x, ammunation.y, ammunation.z)
 	end
@@ -32,8 +40,33 @@ AddEventHandler('lsv:init', function()
 	WarMenu.SetSubTitle('ammunation', 'WEAPONS')
 	WarMenu.SetTitleBackgroundColor('ammunation', ammunationColor.r, ammunationColor.g, ammunationColor.b)
 
+	WarMenu.CreateSubMenu('ammunation_upgrades', 'ammunation', '')
+	WarMenu.SetMenuButtonPressedSound('ammunation_upgrades', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+
 	while true do
 		if WarMenu.IsMenuOpened('ammunation') then
+			for id, weapon in pairs(Weapon.GetWeapons()) do
+				local weaponHash = GetHashKey(id)
+
+				if HasPedGotWeapon(PlayerPedId(), weaponHash, false) then
+					if WarMenu.MenuButton(weapon.name, 'ammunation_upgrades') then
+						WarMenu.SetSubTitle('ammunation_upgrades', weapon.name..' UPGRADES')
+						SetCurrentPedWeapon(PlayerPedId(), weaponHash, true)
+						selectedWeaponHash = weaponHash
+					end
+				end
+			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('ammunation_upgrades') then
+			if GetWeaponTintCount(selectedWeaponHash) == Utils.GetTableLength(Settings.weaponTints) then
+				for weaponTintIndex, weaponTint in pairs(Settings.weaponTints) do
+					if WarMenu.Button(weaponTint.name, weaponTintRP(weaponTintIndex, selectedWeaponHash)) and GetPedWeaponTintIndex(PlayerPedId(), selectedWeaponHash) ~= weaponTintIndex then
+						TriggerServerEvent('lsv:updateWeaponTint', selectedWeaponHash, weaponTintIndex)
+					end
+				end
+			end
+
 			WarMenu.Display()
 		end
 
@@ -65,4 +98,13 @@ AddEventHandler('lsv:init', function()
 			end
 		end
 	end
+end)
+
+
+RegisterNetEvent('lsv:weaponTintUpdated')
+AddEventHandler('lsv:weaponTintUpdated', function(weaponHash, weaponTintIndex)
+	if weaponHash then
+		SetPedWeaponTintIndex(PlayerPedId(), weaponHash, weaponTintIndex)
+		Player.SaveWeapons()
+	else Gui.DisplayNotification('~r~You don\'t have enough RP.') end
 end)
