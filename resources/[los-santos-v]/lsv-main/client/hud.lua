@@ -5,7 +5,7 @@ AddEventHandler('lsv:init', function()
 		"Earn ~BLIP_RP~ by killing other players and join Freemode Events.",
 		"Visit ~BLIP_GUN_SHOP~ to customize your weapons.",
 		"Press ~INPUT_INTERACTION_MENU~ to open Interaction Menu.",
-		"Visit ~BLIP_CLOTHES_STORE~ to customize your Skin.",
+		"Visit ~BLIP_CLOTHES_STORE~ to change your character.",
 		"Tap ~INPUT_ENTER_CHEAT_CODE~ to toggle Expanded Radar.",
 		"Use stealth by pressing ~INPUT_DUCK~ to hide yourself from the radar.",
 	}
