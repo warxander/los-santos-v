@@ -36,3 +36,8 @@ function Logger:Debug(message)
 end
 
 
+function Logger:ToString(any)
+	return '{ type: '..type(any)..', value: '..tostring(any)..' }'
+end
+
+
