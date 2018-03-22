@@ -1,16 +1,19 @@
 AddEventHandler('lsv:init', function()
 	--https://pastebin.com/amtjjcHb
 	local tips = {
-		"Hold ~INPUT_MULTIPLAYER_INFO~ to see Scoreboard.",
-		"Earn ~BLIP_RP~ by killing other players and join Freemode Events.",
+		"Performing Events and taking out players will increase your RP.",
+		"Earn RP (Reputation Points, not RolePlay) to unlock new customization options.",
+		"Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.",
+		"Use Report Player option from Interaction menu to improve your overall game experience.",
+		"Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.",
+		"Press ~INPUT_ENTER_CHEAT_CODE~ to enlarge the Radar.",
+		"Press ~INPUT_DUCK~ to enter stealth mode.",
 		"Visit ~BLIP_GUN_SHOP~ to customize your weapons.",
-		"Press ~INPUT_INTERACTION_MENU~ to open Interaction Menu.",
 		"Visit ~BLIP_CLOTHES_STORE~ to change your character.",
-		"Tap ~INPUT_ENTER_CHEAT_CODE~ to toggle Expanded Radar.",
-		"Use stealth by pressing ~INPUT_DUCK~ to hide yourself from the radar.",
+		"Join our Discord server\n~b~https://discord.gg/fAtxuhx.",
 	}
 	local tipTime = 10000
-	local tipInterval = 20000
+	local tipInterval = 30000
 
 	for _, tip in ipairs(tips) do
 		SetTimeout(tipTime, function()
