@@ -17,7 +17,7 @@ Settings.kdRatioMinStat = 100
 
 
 -- Player
-Settings.disableHealthRegen = true
+Settings.disableHealthRegen = false
 Settings.giveArmorAtSpawn = true
 Settings.autoParachutingHeight = 80
 Settings.giveParachuteAtSpawn = true
