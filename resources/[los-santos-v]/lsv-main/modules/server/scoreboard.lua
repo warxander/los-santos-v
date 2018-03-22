@@ -63,8 +63,6 @@ end
 function Scoreboard.RemovePlayer(player)
 	local playerIndex = findPlayerIndex(player)
 
-	if not playerIndex then return end
-
 	table.remove(scoreboard, playerIndex)
 
 	updateScoreboard()
@@ -84,8 +82,6 @@ end
 function Scoreboard.GetPlayerRP(player)
 	local playerIndex = findPlayerIndex(player)
 
-	if not playerIndex then return end
-
 	return scoreboard[playerIndex].RP
 end
 
@@ -93,16 +89,12 @@ end
 function Scoreboard.GetPlayerKillstreak(player)
 	local playerIndex = findPlayerIndex(player)
 
-	if not playerIndex then return end
-
 	return scoreboard[playerIndex].killstreak
 end
 
 
 function Scoreboard.UpdateRP(player, RP)
 	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
 
 	scoreboard[playerIndex].RP = scoreboard[playerIndex].RP + RP
 
@@ -113,8 +105,6 @@ end
 function Scoreboard.UpdateKills(player)
 	local playerIndex = findPlayerIndex(player)
 
-	if not playerIndex then return end
-
 	scoreboard[playerIndex].kills = scoreboard[playerIndex].kills + 1
 
 	updateScoreboard()
@@ -123,8 +113,6 @@ end
 
 function Scoreboard.UpdateDeaths(player)
 	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
 
 	scoreboard[playerIndex].deaths = scoreboard[playerIndex].deaths + 1
 
@@ -135,8 +123,6 @@ end
 function Scoreboard.UpdateKillstreak(player)
 	local playerIndex = findPlayerIndex(player)
 
-	if not playerIndex then return end
-
 	scoreboard[playerIndex].killstreak = scoreboard[playerIndex].killstreak + 1
 
 	updateScoreboard()
@@ -145,8 +131,6 @@ end
 
 function Scoreboard.ResetKillstreak(player)
 	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
 
 	scoreboard[playerIndex].killstreak = 0
 end
