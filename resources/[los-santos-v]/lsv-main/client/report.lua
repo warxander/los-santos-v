@@ -40,7 +40,7 @@ AddEventHandler('lsv:reportSuccess', function()
 end)
 
 
-RegisterNetEvent('lsv:reportError')
-AddEventHandler('lsv:reportError', function()
-	Gui.DisplayNotification('~r~An unexpected error occurred while trying to send Player Report.')
+RegisterNetEvent('lsv:playerKicked')
+AddEventHandler('lsv:playerKicked', function(playerName)
+	Gui.DisplayNotification('<C>'..playerName..'</C> has been kicked from the session by players.')
 end)
