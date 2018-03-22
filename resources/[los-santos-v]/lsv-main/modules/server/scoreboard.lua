@@ -81,12 +81,21 @@ function Scoreboard.GetRandomPlayer()
 end
 
 
-function Scoreboard.GetPlayerStats(player)
-	for _, playerStats in pairs(scoreboard) do
-		if playerStats.id == player then return playerStats end
-	end
+function Scoreboard.GetPlayerRP(player)
+	local playerIndex = findPlayerIndex(player)
 
-	return nil
+	if not playerIndex then return end
+
+	return scoreboard[playerIndex].RP
+end
+
+
+function Scoreboard.GetPlayerKillstreak(player)
+	local playerIndex = findPlayerIndex(player)
+
+	if not playerIndex then return end
+
+	return scoreboard[playerIndex].killstreak
 end
 
 

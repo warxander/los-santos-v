@@ -37,7 +37,7 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 
 	if killer ~= -1 then
 		Db.UpdateKills(killer, function()
-			local killerRP = Settings.RPPerKill + (Settings.RPPerKillstreak * Scoreboard.GetPlayerStats(killer).killstreak)
+			local killerRP = Settings.RPPerKill + (Settings.RPPerKillstreak * Scoreboard.GetPlayerKillstreak(killer))
 
 			Scoreboard.UpdateKillstreak(killer)
 
