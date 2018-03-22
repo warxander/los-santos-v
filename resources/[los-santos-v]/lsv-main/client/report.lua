@@ -9,7 +9,7 @@ AddEventHandler('lsv:init', function()
 			for i = 0, Settings.maxPlayerCount do
 				if i ~= PlayerId() and NetworkIsPlayerActive(i) then
 					local target = GetPlayerServerId(i)
-					if not Utils.Index(target, reportedPlayers) and WarMenu.MenuButton(GetPlayerName(i), 'reportReason') then 
+					if not Utils.Index(reportedPlayers, target) and WarMenu.MenuButton(GetPlayerName(i), 'reportReason') then
 						reportingPlayer = target
 					end
 				end
