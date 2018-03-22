@@ -2,8 +2,9 @@ local discordUrl = nil
 local reportedPlayers = { }
 
 local function buildReportMessage(player, target, reason)
-	return '**REPORTER**: '..GetPlayerIdentifiers(player)[1]..'\n\n'..'**TARGET**: '..GetPlayerIdentifiers(target)[1]..'\n'..'**NAME**: '..
-		GetPlayerName(target)..'\n'..'**REASON**: '..reason..'\n\nThank you for reporting.'
+	return '**REPORTER ID**: '..GetPlayerIdentifiers(player)[1]..'\n**REPORTER NAME**: '..GetPlayerName(player)..'\n\n'..
+		'**TARGET ID**: '..GetPlayerIdentifiers(target)[1]..'\n**TARGET NAME**: '..GetPlayerName(target)..'\n'..
+		'**REPORTING REASON**: '..reason
 end
 
 local function buildKickMessage(player)
