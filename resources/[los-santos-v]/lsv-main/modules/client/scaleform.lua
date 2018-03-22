@@ -8,7 +8,7 @@ local logger = Logger:CreateNamedLogger("Scaleform")
 
 local function scaleform_is_valid(scaleform)
 	if not scaleform or scaleform == 0 then
-		logger:Error('Scaleform: invalid scaleform '..tostring(scaleform))
+		logger:Error('Invalid scaleform parameter: '..logger:ToString(scaleform))
 		return false
 	end
 
@@ -18,7 +18,7 @@ end
 
 local function scaleform_has_loaded(scaleform)
 	if not scaleform or not HasScaleformMovieLoaded(scaleform) then
-		logger:Error('Scaleform: using not loaded scaleform '..tostring(scaleform))
+		logger:Error('Using not loaded scaleform: '..logger:ToString(scaleform))
 		return false
 	end
 
@@ -33,7 +33,7 @@ end
 
 function Scaleform:Request(id)
 	if type(id) ~= "string" then
-		logger:Error('Scaleform: unable to request '..tostring(id))
+		logger:Error('Unable to request id: '..logger:ToString(id))
 		return nil
 	end
 
@@ -61,7 +61,7 @@ end
 function Scaleform:Call(func, ...)
 	if not scaleform_is_valid(self.scaleform) then return end
 	if type(func) ~= "string" then
-		logger:Error('Scaleform: unable to call '..tostring(func)..' func')
+		logger:Error('Unable to call scaleform func: '..logger:ToString(func))
 		return
 	end
 
@@ -81,7 +81,7 @@ function Scaleform:Call(func, ...)
 		elseif paramType == 'boolean' then
 			PushScaleformMovieFunctionParameterBool(param)
 		else
-			logger:Error('Scaleform: invalid parameter type ['..tostring(paramType)..'] for scaleform '..tostring(self.scaleform))
+			logger:Error('Unknown parameter type for scaleform '..tostring(self.scaleform)..': '..tostring(paramType))
 			return
 		end
 	end
