@@ -42,7 +42,6 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 			Scoreboard.UpdateKillstreak(killer)
 
 			Db.UpdateRP(killer, killerRP, function()
-				TriggerClientEvent('lsv:onRPEarnedPerKill', killer, killerRP)
 				TriggerClientEvent('lsv:onPlayerKilled', -1, victim, killer, getKilledMessage())
 			end)
 		end)

@@ -20,7 +20,7 @@ local ammunationColor = Color.GetHudFromBlipColor(Color.Red)
 
 local function weaponTintRP(weaponTintIndex, weaponHash)
 	if GetPedWeaponTintIndex(PlayerPedId(), weaponHash) == weaponTintIndex then return 'Used' end
-	return Settings.weaponTints[weaponTintIndex].RP..'RP'
+	return Settings.weaponTints[weaponTintIndex].RP..' RP'
 end
 
 

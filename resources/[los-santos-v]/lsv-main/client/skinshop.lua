@@ -22,7 +22,7 @@ local skinshopColor = Color.GetHudFromBlipColor(Color.Green)
 
 local function skinRP(id)
 	if id == Player.skin then return 'Used' end
-	return Settings.skins[id].RP..'RP'
+	return Settings.skins[id].RP..' RP'
 end
 
 

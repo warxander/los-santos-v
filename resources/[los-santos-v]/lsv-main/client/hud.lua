@@ -59,12 +59,6 @@ AddEventHandler('lsv:onPlayerKilled', function(source, killer, message)
 end)
 
 
-RegisterNetEvent('lsv:onRPEarnedPerKill')
-AddEventHandler('lsv:onRPEarnedPerKill', function(RP)
-	Gui.DisplayNotification("+ "..tostring(RP).."RP")
-end)
-
-
 -- GUI
 AddEventHandler('lsv:init', function()
 	while true do
