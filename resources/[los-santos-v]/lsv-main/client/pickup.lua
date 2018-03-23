@@ -6,7 +6,7 @@ local pickupColor = Color.GetHudFromBlipColor(Color.Red)
 
 local function GetValidRandomPickupRadius()
 	local randomSpawnRadius = Settings.pickupMaxSpawnRadius - Settings.pickupMinSpawnRadius
-	local result = GetRandomIntInRange(-randomSpawnRadius, randomSpawnRadius)
+	local result = GetRandomFloatInRange(-randomSpawnRadius, randomSpawnRadius)
 
 	if result < 0 then
 		result = result - Settings.pickupMinSpawnRadius

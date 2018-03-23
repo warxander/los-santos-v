@@ -19,8 +19,8 @@ local function spawnCrateGuard(positionIndex)
 	while not HasModelLoaded(modelHash) do Citizen.Wait(1) end
 
 	for i = 1, Settings.crateDropSettings.guards.count do
-		local x = Settings.crateDropSettings.positions[positionIndex].x + GetRandomIntInRange(-Settings.crateDropSettings.guards.radius, Settings.crateDropSettings.guards.radius)
-		local y = Settings.crateDropSettings.positions[positionIndex].y + GetRandomIntInRange(-Settings.crateDropSettings.guards.radius, Settings.crateDropSettings.guards.radius)
+		local x = Settings.crateDropSettings.positions[positionIndex].x + GetRandomFloatInRange(-Settings.crateDropSettings.guards.radius, Settings.crateDropSettings.guards.radius)
+		local y = Settings.crateDropSettings.positions[positionIndex].y + GetRandomFloatInRange(-Settings.crateDropSettings.guards.radius, Settings.crateDropSettings.guards.radius)
 		local _, z = GetGroundZFor_3dCoord(x, y, Settings.crateDropSettings.positions[positionIndex].z + 1000.)
 
 		local guard = CreatePed(5, modelHash, x, y, z + 1., GetRandomFloatInRange(0.0, 360.0), true, true)

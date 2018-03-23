@@ -202,12 +202,12 @@ end
 local spawnLock = false
 
 
-local minSpawnRadius = 75
-local maxSpawnRadius = 125
+local minSpawnRadius = 75.
+local maxSpawnRadius = 125.
 
 local function GetValidRandomPickupRadius(radiusIncrement)
 	local randomSpawnRadius = maxSpawnRadius - minSpawnRadius + radiusIncrement
-	local result = GetRandomIntInRange(-randomSpawnRadius, randomSpawnRadius)
+	local result = GetRandomFloatInRange(-randomSpawnRadius, randomSpawnRadius)
 
 	if result < 0 then result = result - minSpawnRadius
 	else result = result + minSpawnRadius end

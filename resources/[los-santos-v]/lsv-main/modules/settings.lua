@@ -35,9 +35,9 @@ Settings.crewInvitationTimeout = 10000
 
 -- Pickups
 Settings.pickupMaxCount = 5
-Settings.pickupMinSpawnRadius = 25
-Settings.pickupMaxSpawnRadius = 100
-Settings.pickupMinDistance = 25
+Settings.pickupMinSpawnRadius = 25.
+Settings.pickupMaxSpawnRadius = 100.
+Settings.pickupMinDistance = 25.
 
 
 -- RP
@@ -85,7 +85,7 @@ Settings.crateDropSettings = {
 	},
 	guards = {
 		hash = "s_m_y_marine_03",
-		radius = 13,
+		radius = 13.,
 		armor = 200,
 		weapons = {
 			"WEAPON_SNIPERRIFLE",
