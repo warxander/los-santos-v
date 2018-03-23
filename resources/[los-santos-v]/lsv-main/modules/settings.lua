@@ -47,7 +47,7 @@ Settings.RPPerKillstreak = 1
 
 -- Crate Drops
 Settings.crateDropSettings = {
-	RP = 50,
+	RP = 25,
 	weaponClipCount = 5,
 	weapons = {
 		{ id = "WEAPON_COMPACTLAUNCHER", name = "Compact Grenade Launcher" },
@@ -114,186 +114,176 @@ Settings.skins = {
 
 	["csb_anita"] = {
 		name = "Anita Mendoza",
-		RP = 50000,
+		RP = 5000,
 	},
 
 	["csb_anton"] = {
 		name = "Anton Beaudelaire",
-		RP = 50000,
+		RP = 6000,
 	},
 
 	["ig_ashley"] = {
 		name = "Ashley Butler",
-		RP = 50000,
+		RP = 7000,
 	},
 
 	["ig_casey"] = {
 		name = "Casey",
-		RP = 50000,
+		RP = 8000,
 	},
 
 	["ig_clay"] = {
 		name = "Clay Simons",
-		RP = 50000,
-	},
-
-	["ig_clay"] = {
-		name = "Clay Simons",
-		RP = 50000,
+		RP = 9000,
 	},
 
 	["cs_debra"] = {
 		name = "Debra",
-		RP = 50000,
+		RP = 10000,
 	},
 
 	["csb_hugh"] = {
 		name = "Hugh Harrison",
-		RP = 50000,
+		RP = 11000,
 	},
 
 	["ig_jay_norris"] = {
 		name = "Jay Norris",
-		RP = 50000,
+		RP = 12000,
 	},
 
 	["cs_johnnyklebitz"] = {
 		name = "Johnny Klebitz",
-		RP = 50000,
+		RP = 13000,
 	},
 
 	["ig_karen_daniels"] = {
 		name = "Karen Daniels",
-		RP = 50000,
+		RP = 14000,
 	},
 
 	["ig_natalia"] = {
 		name = "Natalia Zverovna",
-		RP = 50000,
+		RP = 15000,
 	},
 
 	["ig_ortega"] = {
 		name = "Ortega",
-		RP = 50000,
+		RP = 16000,
 	},
 
 	["csb_oscar"] = {
 		name = "Oscar Guzman",
-		RP = 50000,
+		RP = 17000,
 	},
 
 	["ig_dreyfuss"] = {
 		name = "Peter Dreyfuss",
-		RP = 50000,
+		RP = 18000,
 	},
 
 	["ig_tanisha"] = {
 		name = "Tanisha Jackson",
-		RP = 50000,
+		RP = 19000,
 	},
 
 	["ig_terry"] = {
 		name = "Terry Thorpe",
-		RP = 50000,
-	},
-
-	["ig_terry"] = {
-		name = "Terry Thorpe",
-		RP = 50000,
+		RP = 20000,
 	},
 
 
 
 	["ig_andreas"] = {
 		name = "Andreas Sanchez",
-		RP = 125000,
+		RP = 25000,
 	},
 
 	["ig_taostranslator"] = {
 		name = "Cheng's translator",
-		RP = 125000,
+		RP = 30000,
 	},
 
 	["ig_denise"] = {
 		name = "Denise Clinton",
-		RP = 125000,
+		RP = 35000,
 	},
 
 	["ig_oneil"] = {
 		name = "Elwood O'Neil",
-		RP = 125000,
+		RP = 40000,
 	},
 
 	["ig_fabien"] = {
 		name = "Fabien LaRouche",
-		RP = 125000,
+		RP = 45000,
 	},
 
 	["ig_floyd"] = {
 		name = "Floyd Hebert",
-		RP = 125000,
+		RP = 50000,
 	},
 
 	["ig_drfriedlander"] = {
 		name = "Isiah Friedlander",
-		RP = 125000,
+		RP = 55000,
 	},
 
 	["ig_lazlow"] = {
 		name = "Lazlow Jones",
-		RP = 125000,
+		RP = 60000,
 	},
 
 	["ig_patricia"] = {
 		name = "Patricia Madrazo",
-		RP = 125000,
+		RP = 65000,
 	},
 
 	["ig_roccopelosi"] = {
 		name = "Rocco Pelosi",
-		RP = 125000,
+		RP = 70000,
 	},
 
 	["ig_siemonyetarian"] = {
 		name = "Simeon Yetarian",
-		RP = 125000,
+		RP = 75000,
 	},
 
 	["ig_taocheng"] = {
 		name = "Tao Cheng",
-		RP = 125000,
+		RP = 80000,
 	},
 
 
 
 	["ig_amandatownley"] = {
 		name = "Amanda De Santa",
-		RP = 250000,
+		RP = 100000,
 	},
 
 	["ig_jimmydisanto"] = {
 		name = "Jimmy De Santa",
-		RP = 250000,
+		RP = 125000,
 	},
 
 	["ig_tracydisanto"] = {
 		name = "Tracey De Santa",
-		RP = 250000,
+		RP = 150000,
 	},
 
 	["ig_brad"] = {
 		name = "Brad Snider",
-		RP = 250000,
+		RP = 175000,
 	},
 
 	["ig_stretch"] = {
 		name = "Stretch",
-		RP = 250000,
+		RP = 200000,
 	},
 
 	["ig_chengsr"] = {
 		name = "Wei Cheng",
-		RP = 250000,
+		RP = 225000,
 	},
 
 	["cs_martinmadrazo"] = {
@@ -303,76 +293,61 @@ Settings.skins = {
 
 	["ig_solomon"] = {
 		name = "Solomon Richards",
-		RP = 250000,
+		RP = 275000,
 	},
 
 	["ig_nervousron"] = {
 		name = "Ron Jakowski",
-		RP = 250000,
+		RP = 300000,
 	},
 
 	["ig_wade"] = {
 		name = "Wade Hebert",
-		RP = 250000,
+		RP = 325000,
 	},
 
 	["ig_molly"] = {
 		name = "Molly Schultz",
-		RP = 250000,
+		RP = 350000,
 	},
 
 
 
 	["ig_lestercrest"] = {
 		name = "Lester Crest",
-		RP = 500000,
+		RP = 550000,
 	},
 
 	["ig_davenorton"] = {
 		name = "Dave Norton",
-		RP = 500000,
+		RP = 600000,
 	},
 
 	["ig_lamardavis"] = {
 		name = "Lamar Devis",
-		RP = 500000,
-	},
-
-	["ig_lestercrest"] = {
-		name = "Lester Crest",
-		RP = 500000,
-	},
-
-	["ig_davenorton"] = {
-		name = "Dave Norton",
-		RP = 500000,
-	},
-
-	["ig_lamardavis"] = {
-		name = "Lamar Davis",
-		RP = 500000,
+		RP = 650000,
 	},
 
 	["ig_stevehains"] = {
 		name = "Steve Haines",
-		RP = 500000,
+		RP = 700000,
 	},
 
 	["ig_devin"] = {
 		name = "Devin Weston",
-		RP = 500000,
+		RP = 750000,
 	},
 
 
 
 	["player_zero"] = {
 		name = "Michael De Santa",
-		RP = 750000,
+		RP = 1000000,
 	},
 
 	["player_one"] = {
 		name = "Franklin Clinton",
-		RP = 1000000,
+		RP = 1250000,
 	},
 
 	["player_two"] = {
@@ -390,7 +365,7 @@ Settings.weaponTints = {
 
 	[1] = {
 		name = "Green",
-		RP = 2500,
+		RP = 5000,
 	},
 
 	[2] = {
@@ -427,4 +402,4 @@ Settings.weaponTints = {
 
 -- Bounties
 Settings.bountyEventTimeout = 180000
-Settings.bountyEventReward = 25
+Settings.bountyEventReward = 10
