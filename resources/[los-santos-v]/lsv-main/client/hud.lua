@@ -112,6 +112,16 @@ Citizen.CreateThread(function()
 end)
 
 
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+
+		RemoveMultiplayerBankCash()
+		RemoveMultiplayerHudCash()
+	end
+end)
+
+
 AddEventHandler('lsv:init', function()
 	local isBigMapEnabled = false
 
