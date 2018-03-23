@@ -20,6 +20,8 @@ end)
 
 RegisterNetEvent('lsv:playerLoaded')
 AddEventHandler('lsv:playerLoaded', function(playerData)
+	SetEntityAlpha(PlayerPedId(), 128)
+
 	SetRandomSeed(GetNetworkTime())
 
 	Skin.ChangePlayerSkin(playerData.SkinModel)
@@ -30,6 +32,8 @@ AddEventHandler('lsv:playerLoaded', function(playerData)
 	Player.deaths = playerData.Deaths
 
 	Player.GiveWeapons(playerData.Weapons)
+
+	SetEntityAlpha(PlayerPedId(), 255)
 
 	TriggerEvent('lsv:init')
 end)
