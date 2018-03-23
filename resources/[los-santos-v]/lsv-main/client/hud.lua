@@ -54,7 +54,7 @@ end)
 RegisterNetEvent('lsv:onPlayerKilled')
 AddEventHandler('lsv:onPlayerKilled', function(source, killer, message)
 	if NetworkIsPlayerActive(GetPlayerFromServerId(source)) and NetworkIsPlayerActive(GetPlayerFromServerId(killer)) then
-		Gui.DisplayNotification(Gui.GetPlayerName(killer).." "..message.." "..Gui.GetPlayerName(source, nil, true))
+		Gui.DisplayNotification(Gui.GetPlayerName(killer).." "..message.." "..Gui.GetPlayerName(source, nil, true)..'.')
 	end
 end)
 
