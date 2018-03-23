@@ -12,43 +12,6 @@ local function resetCrateDropData()
 end
 
 
-local function spawnCrateGuard(positionIndex)
-	local modelHash = GetHashKey(Settings.crateDropSettings.guards.hash)
-
-	RequestModel(modelHash)
-	while not HasModelLoaded(modelHash) do Citizen.Wait(1) end
-
-	for i = 1, Settings.crateDropSettings.guards.count do
-		local x = Settings.crateDropSettings.positions[positionIndex].x + GetRandomFloatInRange(-Settings.crateDropSettings.guards.radius, Settings.crateDropSettings.guards.radius)
-		local y = Settings.crateDropSettings.positions[positionIndex].y + GetRandomFloatInRange(-Settings.crateDropSettings.guards.radius, Settings.crateDropSettings.guards.radius)
-		local _, z = GetGroundZFor_3dCoord(x, y, Settings.crateDropSettings.positions[positionIndex].z + 1000.)
-
-		local guard = CreatePed(5, modelHash, x, y, z + 1., GetRandomFloatInRange(0.0, 360.0), true, true)
-		SetPedRelationshipGroupHash(guard, GetHashKey("CRATE_DROP_GUARDS"))
-
-		SetPedArmour(guard, Settings.crateDropSettings.guards.armor)
-		SetPedDropsWeaponsWhenDead(guard, false)
-		SetPedDiesWhenInjured(guard, true)
-		SetPedDiesInWater(guard, false)
-
-		local weaponHash = GetHashKey(Settings.crateDropSettings.guards.weapons[GetRandomIntInRange(1, Utils.GetTableLength(Settings.crateDropSettings.guards.weapons) + 1)])
-		GiveWeaponToPed(guard, weaponHash, -1, false, true)
-		SetPedInfiniteAmmo(guard, true, weaponHash)
-
-		SetPedCombatAbility(guard, 2) -- Proffesional
-		SetPedCombatAttributes(guard, 0, true) -- CanUseCovers
-		SetPedCombatAttributes(guard, 46, true) -- AlwaysFight
-		SetPedCombatRange(guard, 2) -- Far
-
-		TaskWanderInArea(guard, x, y, z, Settings.crateDropSettings.guards.radius, Settings.crateDropSettings.guards.radius / 2, 30000) -- Is it good enough?
-
-		Citizen.Wait(50) -- This is dirty hack for better randomness
-	end
-
-	SetModelAsNoLongerNeeded(modelHash)
-end
-
-
 AddEventHandler('lsv:init', function()
 	while true do
 		if crateDropData then
@@ -84,8 +47,6 @@ AddEventHandler('lsv:spawnCrate', function(positionIndex, weaponIndex)
 	end)
 	SetBlipScale(CrateBlip, 1.5)
 
-	if NetworkIsHost() then spawnCrateGuard(positionIndex) end
-
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 	Gui.DisplayNotification('~y~A Special Crate has been dropped.')
 end)
@@ -107,11 +68,4 @@ AddEventHandler('lsv:removeCrate', function(player, weaponClipCount, RP)
 	end
 
 	resetCrateDropData()
-end)
-
-
-Citizen.CreateThread(function()
-	AddRelationshipGroup("CRATE_DROP_GUARDS")
-	SetRelationshipBetweenGroups(5, GetHashKey("CRATE_DROP_GUARDS"), GetHashKey("PLAYER")) -- 5 means HATES
-	SetRelationshipBetweenGroups(5, GetHashKey("PLAYER"), GetHashKey("CRATE_DROP_GUARDS"))
 end)
