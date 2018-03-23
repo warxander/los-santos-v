@@ -85,7 +85,7 @@ Settings.crateDropSettings = {
 	},
 	guards = {
 		hash = "s_m_y_marine_03",
-		radius = 13.,
+		radius = 16.,
 		armor = 200,
 		weapons = {
 			"WEAPON_SNIPERRIFLE",
@@ -98,7 +98,7 @@ Settings.crateDropSettings = {
 			"WEAPON_MINIGUN",
 
 		},
-		count = 15,
+		count = 13,
 	},
 }
 
