@@ -22,7 +22,7 @@ local function CheckDistanceBetweenPickups(coords)
 	local x, y = table.unpack(coords)
 
 	for _, pickup in ipairs(pickups) do
-		if math.abs(pickup.x - x) < Settings.pickupMinSpawnRadius or math.abs(pickup.y - y) < Settings.pickupMinSpawnRadius then
+		if math.abs(pickup.x - x) < Settings.pickupMinDistance or math.abs(pickup.y - y) < Settings.pickupMinDistance then
 			return false
 		end
 	end
