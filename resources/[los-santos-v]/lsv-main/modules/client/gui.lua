@@ -26,7 +26,7 @@ end
 
 
 function Gui.DisplayHelpText(text)
-	ClearAllHelpMessages()
+	if IsHelpMessageBeingDisplayed() then return end
 	BeginTextCommandDisplayHelp("STRING")
 	AddTextComponentScaleform(text)
 	EndTextCommandDisplayHelp(0, 0, 1, -1)
