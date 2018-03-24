@@ -66,6 +66,7 @@ Settings.crateDropSettings = {
 		{ id = "WEAPON_DOUBLEACTION", name = "Double-Action Revolver" },
 	},
 	timeout = 300000,
+	notifyBeforeTimeout = 60000,
 	positions = {
 		{ ['x'] = 699.15850830078, ['y'] = -1594.9453125, ['z'] = 9.6801643371582 },
 		{ ['x'] = 1436.9431152344, ['y'] = -2148.8503417969, ['z'] = 60.606800079346 },

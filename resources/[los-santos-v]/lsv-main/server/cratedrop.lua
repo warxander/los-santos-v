@@ -5,7 +5,11 @@ local crateDropData = nil
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(Settings.crateDropSettings.timeout)
+		Citizen.Wait(Settings.crateDropSettings.timeout - Settings.crateDropSettings.notifyBeforeTimeout)
+
+		if Scoreboard.GetPlayersCount() > 1 then TriggerClientEvent('lsv:notifyAboutCrate', -1) end
+
+		Citizen.Wait(Settings.crateDropSettings.notifyBeforeTimeout)
 
 		if not crateDropData and Scoreboard.GetPlayersCount() > 1 then
 			crateDropData = { }

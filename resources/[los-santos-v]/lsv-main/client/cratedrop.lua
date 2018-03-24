@@ -69,3 +69,10 @@ AddEventHandler('lsv:removeCrate', function(player, weaponClipCount, RP)
 
 	resetCrateDropData()
 end)
+
+
+RegisterNetEvent('lsv:notifyAboutCrate')
+AddEventHandler('lsv:notifyAboutCrate', function()
+	Gui.DisplayHelpText('A plane is on its way to drop a Crate ~BLIP_CRATEDROP~ which contains useful equipment.')
+	Gui.DisplayNotification('Crate Drop inbound.')
+end)
