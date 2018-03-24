@@ -45,6 +45,11 @@ Settings.RPPerKill = 2
 Settings.RPPerKillstreak = 1
 
 
+-- Bounties
+Settings.bountyEventTimeout = 180000
+Settings.bountyEventReward = 10
+
+
 -- Crate Drops
 Settings.crateDropSettings = {
 	RP = 25,
@@ -398,8 +403,3 @@ Settings.weaponTints = {
 		RP = 500000,
 	},
 }
-
-
--- Bounties
-Settings.bountyEventTimeout = 180000
-Settings.bountyEventReward = 10

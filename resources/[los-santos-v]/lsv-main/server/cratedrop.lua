@@ -47,7 +47,7 @@ end)
 AddEventHandler('lsv:playerDropped', function(player)
 	if Scoreboard.GetPlayersCount() ~= 0 then return end
 
-	logger:Info('Remove ')
+	logger:Info('Remove')
 
 	crateDropData = nil
 end)
