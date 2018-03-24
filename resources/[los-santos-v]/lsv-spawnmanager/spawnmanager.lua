@@ -254,7 +254,7 @@ function spawnPlayer(spawnIdx, cb)
 				local unk, groundZ = GetGroundZFor_3dCoord(x, y, playerZ)
 				local validCoords, coords = GetSafeCoordForPed(x, y, groundZ, false, 16)
 
-				if validCoords then
+				if validCoords and groundZ > 0. then
 					spawn = { }
 					spawn.x, spawn.y, spawn.z = table.unpack(coords)
 				else
