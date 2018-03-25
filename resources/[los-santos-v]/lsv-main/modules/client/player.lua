@@ -63,7 +63,7 @@ function Player.GiveWeapons(weapons)
 		GiveWeaponToPed(player, weaponHash, weapon.ammo, false, weapon.selected or false)
 
 		for _, component in ipairs(weapon.components) do
-			GiveWeaponComponentToPed(player, GetHashKey(weapon.id), component.hash)
+			GiveWeaponComponentToPed(player, GetHashKey(weapon.id), component)
 		end
 
 		SetPedWeaponTintIndex(player, weaponHash, weapon.tintIndex)
