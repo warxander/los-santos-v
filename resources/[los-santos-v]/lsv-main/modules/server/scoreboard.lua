@@ -116,6 +116,7 @@ function Scoreboard.UpdateKills(player)
 	if not playerIndex then return end
 
 	scoreboard[playerIndex].kills = scoreboard[playerIndex].kills + 1
+	scoreboard[playerIndex].kdRatio = calculateKdRatio(scoreboard[playerIndex].kills, scoreboard[playerIndex].deaths)
 
 	updateScoreboard()
 end
@@ -127,6 +128,7 @@ function Scoreboard.UpdateDeaths(player)
 	if not playerIndex then return end
 
 	scoreboard[playerIndex].deaths = scoreboard[playerIndex].deaths + 1
+	scoreboard[playerIndex].kdRatio = calculateKdRatio(scoreboard[playerIndex].kills, scoreboard[playerIndex].deaths)
 
 	updateScoreboard()
 end
