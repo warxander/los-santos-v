@@ -52,6 +52,8 @@ RegisterServerEvent('lsv:savePlayerWeapons')
 AddEventHandler('lsv:savePlayerWeapons', function(weapons)
 	local player = source
 
+	if not weapons or type(weapons) ~= 'table' or Utils.IsTableEmpty(weapons) then return end
+
 	Db.SetValue(player, 'Weapons', Db.ToString(json.encode(weapons)))
 end)
 
