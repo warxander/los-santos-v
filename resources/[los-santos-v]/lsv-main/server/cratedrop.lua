@@ -1,15 +1,21 @@
 local logger = Logger:CreateNamedLogger('CrateDrop')
 
 local crateDropData = nil
+local eventFinishedTime = nil
 
 
 Citizen.CreateThread(function()
+	eventFinishedTime = GetGameTimer()
+
 	while true do
 		Citizen.Wait(Settings.crateDropSettings.timeout - Settings.crateDropSettings.notifyBeforeTimeout)
 
 		if Scoreboard.GetPlayersCount() > 1 then TriggerClientEvent('lsv:notifyAboutCrate', -1) end
 
 		Citizen.Wait(Settings.crateDropSettings.notifyBeforeTimeout)
+
+		local timePassedSinceLastEvent = GetGameTimer() - eventFinishedTime
+		if timePassedSinceLastEvent < Settings.crateDropSettings.timeout then Citizen.Wait(Settings.crateDropSettings.timeout - timePassedSinceLastEvent) end
 
 		if not crateDropData and Scoreboard.GetPlayersCount() > 1 then
 			crateDropData = { }
@@ -34,6 +40,7 @@ AddEventHandler('lsv:cratePickedUp', function()
 
 	Db.UpdateRP(player, Settings.crateDropSettings.RP, function()
 		crateDropData = nil
+		eventFinishedTime = GetGameTimer()
 		TriggerClientEvent('lsv:removeCrate', -1, player, Settings.crateDropSettings.weaponClipCount, Settings.crateDropSettings.RP)
 	end)
 end)
