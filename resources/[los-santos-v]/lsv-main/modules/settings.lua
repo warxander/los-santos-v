@@ -50,6 +50,13 @@ Settings.bountyEventTimeout = 180000
 Settings.bountyEventReward = 10
 
 
+-- Distract Cops
+Settings.distractCopsRadius = 125.
+Settings.distractCopsTime = 300000
+Settings.distractCopsWantedInterval = 60000
+Settings.distractCopsReward = 150
+
+
 -- Crate Drops
 Settings.crateDropSettings = {
 	RP = 25,

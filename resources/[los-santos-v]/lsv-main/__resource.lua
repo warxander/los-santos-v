@@ -34,6 +34,7 @@ server_scripts {
 	"server/cratedrop.lua",
 	"server/bounty.lua",
 	"server/guard.lua",
+	"server/distractcops.lua",
 	"server/crew.lua",
 }
 
@@ -73,5 +74,6 @@ client_scripts {
 	"client/interactionmenu.lua",
 	"client/bounty.lua",
 	"client/guard.lua",
+	"client/distractcops.lua",
 	"client/crew.lua",
 }

@@ -104,6 +104,10 @@ AddEventHandler('lsv:init', function()
 				TriggerServerEvent('lsv:leaveCrew')
 
 				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Distract Cops') then
+				TriggerEvent('lsv:distractCops')
+
+				WarMenu.CloseMenu()
 			elseif WarMenu.Button('Kill Yourself') then
 				SetEntityHealth(PlayerPedId(), 0)
 

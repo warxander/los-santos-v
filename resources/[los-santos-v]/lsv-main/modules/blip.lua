@@ -122,25 +122,35 @@ end
 
 
 -- Places
+function Blip.BigCircle()
+	return 9
+end
+
+
 function Blip.Waypoint()
 	return 8
 end
+
 
 function Blip.Store()
 	return 52
 end
 
+
 function Blip.CrateDrop()
 	return 306
 end
+
 
 function Blip.AmmuNation()
 	return 110
 end
 
+
 function Blip.Clothes()
 	return 73
 end
+
 
 function Blip.LosSantosCustoms()
 	return 72
