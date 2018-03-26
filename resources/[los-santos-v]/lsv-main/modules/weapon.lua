@@ -61,13 +61,11 @@ local weapons = {
 	["WEAPON_RPG"] = {
 		name = "RPG",
 		components = { },
-		unique = true,
 	},
 
 	["WEAPON_MINIGUN"] = {
 		name = "Minigun",
 		components = { },
-		unique = true,
 	},
 
 	["WEAPON_GRENADE"] = {
@@ -115,13 +113,11 @@ local weapons = {
 	["WEAPON_MUSKET"] = {
 		name = "Musket",
 		components = { },
-		unique = true,
 	},
 
 	["WEAPON_HOMINGLAUNCHER"] = {
 		name = "Homing Launcher",
 		components = { },
-		unique = true,
 	},
 
 	["WEAPON_PROXMINE"] = {
@@ -193,7 +189,6 @@ local weapons = {
 	["WEAPON_COMPACTLAUNCHER"] = {
 		name = "Compact Grenade Launcher",
 		components = { },
-		unique = true,
 	},
 
 	["WEAPON_PIPEBOMB"] = {
@@ -217,8 +212,8 @@ local weapons = {
 	["WEAPON_PISTOL"] = {
 		name = "Pistol",
 		components = {
-			{ owned = nil, hash = 3978713628, name = "Extended Clip" },
-			{ owned = nil, hash = 1709866683, name = "Suppressor" },
+			{ hash = 3978713628, name = "Extended Clip" },
+			{ hash = 1709866683, name = "Suppressor" },
 		},
 		RP = 0,
 	},
@@ -226,7 +221,7 @@ local weapons = {
 	["WEAPON_MINISMG"] = {
 		name = "Mini SMG",
 		components = {
-			{ owned = nil, hash = 2474561719, name = "Extended Clip" },
+			{ hash = 2474561719, name = "Extended Clip" },
 		},
 		RP = 89000,
 	},
@@ -234,8 +229,8 @@ local weapons = {
 	["WEAPON_MACHINEPISTOL"] = {
 		name = "Machine Pistol",
 		components = {
-			{ owned = nil, hash = 3106695545, name = "Extended Clip" },
-			{ owned = nil, hash = 3271853210, name = "Suppressor" },
+			{ hash = 3106695545, name = "Extended Clip" },
+			{ hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 62500,
 	},
@@ -243,7 +238,7 @@ local weapons = {
 	["WEAPON_COMPACTRIFLE"] = {
 		name = "Compact Rifle",
 		components = {
-			{ owned = nil, hash = 1509923832, name = "Extended Clip" },
+			{ hash = 1509923832, name = "Extended Clip" },
 		},
 		RP = 146500,
 	},
@@ -251,9 +246,9 @@ local weapons = {
 	["WEAPON_COMBATPDW"] = {
 		name = "Combat PDW",
 		components = {
-			{ owned = nil, hash = 860508675, name = "Extended Clip" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
-			{ owned = nil, hash = 2855028148, name = "Scope" },
+			{ hash = 860508675, name = "Extended Clip" },
+			{ hash = 202788691, name = "Grip" },
+			{ hash = 2855028148, name = "Scope" },
 		},
 		RP = 117500,
 	},
@@ -261,7 +256,7 @@ local weapons = {
 	["WEAPON_SNSPISTOL"] = {
 		name = "SNS Pistol",
 		components = {
-			{ owned = nil, hash = 2063610803, name = "Extended Clip" },
+			{ hash = 2063610803, name = "Extended Clip" },
 		},
 		RP = 27500,
 	},
@@ -269,8 +264,8 @@ local weapons = {
 	["WEAPON_HEAVYPISTOL"] = {
 		name = "Heavy Pistol",
 		components = {
-			{ owned = nil, hash = 1694090795, name = "Extended Clip" },
-			{ owned = nil, hash = 3271853210, name = "Suppressor" },
+			{ hash = 1694090795, name = "Extended Clip" },
+			{ hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 37500,
 	},
@@ -278,10 +273,10 @@ local weapons = {
 	["WEAPON_SPECIALCARBINE"] = {
 		name = "Special Carbine",
 		components = {
-			{ owned = nil, hash = 2089537806, name = "Extended Clip" },
-			{ owned = nil, hash = 2805810788, name = "Suppressor" },
-			{ owned = nil, hash = 2698550338, name = "Scope" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
+			{ hash = 2089537806, name = "Extended Clip" },
+			{ hash = 2805810788, name = "Suppressor" },
+			{ hash = 2698550338, name = "Scope" },
+			{ hash = 202788691, name = "Grip" },
 		},
 		RP = 147500,
 	},
@@ -289,10 +284,10 @@ local weapons = {
 	["WEAPON_BULLPUPRIFLE"] = {
 		name = "Bullpup Rifle",
 		components = {
-			{ owned = nil, hash = 3009973007, name = "Extended Clip" },
-			{ owned = nil, hash = 2205435306, name = "Suppressor" },
-			{ owned = nil, hash = 2855028148, name = "Scope" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
+			{ hash = 3009973007, name = "Extended Clip" },
+			{ hash = 2205435306, name = "Suppressor" },
+			{ hash = 2855028148, name = "Scope" },
+			{ hash = 202788691, name = "Grip" },
 		},
 		RP = 145000,
 	},
@@ -300,8 +295,8 @@ local weapons = {
 	["WEAPON_VINTAGEPISTOL"] = {
 		name = "Vintage Pistol",
 		components = {
-			{ owned = nil, hash = 867832552, name = "Extended Clip" },
-			{ owned = nil, hash = 3271853210, name = "Suppressor" },
+			{ hash = 867832552, name = "Extended Clip" },
+			{ hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 34500,
 	},
@@ -309,9 +304,9 @@ local weapons = {
 	["WEAPON_HEAVYSHOTGUN"] = {
 		name = "Heavy Shotgun",
 		components = {
-			{ owned = nil, hash = 2535257853, name = "Extended Clip" },
-			{ owned = nil, hash = 2805810788, name = "Suppressor" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
+			{ hash = 2535257853, name = "Extended Clip" },
+			{ hash = 2805810788, name = "Suppressor" },
+			{ hash = 202788691, name = "Grip" },
 		},
 		RP = 135500,
 	},
@@ -319,19 +314,18 @@ local weapons = {
 	["WEAPON_MARKSMANRIFLE"] = {
 		name = "Marksman Rifle",
 		components = {
-			{ owned = nil, hash = 3439143621, name = "Extended Clip" },
-			{ owned = nil, hash = 2205435306, name = "Suppressor" },
-			{ owned = nil, hash = 471997210, name = "Scope" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
+			{ hash = 3439143621, name = "Extended Clip" },
+			{ hash = 2205435306, name = "Suppressor" },
+			{ hash = 471997210, name = "Scope" },
+			{ hash = 202788691, name = "Grip" },
 		},
-		unique = true,
 	},
 
 	["WEAPON_COMBATPISTOL"] = {
 		name = "Combat Pistol",
 		components = {
-			{ owned = nil, hash = 3598405421, name = "Extended Clip" },
-			{ owned = nil, hash = 3271853210, name = "Suppressor" },
+			{ hash = 3598405421, name = "Extended Clip" },
+			{ hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 32000,
 	},
@@ -339,8 +333,8 @@ local weapons = {
 	["WEAPON_APPISTOL"] = {
 		name = "AP Pistol",
 		components = {
-			{ owned = nil, hash = 614078421, name = "Extended Clip" },
-			{ owned = nil, hash = 3271853210, name = "Suppressor" },
+			{ hash = 614078421, name = "Extended Clip" },
+			{ hash = 3271853210, name = "Suppressor" },
 		},
 		RP = 50000,
 	},
@@ -348,14 +342,13 @@ local weapons = {
 	["WEAPON_DOUBLEACTION"] = {
 		name = "Double-Action Revolver",
 		components = { },
-		unique = true
 	},
 
 	["WEAPON_PISTOL50"] = {
 		name = "Pistol .50",
 		components = {
-			{ owned = nil, hash = 3654528146, name = "Extended Clip" },
-			{ owned = nil, hash = 2805810788, name = "Suppressor" },
+			{ hash = 3654528146, name = "Extended Clip" },
+			{ hash = 2805810788, name = "Suppressor" },
 		},
 		RP = 40000,
 	},
@@ -363,9 +356,9 @@ local weapons = {
 	["WEAPON_MICROSMG"] = {
 		name = "Micro SMG",
 		components = {
-			{ owned = nil, hash = 283556395, name = "Extended Clip" },
-			{ owned = nil, hash = 2805810788, name = "Suppressor" },
-			{ owned = nil, hash = 2637152041, name = "Scope" },
+			{ hash = 283556395, name = "Extended Clip" },
+			{ hash = 2805810788, name = "Suppressor" },
+			{ hash = 2637152041, name = "Scope" },
 		},
 		RP = 37500,
 	},
@@ -373,9 +366,9 @@ local weapons = {
 	["WEAPON_SMG"] = {
 		name = "SMG",
 		components = {
-			{ owned = nil, hash = 889808635, name = "Extended Clip" },
-			{ owned = nil, hash = 3271853210, name = "Suppressor" },
-			{ owned = nil, hash = 1019656791, name = "Scope" },
+			{ hash = 889808635, name = "Extended Clip" },
+			{ hash = 3271853210, name = "Suppressor" },
+			{ hash = 1019656791, name = "Scope" },
 		},
 		RP = 75000,
 	},
@@ -383,9 +376,9 @@ local weapons = {
 	["WEAPON_ASSAULTSMG"] = {
 		name = "Assault SMG",
 		components = {
-			{ owned = nil, hash = 3141985303, name = "Extended Clip" },
-			{ owned = nil, hash = 2805810788, name = "Suppressor" },
-			{ owned = nil, hash = 2637152041, name = "Scope" },
+			{ hash = 3141985303, name = "Extended Clip" },
+			{ hash = 2805810788, name = "Suppressor" },
+			{ hash = 2637152041, name = "Scope" },
 		},
 		RP = 125500,
 	},
@@ -393,10 +386,10 @@ local weapons = {
 	["WEAPON_ASSAULTRIFLE"] = {
 		name = "Assault Rifle",
 		components = {
-			{ owned = nil, hash = 2971750299, name = "Extended Clip" },
-			{ owned = nil, hash = 2805810788, name = "Suppressor" },
-			{ owned = nil, hash = 2637152041, name = "Scope" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
+			{ hash = 2971750299, name = "Extended Clip" },
+			{ hash = 2805810788, name = "Suppressor" },
+			{ hash = 2637152041, name = "Scope" },
+			{ hash = 202788691, name = "Grip" },
 		},
 		RP = 85500,
 	},
@@ -404,10 +397,10 @@ local weapons = {
 	["WEAPON_CARBINERIFLE"] = {
 		name = "Carbine Rifle",
 		components = {
-			{ owned = nil, hash = 2433783441, name = "Extended Clip" },
-			{ owned = nil, hash = 2205435306, name = "Suppressor" },
-			{ owned = nil, hash = 2698550338, name = "Scope" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
+			{ hash = 2433783441, name = "Extended Clip" },
+			{ hash = 2205435306, name = "Suppressor" },
+			{ hash = 2698550338, name = "Scope" },
+			{ hash = 202788691, name = "Grip" },
 		},
 		RP = 130000,
 	},
@@ -415,9 +408,9 @@ local weapons = {
 	["WEAPON_ADVANCEDRIFLE"] = {
 		name = "Advanced Rifle",
 		components = {
-			{ owned = nil, hash = 2395064697, name = "Extended Clip" },
-			{ owned = nil, hash = 2205435306, name = "Suppressor" },
-			{ owned = nil, hash = 2855028148, name = "Scope" },
+			{ hash = 2395064697, name = "Extended Clip" },
+			{ hash = 2205435306, name = "Suppressor" },
+			{ hash = 2855028148, name = "Scope" },
 		},
 		RP = 142500,
 	},
@@ -425,8 +418,8 @@ local weapons = {
 	["WEAPON_MG"] = {
 		name = "MG",
 		components = {
-			{ owned = nil, hash = 2182449991, name = "Extended Clip" },
-			{ owned = nil, hash = 1006677997, name = "Scope" },
+			{ hash = 2182449991, name = "Extended Clip" },
+			{ hash = 1006677997, name = "Scope" },
 		},
 		RP = 135000,
 	},
@@ -434,8 +427,8 @@ local weapons = {
 	["WEAPON_COMBATMG"] = {
 		name = "Combat MG",
 		components = {
-			{ owned = nil, hash = 3603274966, name = "Extended Clip" },
-			{ owned = nil, hash = 2698550338, name = "Scope" },
+			{ hash = 3603274966, name = "Extended Clip" },
+			{ hash = 2698550338, name = "Scope" },
 		},
 		RP = 148000,
 	},
@@ -443,7 +436,7 @@ local weapons = {
 	["WEAPON_PUMPSHOTGUN"] = {
 		name = "Pump Shotgun",
 		components = {
-			{ owned = nil, hash = 3859329886, name = "Suppressor" },
+			{ hash = 3859329886, name = "Suppressor" },
 		},
 		RP = 35000,
 	},
@@ -451,9 +444,9 @@ local weapons = {
 	["WEAPON_ASSAULTSHOTGUN"] = {
 		name = "Assault Shotgun",
 		components = {
-			{ owned = nil, hash = 2260565874, name = "Extended Clip" },
-			{ owned = nil, hash = 2205435306, name = "Suppressor" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
+			{ hash = 2260565874, name = "Extended Clip" },
+			{ hash = 2205435306, name = "Suppressor" },
+			{ hash = 202788691, name = "Grip" },
 		},
 		RP = 100000,
 	},
@@ -461,8 +454,8 @@ local weapons = {
 	["WEAPON_BULLPUPSHOTGUN"] = {
 		name = "Bullpup Shotgun",
 		components = {
-			{ owned = nil, hash = 2805810788, name = "Suppressor" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
+			{ hash = 2805810788, name = "Suppressor" },
+			{ hash = 202788691, name = "Grip" },
 		},
 		RP = 80000,
 	},
@@ -470,27 +463,24 @@ local weapons = {
 	["WEAPON_SNIPERRIFLE"] = {
 		name = "Sniper Rifle",
 		components = {
-			{ owned = nil, hash = 2805810788, name = "Suppressor" },
-			{ owned = nil, hash = 3159677559, name = "Advanced Scope" },
+			{ hash = 2805810788, name = "Suppressor" },
+			{ hash = 3159677559, name = "Advanced Scope" },
 		},
-		unique = true,
 	},
 
 	["WEAPON_HEAVYSNIPER"] = {
 		name = "Heavy Sniper",
 		components = {
-			{ owned = nil, hash = 3159677559, name = "Advanced Scope" },
+			{ hash = 3159677559, name = "Advanced Scope" },
 		},
-		unique = true,
 	},
 
 	["WEAPON_GRENADELAUNCHER"] = {
 		name = "Grenade Launcher",
 		components = {
-			{ owned = nil, hash = 2855028148, name = "Scope" },
-			{ owned = nil, hash = 202788691, name = "Grip" },
+			{ hash = 2855028148, name = "Scope" },
+			{ hash = 202788691, name = "Grip" },
 		},
-		unique = true,
 	},
 }
 
