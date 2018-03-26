@@ -12,4 +12,18 @@ CREATE TABLE Players (
 	PRIMARY KEY (PlayerID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+CREATE TABLE Reports (
+	PlayerID varchar(50) NOT NULL,
+	Total INT UNSIGNED NOT NULL DEFAULT 0,
+	PRIMARY KEY (PlayerID),
+	FOREIGN KEY (PlayerID) REFERENCES Players(PlayerID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Remove this line
+INSERT INTO Reports (PlayerID) SELECT PlayerID FROM Players;
+--
+
+
 COMMIT;

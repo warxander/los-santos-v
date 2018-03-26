@@ -16,18 +16,20 @@ RegisterServerEvent('lsv:reportPlayer')
 AddEventHandler('lsv:reportPlayer', function(target, reason)
 	local player = source
 
-	if not reportedPlayers[target] then reportedPlayers[target] = 1
-	else reportedPlayers[target] = reportedPlayers[target] + 1 end
+	Db.UpdateReports(target, function()
+		if not reportedPlayers[target] then reportedPlayers[target] = 1
+		else reportedPlayers[target] = reportedPlayers[target] + 1 end
 
-	TriggerClientEvent('lsv:reportSuccess', player)
-	PerformHttpRequest(discordUrl, function() end, 'POST', json.encode({ content = buildReportMessage(player, target, reason) }), { ['Content-Type'] = 'application/json' })
+		TriggerClientEvent('lsv:reportSuccess', player)
+		PerformHttpRequest(discordUrl, function() end, 'POST', json.encode({ content = buildReportMessage(player, target, reason) }), { ['Content-Type'] = 'application/json' })
 
-	if Scoreboard.GetPlayersCount() > 3 and reportedPlayers[target] > Scoreboard.GetPlayersCount() / 2 then
-		TriggerClientEvent('lsv:playerKicked', -1, GetPlayerName(target))
-		PerformHttpRequest(discordUrl, function() end, 'POST', json.encode({ content = buildKickMessage(player) }), { ['Content-Type'] = 'application/json' })
-		DropPlayer(target, "You have been kicked from the session by other players.")
-		reportedPlayers[target] = nil
-	end
+		if Scoreboard.GetPlayersCount() > 3 and reportedPlayers[target] > Scoreboard.GetPlayersCount() / 2 then
+			TriggerClientEvent('lsv:playerKicked', -1, GetPlayerName(target))
+			PerformHttpRequest(discordUrl, function() end, 'POST', json.encode({ content = buildKickMessage(player) }), { ['Content-Type'] = 'application/json' })
+			DropPlayer(target, "You have been kicked from the session by other players.")
+			reportedPlayers[target] = nil
+		end
+	end)
 end)
 
 Citizen.CreateThread(function()

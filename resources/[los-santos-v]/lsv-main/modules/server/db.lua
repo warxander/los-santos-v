@@ -61,9 +61,13 @@ end
 
 
 function Db.RegisterPlayer(player, callback)
+	local playerId = GetPlayerIdentifiers(player)[1]
+
 	MySQL.ready(function()
-		MySQL.Async.execute('INSERT INTO Players (PlayerID) VALUES (@playerId)', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
-			Db.FindPlayer(player, callback)
+		MySQL.Async.execute('INSERT INTO Players (PlayerID) VALUES (@playerId)', { ['@playerId'] = playerId }, function()
+			MySQL.Async.execute('INSERT INTO Reports (PlayerID) VALUES (@playerId)', { ['@playerId'] = playerId }, function()
+				Db.FindPlayer(player, callback)
+			end)
 		end)
 	end)
 end
@@ -72,6 +76,15 @@ end
 function Db.BanPlayer(player, callback)
 	MySQL.ready(function()
 		MySQL.Async.execute('UPDATE Players SET Banned=1 WHERE PlayerID=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
+			if callback then callback() end
+		end)
+	end)
+end
+
+
+function Db.UpdateReports(player, callback)
+	MySQL.ready(function()
+		MySQL.Async.execute('UPDATE Reports SET Total=Total+1 WHERE PlayerID=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
 			if callback then callback() end
 		end)
 	end)
