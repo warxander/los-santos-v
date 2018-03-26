@@ -1,11 +1,17 @@
 local logger = Logger:CreateNamedLogger('Bounty')
 
 local bountyPlayerId = nil
+local eventFinishedTime = nil
 
 
 Citizen.CreateThread(function()
+	eventFinishedTime = GetGameTimer()
+
 	while true do
 		Citizen.Wait(Settings.bountyEventTimeout)
+
+		local timePassedSinceLastEvent = GetGameTimer() - eventFinishedTime
+		if timePassedSinceLastEvent < Settings.bountyEventTimeout then Citizen.Wait(Settings.bountyEventTimeout - timePassedSinceLastEvent) end
 
 		if not bountyPlayerId and Scoreboard.GetPlayersCount() > 1 then
 			bountyPlayerId = Scoreboard.GetRandomPlayer()
@@ -26,6 +32,7 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 	logger:Info('Killed { '..GetPlayerName(bountyPlayerId)..', '..bountyPlayerId..' }')
 
 	bountyPlayerId = nil
+	eventFinishedTime = GetGameTimer()
 
 	Db.UpdateRP(killer, Settings.bountyEventReward, function()
 		TriggerClientEvent('lsv:bountyKilled', -1, killer)
