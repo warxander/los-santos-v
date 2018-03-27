@@ -13,10 +13,7 @@ AddEventHandler('lsv:distractCops', function()
 	Gui.DisplayNotification('Distract the cops in the area marked by blue circle.')
 
 	local x, y, z = table.unpack(GetEntityCoords(PlayerPedId(), true))
-	blip = AddBlipForRadius(x, y, z, Settings.distractCopsRadius)
-	SetBlipSprite(blip, Blip.BigCircle())
-	SetBlipColour(blip, Color.Blue)
-	SetBlipAlpha(blip, 128)
+	blip = Map.CreateRadiusBlip(x, y, z, Settings.distractCopsRadius, Color.Blue)
 
 	Citizen.Wait(3500)
 
