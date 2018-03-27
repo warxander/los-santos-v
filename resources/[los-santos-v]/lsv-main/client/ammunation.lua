@@ -37,9 +37,10 @@ AddEventHandler('lsv:init', function()
 		ammunation.blip = Map.CreatePlaceBlip(Blip.AmmuNation(), ammunation.x, ammunation.y, ammunation.z)
 	end
 
-	WarMenu.CreateMenu('ammunation', 'Ammu-Nation')
+	WarMenu.CreateMenu('ammunation', '')
 	WarMenu.SetSubTitle('ammunation', 'WEAPONS')
-	WarMenu.SetTitleBackgroundColor('ammunation', ammunationColor.r, ammunationColor.g, ammunationColor.b)
+	WarMenu.SetTitleBackgroundColor('ammunation', Color.GetHudFromBlipColor(Color.White).r, Color.GetHudFromBlipColor(Color.White).g, Color.GetHudFromBlipColor(Color.White).b, Color.GetHudFromBlipColor(Color.White).a)
+	WarMenu.SetTitleBackgroundSprite('ammunation', 'shopui_title_gunclub', 'shopui_title_gunclub')
 
 	WarMenu.CreateSubMenu('ammunation_upgrades', 'ammunation', '')
 	WarMenu.SetMenuButtonPressedSound('ammunation_upgrades', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')

@@ -37,9 +37,10 @@ AddEventHandler('lsv:init', function()
 		skinshop.blip = Map.CreatePlaceBlip(Blip.Clothes(), skinshop.x, skinshop.y, skinshop.z)
 	end
 
-	WarMenu.CreateMenu('skinshop', 'Profile')
+	WarMenu.CreateMenu('skinshop', '')
 	WarMenu.SetSubTitle('skinshop', 'Select Your Character')
-	WarMenu.SetTitleBackgroundColor('skinshop', skinshopColor.r, skinshopColor.g, skinshopColor.b)
+	WarMenu.SetTitleBackgroundColor('skinshop', Color.GetHudFromBlipColor(Color.White).r, Color.GetHudFromBlipColor(Color.White).g, Color.GetHudFromBlipColor(Color.White).b, Color.GetHudFromBlipColor(Color.White).a)
+	WarMenu.SetTitleBackgroundSprite('skinshop', 'shopui_title_lowendfashion', 'shopui_title_lowendfashion')
 	WarMenu.SetMenuButtonPressedSound('skinshop', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	local orderedSkins = { }

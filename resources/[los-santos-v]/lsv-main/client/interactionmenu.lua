@@ -23,7 +23,8 @@ end
 AddEventHandler('lsv:init', function()
 	WarMenu.CreateMenu('interaction', GetPlayerName(PlayerId()))
 	WarMenu.SetTitleColor('interaction', 255, 255, 255)
-	WarMenu.SetTitleBackgroundColor('interaction', 93, 182, 229)
+	WarMenu.SetTitleBackgroundColor('interaction', Color.GetHudFromBlipColor(Color.White).r, Color.GetHudFromBlipColor(Color.White).g, Color.GetHudFromBlipColor(Color.White).b, Color.GetHudFromBlipColor(Color.White).a)
+	WarMenu.SetTitleBackgroundSprite('interaction', 'commonmenu', 'interaction_bgd')
 
 	WarMenu.CreateSubMenu('inviteToCrew', 'interaction', 'Invite to Crew')
 	WarMenu.CreateSubMenu('reportPlayer', 'interaction', 'Report Player')
