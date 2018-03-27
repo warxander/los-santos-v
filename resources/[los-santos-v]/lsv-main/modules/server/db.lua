@@ -64,10 +64,8 @@ function Db.RegisterPlayer(player, callback)
 	local playerId = GetPlayerIdentifiers(player)[1]
 
 	MySQL.ready(function()
-		MySQL.Async.execute('INSERT INTO Players (PlayerID) VALUES (@playerId)', { ['@playerId'] = playerId }, function()
-			MySQL.Async.execute('INSERT INTO Reports (PlayerID) VALUES (@playerId)', { ['@playerId'] = playerId }, function()
-				Db.FindPlayer(player, callback)
-			end)
+		MySQL.Async.transaction({ 'INSERT INTO Players (PlayerID) VALUES (@playerId)', 'INSERT INTO Reports (PlayerID) VALUES (@playerId)' }, { ['@playerId'] = playerId }, function()
+			Db.FindPlayer(player, callback)
 		end)
 	end)
 end
