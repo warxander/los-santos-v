@@ -76,6 +76,13 @@ function Player.SaveWeapons()
 end
 
 
+function Player.Save()
+	Player.SaveWeapons()
+
+	TriggerServerEvent('lsv:playerSaved')
+end
+
+
 function Player.Teleport(position)
 	local playerPed = PlayerPedId()
 
@@ -94,4 +101,10 @@ RegisterNetEvent('lsv:RPUpdated')
 AddEventHandler('lsv:RPUpdated', function(RP)
 	Player.RP = Player.RP + RP
 	Gui.DisplayNotification('Gained '..tostring(RP)..' RP.')
+end)
+
+
+RegisterNetEvent('lsv:savePlayer')
+AddEventHandler('lsv:savePlayer', function()
+	Player.Save()
 end)

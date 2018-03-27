@@ -20,6 +20,7 @@ server_scripts {
 
 	"modules/server/db.lua",
 	"modules/server/scoreboard.lua",
+	"modules/server/autosave.lua",
 }
 
 

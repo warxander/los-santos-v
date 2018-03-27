@@ -12,8 +12,6 @@ AddEventHandler('playerSpawned', function()
 	if not Player.isLoaded then
 		Player.isLoaded = true
 		TriggerServerEvent('lsv:loadPlayer')
-	else
-		Player.SaveWeapons()
 	end
 end)
 
