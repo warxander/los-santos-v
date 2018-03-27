@@ -15,7 +15,7 @@ AddEventHandler('lsv:distractCops', function()
 	local x, y, z = table.unpack(GetEntityCoords(PlayerPedId(), true))
 	blip = Map.CreateRadiusBlip(x, y, z, Settings.distractCopsRadius, Color.Blue)
 
-	Citizen.Wait(3500)
+	Citizen.Wait(5000)
 
 	StartScreenEffect("SuccessMichael", 0, false)
 
@@ -53,7 +53,7 @@ AddEventHandler('lsv:distractCopsFinished', function(success)
 
 	StartScreenEffect("SuccessMichael", 0, false)
 
-	Citizen.Wait(500)
+	Citizen.Wait(1000)
 
 	local message = success and '+'..tostring(Settings.distractCopsReward)..' RP' or 'Event failed.'
 

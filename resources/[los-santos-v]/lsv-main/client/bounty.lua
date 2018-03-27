@@ -13,6 +13,8 @@ AddEventHandler('lsv:setBounty', function(bountyServerPlayerId)
 	if GetPlayerServerId(PlayerId()) == bountyServerPlayerId then
 		Gui.DisplayNotification(bountyText, 'CHAR_LESTER_DEATHWISH', 'Unknown')
 
+		Citizen.Wait(1500)
+
 		local bountyScaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 
 		bountyScaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'BOUNTY', bountyText)
