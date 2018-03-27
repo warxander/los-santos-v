@@ -93,13 +93,13 @@ function Gui.DisplayObjectiveText(text)
 end
 
 
-function Gui.DrawTimerBar(width, text, subText)
+function Gui.DrawBar(width, text, subText, color)
 	local rectHeight = 0.038
 	local rectX = GetSafeZoneSize() - width + width / 2
 	local rectY = GetSafeZoneSize() - rectHeight + rectHeight / 2
 	local hTextMargin = 0.003
 	local textFont = 0
-	local textColor = { r = 255, g = 255, b = 255, a = 255 }
+	local textColor = color or Color.GetHudFromBlipColor(Color.White)
 	local textScale = 0.32
 	local subTextScale = 0.5
 
@@ -111,6 +111,12 @@ function Gui.DrawTimerBar(width, text, subText)
 	DrawSprite("timerbars", "all_black_bg", rectX, rectY, width, rectHeight, 0, 0, 0, 0, 128)
 	Gui.DrawText(text, { x = GetSafeZoneSize() - width + hTextMargin, y = rectY - 0.008 }, textFont, textColor, textScale)
 	Gui.DrawText(subText, { x = GetSafeZoneSize() - hTextMargin, y = rectY - 0.0175 }, textFont, textColor, subTextScale, false, false, false, true, width / 2)
+end
+
+
+function Gui.DrawTimerBar(width, text, seconds)
+	local textColor = seconds <= 10 and Color.GetHudFromBlipColor(Color.Red) or Color.GetHudFromBlipColor(Color.White)
+	Gui.DrawBar(width, text, string.format("%02.f", math.floor(seconds / 60))..':'..string.format("%02.f", math.floor(seconds % 60)), textColor)
 end
 
 

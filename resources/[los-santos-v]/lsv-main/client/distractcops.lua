@@ -34,7 +34,7 @@ AddEventHandler('lsv:distractCops', function()
 			else
 				local passedTime = GetGameTimer() - eventStartTime
 				local secondsLeft = math.floor((Settings.distractCopsTime - passedTime) / 1000)
-				Gui.DrawTimerBar(0.13, 'DISTRACT TIME', string.format("%02.f", math.floor(secondsLeft / 60))..':'..string.format("%02.f", math.floor(secondsLeft % 60)))
+				Gui.DrawTimerBar(0.13, 'DISTRACT TIME', secondsLeft)
 				Gui.DisplayObjectiveText('Stay in the ~b~area~w~.')
 				World.SetWantedLevel(math.floor(passedTime / Settings.distractCopsWantedInterval) + 1)
 			end
