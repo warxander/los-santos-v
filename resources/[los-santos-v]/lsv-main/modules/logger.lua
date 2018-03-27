@@ -3,7 +3,11 @@ Logger.__index = Logger
 
 
 local function log(level, name, message)
-	Citizen.Trace('['..os.date('%c')..'] ['..level..'] ['..name..'] '..tostring(message)..'\n')
+	if IsDuplicityVersion() then
+		Citizen.Trace('['..os.date('%c')..'] ['..level..'] ['..name..'] '..tostring(message)..'\n')
+	else
+		Citizen.Trace('['..level..'] ['..name..'] '..tostring(message))
+	end
 end
 
 

@@ -55,28 +55,12 @@ AddEventHandler('lsv:distractCopsFinished', function(success)
 
 	Citizen.Wait(500)
 
-	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 	local message = success and '+'..tostring(Settings.distractCopsReward)..' RP' or 'Event failed.'
-	local time = GetGameTimer()
+
+	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 
 	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'Distract Cops', message)
-	while GetGameTimer() - time < 5500 and not IsPlayerDead(PlayerId()) do
-		Citizen.Wait(0)
-
-		if GetGameTimer() - time > 5000 then
-			scaleform:Call('SHARD_ANIM_OUT', 1, 0.33)
-			time = time + 500
-
-			while GetGameTimer() - time < 5500 do
-				Citizen.Wait(0)
-				scaleform:RenderFullscreen(255, 255, 255, 255)
-			end
-
-			break
-		end
-
-		scaleform:RenderFullscreen(255, 255, 255, 255)
-	end
+	scaleform:RenderFullscreenTimed(5000)
 
 	scaleform:Delete()
 

@@ -31,6 +31,32 @@ local function scaleform_is_int(number)
 end
 
 
+local function scaleform_render_timed(scaleform, time, renderFunc, ...)
+	if not scaleform_is_valid(scaleform.scaleform) then return end
+
+	local startTime = GetGameTimer()
+	local transOutTime = 500
+
+	while GetTimeDifference(GetGameTimer(), startTime) < time + transOutTime and not IsPlayerDead(PlayerId()) do
+		Citizen.Wait(0)
+
+		if GetGameTimer() - startTime > time then
+			scaleform:Call('SHARD_ANIM_OUT', 1, 0.33)
+			startTime = startTime + transOutTime
+
+			while GetGameTimer() - startTime < time + transOutTime do
+				Citizen.Wait(0)
+				renderFunc(scaleform, ...)
+			end
+
+			break
+		end
+
+		renderFunc(scaleform, ...)
+	end
+end
+
+
 function Scaleform:Request(id)
 	if type(id) ~= "string" then
 		logger:Error('Unable to request id: '..logger:ToString(id))
@@ -99,4 +125,14 @@ end
 function Scaleform:RenderFullscreen(r, g, b, a)
 	if not scaleform_is_valid(self.scaleform) then return end
 	DrawScaleformMovieFullscreen(self.scaleform, r or 255, g or 255, b or 255, a or 255)
+end
+
+
+function Scaleform:RenderTimed(time, x, y, w, h, r, g, b, a)
+	scaleform_render_timed(self, time, self.Render, x, y, w, h, r, g, b, a)
+end
+
+
+function Scaleform:RenderFullscreenTimed(time, r, g, b, a)
+	scaleform_render_timed(self, time, self.RenderFullscreen, r, g, b, a)
 end
