@@ -5,8 +5,8 @@ function Skin.ChangePlayerSkin(id)
 	ResetPedMovementClipset(PlayerPedId(), 0.0)
 
 	local model = GetHashKey(id)
-	RequestModel(model)
-	while not HasModelLoaded(model) do Citizen.Wait(1) end
+
+	Streaming.RequestModel(id)
 
 	local weapons = Player.GetPlayerWeapons()
 	local health = GetEntityHealth(PlayerPedId())

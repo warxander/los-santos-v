@@ -103,10 +103,7 @@ function Gui.DrawBar(width, text, subText, color)
 	local textScale = 0.32
 	local subTextScale = 0.5
 
-	if not HasStreamedTextureDictLoaded("timerbars") then
-		RequestStreamedTextureDict("timerbars", true)
-		while not HasStreamedTextureDictLoaded("timerbars") do Citizen.Wait(0) end
-	end
+	Streaming.RequestStreamedTextureDict("timerbars")
 
 	DrawSprite("timerbars", "all_black_bg", rectX, rectY, width, rectHeight, 0, 0, 0, 0, 128)
 	Gui.DrawText(text, { x = GetSafeZoneSize() - width + hTextMargin, y = rectY - 0.008 }, textFont, textColor, textScale)

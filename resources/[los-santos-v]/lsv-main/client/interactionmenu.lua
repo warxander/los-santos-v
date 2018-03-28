@@ -33,10 +33,7 @@ end)
 
 
 AddEventHandler('lsv:updateWalkStyle', function(animSet)
-	if not HasAnimSetLoaded(animSet) then
-		RequestAnimSet(animSet)
-		while not HasAnimSetLoaded(animSet) do Citizen.Wait(0) end
-	end
+	Streaming.RequestAnimSet(animSet)
 
 	SetPedMovementClipset(PlayerPedId(), animSet, 1.0)
 

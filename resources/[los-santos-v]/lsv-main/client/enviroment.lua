@@ -21,10 +21,8 @@ Citizen.CreateThread(function()
 				RequestScriptAudioBank("ICE_FOOTSTEPS", false)
 				RequestScriptAudioBank("SNOW_FOOTSTEPS", false)
 
-				RequestNamedPtfxAsset("core_snow")
-				while not HasNamedPtfxAssetLoaded("core_snow") do
-					Citizen.Wait(0)
-				end
+				Streaming.RequestNamedPtfxAsset("core_snow")
+
 				UseParticleFxAssetNextCall("core_snow")
 
 				isSnowLoaded = true

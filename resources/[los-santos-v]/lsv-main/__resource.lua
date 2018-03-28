@@ -49,6 +49,7 @@ client_scripts {
 	"modules/weapon.lua",
 
 	"modules/client/world.lua",
+	"modules/client/streaming.lua",
 	"modules/client/scaleform.lua",
 	"modules/client/skin.lua",
 	"modules/client/color.lua",
