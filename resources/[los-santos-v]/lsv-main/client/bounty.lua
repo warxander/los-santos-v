@@ -11,7 +11,7 @@ AddEventHandler('lsv:setBounty', function(bountyServerPlayerId)
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 
 	if GetPlayerServerId(PlayerId()) == bountyServerPlayerId then
-		Gui.DisplayNotification(bountyText, 'CHAR_LESTER_DEATHWISH', 'Unknown')
+		Gui.DisplayNotification(bountyText, 'CHAR_LESTER_DEATHWISH', 'Unknown', '', 2)
 
 		Citizen.Wait(1500)
 

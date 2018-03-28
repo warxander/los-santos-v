@@ -40,12 +40,12 @@ function Gui.DisplayHelpTextThisFrame(text)
 end
 
 
-function Gui.DisplayNotification(text, icon, title, subtitle)
+function Gui.DisplayNotification(text, pic, title, subtitle, icon)
 	SetNotificationTextEntry("STRING")
 	AddTextComponentSubstringPlayerName(text)
 
-	if icon then
-		SetNotificationMessage(icon, icon, false, 4, title or "", subtitle or "")
+	if pic then
+		SetNotificationMessage(pic, pic, false, icon or 4, title or "", subtitle or "")
 	end
 
 	DrawNotification(false, true)
