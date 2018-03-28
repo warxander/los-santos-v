@@ -2,7 +2,7 @@ RegisterServerEvent('lsv:updateWeaponTint')
 AddEventHandler('lsv:updateWeaponTint', function(weaponHash, weaponTintIndex)
 	local player = source
 
-	local isNotEnoughRP = Scoreboard.GetPlayerRP(player) < Settings.weaponTints[weaponTintIndex].RP
+	local isEnoughRP = Scoreboard.GetPlayerRP(player) >= Settings.weaponTints[weaponTintIndex].RP
 
-	TriggerClientEvent('lsv:weaponTintUpdated', player, isNotEnoughRP or weaponHash, isNotEnoughRP or weaponTintIndex)
+	TriggerClientEvent('lsv:weaponTintUpdated', player, isEnoughRP and weaponHash, weaponTintIndex)
 end)
