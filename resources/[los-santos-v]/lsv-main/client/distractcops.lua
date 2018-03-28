@@ -55,6 +55,8 @@ AddEventHandler('lsv:distractCopsFinished', function(success)
 
 	Citizen.Wait(1000)
 
+	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true) end
+
 	local message = success and '+'..tostring(Settings.distractCopsReward)..' RP' or 'Event failed.'
 
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
