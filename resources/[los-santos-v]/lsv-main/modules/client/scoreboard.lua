@@ -13,7 +13,7 @@ local headerTableSpacing = 0.01
 local tableSpacing = 0.0025
 local tableHeight = 0.035
 local tablePositionWidth = 0.175
-local tableMoneyWidth = 0.1
+local tableRPWidth = 0.1
 local tableKdRatioWidth = 0.1
 local tableKillsWidth = 0.1
 local tableDeathsWidth = 0.1
@@ -23,12 +23,12 @@ local onlineStatusWidth = 0.003
 local headerScale = 0.35
 local positionScale = 0.5
 local rankScale = 0.45
-local moneyScale = 0.35
+local RPScale = 0.35
 local kdRatioScale = 0.35
 local killsScale = 0.35
 local deathsScale = 0.35
 
-local scoreboardPosition = { ['x'] = (1.0 - tablePositionWidth - tableMoneyWidth - tableKdRatioWidth - tableKillsWidth - tableDeathsWidth) / 2, ['y'] = 0.1 }
+local scoreboardPosition = { ['x'] = (1.0 - tablePositionWidth - tableRPWidth - tableKdRatioWidth - tableKillsWidth - tableDeathsWidth) / 2, ['y'] = 0.1 }
 
 
 -- Colors
@@ -41,8 +41,8 @@ local tablePositionRankBackgroundColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'
 local tablePositionRankColor = { ['r'] = 63, ['g'] = 81, ['b'] = 181, ['a'] = 255 }
 local tablePositionRankTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 
-local tableMoneyColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
-local tableMoneyTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
+local tableRPColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
+local tableRPTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 
 local tableKdRatioColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
 local tableKdRatioTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
@@ -58,12 +58,12 @@ local tableHeader = { ['y'] = scoreboardPosition.y + tableHeight / 2 }
 local tableHeaderText = { ['y'] = tableHeader.y - tableHeight / 2 + 0.004 }
 
 local tablePositionHeader = { ['x'] = scoreboardPosition.x + tablePositionWidth / 2, ['y'] = tableHeader.y }
-local tableMoneyHeader = { ['x'] = tablePositionHeader.x + tablePositionWidth / 2 + tableMoneyWidth / 2 , ['y'] = tableHeader.y }
-local tableKdRatioHeader = { ['x'] = tableMoneyHeader.x + tableMoneyWidth / 2 + tableKdRatioWidth / 2 , ['y'] = tableHeader.y }
+local tableRPHeader = { ['x'] = tablePositionHeader.x + tablePositionWidth / 2 + tableRPWidth / 2 , ['y'] = tableHeader.y }
+local tableKdRatioHeader = { ['x'] = tableRPHeader.x + tableRPWidth / 2 + tableKdRatioWidth / 2 , ['y'] = tableHeader.y }
 local tableKillsHeader = { ['x'] = tableKdRatioHeader.x + tableKdRatioWidth / 2 + tableKillsWidth / 2 , ['y'] = tableHeader.y }
 local tableDeathsHeader = { ['x'] = tableKillsHeader.x + tableKillsWidth / 2 + tableDeathsWidth / 2 , ['y'] = tableHeader.y }
 
-local tableWidth = tablePositionWidth + tableMoneyWidth + tableKdRatioWidth + tableKillsWidth + tableDeathsWidth
+local tableWidth = tablePositionWidth + tableRPWidth + tableKdRatioWidth + tableKillsWidth + tableDeathsWidth
 
 
 AddEventHandler('lsv:updateScoreboard', function(serverScoreboard)
@@ -88,8 +88,8 @@ function Scoreboard.DisplayThisFrame()
 	Gui.DrawText("POSITION", { ['x'] = tablePositionHeader.x, ['y'] = tableHeaderText.y }, 0, tableHeaderTextColor, headerScale, false, false, true)
 
 	-- Draw "RP" header
-	Gui.DrawRect(tableMoneyHeader, tableMoneyWidth, tableHeight, tableHeaderColor)
-	Gui.DrawText("RP", { ['x'] = tableMoneyHeader.x, ['y'] = tableHeaderText.y }, 0, tableHeaderTextColor, headerScale, false, false, true)
+	Gui.DrawRect(tableRPHeader, tableRPWidth, tableHeight, tableHeaderColor)
+	Gui.DrawText("RP", { ['x'] = tableRPHeader.x, ['y'] = tableHeaderText.y }, 0, tableHeaderTextColor, headerScale, false, false, true)
 
 	-- Draw "KILLSTREAK" header
 	Gui.DrawRect(tableKdRatioHeader, tableKdRatioWidth, tableHeight, tableHeaderColor)
@@ -111,15 +111,15 @@ function Scoreboard.DisplayThisFrame()
 		local avatarPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth / 2, ['y'] = tablePosition.y }
 		local playerPosition = { ['x'] = avatarPosition.x + tablePositionWidth / 2, ['y'] = tablePosition.y }
 		local onlineStatusPosition = { ['x'] = avatarPosition.x + tableAvatarPositionWidth / 2 + onlineStatusWidth / 2, ['y'] = tablePosition.y }
-		local moneyPosition = { ['x'] = tableMoneyHeader.x, ['y'] = tablePosition.y }
+		local RPPosition = { ['x'] = tableRPHeader.x, ['y'] = tablePosition.y }
 		local kdRatioPosition = { ['x'] = tableKdRatioHeader.x, ['y'] = tablePosition.y }
 		local killsPosition = { ['x'] = tableKillsHeader.x, ['y'] = tablePosition.y }
 		local deathsPosition = { ['x'] = tableDeathsHeader.x, ['y'] = tablePosition.y }
 		local tableText = { ['y'] = tablePosition.y - tableHeight / 2 }
 
 		-- Draw avatar
-		Gui.DrawRect(avatarPosition, tableAvatarPositionWidth, tableHeight, tableMoneyColor)
-		Gui.DrawText(tostring(index), { ['x'] = avatarPosition.x, ['y'] = tableText.y + 0.004 }, 0, tableMoneyTextColor, moneyScale,
+		Gui.DrawRect(avatarPosition, tableAvatarPositionWidth, tableHeight, tableRPColor)
+		Gui.DrawText(tostring(index), { ['x'] = avatarPosition.x, ['y'] = tableText.y + 0.004 }, 0, tableRPTextColor, RPScale,
 			false, false, true)-- TODO Draw avatar here!
 
 		-- Draw player name
@@ -135,9 +135,9 @@ function Scoreboard.DisplayThisFrame()
 		Gui.DrawRect(onlineStatusPosition, onlineStatusWidth, tableHeight, onlineStatusColor)
 
 		-- Draw RP
-		Gui.DrawRect(moneyPosition, tableMoneyWidth, tableHeight, tableMoneyColor)
-		Gui.DrawText(tostring(scoreboard[index].RP), { ['x'] = tableMoneyHeader.x, ['y'] = tableText.y + 0.004 },
-			0, tableMoneyTextColor, moneyScale, false, false, true)
+		Gui.DrawRect(RPPosition, tableRPWidth, tableHeight, tableRPColor)
+		Gui.DrawText(tostring(scoreboard[index].RP), { ['x'] = tableRPHeader.x, ['y'] = tableText.y + 0.004 },
+			0, tableRPTextColor, RPScale, false, false, true)
 
 		-- Draw kdRatio
 		local kdRatio = '-'
