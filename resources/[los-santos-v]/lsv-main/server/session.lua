@@ -64,5 +64,5 @@ AddEventHandler('lsv:kickAFKPlayer', function()
 
 	logger:Info('Drop AFK player { '..player..' }')
 
-	DropPlayer(player, "You were AFK for more than "..tostring(math.ceil(Settings.afkTimeout / 60)).." minutes.")
+	DropPlayer(player, "You were AFK for more than "..math.ceil(Settings.afkTimeout / 60).." minutes.")
 end)

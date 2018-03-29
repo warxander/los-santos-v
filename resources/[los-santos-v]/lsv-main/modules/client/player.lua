@@ -100,7 +100,7 @@ end
 RegisterNetEvent('lsv:RPUpdated')
 AddEventHandler('lsv:RPUpdated', function(RP)
 	Player.RP = Player.RP + RP
-	Gui.DisplayNotification('Gained '..tostring(RP)..' RP.')
+	Gui.DisplayNotification('Gained '..RP..' RP.')
 end)
 
 

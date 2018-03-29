@@ -119,7 +119,7 @@ function Scoreboard.DisplayThisFrame()
 
 		-- Draw avatar
 		Gui.DrawRect(avatarPosition, tableAvatarPositionWidth, tableHeight, tableRPColor)
-		Gui.DrawText(tostring(index), { ['x'] = avatarPosition.x, ['y'] = tableText.y + 0.004 }, 0, tableRPTextColor, RPScale,
+		Gui.DrawText(index, { ['x'] = avatarPosition.x, ['y'] = tableText.y + 0.004 }, 0, tableRPTextColor, RPScale,
 			false, false, true)-- TODO Draw avatar here!
 
 		-- Draw player name
@@ -136,7 +136,7 @@ function Scoreboard.DisplayThisFrame()
 
 		-- Draw RP
 		Gui.DrawRect(RPPosition, tableRPWidth, tableHeight, tableRPColor)
-		Gui.DrawText(tostring(scoreboard[index].RP), { ['x'] = tableRPHeader.x, ['y'] = tableText.y + 0.004 },
+		Gui.DrawText(scoreboard[index].RP, { ['x'] = tableRPHeader.x, ['y'] = tableText.y + 0.004 },
 			0, tableRPTextColor, RPScale, false, false, true)
 
 		-- Draw kdRatio
@@ -150,12 +150,12 @@ function Scoreboard.DisplayThisFrame()
 
 		-- Draw kills
 		Gui.DrawRect(killsPosition, tableKillsWidth, tableHeight, tableKillsColor)
-		Gui.DrawText(tostring(scoreboard[index].kills), { ['x'] = tableKillsHeader.x, ['y'] = tableText.y + 0.004 },
+		Gui.DrawText(scoreboard[index].kills, { ['x'] = tableKillsHeader.x, ['y'] = tableText.y + 0.004 },
 			0, tableKillsTextColor, killsScale, false, false, true)
 
 		-- Draw deaths
 		Gui.DrawRect(deathsPosition, tableDeathsWidth, tableHeight, tableDeathsColor)
-		Gui.DrawText(tostring(scoreboard[index].deaths), { ['x'] = tableDeathsHeader.x, ['y'] = tableText.y + 0.004 },
+		Gui.DrawText(scoreboard[index].deaths, { ['x'] = tableDeathsHeader.x, ['y'] = tableText.y + 0.004 },
 			0, tableDeathsTextColor, deathsScale, false, false, true)
 
 		-- Update table position

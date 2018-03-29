@@ -22,7 +22,7 @@ Citizen.CreateThread(function()
 			crateDropData.positionIndex = math.random(Utils.GetTableLength(Settings.crateDropSettings.positions))
 			crateDropData.weaponIndex = math.random(Utils.GetTableLength(Settings.crateDropSettings.weapons))
 
-			logger:Info('Spawn { '..tostring(crateDropData.positionIndex)..', '..tostring(crateDropData.weaponIndex)..' }')
+			logger:Info('Spawn { '..crateDropData.positionIndex..', '..crateDropData.weaponIndex..' }')
 
 			TriggerClientEvent('lsv:spawnCrate', -1, crateDropData.positionIndex, crateDropData.weaponIndex)
 		end

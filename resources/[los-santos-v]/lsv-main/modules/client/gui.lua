@@ -28,21 +28,21 @@ end
 function Gui.DisplayHelpText(text)
 	if IsHelpMessageBeingDisplayed() then return end
 	BeginTextCommandDisplayHelp("STRING")
-	AddTextComponentScaleform(text)
+	AddTextComponentScaleform(tostring(text))
 	EndTextCommandDisplayHelp(0, 0, 1, -1)
 end
 
 
 function Gui.DisplayHelpTextThisFrame(text)
 	BeginTextCommandDisplayHelp("STRING")
-	AddTextComponentScaleform(text)
+	AddTextComponentScaleform(tostring(text))
 	EndTextCommandDisplayHelp(0, 0, 0, -1)
 end
 
 
 function Gui.DisplayNotification(text, pic, title, subtitle, icon)
 	SetNotificationTextEntry("STRING")
-	AddTextComponentSubstringPlayerName(text)
+	AddTextComponentSubstringPlayerName(tostring(text))
 
 	if pic then
 		SetNotificationMessage(pic, pic, false, icon or 4, title or "", subtitle or "")
@@ -73,7 +73,7 @@ function Gui.DrawText(text, position, font, color, scale, shadow, outline, cente
 	end
 
 	BeginTextCommandDisplayText("STRING")
-	AddTextComponentSubstringPlayerName(text)
+	AddTextComponentSubstringPlayerName(tostring(text))
 
 	if center then
 		SetTextCentre(true)
@@ -88,7 +88,7 @@ end
 
 function Gui.DisplayObjectiveText(text)
 	BeginTextCommandPrint("STRING")
-	AddTextComponentString(text)
+	AddTextComponentString(tostring(text))
 	EndTextCommandPrint(1, true)
 end
 

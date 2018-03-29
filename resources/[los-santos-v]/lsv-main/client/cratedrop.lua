@@ -64,7 +64,7 @@ AddEventHandler('lsv:removeCrate', function(player, weaponClipCount, RP)
 		local weaponHash = GetHashKey(weapon.id)
 		GiveWeaponToPed(playerPed, weaponHash, GetWeaponClipSize(weaponHash) * weaponClipCount, false, true)
 
-		Gui.DisplayNotification('Crate Contents:~w~\n+ '..tostring(RP)..' RP\n+ '..weapon.name..'\n+ Body Armor')
+		Gui.DisplayNotification('Crate Contents:~w~\n+ '..RP..' RP\n+ '..weapon.name..'\n+ Body Armor')
 
 		Player.SaveWeapons()
 	end

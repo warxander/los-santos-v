@@ -12,7 +12,7 @@ end
 
 function Db.UpdateValue(player, field, value, callback)
 	MySQL.ready(function()
-		MySQL.Async.execute('UPDATE Players SET '..field..' = '..field..' + '..tostring(value)..' WHERE PlayerId=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
+		MySQL.Async.execute('UPDATE Players SET '..field..' = '..field..' + '..value..' WHERE PlayerId=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
 			if callback then callback() end
 		end)
 	end)

@@ -27,7 +27,7 @@ end
 
 
 local function scaleform_is_int(number)
-	return type(number) == "number" and not string.find(tostring(number), '%.')
+	return type(number) == "number" and not string.find(number, '%.')
 end
 
 
