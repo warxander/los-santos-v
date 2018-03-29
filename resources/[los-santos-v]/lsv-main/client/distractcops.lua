@@ -28,16 +28,27 @@ AddEventHandler('lsv:distractCops', function()
 
 		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.distractCopsTime then
 			local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
-			if IsPlayerDead(PlayerId()) or GetPlayerWantedLevel(PlayerId()) == 0 or GetDistanceBetweenCoords(playerX, playerY, playerZ, x, y, z, false) > Settings.distractCopsRadius then
+
+			if IsPlayerDead(PlayerId()) then
 				TriggerEvent('lsv:distractCopsFinished', false)
 				return
-			else
-				local passedTime = GetGameTimer() - eventStartTime
-				local secondsLeft = math.floor((Settings.distractCopsTime - passedTime) / 1000)
-				Gui.DrawTimerBar(0.13, 'DISTRACT TIME', secondsLeft)
-				Gui.DisplayObjectiveText('Stay in the ~b~area~w~.')
-				World.SetWantedLevel(math.floor(passedTime / Settings.distractCopsWantedInterval) + 1)
 			end
+
+			if GetPlayerWantedLevel(PlayerId()) == 0 then
+				TriggerEvent('lsv:distractCopsFinished', false, 'You lose the cops.')
+				return
+			end
+
+			if GetDistanceBetweenCoords(playerX, playerY, playerZ, x, y, z, false) > Settings.distractCopsRadius then
+				TriggerEvent('lsv:distractCopsFinished', false, 'You left the event area.')
+				return
+			end
+
+			local passedTime = GetGameTimer() - eventStartTime
+			local secondsLeft = math.floor((Settings.distractCopsTime - passedTime) / 1000)
+			Gui.DrawTimerBar(0.13, 'DISTRACT TIME', secondsLeft)
+			Gui.DisplayObjectiveText('Stay in the ~b~area~w~.')
+			World.SetWantedLevel(math.floor(passedTime / Settings.distractCopsWantedInterval) + 1)
 		else
 			TriggerServerEvent('lsv:distractCopsFinished')
 			return
@@ -47,7 +58,7 @@ end)
 
 
 RegisterNetEvent('lsv:distractCopsFinished')
-AddEventHandler('lsv:distractCopsFinished', function(success)
+AddEventHandler('lsv:distractCopsFinished', function(success, reason)
 	RemoveBlip(blip)
 	World.SetWantedLevel(0)
 
@@ -57,11 +68,12 @@ AddEventHandler('lsv:distractCopsFinished', function(success)
 
 	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true) end
 
-	local message = success and '+'..tostring(Settings.distractCopsReward)..' RP' or 'Event failed.'
+	local status = success and 'COMPLETED' or 'FAILED'
+	local message = success and '+'..Settings.distractCopsReward..' RP' or reason or ''
 
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 
-	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'Distract Cops', message)
+	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'DISTRACT COPS '..status, message)
 	scaleform:RenderFullscreenTimed(5000)
 
 	scaleform:Delete()
