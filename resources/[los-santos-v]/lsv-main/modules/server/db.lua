@@ -10,7 +10,7 @@ function Db.SetValue(player, field, value, callback)
 end
 
 
-function Db.UpdateValue(player, field, value, callback)
+function Db.UpdateNumericValue(player, field, value, callback)
 	MySQL.ready(function()
 		MySQL.Async.execute('UPDATE Players SET '..field..' = '..field..' + '..value..' WHERE PlayerId=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
 			if callback then callback() end
@@ -25,7 +25,7 @@ function Db.UpdateRP(player, RP, callback)
 		return
 	end
 
-	Db.UpdateValue(player, 'RP', RP, function()
+	Db.UpdateNumericValue(player, 'RP', RP, function()
 		if callback then callback() end
 		Scoreboard.UpdateRP(player, RP)
 		TriggerClientEvent('lsv:RPUpdated', player, RP)
@@ -34,7 +34,7 @@ end
 
 
 function Db.UpdateKills(player, callback)
-	Db.UpdateValue(player, 'Kills', 1, function()
+	Db.UpdateNumericValue(player, 'Kills', 1, function()
 		if callback then callback() end
 		Scoreboard.UpdateKills(player)
 		TriggerClientEvent('lsv:killsUpdated', player)
@@ -43,7 +43,7 @@ end
 
 
 function Db.UpdateDeaths(player, callback)
-	Db.UpdateValue(player, 'Deaths', 1, function()
+	Db.UpdateNumericValue(player, 'Deaths', 1, function()
 		if callback then callback() end
 		Scoreboard.UpdateDeaths(player)
 		TriggerClientEvent('lsv:deathsUpdated', player)
