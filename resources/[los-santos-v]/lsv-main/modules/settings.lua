@@ -30,6 +30,16 @@ Settings.defaultPlayerWeapons = {
 }
 
 
+--- Abilities
+Settings.equipBodyArmorTimeout = 30
+Settings.equipBodyArmorPercentage = 0.25
+
+Settings.refillAmmoTimeout = 60
+Settings.refillAmmoClipCount = 3
+
+Settings.repairVehicleTimeout = 90
+
+
 -- Crew
 Settings.crewInvitationTimeout = 10000
 
