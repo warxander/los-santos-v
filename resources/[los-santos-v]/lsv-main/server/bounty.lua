@@ -40,6 +40,11 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 end)
 
 
+AddEventHandler('lsv:playerConnected', function(player)
+	if bountyPlayerId ~= nil then TriggerClientEvent('lsv:setBounty', player, bountyPlayerId) end
+end)
+
+
 AddEventHandler('lsv:playerDropped', function(player)
 	if player ~= bountyPlayerId then return end
 
