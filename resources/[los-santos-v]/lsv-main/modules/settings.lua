@@ -57,7 +57,7 @@ Settings.RPPerKillstreak = 5
 
 
 -- Bounties
-Settings.bountyEventTimeout = 180000
+Settings.bountyEventTimeout = 300000
 Settings.bountyEventReward = 100
 
 
@@ -83,7 +83,7 @@ Settings.crateDropSettings = {
 		{ id = "WEAPON_MARKSMANRIFLE", name = "Marksman Rifle" },
 		{ id = "WEAPON_DOUBLEACTION", name = "Double-Action Revolver" },
 	},
-	timeout = 300000,
+	timeout = 600000,
 	notifyBeforeTimeout = 60000,
 	positions = {
 		{ ['x'] = 699.15850830078, ['y'] = -1594.9453125, ['z'] = 9.6801643371582 },
