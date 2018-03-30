@@ -25,13 +25,21 @@ local function weaponTintRP(weaponTintIndex, weaponHash)
 end
 
 
+local function weaponComponentRP(componentIndex, weapon, componentHash)
+	local weaponHash = GetHashKey(weapon)
+	if HasPedGotWeaponComponent(PlayerPedId(), weaponHash, componentHash) then return 'Used' end
+	if Player.RP >= Weapon.GetWeapon(weapon).components[componentIndex].RP then return '' end
+	return Weapon.GetWeapon(weapon).components[componentIndex].RP..' RP'
+end
+
+
 function AmmuNation.GetPlaces()
 	return ammunations
 end
 
 
 AddEventHandler('lsv:init', function()
-	local selectedWeaponHash = nil
+	local selectedWeapon = nil
 
 	for _, ammunation in ipairs(ammunations) do
 		ammunation.blip = Map.CreatePlaceBlip(Blip.AmmuNation(), ammunation.x, ammunation.y, ammunation.z)
@@ -54,13 +62,22 @@ AddEventHandler('lsv:init', function()
 					if WarMenu.MenuButton(weapon.name, 'ammunation_upgrades') then
 						WarMenu.SetSubTitle('ammunation_upgrades', weapon.name..' UPGRADES')
 						SetCurrentPedWeapon(PlayerPedId(), weaponHash, true)
-						selectedWeaponHash = weaponHash
+						selectedWeapon = id
 					end
 				end
 			end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_upgrades') then
+			local selectedWeaponHash = GetHashKey(selectedWeapon)
+
+			for componentIndex, component in ipairs(Weapon.GetWeapon(selectedWeapon).components) do
+				if WarMenu.Button(component.name, weaponComponentRP(componentIndex, selectedWeapon, component.hash)) and
+					not HasPedGotWeaponComponent(PlayerPedId(), selectedWeaponHash, component.hash) then
+						TriggerServerEvent('lsv:updateWeaponComponent', selectedWeapon, componentIndex)
+				end
+			end
+
 			if GetWeaponTintCount(selectedWeaponHash) == Utils.GetTableLength(Settings.weaponTints) then
 				for weaponTintIndex, weaponTint in pairs(Settings.weaponTints) do
 					if WarMenu.Button(weaponTint.name, weaponTintRP(weaponTintIndex, selectedWeaponHash)) and GetPedWeaponTintIndex(PlayerPedId(), selectedWeaponHash) ~= weaponTintIndex then
@@ -107,6 +124,15 @@ RegisterNetEvent('lsv:weaponTintUpdated')
 AddEventHandler('lsv:weaponTintUpdated', function(weaponHash, weaponTintIndex)
 	if weaponHash then
 		SetPedWeaponTintIndex(PlayerPedId(), weaponHash, weaponTintIndex)
+		Player.SaveWeapons()
+	else Gui.DisplayNotification('~r~You don\'t have enough RP.') end
+end)
+
+
+RegisterNetEvent('lsv:weaponComponentUpdated')
+AddEventHandler('lsv:weaponComponentUpdated', function(weapon, componentIndex)
+	if weapon then
+		GiveWeaponComponentToPed(PlayerPedId(), GetHashKey(weapon), Weapon.GetWeapon(weapon).components[componentIndex].hash)
 		Player.SaveWeapons()
 	else Gui.DisplayNotification('~r~You don\'t have enough RP.') end
 end)
