@@ -1,13 +1,7 @@
 local blip = nil
-local inProgress = false
 
 AddEventHandler('lsv:distractCops', function()
-	if inProgress then
-		Gui.DisplayNotification('Event is still in progress.')
-		return 
-	end
-
-	inProgress = true
+	Player.isEventInProgress = true
 
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 	Gui.DisplayNotification('Distract the cops in the area marked by blue circle.')
@@ -78,5 +72,5 @@ AddEventHandler('lsv:distractCopsFinished', function(success, reason)
 
 	scaleform:Delete()
 
-	inProgress = false
+	Player.isEventInProgress = false
 end)

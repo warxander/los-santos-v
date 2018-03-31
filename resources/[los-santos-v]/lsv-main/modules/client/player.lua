@@ -9,6 +9,8 @@ Player.killstreak = 0
 Player.kills = 0
 Player.deaths = 0
 
+Player.isEventInProgress = false
+
 Player.crewMembers = { } -- { serverPlayerId }
 
 

@@ -77,6 +77,7 @@ client_scripts {
 	"client/interactionmenu.lua",
 	"client/bounty.lua",
 	"client/guard.lua",
+	"client/vipwork.lua",
 	"client/distractcops.lua",
 	"client/crew.lua",
 }

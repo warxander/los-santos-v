@@ -26,6 +26,7 @@ AddEventHandler('lsv:init', function()
 	WarMenu.SetTitleBackgroundColor('interaction', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
 	WarMenu.SetTitleBackgroundSprite('interaction', 'commonmenu', 'interaction_bgd')
 
+	WarMenu.CreateSubMenu('vipWork', 'interaction', 'VIP Work')
 	WarMenu.CreateSubMenu('inviteToCrew', 'interaction', 'Invite to Crew')
 	WarMenu.CreateSubMenu('reportPlayer', 'interaction', 'Report Player')
 	WarMenu.CreateSubMenu('reportReason', 'reportPlayer', 'Select a reason for reporting')
@@ -97,13 +98,10 @@ AddEventHandler('lsv:init', function()
 				else
 					TriggerEvent('lsv:updateWalkStyle', getClipSetBySex(walkStyleSelectedIndex, IsPedMale(PlayerPedId())))
 				end
+			elseif not Player.isEventInProgress and WarMenu.MenuButton('VIP Work', 'vipWork') then
 			elseif WarMenu.MenuButton('Invite To Crew', 'inviteToCrew') then
 			elseif Utils.GetTableLength(Player.crewMembers) ~= 0 and WarMenu.Button('Leave Crew') then
 				TriggerServerEvent('lsv:leaveCrew')
-
-				WarMenu.CloseMenu()
-			elseif WarMenu.Button('Distract Cops') then
-				TriggerEvent('lsv:distractCops')
 
 				WarMenu.CloseMenu()
 			elseif WarMenu.Button('Kill Yourself') then
