@@ -52,8 +52,8 @@ Settings.pickupMinDistance = 25.
 
 
 -- RP
-Settings.RPPerKill = 25
-Settings.RPPerKillstreak = 5
+Settings.RPPerKill = 50
+Settings.RPPerKillstreak = 25
 
 
 -- Bounties
