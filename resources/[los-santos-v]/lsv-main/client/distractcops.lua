@@ -7,7 +7,7 @@ AddEventHandler('lsv:distractCops', function()
 	Gui.DisplayNotification('Distract the cops in the area marked by blue circle.')
 
 	local x, y, z = table.unpack(GetEntityCoords(PlayerPedId(), true))
-	blip = Map.CreateRadiusBlip(x, y, z, Settings.distractCopsRadius, Color.BlipBlue())
+	blip = Map.CreateRadiusBlip(x, y, z, Settings.distractCops.radius, Color.BlipBlue())
 
 	Citizen.Wait(5000)
 
@@ -20,7 +20,7 @@ AddEventHandler('lsv:distractCops', function()
 	while true do
 		Citizen.Wait(0)
 
-		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.distractCopsTime then
+		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.distractCops.time then
 			local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
 
 			if IsPlayerDead(PlayerId()) then
@@ -33,16 +33,16 @@ AddEventHandler('lsv:distractCops', function()
 				return
 			end
 
-			if GetDistanceBetweenCoords(playerX, playerY, playerZ, x, y, z, false) > Settings.distractCopsRadius then
+			if GetDistanceBetweenCoords(playerX, playerY, playerZ, x, y, z, false) > Settings.distractCops.radius then
 				TriggerEvent('lsv:distractCopsFinished', false, 'You left the event area.')
 				return
 			end
 
 			local passedTime = GetGameTimer() - eventStartTime
-			local secondsLeft = math.floor((Settings.distractCopsTime - passedTime) / 1000)
+			local secondsLeft = math.floor((Settings.distractCops.time - passedTime) / 1000)
 			Gui.DrawTimerBar(0.13, 'DISTRACT TIME', secondsLeft)
 			Gui.DisplayObjectiveText('Stay in the ~b~area~w~.')
-			World.SetWantedLevel(math.floor(passedTime / Settings.distractCopsWantedInterval) + 1)
+			World.SetWantedLevel(math.floor(passedTime / Settings.distractCops.wantedInterval) + 1)
 		else
 			TriggerServerEvent('lsv:distractCopsFinished')
 			return
@@ -63,7 +63,7 @@ AddEventHandler('lsv:distractCopsFinished', function(success, reason)
 	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true) end
 
 	local status = success and 'COMPLETED' or 'FAILED'
-	local message = success and '+'..Settings.distractCopsReward..' RP' or reason or ''
+	local message = success and '+'..Settings.distractCops.reward..' RP' or reason or ''
 
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 

@@ -57,15 +57,19 @@ Settings.RPPerKillstreak = 5
 
 
 -- Bounties
-Settings.bountyEventTimeout = 300000
-Settings.bountyEventReward = 100
+Settings.bounty = {
+	timeout = 300000,
+	reward = 100,
+}
 
 
 -- Distract Cops
-Settings.distractCopsRadius = 125.
-Settings.distractCopsTime = 300000
-Settings.distractCopsWantedInterval = 60000
-Settings.distractCopsReward = 500
+Settings.distractCops = {
+	radius = 125.,
+	time = 300000,
+	wantedInterval = 60000,
+	reward = 500,
+}
 
 
 -- Crate Drops
