@@ -1,15 +1,5 @@
 Color = { }
 
-Color.White = 0
-Color.Red = 1
-Color.Green = 2
-Color.Blue = 3
-Color.Orange = 17
-Color.Purple = 19
-Color.Grey = 20
-Color.Brown = 21
-Color.Pink = 23
-
 local colors = {
 	{ r = 254, g = 254, b = 254, a = 255 },
 	{ r = 224, g = 50, b = 50, a = 255 },
@@ -47,6 +37,51 @@ local colors = {
 	{ r = 240, g = 240, b = 150, a = 255 },
 }
 
-function Color.GetHudFromBlipColor(blipColor) --RGB
+
+function Color.GetHudFromBlipColor(blipColor)
 	return colors[blipColor + 1]
+end
+
+
+function Color.BlipWhite()
+	return 0
+end
+
+function Color.BlipRed()
+	return 1
+end
+
+
+function Color.BlipGreen()
+	return 2
+end
+
+
+function Color.BlipBlue()
+	return 3
+end
+
+
+function Color.BlipOrange()
+	return 17
+end
+
+
+function Color.BlipPurple()
+	return 19
+end
+
+
+function Color.BlipGrey()
+	return 20
+end
+
+
+function Color.BlipBrown()
+	return 21
+end
+
+
+function Color.BlipPink()
+	return 23
 end

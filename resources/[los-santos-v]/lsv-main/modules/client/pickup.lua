@@ -55,8 +55,8 @@ local pickups = {
 	{ id = "PICKUP_WEAPON_STICKYBOMB", name = "Sticky Bomb" },
 
 	 --Ammunition
-	{ id = "PICKUP_HEALTH_STANDARD", color = Color.Green, name = "First Aid Kit" },
-	{ id = "PICKUP_ARMOUR_STANDARD", color = Color.Blue, armor = true, name = "Body Armor" },
+	{ id = "PICKUP_HEALTH_STANDARD", color = Color.BlipGreen(), name = "First Aid Kit" },
+	{ id = "PICKUP_ARMOUR_STANDARD", color = Color.BlipBlue(), armor = true, name = "Body Armor" },
 
 	--Heavy Weapons
 	-- { id = "PICKUP_WEAPON_COMPACTLAUNCHER", name = "Compact Grenade Launcher" },

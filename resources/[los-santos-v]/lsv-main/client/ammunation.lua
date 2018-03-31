@@ -15,7 +15,7 @@ local ammunations = {
 	{ blip = nil, ['x'] = 1693.8348388672, ['y'] = 3759.2829589844, ['z'] = 34.705318450928 },
 }
 
-local ammunationColor = Color.GetHudFromBlipColor(Color.Red)
+local ammunationColor = Color.GetHudFromBlipColor(Color.BlipRed())
 
 
 local function weaponTintRP(weaponTintIndex, weaponHash)
@@ -47,7 +47,7 @@ AddEventHandler('lsv:init', function()
 
 	WarMenu.CreateMenu('ammunation', '')
 	WarMenu.SetSubTitle('ammunation', 'WEAPONS')
-	WarMenu.SetTitleBackgroundColor('ammunation', Color.GetHudFromBlipColor(Color.White).r, Color.GetHudFromBlipColor(Color.White).g, Color.GetHudFromBlipColor(Color.White).b, Color.GetHudFromBlipColor(Color.White).a)
+	WarMenu.SetTitleBackgroundColor('ammunation', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
 	WarMenu.SetTitleBackgroundSprite('ammunation', 'shopui_title_gunclub', 'shopui_title_gunclub')
 
 	WarMenu.CreateSubMenu('ammunation_upgrades', 'ammunation', '')

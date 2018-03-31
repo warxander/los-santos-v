@@ -99,7 +99,7 @@ function Gui.DrawBar(width, text, subText, color)
 	local rectY = GetSafeZoneSize() - rectHeight + rectHeight / 2
 	local hTextMargin = 0.003
 	local textFont = 0
-	local textColor = color or Color.GetHudFromBlipColor(Color.White)
+	local textColor = color or Color.GetHudFromBlipColor(Color.BlipWhite())
 	local textScale = 0.32
 	local subTextScale = 0.5
 
@@ -112,7 +112,7 @@ end
 
 
 function Gui.DrawTimerBar(width, text, seconds)
-	local textColor = seconds <= 10 and Color.GetHudFromBlipColor(Color.Red) or Color.GetHudFromBlipColor(Color.White)
+	local textColor = seconds <= 10 and Color.GetHudFromBlipColor(Color.BlipRed()) or Color.GetHudFromBlipColor(Color.BlipWhite())
 	Gui.DrawBar(width, text, string.format("%02.f", math.floor(seconds / 60))..':'..string.format("%02.f", math.floor(seconds % 60)), textColor)
 end
 

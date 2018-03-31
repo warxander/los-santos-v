@@ -17,7 +17,7 @@ local skinshops = {
 	{ blip = nil, ['x'] = 11.053486824036, ['y'] = 6514.693359375, ['z'] = 31.877849578857 },
 }
 
-local skinshopColor = Color.GetHudFromBlipColor(Color.Green)
+local skinshopColor = Color.GetHudFromBlipColor(Color.BlipGreen())
 
 
 local function skinRP(id)
@@ -39,7 +39,7 @@ AddEventHandler('lsv:init', function()
 
 	WarMenu.CreateMenu('skinshop', '')
 	WarMenu.SetSubTitle('skinshop', 'Select Your Character')
-	WarMenu.SetTitleBackgroundColor('skinshop', Color.GetHudFromBlipColor(Color.White).r, Color.GetHudFromBlipColor(Color.White).g, Color.GetHudFromBlipColor(Color.White).b, Color.GetHudFromBlipColor(Color.White).a)
+	WarMenu.SetTitleBackgroundColor('skinshop', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
 	WarMenu.SetTitleBackgroundSprite('skinshop', 'shopui_title_lowendfashion', 'shopui_title_lowendfashion')
 	WarMenu.SetMenuButtonPressedSound('skinshop', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 

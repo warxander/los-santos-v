@@ -1,8 +1,6 @@
 -- Format: { pickup, blip, name, x, y }
 local pickups =  { }
 
-local pickupColor = Color.GetHudFromBlipColor(Color.Red)
-
 
 local function GetValidRandomPickupRadius()
 	local randomSpawnRadius = Settings.pickupMaxSpawnRadius - Settings.pickupMinSpawnRadius
