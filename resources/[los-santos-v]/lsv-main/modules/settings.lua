@@ -59,22 +59,21 @@ Settings.RPPerKillstreak = 5
 -- Bounties
 Settings.bounty = {
 	timeout = 300000,
-	reward = 100,
+	reward = 150,
 }
 
 
--- Distract Cops
+-- Distract Cops VIP Work
 Settings.distractCops = {
 	radius = 125.,
 	time = 300000,
 	wantedInterval = 60000,
-	reward = 500,
+	reward = 1000,
 }
-
 
 -- Crate Drops
 Settings.crateDropSettings = {
-	RP = 250,
+	RP = 500,
 	weaponClipCount = 5,
 	weapons = {
 		{ id = "WEAPON_COMPACTLAUNCHER", name = "Compact Grenade Launcher" },
