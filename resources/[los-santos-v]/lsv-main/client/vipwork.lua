@@ -8,6 +8,11 @@ AddEventHandler('lsv:init', function()
 				WarMenu.CloseMenu()
 			end
 
+			if WarMenu.Button('Asset Recovery') then
+				TriggerEvent('lsv:startAssetRecovery')
+				WarMenu.CloseMenu()
+			end
+
 			WarMenu.Display()
 		end
 	end

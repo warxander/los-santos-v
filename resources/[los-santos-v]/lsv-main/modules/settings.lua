@@ -71,6 +71,45 @@ Settings.distractCops = {
 	reward = 1000,
 }
 
+
+-- Asset Recovery VIP Work
+Settings.assetRecovery = {
+	time = 1200000,
+	variants = {
+		{
+			vehicle = "pigalle",
+			vehicleLocation = { x = -1041.6690673828, y = -850.52899169922, z = 4.7838535308838, heading = 135.58250427246 },
+			dropOffLocation = { x = 1537.0913085938, y = 6482.6098632813, z = 22.000032424927 },
+		},
+
+		{
+			vehicle = "dominator",
+			vehicleLocation = { x = 454.39685058594, y = -1024.5531005859, z = 28.112592697144, heading = 92.917694091797 },
+			dropOffLocation = { x = 715.486328125, y = 4175.56640625, z = 40.000110626221 },
+		},
+
+		{
+			vehicle = "comet2",
+			vehicleLocation = { x = 852.61529541016, y = -1280.2347412109, z = 26.133306503296, heading = 359.4150390625 },
+			dropOffLocation = { x = 1537.0913085938, y = 6482.6098632813, z = 22.000032424927 },
+		},
+
+		{
+			vehicle = "feltzer3",
+			vehicleLocation = { x = 468.05123901367, y = -65.828109741211, z = 77.158767700195, heading = 238.4743347168 },
+			dropOffLocation = { x = 715.486328125, y = 4175.56640625, z = 40.000110626221 },
+		},
+
+		{
+			vehicle = "blazer",
+			vehicleLocation = { x = 1866.5213623047, y = 3699.1994628906, z = 32.8317527771, heading = 210.75952148438 },
+			dropOffLocation = { x = 165.90403747559, y = -3081.7749023438, z = 5.5951142311096, heading = 270.91390991211 },
+		},
+	},
+	dropRadius = 25.,
+	reward = 1500,
+}
+
 -- Crate Drops
 Settings.crateDropSettings = {
 	RP = 500,

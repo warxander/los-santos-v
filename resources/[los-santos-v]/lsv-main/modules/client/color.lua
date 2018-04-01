@@ -62,6 +62,11 @@ function Color.BlipBlue()
 end
 
 
+function Color.BlipYellow()
+	return 5
+end
+
+
 function Color.BlipOrange()
 	return 17
 end

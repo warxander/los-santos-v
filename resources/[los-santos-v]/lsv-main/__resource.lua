@@ -36,6 +36,7 @@ server_scripts {
 	"server/bounty.lua",
 	"server/guard.lua",
 	"server/distractcops.lua",
+	"server/assetrecovery.lua",
 	"server/crew.lua",
 }
 
@@ -79,5 +80,6 @@ client_scripts {
 	"client/guard.lua",
 	"client/vipwork.lua",
 	"client/distractcops.lua",
+	"client/assetrecovery.lua",
 	"client/crew.lua",
 }
