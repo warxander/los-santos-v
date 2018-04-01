@@ -7,6 +7,7 @@ AddEventHandler('lsv:init', function(isRegistered)
 		"Earn RP (Reputation Points, not RolePlay) to unlock new customization options.",
 		"Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.",
 		"Use Report Player option from Interaction menu to improve your overall game experience.",
+		"You can start a VIP Work from Interaction menu.",
 		"Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.",
 		"Press ~INPUT_ENTER_CHEAT_CODE~ to enlarge the Radar.",
 		"Press ~INPUT_DUCK~ to enter stealth mode.",
