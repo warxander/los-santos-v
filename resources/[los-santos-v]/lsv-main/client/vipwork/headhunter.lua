@@ -69,7 +69,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 			end
 
 			if loseTheCopsStage and GetPlayerWantedLevel(PlayerId()) == 0 then
-				TriggerEvent('lsv:headhunterFinished', true)
+				TriggerServerEvent('lsv:headhunterFinished')
 				return
 			end
 		else
