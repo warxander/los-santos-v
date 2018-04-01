@@ -68,7 +68,7 @@ Settings.distractCops = {
 	radius = 125.,
 	time = 300000,
 	wantedInterval = 60000,
-	reward = 1000,
+	reward = 1500,
 }
 
 
