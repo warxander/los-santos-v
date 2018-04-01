@@ -33,7 +33,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 	Player.StartVipWork('Headhunter')
 
 	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
-	Gui.DisplayNotification('You have started Headhunter. Assasinate the target and lose the cops to earn RP.')
+	Gui.DisplayNotification('You have started Headhunter. Assassinate the target and lose the cops to earn RP.')
 
 	local eventStartTime = GetGameTimer()
 	local loseTheCopsStage = false
