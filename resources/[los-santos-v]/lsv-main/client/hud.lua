@@ -11,7 +11,7 @@ AddEventHandler('lsv:init', function()
 		"Don\'t forget to use Abilities.\nThey can save your life in a critical moment.",
 		"Visit ~BLIP_GUN_SHOP~ to customize your weapons.",
 		"Visit ~BLIP_CLOTHES_STORE~ to change your character.",
-		"Join our Discord server\n~b~https://discord.gg/fAtxuhx.",
+		"Join our Discord server\n~b~https://discord.gg/fAtxuhx",
 	}
 	local tipTime = 10000
 	local tipInterval = 30000

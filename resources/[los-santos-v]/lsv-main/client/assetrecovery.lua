@@ -4,8 +4,6 @@ local dropOffBlip = nil
 local dropOffLocationBlip = nil
 
 AddEventHandler('lsv:startAssetRecovery', function()
-	Player.isEventInProgress = true
-
 	local variant = Settings.assetRecovery.variants[GetRandomIntInRange(1, Utils.GetTableLength(Settings.assetRecovery.variants) + 1)]
 
 	Streaming.RequestModel(variant.vehicle)
@@ -28,6 +26,8 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 	dropOffLocationBlip = Map.CreateRadiusBlip(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, Settings.assetRecovery.dropRadius, Color.BlipYellow())
 	SetBlipAlpha(dropOffLocationBlip, 0)
+
+	Player.isEventInProgress = true
 
 	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
 	Gui.DisplayNotification('You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off to earn RP.')
@@ -104,8 +104,6 @@ AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
 	World.SetWantedLevel(0)
 
 	StartScreenEffect("SuccessMichael", 0, false)
-
-	Citizen.Wait(1000)
 
 	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true) end
 
