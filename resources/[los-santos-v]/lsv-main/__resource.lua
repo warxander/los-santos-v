@@ -69,7 +69,6 @@ client_scripts {
 	"client/enviroment.lua",
 	"client/pickup.lua",
 	"client/afk.lua",
-	"client/abilities.lua",
 	"client/session.lua",
 	"client/report.lua",
 	"client/hud.lua",
