@@ -27,19 +27,21 @@ server_scripts {
 -- Server scripts
 server_scripts {
 	"server/main.lua",
-	"server/ammunation.lua",
-	"server/skinshop.lua",
 	"server/baseevents.lua",
 	"server/session.lua",
 	"server/report.lua",
 	"server/cratedrop.lua",
 	"server/bounty.lua",
 	"server/guard.lua",
-	"server/distractcops.lua",
-	"server/assetrecovery.lua",
-	"server/headhunter.lua",
-	"server/vipwork.lua",
 	"server/crew.lua",
+
+	"server/shop/ammunation.lua",
+	"server/shop/skinshop.lua",
+
+	"server/vipwork/vipwork.lua",
+	"server/vipwork/distractcops.lua",
+	"server/vipwork/assetrecovery.lua",
+	"server/vipwork/headhunter.lua",
 }
 
 
@@ -74,14 +76,16 @@ client_scripts {
 	"client/hud.lua",
 	"client/playertags.lua",
 	"client/cratedrop.lua",
-	"client/skinshop.lua",
-	"client/ammunation.lua",
 	"client/interactionmenu.lua",
 	"client/bounty.lua",
 	"client/guard.lua",
-	"client/vipwork.lua",
-	"client/distractcops.lua",
-	"client/assetrecovery.lua",
-	"client/headhunter.lua",
 	"client/crew.lua",
+
+	"client/shop/skinshop.lua",
+	"client/shop/ammunation.lua",
+
+	"client/vipwork/vipwork.lua",
+	"client/vipwork/distractcops.lua",
+	"client/vipwork/assetrecovery.lua",
+	"client/vipwork/headhunter.lua",
 }

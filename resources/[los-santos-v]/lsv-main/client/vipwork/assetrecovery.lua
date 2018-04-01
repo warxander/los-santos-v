@@ -51,6 +51,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.assetRecovery.time then
 			if not DoesEntityExist(vehicle) or not IsVehicleDriveable(vehicle, false) then
 				TriggerEvent('lsv:assetRecoveryFinished', false, 'A vehicle has been destroyed.')
+				return
 			end
 
 			local isInVehicle = IsPedInVehicle(PlayerPedId(), vehicle, false)
