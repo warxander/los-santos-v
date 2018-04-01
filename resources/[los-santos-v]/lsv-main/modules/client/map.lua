@@ -1,5 +1,7 @@
 Map = { }
 
+local logger = Logger:CreateNamedLogger('Map')
+
 
 function Map.CreatePlaceBlip(blipSprite, x, y, z, customName)
 	local blip = AddBlipForCoord(x, y, z)
@@ -45,4 +47,15 @@ function Map.CreatePickupBlip(pickup, itemId, color)
 	end
 
 	return blip
+end
+
+
+function Map.SetBlipFlashes(blip, time)
+	if not blip or blip == 0 then
+		logger:Error('Unable to SetBlipFlashes: '..logger:ToString(blip))
+		return
+	end
+
+	SetBlipFlashes(blip, true)
+	SetTimeout(time or 5000, function() SetBlipFlashes(blip, false) end)
 end

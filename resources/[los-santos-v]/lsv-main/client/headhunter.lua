@@ -28,12 +28,9 @@ AddEventHandler('lsv:startHeadhunter', function()
 	SetBlipRouteColour(targetBlip, Color.BlipRed())
 	SetBlipRoute(targetBlip, true)
 
-	SetBlipFlashes(targetBlip, true)
-	SetTimeout(3000, function()
-		if targetBlip then SetBlipFlashes(targetBlip, false) end
-	end)
+	Map.SetBlipFlashes(targetBlip)
 
-	Player.isEventInProgress = true
+	Player.StartVipWork('Headhunter')
 
 	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
 	Gui.DisplayNotification('You have started Headhunter. Assasinate the target and lose the cops to earn RP.')
@@ -85,7 +82,7 @@ end)
 
 RegisterNetEvent('lsv:headhunterFinished')
 AddEventHandler('lsv:headhunterFinished', function(success, reason)
-	Player.isEventInProgress = false
+	Player.FinishVipWork('Headhunter')
 
 	removeTargetBlip()
 

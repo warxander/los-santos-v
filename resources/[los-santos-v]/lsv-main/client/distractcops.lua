@@ -6,7 +6,7 @@ AddEventHandler('lsv:distractCops', function()
 
 	World.SetWantedLevel(2)
 
-	Player.isEventInProgress = true
+	Player.StartVipWork('Distract Cops')
 
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 	Gui.DisplayNotification('You have started Distract Cops. Distracting the cops in the area marked by a blue circle to earn RP.')
@@ -49,7 +49,7 @@ end)
 
 RegisterNetEvent('lsv:distractCopsFinished')
 AddEventHandler('lsv:distractCopsFinished', function(success, reason)
-	Player.isEventInProgress = false
+	Player.FinishVipWork('Distract Cops')
 
 	RemoveBlip(blip)
 	World.SetWantedLevel(0)

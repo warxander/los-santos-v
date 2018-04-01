@@ -39,13 +39,8 @@ AddEventHandler('lsv:spawnCrate', function(positionIndex, weaponIndex)
 		Settings.crateDropSettings.positions[positionIndex].z)
 	SetBlipAsShortRange(CrateBlip, false)
 	SetBlipColour(CrateBlip, 5)
-	SetBlipFlashes(CrateBlip, true)
-	SetTimeout(5000, function()
-		if CrateBlip then
-			SetBlipFlashes(CrateBlip, false)
-		end
-	end)
 	SetBlipScale(CrateBlip, 1.5)
+	Map.SetBlipFlashes(CrateBlip)
 
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 	Gui.DisplayNotification('~y~A Special Crate has been dropped.')

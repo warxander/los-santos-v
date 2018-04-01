@@ -14,6 +14,18 @@ Player.isEventInProgress = false
 Player.crewMembers = { } -- { serverPlayerId }
 
 
+function Player.StartVipWork(eventName)
+	Player.isEventInProgress = true
+	TriggerServerEvent('lsv:vipWorkStarted', eventName)
+end
+
+
+function Player.FinishVipWork(eventName)
+	Player.isEventInProgress = false
+	TriggerServerEvent('lsv:vipWorkFinished', eventName)
+end
+
+
 function Player.GetPlayerWeapons()
 	local player = PlayerPedId()
 	local ammoTypes = { }

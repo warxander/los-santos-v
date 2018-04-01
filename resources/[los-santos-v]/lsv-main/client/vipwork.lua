@@ -22,3 +22,21 @@ AddEventHandler('lsv:init', function()
 		end
 	end
 end)
+
+
+RegisterNetEvent('lsv:vipWorkStarted')
+AddEventHandler('lsv:vipWorkStarted', function(player, vipWork)
+	if GetPlayerServerId(PlayerId()) ~= player then
+		Gui.DisplayNotification(Gui.GetPlayerName(player, '~g~')..' has started '..vipWork..' VIP Work.')
+		Map.SetBlipFlashes(GetBlipFromEntity(GetPlayerPed(GetPlayerFromServerId(player))))
+	end
+end)
+
+
+RegisterNetEvent('lsv:vipWorkFinished')
+AddEventHandler('lsv:vipWorkFinished', function(player, vipWork)
+	if GetPlayerServerId(PlayerId()) ~= player then
+		Gui.DisplayNotification(Gui.GetPlayerName(player, '~g~')..' has finished '..vipWork..' VIP Work.')
+		Map.SetBlipFlashes(GetBlipFromEntity(GetPlayerPed(GetPlayerFromServerId(player))))
+	end
+end)

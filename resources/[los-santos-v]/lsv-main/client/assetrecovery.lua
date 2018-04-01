@@ -27,7 +27,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	dropOffLocationBlip = Map.CreateRadiusBlip(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, Settings.assetRecovery.dropRadius, Color.BlipYellow())
 	SetBlipAlpha(dropOffLocationBlip, 0)
 
-	Player.isEventInProgress = true
+	Player.StartVipWork('Asset Recovery')
 
 	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
 	Gui.DisplayNotification('You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off to earn RP.')
@@ -91,7 +91,7 @@ end)
 
 RegisterNetEvent('lsv:assetRecoveryFinished')
 AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
-	Player.isEventInProgress = false
+	Player.FinishVipWork('Asset Recovery')
 
 	RemoveBlip(vehicleBlip)
 	RemoveBlip(dropOffBlip)

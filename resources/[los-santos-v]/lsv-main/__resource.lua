@@ -38,6 +38,7 @@ server_scripts {
 	"server/distractcops.lua",
 	"server/assetrecovery.lua",
 	"server/headhunter.lua",
+	"server/vipwork.lua",
 	"server/crew.lua",
 }
 
