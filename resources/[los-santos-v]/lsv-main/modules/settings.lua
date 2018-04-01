@@ -110,6 +110,46 @@ Settings.assetRecovery = {
 	reward = 1500,
 }
 
+
+-- Headhunter VIP Work
+Settings.headhunter = {
+	time = 900000,
+	targets = {
+		{
+			location = { x = -1847.6923828125, y = -1228.1429443359, z = 13.017274856567 },
+			pedModel = "a_m_y_beachvesp_01",
+		},
+
+		{
+			location = { x = -920.48883056641, y = -352.99243164063, z = 38.96821975708 },
+			pedModel = "a_m_y_hasjew_01",
+		},
+
+		{
+			location = { x = 722.82415771484, y = -760.00848388672, z = 25.20599937439 },
+			pedModel = "s_m_y_garbage",
+		},
+
+		{
+			location = { x = 814.84204101563, y = -1280.7314453125, z = 26.336791992188 },
+			pedModel = "s_m_y_cop_01",
+		},
+
+		{
+			location = { x = 337.9733581543, y = -2048.1398925781, z = 21.116983413696 },
+			pedModel = "g_m_y_mexgang_01",
+		},
+	},
+	weapons = {
+		"WEAPON_SPECIALCARBINE",
+		"WEAPON_ADVANCEDRIFLE",
+		"WEAPON_AUTOSHOTGUN",
+		"WEAPON_MINISMG",
+		"WEAPON_RPG",
+	},
+	reward = 1500,
+}
+
 -- Crate Drops
 Settings.crateDropSettings = {
 	RP = 500,

@@ -13,6 +13,11 @@ AddEventHandler('lsv:init', function()
 				WarMenu.CloseMenu()
 			end
 
+			if WarMenu.Button('Headhunter') then
+				TriggerEvent('lsv:startHeadhunter')
+				WarMenu.CloseMenu()
+			end
+
 			WarMenu.Display()
 		end
 	end
