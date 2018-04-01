@@ -1,12 +1,12 @@
 local logger = Logger:CreateNamedLogger('Session')
 
-local function initPlayer(player, playerStats)
+local function initPlayer(player, playerStats, isRegistered)
 	Scoreboard.AddPlayer(player, playerStats)
 
 	if not playerStats.Weapons then playerStats.Weapons = Settings.defaultPlayerWeapons
 	else playerStats.Weapons = json.decode(playerStats.Weapons) end
 
-	TriggerClientEvent('lsv:playerLoaded', player, playerStats)
+	TriggerClientEvent('lsv:playerLoaded', player, playerStats, isRegistered)
 	TriggerClientEvent('lsv:playerConnected', -1, player)
 
 	TriggerEvent('lsv:playerConnected', player)
@@ -37,11 +37,11 @@ AddEventHandler('lsv:loadPlayer', function()
 	Db.FindPlayer(player, function(data)
 		if Utils.IsTableEmpty(data) then
 			Db.RegisterPlayer(player, function(data)
-				initPlayer(player, data[1])
+				initPlayer(player, data[1], true)
 				logger:Info('Register { '..playerName..', '..player..' }')
 			end)
 		else
-			initPlayer(player, data[1])
+			initPlayer(player, data[1], false)
 			logger:Info('Loaded { '..playerName..', '..player..' }')
 		end
 	end)

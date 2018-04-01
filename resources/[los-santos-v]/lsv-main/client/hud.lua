@@ -1,4 +1,6 @@
-AddEventHandler('lsv:init', function()
+AddEventHandler('lsv:init', function(isRegistered)
+	if not isRegistered then return end
+
 	--https://pastebin.com/amtjjcHb
 	local tips = {
 		"Performing Events and taking out players will increase your RP.",

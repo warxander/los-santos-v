@@ -17,7 +17,7 @@ end)
 
 
 RegisterNetEvent('lsv:playerLoaded')
-AddEventHandler('lsv:playerLoaded', function(playerData)
+AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 	SetEntityAlpha(PlayerPedId(), 128)
 
 	SetRandomSeed(GetNetworkTime())
@@ -33,7 +33,7 @@ AddEventHandler('lsv:playerLoaded', function(playerData)
 
 	SetEntityAlpha(PlayerPedId(), 255)
 
-	TriggerEvent('lsv:init')
+	TriggerEvent('lsv:init', isRegistered)
 end)
 
 
