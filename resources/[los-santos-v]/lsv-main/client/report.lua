@@ -1,6 +1,6 @@
 local reportedPlayers = { }
 local reportingPlayer = nil
-local reportingReasons = { "Bad Player Name", "Harassment", "Cheating", "Spam" }
+local reportingReasons = { "Inappropriate Player Name", "Harassment", "Cheating", "Spam" }
 
 
 AddEventHandler('lsv:init', function()
