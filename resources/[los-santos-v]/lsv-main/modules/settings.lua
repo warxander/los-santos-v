@@ -5,6 +5,7 @@ Settings = { }
 Settings.maxPlayerCount = 31 -- For internal usage only, do not touch it!
 Settings.afkTimeout = 300 --in seconds
 Settings.autoSavingTimeout = 180000
+Settings.pingThreshold = 200
 
 
 -- Place markers

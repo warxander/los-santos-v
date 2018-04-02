@@ -34,6 +34,7 @@ server_scripts {
 	"server/bounty.lua",
 	"server/guard.lua",
 	"server/crew.lua",
+	"server/pingkick.lua",
 
 	"server/shop/ammunation.lua",
 	"server/shop/skinshop.lua",
@@ -80,6 +81,7 @@ client_scripts {
 	"client/bounty.lua",
 	"client/guard.lua",
 	"client/crew.lua",
+	"client/pingkick.lua",
 
 	"client/shop/skinshop.lua",
 	"client/shop/ammunation.lua",
