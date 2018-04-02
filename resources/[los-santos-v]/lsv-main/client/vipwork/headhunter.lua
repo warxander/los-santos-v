@@ -60,7 +60,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 
 			if isTargetDead and not loseTheCopsStage then
 				StartScreenEffect("SuccessTrevor", 0, false)
-				World.SetWantedLevel(3)
+				World.SetWantedLevel(Settings.headhunter.wantedLevel)
 				loseTheCopsStage = true
 			end
 

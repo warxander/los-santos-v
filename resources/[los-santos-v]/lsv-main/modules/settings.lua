@@ -138,6 +138,7 @@ Settings.headhunter = {
 		"WEAPON_MINISMG",
 		"WEAPON_RPG",
 	},
+	wantedLevel = 4,
 	reward = 1500,
 }
 
