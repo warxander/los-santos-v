@@ -104,7 +104,7 @@ Settings.assetRecovery = {
 
 -- Headhunter VIP Work
 Settings.headhunter = {
-	time = 900000,
+	time = 600000,
 	targets = {
 		{
 			location = { x = -1847.6923828125, y = -1228.1429443359, z = 13.017274856567 },
