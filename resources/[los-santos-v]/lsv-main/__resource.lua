@@ -40,7 +40,7 @@ server_scripts {
 	"server/shop/skinshop.lua",
 
 	"server/vipwork/vipwork.lua",
-	"server/vipwork/distractcops.lua",
+	"server/vipwork/mostwanted.lua",
 	"server/vipwork/assetrecovery.lua",
 	"server/vipwork/headhunter.lua",
 }
@@ -87,7 +87,7 @@ client_scripts {
 	"client/shop/ammunation.lua",
 
 	"client/vipwork/vipwork.lua",
-	"client/vipwork/distractcops.lua",
+	"client/vipwork/mostwanted.lua",
 	"client/vipwork/assetrecovery.lua",
 	"client/vipwork/headhunter.lua",
 }

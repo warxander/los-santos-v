@@ -54,11 +54,9 @@ Settings.bounty = {
 }
 
 
--- Distract Cops VIP Work
-Settings.distractCops = {
-	radius = 125.,
+-- Most Wanted VIP Work
+Settings.mostWanted = {
 	time = 300000,
-	wantedInterval = 60000,
 	reward = 1500,
 }
 

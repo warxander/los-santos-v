@@ -3,8 +3,8 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if WarMenu.IsMenuOpened('vipWork') then
-			if WarMenu.Button('Distract Cops') then
-				TriggerEvent('lsv:distractCops')
+			if WarMenu.Button('Most Wanted') then
+				TriggerEvent('lsv:startMostWanted')
 				WarMenu.CloseMenu()
 			end
 
