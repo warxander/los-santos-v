@@ -93,10 +93,11 @@ function Gui.DisplayObjectiveText(text)
 end
 
 
-function Gui.DrawBar(width, text, subText, color)
+function Gui.DrawBar(width, text, subText, color, position)
+	local barIndex = position or 1
 	local rectHeight = 0.038
 	local rectX = GetSafeZoneSize() - width + width / 2
-	local rectY = GetSafeZoneSize() - rectHeight + rectHeight / 2
+	local rectY = GetSafeZoneSize() - rectHeight + rectHeight / 2 - (barIndex - 1) * (rectHeight + 0.005)
 	local hTextMargin = 0.003
 	local textFont = 0
 	local textColor = color or Color.GetHudFromBlipColor(Color.BlipWhite())
@@ -111,9 +112,9 @@ function Gui.DrawBar(width, text, subText, color)
 end
 
 
-function Gui.DrawTimerBar(width, text, seconds)
+function Gui.DrawTimerBar(width, text, seconds, position)
 	local textColor = seconds <= 10 and Color.GetHudFromBlipColor(Color.BlipRed()) or Color.GetHudFromBlipColor(Color.BlipWhite())
-	Gui.DrawBar(width, text, string.format("%02.f", math.floor(seconds / 60))..':'..string.format("%02.f", math.floor(seconds % 60)), textColor)
+	Gui.DrawBar(width, text, string.format("%02.f", math.floor(seconds / 60))..':'..string.format("%02.f", math.floor(seconds % 60)), textColor, position)
 end
 
 

@@ -43,6 +43,7 @@ server_scripts {
 	"server/vipwork/mostwanted.lua",
 	"server/vipwork/assetrecovery.lua",
 	"server/vipwork/headhunter.lua",
+	"server/vipwork/velocity.lua",
 }
 
 
@@ -90,4 +91,5 @@ client_scripts {
 	"client/vipwork/mostwanted.lua",
 	"client/vipwork/assetrecovery.lua",
 	"client/vipwork/headhunter.lua",
+	"client/vipwork/velocity.lua",
 }

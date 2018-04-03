@@ -3,17 +3,16 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if WarMenu.IsMenuOpened('vipWork') then
-			if WarMenu.Button('Most Wanted') then
+			if WarMenu.Button('Velocity') then
+				TriggerEvent('lsv:startVelocity')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Most Wanted') then
 				TriggerEvent('lsv:startMostWanted')
 				WarMenu.CloseMenu()
-			end
-
-			if WarMenu.Button('Asset Recovery') then
+			elseif WarMenu.Button('Asset Recovery') then
 				TriggerEvent('lsv:startAssetRecovery')
 				WarMenu.CloseMenu()
-			end
-
-			if WarMenu.Button('Headhunter') then
+			elseif WarMenu.Button('Headhunter') then
 				TriggerEvent('lsv:startHeadhunter')
 				WarMenu.CloseMenu()
 			end
