@@ -35,6 +35,7 @@ local colors = {
 	{ r = 186, g = 157, b = 125, a = 255 },
 	{ r = 201, g = 225, b = 255, a = 255 },
 	{ r = 240, g = 240, b = 150, a = 255 },
+	[39] = { r = 44, g = 109, b = 184, a = 255}, -- Lazy bitch
 }
 
 
@@ -89,4 +90,14 @@ end
 
 function Color.BlipPink()
 	return 23
+end
+
+
+function Color.BlipLightBlue()
+	return 26
+end
+
+
+function Color.BlipDarkBlue()
+	return 38
 end

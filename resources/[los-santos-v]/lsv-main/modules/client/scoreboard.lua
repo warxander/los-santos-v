@@ -123,8 +123,8 @@ function Scoreboard.DisplayThisFrame()
 			false, false, true)-- TODO Draw avatar here!
 
 		-- Draw player name
-		local playerColor = Color.GetHudFromBlipColor(scoreboard[index].id + 1)
-		local onlineStatusColor = { ['r'] = playerColor.r, ['g'] = playerColor.g, ['b'] = playerColor.b, ['a'] = 255 }
+		local playerColor = Utils.Index(Player.crewMembers, scoreboard[index].id) and Color.GetHudFromBlipColor(Color.BlipLightBlue()) or Color.GetHudFromBlipColor(Color.BlipDarkBlue())
+		local onlineStatusColor = Color.GetHudFromBlipColor(Color.BlipLightBlue())
 		local tablePositionColor = { ['r'] = playerColor.r, ['g'] = playerColor.g, ['b'] = playerColor.b, ['a'] = 160 }
 
 		Gui.DrawRect(playerPosition, tablePositionWidth - tableAvatarPositionWidth, tableHeight, tablePositionColor)
