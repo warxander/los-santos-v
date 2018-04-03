@@ -9,7 +9,7 @@ end
 
 
 AddEventHandler('lsv:startHeadhunter', function()
-	local target = Settings.headhunter.targets[GetRandomIntInRange(1, Utils.GetTableLength(Settings.headhunter.targets) + 1)]
+	local target = Utils.GetRandom(Settings.headhunter.targets)
 
 	Streaming.RequestModel(target.pedModel)
 
@@ -18,7 +18,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 	SetPedRelationshipGroupHash(targetPed, GetHashKey("HATES_PLAYER"))
 	SetPedArmour(targetPed, 500)
 	SetEntityHealth(targetPed, 500)
-	GiveDelayedWeaponToPed(targetPed, GetHashKey(Settings.headhunter.weapons[GetRandomIntInRange(1, Utils.GetTableLength(Settings.headhunter.weapons) + 1)]), 25000, true)
+	GiveDelayedWeaponToPed(targetPed, GetHashKey(Utils.GetRandom(Settings.headhunter.weapons)), 25000, true)
 	TaskWanderStandard(targetPed, 10.0, 10)
 
 	SetModelAsNoLongerNeeded(targetPedModelHash)

@@ -4,7 +4,7 @@ local dropOffBlip = nil
 local dropOffLocationBlip = nil
 
 AddEventHandler('lsv:startAssetRecovery', function()
-	local variant = Settings.assetRecovery.variants[GetRandomIntInRange(1, Utils.GetTableLength(Settings.assetRecovery.variants) + 1)]
+	local variant = Utils.GetRandom(Settings.assetRecovery.variants)
 
 	Streaming.RequestModel(variant.vehicle)
 

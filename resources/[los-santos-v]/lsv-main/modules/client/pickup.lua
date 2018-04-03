@@ -86,7 +86,7 @@ local pickups = {
 
 
 function Pickup.GetRandomPickup()
-	return pickups[GetRandomIntInRange(1, Utils.GetTableLength(pickups) + 1)]
+	return Utils.GetRandom(pickups)
 end
 
 
