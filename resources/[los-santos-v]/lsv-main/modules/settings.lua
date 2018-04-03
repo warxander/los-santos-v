@@ -54,7 +54,7 @@ Settings.bounty = {
 }
 
 
--- Velocity VIP Work
+-- Velocity Job
 Settings.velocity = {
 	enterVehicleTime = 600000,
 	preparationTime = 10000,
@@ -72,14 +72,14 @@ Settings.velocity = {
 }
 
 
--- Most Wanted VIP Work
+-- Most Wanted Job
 Settings.mostWanted = {
 	time = 300000,
 	reward = 1500,
 }
 
 
--- Asset Recovery VIP Work
+-- Asset Recovery Job
 Settings.assetRecovery = {
 	time = 1200000,
 	variants = {
@@ -118,7 +118,7 @@ Settings.assetRecovery = {
 }
 
 
--- Headhunter VIP Work
+-- Headhunter Job
 Settings.headhunter = {
 	time = 600000,
 	targets = {

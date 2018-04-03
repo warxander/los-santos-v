@@ -2,9 +2,9 @@ AddEventHandler('lsv:startMostWanted', function()
 	World.SetWantedLevel(5)
 
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
-	Gui.DisplayNotification('You have started Most Wanted. Stay alive with a wanted level to earn RP.')
+	Gui.DisplayNotification('You have started Most Wanted. Stay alive with a wanted level.')
 
-	Player.StartVipWork('Most Wanted')
+	Player.StartJob('Most Wanted')
 
 	local eventStartTime = GetGameTimer()
 
@@ -24,7 +24,7 @@ AddEventHandler('lsv:startMostWanted', function()
 
 			local passedTime = GetGameTimer() - eventStartTime
 			local secondsLeft = math.floor((Settings.mostWanted.time - passedTime) / 1000)
-			Gui.DrawTimerBar(0.13, 'VIP WORK END', secondsLeft)
+			Gui.DrawTimerBar(0.13, 'TIME LEFT', secondsLeft)
 			Gui.DisplayObjectiveText('Stay alive with a wanted level.')
 		else
 			TriggerServerEvent('lsv:mostWantedFinished')
@@ -36,7 +36,7 @@ end)
 
 RegisterNetEvent('lsv:mostWantedFinished')
 AddEventHandler('lsv:mostWantedFinished', function(success, reason)
-	Player.FinishVipWork('Most Wanted')
+	Player.FinishJob('Most Wanted')
 
 	World.SetWantedLevel(0)
 

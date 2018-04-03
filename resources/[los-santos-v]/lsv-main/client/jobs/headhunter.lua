@@ -26,15 +26,17 @@ AddEventHandler('lsv:startHeadhunter', function()
 	targetBlip = AddBlipForEntity(targetPed)
 	SetBlipColour(targetBlip, Color.BlipRed())
 	SetBlipHighDetail(targetBlip, true)
+	SetBlipSprite(targetBlip, Blip.Target())
+	SetBlipColour(targetBlip, Color.BlipRed())
 	SetBlipRouteColour(targetBlip, Color.BlipRed())
 	SetBlipRoute(targetBlip, true)
 
 	Map.SetBlipFlashes(targetBlip)
 
-	Player.StartVipWork('Headhunter')
+	Player.StartJob('Headhunter')
 
 	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
-	Gui.DisplayNotification('You have started Headhunter. Assassinate the target and lose the cops to earn RP.')
+	Gui.DisplayNotification('You have started Headhunter. Assassinate the target and lose the cops.')
 
 	local eventStartTime = GetGameTimer()
 	local loseTheCopsStage = false
@@ -43,7 +45,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 		while true do
 			Citizen.Wait(0)
 
-			if Player.isEventInProgress then Gui.DrawTimerBar(0.13, 'VIP WORK END', math.floor((Settings.headhunter.time - GetGameTimer() + eventStartTime) / 1000))
+			if Player.isJobInProgress then Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.headhunter.time - GetGameTimer() + eventStartTime) / 1000))
 			else return end
 		end
 	end)
@@ -83,7 +85,7 @@ end)
 
 RegisterNetEvent('lsv:headhunterFinished')
 AddEventHandler('lsv:headhunterFinished', function(success, reason)
-	Player.FinishVipWork('Headhunter')
+	Player.FinishJob('Headhunter')
 
 	removeTargetBlip()
 

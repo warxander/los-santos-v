@@ -2,7 +2,7 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if WarMenu.IsMenuOpened('vipWork') then
+		if WarMenu.IsMenuOpened('jobs') then
 			if WarMenu.Button('Velocity') then
 				TriggerEvent('lsv:startVelocity')
 				WarMenu.CloseMenu()
@@ -23,19 +23,16 @@ AddEventHandler('lsv:init', function()
 end)
 
 
-RegisterNetEvent('lsv:vipWorkStarted')
-AddEventHandler('lsv:vipWorkStarted', function(player, vipWork)
+RegisterNetEvent('lsv:jobStarted')
+AddEventHandler('lsv:jobStarted', function(player, job)
 	if GetPlayerServerId(PlayerId()) ~= player then
-		Gui.DisplayNotification(Gui.GetPlayerName(player, '~g~')..' has started '..vipWork..' VIP Work.')
+		Gui.DisplayNotification(Gui.GetPlayerName(player, '~g~')..' has started '..job..' Job.')
 		Map.SetBlipFlashes(GetBlipFromEntity(GetPlayerPed(GetPlayerFromServerId(player))))
 	end
 end)
 
 
-RegisterNetEvent('lsv:vipWorkFinished')
-AddEventHandler('lsv:vipWorkFinished', function(player, vipWork)
-	if GetPlayerServerId(PlayerId()) ~= player then
-		Gui.DisplayNotification(Gui.GetPlayerName(player, '~g~')..' has finished '..vipWork..' VIP Work.')
-		Map.SetBlipFlashes(GetBlipFromEntity(GetPlayerPed(GetPlayerFromServerId(player))))
-	end
+RegisterNetEvent('lsv:jobFinished')
+AddEventHandler('lsv:jobFinished', function(player, job)
+	if GetPlayerServerId(PlayerId()) ~= player then Gui.DisplayNotification(Gui.GetPlayerName(player, '~g~')..' has finished '..job..' Job.') end
 end)

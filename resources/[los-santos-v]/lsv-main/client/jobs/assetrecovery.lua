@@ -17,10 +17,12 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	SetModelAsNoLongerNeeded(vehicleHash)
 
 	vehicleBlip = AddBlipForEntity(vehicle)
-	SetBlipColour(vehicleBlip, Color.BlipYellow())
 	SetBlipHighDetail(vehicleBlip, true)
-	SetBlipRouteColour(vehicleBlip, Color.BlipYellow())
+	SetBlipSprite(vehicleBlip, Blip.PersonalVehicleCar())
+	SetBlipColour(vehicleBlip, Color.BlipGreen())
+	SetBlipRouteColour(vehicleBlip, Color.BlipGreen())
 	SetBlipAlpha(vehicleBlip, 0)
+	Map.SetBlipText(vehicleBlip, 'Vehicle')
 
 	dropOffBlip = AddBlipForCoord(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z)
 	SetBlipColour(dropOffBlip, Color.BlipYellow())
@@ -31,10 +33,10 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	dropOffLocationBlip = Map.CreateRadiusBlip(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, Settings.assetRecovery.dropRadius, Color.BlipYellow())
 	SetBlipAlpha(dropOffLocationBlip, 0)
 
-	Player.StartVipWork('Asset Recovery')
+	Player.StartJob('Asset Recovery')
 
 	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
-	Gui.DisplayNotification('You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off to earn RP.')
+	Gui.DisplayNotification('You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off location.')
 
 	local eventStartTime = GetGameTimer()
 
@@ -42,7 +44,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 		while true do
 			Citizen.Wait(0)
 
-			if Player.isEventInProgress then Gui.DrawTimerBar(0.13, 'VIP WORK END', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
+			if Player.isJobInProgress then Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
 			else return end
 		end
 	end)
@@ -60,7 +62,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 			local isInVehicle = IsPedInVehicle(PlayerPedId(), vehicle, false)
 
-			Gui.DisplayObjectiveText(isInVehicle and 'Deliver the vehicle to the ~y~drop off~w~.' or 'Steal the ~y~vehicle~w~.')
+			Gui.DisplayObjectiveText(isInVehicle and 'Deliver the vehicle to the ~y~drop off~w~.' or 'Steal the ~g~vehicle~w~.')
 
 			SetBlipAlpha(vehicleBlip, isInVehicle and 0 or 255)
 			SetBlipAlpha(dropOffBlip, isInVehicle and 255 or 0)
@@ -98,7 +100,7 @@ end)
 
 RegisterNetEvent('lsv:assetRecoveryFinished')
 AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
-	Player.FinishVipWork('Asset Recovery')
+	Player.FinishJob('Asset Recovery')
 
 	vehicle = nil
 

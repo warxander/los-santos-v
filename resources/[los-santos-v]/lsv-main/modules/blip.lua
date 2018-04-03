@@ -64,7 +64,6 @@ function Blip.GetPickupBlipSpriteId(item)
 end
 
 
--- Player states
 function Blip.Standard()
 	return 1
 end
@@ -80,7 +79,6 @@ function Blip.BountyHit()
 end
 
 
--- Vehicles
 function Blip.Helicopter()
 	return 64
 end
@@ -115,13 +113,11 @@ function Blip.Boat()
 end
 
 
--- Mission states
 function Blip.Completed()
 	return 367
 end
 
 
--- Places
 function Blip.BigCircle()
 	return 9
 end
@@ -154,4 +150,9 @@ end
 
 function Blip.LosSantosCustoms()
 	return 72
+end
+
+
+function Blip.Target()
+	return 458
 end

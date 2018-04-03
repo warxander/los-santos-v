@@ -16,12 +16,14 @@ AddEventHandler('lsv:startVelocity', function()
 	SetModelAsNoLongerNeeded(vehicleHash)
 
 	vehicleBlip = AddBlipForEntity(vehicle)
-	SetBlipColour(vehicleBlip, Color.BlipYellow())
 	SetBlipHighDetail(vehicleBlip, true)
-	SetBlipRouteColour(vehicleBlip, Color.BlipYellow())
+	SetBlipSprite(vehicleBlip, Blip.PersonalVehicleCar())
+	SetBlipColour(vehicleBlip, Color.BlipGreen())
+	SetBlipRouteColour(vehicleBlip, Color.BlipGreen())
 	SetBlipRoute(vehicleBlip, true)
+	Map.SetBlipText(vehicleBlip, 'Rocket Voltic')
 
-	Player.StartVipWork('Velocity')
+	Player.StartJob('Velocity')
 
 	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
 	Gui.DisplayNotification('You have started Velocity. Enter the Rocket Voltic and stay above minimum speed to avoid detonation.')
@@ -40,13 +42,13 @@ AddEventHandler('lsv:startVelocity', function()
 		while true do
 			Citizen.Wait(0)
 
-			if Player.isEventInProgress then
+			if Player.isJobInProgress then
 				local totalTime = Settings.velocity.enterVehicleTime
 				if preparationStage then totalTime = Settings.velocity.preparationTime
 				elseif detonationStage then totalTime = Settings.velocity.detonationTime
 				elseif isInVehicle and not preparationStage then totalTime = Settings.velocity.driveTime end
 
-				local title = 'VIP WORK END'
+				local title = 'TIME LEFT'
 				if preparationStage then title = 'BOMB ACTIVATION'
 				elseif detonationStage then title = 'DETONATE IN' end
 
@@ -61,7 +63,7 @@ AddEventHandler('lsv:startVelocity', function()
 					Gui.DrawBar(0.13, 'SPEED', vehicleSpeedMph..' MPH', nil, 2)
 				end
 
-				Gui.DisplayObjectiveText(isInVehicle and 'Stay above '..Settings.velocity.minSpeed..' mph to avoid detonation.' or 'Enter the ~y~Rocket Voltic~w~.')
+				Gui.DisplayObjectiveText(isInVehicle and 'Stay above '..Settings.velocity.minSpeed..' mph to avoid detonation.' or 'Enter the ~g~Rocket Voltic~w~.')
 			else return end
 		end
 	end)
@@ -128,7 +130,7 @@ end)
 
 RegisterNetEvent('lsv:velocityFinished')
 AddEventHandler('lsv:velocityFinished', function(success, reason)
-	Player.FinishVipWork('Velocity')
+	Player.FinishJob('Velocity')
 
 	vehicle = nil
 

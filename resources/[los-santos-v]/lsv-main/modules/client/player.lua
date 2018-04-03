@@ -9,20 +9,20 @@ Player.killstreak = 0
 Player.kills = 0
 Player.deaths = 0
 
-Player.isEventInProgress = false
+Player.isJobInProgress = false
 
 Player.crewMembers = { } -- { serverPlayerId }
 
 
-function Player.StartVipWork(eventName)
-	Player.isEventInProgress = true
-	TriggerServerEvent('lsv:vipWorkStarted', eventName)
+function Player.StartJob(eventName)
+	Player.isJobInProgress = true
+	TriggerServerEvent('lsv:jobStarted', eventName)
 end
 
 
-function Player.FinishVipWork(eventName)
-	Player.isEventInProgress = false
-	TriggerServerEvent('lsv:vipWorkFinished', eventName)
+function Player.FinishJob(eventName)
+	Player.isJobInProgress = false
+	TriggerServerEvent('lsv:jobFinished', eventName)
 end
 
 

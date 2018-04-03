@@ -26,7 +26,7 @@ AddEventHandler('lsv:init', function()
 	WarMenu.SetTitleBackgroundColor('interaction', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
 	WarMenu.SetTitleBackgroundSprite('interaction', 'commonmenu', 'interaction_bgd')
 
-	WarMenu.CreateSubMenu('vipWork', 'interaction', 'VIP Work')
+	WarMenu.CreateSubMenu('jobs', 'interaction', 'Jobs')
 	WarMenu.CreateSubMenu('inviteToCrew', 'interaction', 'Invite to Crew')
 	WarMenu.CreateSubMenu('reportPlayer', 'interaction', 'Report Player')
 	WarMenu.CreateSubMenu('reportReason', 'reportPlayer', 'Select a reason for reporting')
@@ -82,8 +82,8 @@ AddEventHandler('lsv:init', function()
 					local x, y, z = table.unpack(GetBlipCoords(blip))
 					quickGpsBlip = AddBlipForCoord(x, y, z)
 					SetBlipSprite(quickGpsBlip, Blip.Waypoint())
-					SetBlipColour(quickGpsBlip, 3)
-					SetBlipRouteColour(quickGpsBlip, 3)
+					SetBlipColour(quickGpsBlip, Color.BlipBlue())
+					SetBlipRouteColour(quickGpsBlip, Color.BlipBlue())
 					SetBlipHighDetail(quickGpsBlip, true)
 					SetBlipRoute(quickGpsBlip, true)
 				end
@@ -98,7 +98,7 @@ AddEventHandler('lsv:init', function()
 				else
 					TriggerEvent('lsv:updateWalkStyle', getClipSetBySex(walkStyleSelectedIndex, IsPedMale(PlayerPedId())))
 				end
-			elseif not Player.isEventInProgress and WarMenu.MenuButton('VIP Work', 'vipWork') then
+			elseif not Player.isJobInProgress and WarMenu.MenuButton('Jobs', 'jobs') then
 			elseif WarMenu.MenuButton('Invite To Crew', 'inviteToCrew') then
 			elseif Utils.GetTableLength(Player.crewMembers) ~= 0 and WarMenu.Button('Leave Crew') then
 				TriggerServerEvent('lsv:leaveCrew')

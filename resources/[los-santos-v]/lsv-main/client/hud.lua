@@ -3,11 +3,10 @@ AddEventHandler('lsv:init', function(isRegistered)
 
 	--https://pastebin.com/amtjjcHb
 	local tips = {
-		"Performing Events and taking out players will increase your RP.",
+		"Performing Jobs and taking out players will increase your RP.",
 		"Earn RP (Reputation Points, not RolePlay) to unlock new customization options.",
 		"Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.",
 		"Use Report Player option from Interaction menu to improve your overall game experience.",
-		"You can start a VIP Work from Interaction menu.",
 		"Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.",
 		"Press ~INPUT_ENTER_CHEAT_CODE~ to enlarge the Radar.",
 		"Press ~INPUT_DUCK~ to enter stealth mode.",
@@ -146,25 +145,25 @@ AddEventHandler('lsv:init', function()
 					end
 
 					local isPlayerDead = IsPlayerDead(id)
-					local isPlayerBounty = GetPlayerServerId(id) == World.GetBountyPlayerId()
-					local blipSprite = Blip.Standard()
 
-					if isPlayerDead then
-						blipSprite = Blip.Dead()
-					elseif isPlayerBounty then
-						blipSprite = Blip.BountyHit()
-					end
+					local serverId = GetPlayerServerId(id)
+					local isPlayerBounty = serverId == World.GetBountyPlayerId()
+					local isPlayerInCrew = Utils.Index(Player.crewMembers, serverId)
+
+					local blipSprite = Blip.Standard()
+					if isPlayerDead then blipSprite = Blip.Dead()
+					elseif isPlayerBounty then blipSprite = Blip.BountyHit() end
+
+					local blipColor = Color.BlipWhite()
+					if isPlayerInCrew then blipColor = Color.BlipBlue()
+					elseif isPlayerBounty then blipColor = Color.BlipRed() end
 
 					SetBlipSprite(blip, blipSprite)
-
 					ShowHeadingIndicatorOnBlip(blip, blipSprite == Blip.Standard())
-
-					SetBlipAlpha(blip, GetPedStealthMovement(ped) and 0 or 255)
-
+					SetBlipAlpha(blip, GetPedStealthMovement(ped) and not isPlayerInCrew and 0 or 255)
+					SetBlipFriend(blip, isPlayerInCrew)
 					SetBlipShrink(blip, not isPlayerBounty)
-
-					SetBlipColour(blip, isPlayerBounty and Color.BlipWhite() or Color.BlipRed())
-
+					SetBlipColour(blip, blipColor)
 					SetBlipNameToPlayerName(blip, id)
 				else
 					SetBlipAlpha(blip, 0)

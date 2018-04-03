@@ -39,11 +39,11 @@ server_scripts {
 	"server/shop/ammunation.lua",
 	"server/shop/skinshop.lua",
 
-	"server/vipwork/vipwork.lua",
-	"server/vipwork/mostwanted.lua",
-	"server/vipwork/assetrecovery.lua",
-	"server/vipwork/headhunter.lua",
-	"server/vipwork/velocity.lua",
+	"server/jobs/jobs.lua",
+	"server/jobs/mostwanted.lua",
+	"server/jobs/assetrecovery.lua",
+	"server/jobs/headhunter.lua",
+	"server/jobs/velocity.lua",
 }
 
 
@@ -87,9 +87,9 @@ client_scripts {
 	"client/shop/skinshop.lua",
 	"client/shop/ammunation.lua",
 
-	"client/vipwork/vipwork.lua",
-	"client/vipwork/mostwanted.lua",
-	"client/vipwork/assetrecovery.lua",
-	"client/vipwork/headhunter.lua",
-	"client/vipwork/velocity.lua",
+	"client/jobs/jobs.lua",
+	"client/jobs/mostwanted.lua",
+	"client/jobs/assetrecovery.lua",
+	"client/jobs/headhunter.lua",
+	"client/jobs/velocity.lua",
 }
