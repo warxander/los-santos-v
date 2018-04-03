@@ -8,9 +8,13 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 	Streaming.RequestModel(variant.vehicle)
 
-	vehicle = CreateVehicle(GetHashKey(variant.vehicle), variant.vehicleLocation.x, variant.vehicleLocation.y, variant.vehicleLocation.z, variant.vehicleLocation.heading, true, true)
+	local vehicleHash = GetHashKey(variant.vehicle)
+
+	vehicle = CreateVehicle(vehicleHash, variant.vehicleLocation.x, variant.vehicleLocation.y, variant.vehicleLocation.z, variant.vehicleLocation.heading, false, true)
 	SetVehicleModKit(vehicle, 0)
 	SetVehicleMod(vehicle, 16, 4)
+
+	SetModelAsNoLongerNeeded(vehicleHash)
 
 	vehicleBlip = AddBlipForEntity(vehicle)
 	SetBlipColour(vehicleBlip, Color.BlipYellow())
@@ -63,6 +67,8 @@ AddEventHandler('lsv:startAssetRecovery', function()
 			SetBlipAlpha(dropOffLocationBlip, isInVehicle and 128 or 0)
 
 			if isInVehicle then
+				if not NetworkGetEntityIsNetworked(vehicle) then NetworkRegisterEntityAsNetworked(vehicle) end
+
 				if routeBlip ~= dropOffBlip then
 					SetBlipRoute(dropOffBlip, true)
 					routeBlip = dropOffBlip
@@ -93,6 +99,8 @@ end)
 RegisterNetEvent('lsv:assetRecoveryFinished')
 AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
 	Player.FinishVipWork('Asset Recovery')
+
+	vehicle = nil
 
 	RemoveBlip(vehicleBlip)
 	RemoveBlip(dropOffBlip)
