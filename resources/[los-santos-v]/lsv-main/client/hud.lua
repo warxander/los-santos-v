@@ -142,29 +142,29 @@ AddEventHandler('lsv:init', function()
 					if not DoesBlipExist(blip) then
 						blip = AddBlipForEntity(ped)
 						SetBlipHighDetail(blip, true)
-						SetBlipScale(blip, 0.9)
-						SetBlipShowCone(blip, false)
+						SetBlipScale(blip, 0.85)
 					end
 
-					local IsPedDead = IsPedDeadOrDying(ped, true)
+					local isPlayerDead = IsPlayerDead(id)
+					local isPlayerBounty = GetPlayerServerId(id) == World.GetBountyPlayerId()
 					local blipSprite = Blip.Standard()
 
-					if IsPedDead then
+					if isPlayerDead then
 						blipSprite = Blip.Dead()
-					elseif GetPlayerServerId(id) == World.GetBountyPlayerId() then
+					elseif isPlayerBounty then
 						blipSprite = Blip.BountyHit()
 					end
 
 					SetBlipSprite(blip, blipSprite)
 
-					if GetPedStealthMovement(ped) then
-						SetBlipAlpha(blip, 0)
-					else
-						SetBlipAlpha(blip, 255)
-					end
+					ShowHeadingIndicatorOnBlip(blip, blipSprite == Blip.Standard())
 
-					SetBlipAsShortRange(blip, IsPedDead)
-					SetBlipColour(blip, id + 1)
+					SetBlipAlpha(blip, GetPedStealthMovement(ped) and 0 or 255)
+
+					SetBlipShrink(blip, not isPlayerBounty)
+
+					SetBlipColour(blip, isPlayerBounty and Color.BlipWhite() or Color.BlipRed())
+
 					SetBlipNameToPlayerName(blip, id)
 				else
 					SetBlipAlpha(blip, 0)
