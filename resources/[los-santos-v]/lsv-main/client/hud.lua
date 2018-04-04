@@ -141,7 +141,7 @@ AddEventHandler('lsv:init', function()
 					if not DoesBlipExist(blip) then
 						blip = AddBlipForEntity(ped)
 						SetBlipHighDetail(blip, true)
-						SetBlipScale(blip, 0.85)
+						SetBlipScale(blip, 0.9)
 					end
 
 					local isPlayerDead = IsPlayerDead(id)
@@ -162,7 +162,6 @@ AddEventHandler('lsv:init', function()
 					ShowHeadingIndicatorOnBlip(blip, blipSprite == Blip.Standard())
 					SetBlipAlpha(blip, GetPedStealthMovement(ped) and not isPlayerInCrew and 0 or 255)
 					SetBlipFriend(blip, isPlayerInCrew)
-					SetBlipShrink(blip, not isPlayerBounty)
 					SetBlipColour(blip, blipColor)
 					SetBlipNameToPlayerName(blip, id)
 				else
