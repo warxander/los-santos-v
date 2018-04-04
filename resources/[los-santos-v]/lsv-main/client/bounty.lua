@@ -21,14 +21,14 @@ AddEventHandler('lsv:setBounty', function(bountyServerPlayerId)
 		bountyScaleform:RenderFullscreenTimed(5000)
 
 		bountyScaleform:Delete()
-	else Gui.DisplayNotification('A Bounty has been set on '..Gui.GetPlayerName(bountyServerPlayerId, '~p~')..'.') end
+	else Gui.DisplayNotification('A Bounty has been set on '..Gui.GetPlayerName(bountyServerPlayerId, '~r~')..'.') end
 end)
 
 
 RegisterNetEvent('lsv:bountyKilled')
 AddEventHandler('lsv:bountyKilled', function(killer)
 	if GetPlayerServerId(PlayerId()) ~= killer then
-		Gui.DisplayNotification('The Bounty on '..Gui.GetPlayerName(World.GetBountyPlayerId(), '~p~')..' has been claimed by '..Gui.GetPlayerName(killer, '~p~'))
+		Gui.DisplayNotification('The Bounty on '..Gui.GetPlayerName(World.GetBountyPlayerId())..' has been claimed by '..Gui.GetPlayerName(killer))
 	end
 
 	World.SetBountyPlayerId(nil)
