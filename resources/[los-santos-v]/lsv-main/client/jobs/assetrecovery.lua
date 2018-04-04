@@ -105,11 +105,12 @@ AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
 	vehicle = nil
 
 	RemoveBlip(vehicleBlip)
-	RemoveBlip(dropOffBlip)
-	RemoveBlip(dropOffLocationBlip)
-
 	vehicleBlip = nil
+
+	RemoveBlip(dropOffBlip)
 	dropOffBlip = nil
+
+	RemoveBlip(dropOffLocationBlip)
 	dropOffLocationBlip = nil
 
 	World.SetWantedLevel(0)

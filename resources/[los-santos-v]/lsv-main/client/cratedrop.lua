@@ -5,9 +5,10 @@ local crateDropData = nil
 
 local function resetCrateDropData()
 	RemovePickup(crateDropData.pickup)
-	RemoveBlip(CrateBlip)
 
+	RemoveBlip(CrateBlip)
 	CrateBlip = nil
+
 	crateDropData = nil
 end
 
@@ -38,7 +39,7 @@ AddEventHandler('lsv:spawnCrate', function(positionIndex, weaponIndex)
 	CrateBlip = Map.CreatePlaceBlip(Blip.CrateDrop(), Settings.crateDropSettings.positions[positionIndex].x, Settings.crateDropSettings.positions[positionIndex].y,
 		Settings.crateDropSettings.positions[positionIndex].z)
 	SetBlipAsShortRange(CrateBlip, false)
-	SetBlipColour(CrateBlip, 5)
+	SetBlipColour(CrateBlip, Color.BlipYellow())
 	SetBlipScale(CrateBlip, 1.5)
 	Map.SetBlipFlashes(CrateBlip)
 

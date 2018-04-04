@@ -41,7 +41,8 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if GetEntityHeightAboveGround(PlayerPedId()) < Settings.autoParachutingHeight and IsPedInParachuteFreeFall(PlayerPedId()) then
+		if IsPlayerDead(PlayerId()) then return
+		elseif GetEntityHeightAboveGround(PlayerPedId()) < Settings.autoParachutingHeight and IsPedInParachuteFreeFall(PlayerPedId()) then
 			ForcePedToOpenParachute(PlayerPedId())
 		end
 	end
@@ -55,19 +56,9 @@ AddEventHandler('lsv:init', function()
 	SetIgnoreLowPriorityShockingEvents(-1, true)
 
 	World.SetWantedLevel(0)
-end)
 
+	if Settings.disableHealthRegen then SetPlayerHealthRechargeMultiplier(PlayerId(), 0) end
 
-AddEventHandler('lsv:init', function()
-	if Settings.disableHealthRegen then
-		SetPlayerHealthRechargeMultiplier(PlayerId(), 0)
-	end
-
-	SetPlayerTargetingMode(2) --free aim
-end)
-
-
-AddEventHandler('lsv:init', function()
 	if Settings.infinitePlayerStamina then
 		while true do
 			Citizen.Wait(0)

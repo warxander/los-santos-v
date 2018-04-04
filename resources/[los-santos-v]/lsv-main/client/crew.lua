@@ -23,8 +23,7 @@ end)
 
 RegisterNetEvent('lsv:invitedToCrew')
 AddEventHandler('lsv:invitedToCrew', function(player)
-	if not Utils.IsTableEmpty(Player.crewMembers) or alreadyInvited then
-		TriggerServerEvent('lsv:alreadyInCrew', player)
+	if not Utils.IsTableEmpty(Player.crewMembers) or alreadyInvited then TriggerServerEvent('lsv:alreadyInCrew', player)
 	else
 		PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 		Gui.DisplayNotification("I would like to invite you in my Crew.", "CHAR_MULTIPLAYER", Gui.GetPlayerName(player))

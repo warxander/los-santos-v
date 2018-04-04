@@ -103,8 +103,6 @@ AddEventHandler('lsv:startVelocity', function()
 						NetworkRequestControlOfNetworkId(vehicleNetId)
 						while not NetworkHasControlOfNetworkId(vehicleNetId) do Citizen.Wait(0) end
 
-						Citizen.Wait(1000)
-
 						NetworkExplodeVehicle(vehicle, true, false, false)
 
 						TriggerEvent('lsv:velocityFinished', false, 'The bomb has detonated.')

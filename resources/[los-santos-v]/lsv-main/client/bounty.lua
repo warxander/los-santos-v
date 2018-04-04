@@ -1,4 +1,4 @@
---TODO Instancing players?
+-- TODO Instancing players?
 
 local bountyText = 'Watch out, someone has put a Bounty on you.'
 
