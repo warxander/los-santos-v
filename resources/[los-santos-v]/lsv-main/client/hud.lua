@@ -148,7 +148,7 @@ AddEventHandler('lsv:init', function()
 
 					local serverId = GetPlayerServerId(id)
 					local isPlayerBounty = serverId == World.GetBountyPlayerId()
-					local isPlayerInCrew = Utils.Index(Player.crewMembers, serverId)
+					local isPlayerInCrew = Utils.IndexOf(Player.crewMembers, serverId)
 
 					local blipSprite = Blip.Standard()
 					if isPlayerDead then blipSprite = Blip.Dead()

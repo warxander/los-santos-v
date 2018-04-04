@@ -3,7 +3,7 @@ AddEventHandler('lsv:init', function()
 		for id = 0, Settings.maxPlayerCount do
 			if id ~= PlayerId() and NetworkIsPlayerActive(id) then
 				local playerPed = GetPlayerPed(id)
-				local isCrewMember = Utils.Index(Player.crewMembers, GetPlayerServerId(id))
+				local isCrewMember = Utils.IndexOf(Player.crewMembers, GetPlayerServerId(id))
 				
 				local healthBarVisible = IsPlayerFreeAimingAtEntity(PlayerId(), playerPed) or isCrewMember
 				local isPlayerTalking = NetworkIsPlayerTalking(id)

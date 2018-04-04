@@ -21,7 +21,7 @@ function Utils.GetRandom(t)
 end
 
 
-function Utils.Index(t, value)
+function Utils.IndexOf(t, value)
 	for index, v in pairs(t) do
 		if v == value then
 			return index
