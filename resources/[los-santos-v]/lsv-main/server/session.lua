@@ -41,6 +41,11 @@ AddEventHandler('lsv:loadPlayer', function()
 				logger:Info('Register { '..playerName..', '..player..' }')
 			end)
 		else
+			if data[1].Banned then
+				DropPlayer(player, "You're permanently banned from this server.")
+				return
+			end
+
 			initPlayer(player, data[1], false)
 			logger:Info('Loaded { '..playerName..', '..player..' }')
 		end
