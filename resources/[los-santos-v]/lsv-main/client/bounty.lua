@@ -28,7 +28,7 @@ end)
 RegisterNetEvent('lsv:bountyKilled')
 AddEventHandler('lsv:bountyKilled', function(killer)
 	if GetPlayerServerId(PlayerId()) ~= killer then
-		Gui.DisplayNotification('The Bounty on '..Gui.GetPlayerName(World.GetBountyPlayerId())..' has been claimed by '..Gui.GetPlayerName(killer))
+		Gui.DisplayNotification('The Bounty on '..Gui.GetPlayerName(World.GetBountyPlayerId(), nil, true)..' has been claimed by '..Gui.GetPlayerName(killer))
 	end
 
 	World.SetBountyPlayerId(nil)
