@@ -1,7 +1,8 @@
 AddEventHandler('lsv:startMostWanted', function()
 	World.SetWantedLevel(5)
 
-	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
+	FlashMinimapDisplay()
+	PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
 	Gui.DisplayNotification('You have started Most Wanted. Stay alive with a wanted level.')
 
 	JobWatcher.StartJob('Most Wanted')
@@ -42,7 +43,8 @@ AddEventHandler('lsv:mostWantedFinished', function(success, reason)
 
 	StartScreenEffect("SuccessMichael", 0, false)
 
-	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true) end
+	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
+	elseif not IsPlayerDead(PlayerId()) then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
 
 	local status = success and 'COMPLETED' or 'FAILED'
 	local message = success and '+'..Settings.mostWanted.reward..' RP' or reason or ''

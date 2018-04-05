@@ -35,7 +35,8 @@ AddEventHandler('lsv:startHeadhunter', function()
 
 	JobWatcher.StartJob('Headhunter')
 
-	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
+	FlashMinimapDisplay()
+	PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
 	Gui.DisplayNotification('You have started Headhunter. Assassinate the target and lose the cops.')
 
 	local eventStartTime = GetGameTimer()
@@ -93,7 +94,8 @@ AddEventHandler('lsv:headhunterFinished', function(success, reason)
 
 	StartScreenEffect("SuccessMichael", 0, false)
 
-	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true) end
+	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
+	elseif not IsPlayerDead(PlayerId()) then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
 
 	local status = success and 'COMPLETED' or 'FAILED'
 	local message = success and '+'..Settings.headhunter.reward..' RP' or reason or ''
