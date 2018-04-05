@@ -2,14 +2,14 @@ local alreadyInvited = false
 
 
 AddEventHandler('lsv:playerDisconnected', function(playerName, player)
-	local playerIndex = Utils.IndexOf(Player.crewMembers, player)
+	local playerIndex = Player.isCrewMember(player)
 	if playerIndex then table.remove(Player.crewMembers, playerIndex) end
 end)
 
 
 RegisterNetEvent('lsv:crewLeaved')
 AddEventHandler('lsv:crewLeaved', function(player)
-	local playerIndex = Utils.IndexOf(Player.crewMembers, player)
+	local playerIndex = Player.isCrewMember(player)
 
 	if playerIndex then
 		table.remove(Player.crewMembers, playerIndex)
@@ -82,7 +82,7 @@ end)
 
 RegisterNetEvent('lsv:addedCrewMember')
 AddEventHandler('lsv:addedCrewMember', function(player, member, members)
-	if player ~= GetPlayerServerId(PlayerId()) and GetPlayerServerId(PlayerId()) ~= member and Utils.IndexOf(Player.crewMembers, player) then
+	if player ~= GetPlayerServerId(PlayerId()) and GetPlayerServerId(PlayerId()) ~= member and Player.isCrewMember(player) then
 		table.insert(Player.crewMembers, member)
 		PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 		Gui.DisplayNotification(GetPlayerName(member)..' has joined to your Crew.')

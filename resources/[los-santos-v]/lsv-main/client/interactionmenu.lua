@@ -116,7 +116,7 @@ AddEventHandler('lsv:init', function()
 			for i = 0, Settings.maxPlayerCount do
 				if i ~= PlayerId() and NetworkIsPlayerActive(i) then
 					local player = GetPlayerServerId(i)
-					if not Utils.IndexOf(Player.crewMembers, player) and WarMenu.Button(GetPlayerName(i)) then
+					if not Player.isCrewMember(player) and WarMenu.Button(GetPlayerName(i)) then
 						Gui.DisplayNotification('You have sent Crew Invitation to '..Gui.GetPlayerName(player))
 						TriggerServerEvent('lsv:inviteToCrew', player)
 						WarMenu.CloseMenu()

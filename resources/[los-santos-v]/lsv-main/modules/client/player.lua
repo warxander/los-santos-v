@@ -26,6 +26,11 @@ function Player.FinishJob(eventName)
 end
 
 
+function Player.isCrewMember(serverId)
+	return Utils.IndexOf(Player.crewMembers, serverId)
+end
+
+
 function Player.GetPlayerWeapons()
 	local player = PlayerPedId()
 	local ammoTypes = { }

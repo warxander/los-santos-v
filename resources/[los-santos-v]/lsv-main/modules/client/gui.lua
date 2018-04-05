@@ -12,7 +12,7 @@ function Gui.GetPlayerName(serverId, color, lowercase)
 		end
 	else
 		if not color then
-			if Utils.IndexOf(Player.crewMembers, serverId) then
+			if Player.isCrewMember(serverId) then
 				color = '~b~'
 			else
 				color = '~w~'
