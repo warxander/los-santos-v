@@ -34,29 +34,31 @@ end)
 
 
 RegisterNetEvent('lsv:playerConnected')
-AddEventHandler('lsv:playerConnected', function(source)
-	if PlayerId() ~= GetPlayerFromServerId(source) and NetworkIsPlayerActive(GetPlayerFromServerId(source)) then
-		Gui.DisplayNotification(Gui.GetPlayerName(source).." connected.")
+AddEventHandler('lsv:playerConnected', function(player)
+	local playerId = GetPlayerFromServerId(player)
+	if PlayerId() ~= playerId and NetworkIsPlayerActive(playerId) then
+		Gui.DisplayNotification(Gui.GetPlayerName(player).." connected.")
+		Map.SetBlipFlashes(GetBlipFromEntity(GetPlayerPed(playerId)))
 	end
 end)
 
 
 RegisterNetEvent('lsv:onPlayerDied')
-AddEventHandler('lsv:onPlayerDied', function(source, suicide)
-	if NetworkIsPlayerActive(GetPlayerFromServerId(source)) then
+AddEventHandler('lsv:onPlayerDied', function(player, suicide)
+	if NetworkIsPlayerActive(GetPlayerFromServerId(player)) then
 		if suicide then
-			Gui.DisplayNotification(Gui.GetPlayerName(source).." committed suicide.")
+			Gui.DisplayNotification(Gui.GetPlayerName(player).." committed suicide.")
 		else
-			Gui.DisplayNotification(Gui.GetPlayerName(source).." died.")
+			Gui.DisplayNotification(Gui.GetPlayerName(player).." died.")
 		end
 	end
 end)
 
 
 RegisterNetEvent('lsv:onPlayerKilled')
-AddEventHandler('lsv:onPlayerKilled', function(source, killer, message)
-	if NetworkIsPlayerActive(GetPlayerFromServerId(source)) and NetworkIsPlayerActive(GetPlayerFromServerId(killer)) then
-		Gui.DisplayNotification(Gui.GetPlayerName(killer).." "..message.." "..Gui.GetPlayerName(source, nil, true)..'.')
+AddEventHandler('lsv:onPlayerKilled', function(player, killer, message)
+	if NetworkIsPlayerActive(GetPlayerFromServerId(player)) and NetworkIsPlayerActive(GetPlayerFromServerId(killer)) then
+		Gui.DisplayNotification(Gui.GetPlayerName(killer).." "..message.." "..Gui.GetPlayerName(player, nil, true)..'.')
 	end
 end)
 
