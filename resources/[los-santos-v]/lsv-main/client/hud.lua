@@ -149,19 +149,26 @@ AddEventHandler('lsv:init', function()
 					local serverId = GetPlayerServerId(id)
 					local isPlayerBounty = serverId == World.GetBountyPlayerId()
 					local isPlayerInCrew = Player.isCrewMember(serverId)
+					local isPlayerDoingJob = JobWatcher.IsDoingJob(serverId)
 
 					local blipSprite = Blip.Standard()
 					if isPlayerDead then blipSprite = Blip.Dead()
-					elseif isPlayerBounty then blipSprite = Blip.BountyHit() end
+					elseif isPlayerBounty then blipSprite = Blip.BountyHit()
+					elseif isPlayerDoingJob then blipSprite = Blip.PolicePlayer() end
 
 					local blipColor = Color.BlipWhite()
 					if isPlayerInCrew then blipColor = Color.BlipBlue()
-					elseif isPlayerBounty then blipColor = Color.BlipRed() end
+					elseif isPlayerBounty then blipColor = Color.BlipRed()
+					elseif isPlayerDoingJob then blipColor = Color.BlipPurple() end
 
-					SetBlipSprite(blip, blipSprite)
+					local blipAlpha = 255
+					if GetPedStealthMovement(ped) and not isPlayerInCrew then blipAlpha = 0 end
+
+					if GetBlipSprite(blip) ~= blipSprite then SetBlipSprite(blip, blipSprite) end
+					if GetBlipAlpha(blip) ~= blipAlpha then SetBlipAlpha(blip, blipAlpha) end
+
 					ShowHeadingIndicatorOnBlip(blip, blipSprite == Blip.Standard())
-					SetBlipAlpha(blip, GetPedStealthMovement(ped) and not isPlayerInCrew and 0 or 255)
-					SetBlipFriend(blip, isPlayerInCrew)
+					SetBlipFriendly(blip, isPlayerInCrew)
 					SetBlipColour(blip, blipColor)
 					SetBlipNameToPlayerName(blip, id)
 				else

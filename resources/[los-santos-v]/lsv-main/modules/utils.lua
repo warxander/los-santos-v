@@ -32,6 +32,15 @@ function Utils.IndexOf(t, value)
 end
 
 
+function Utils.SafeRemove(t, value)
+	local index = Utils.IndexOf(t, value)
+
+	if not index then return end
+
+	table.remove(t, index)
+end
+
+
 function Utils.IsTableEmpty(t)
 	return type(t) == 'table' and Utils.GetTableLength(t) == 0
 end

@@ -79,6 +79,11 @@ function Blip.BountyHit()
 end
 
 
+function Blip.PolicePlayer()
+	return 58
+end
+
+
 function Blip.Helicopter()
 	return 64
 end
