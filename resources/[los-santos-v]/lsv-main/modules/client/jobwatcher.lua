@@ -31,6 +31,8 @@ RegisterNetEvent('lsv:jobStarted')
 AddEventHandler('lsv:jobStarted', function(player, job)
 	if GetPlayerServerId(PlayerId()) ~= player then
 		table.insert(players, player)
+
+		FlashMinimapDisplay()
 		Gui.DisplayNotification(Gui.GetPlayerName(player, '~p~')..' has started '..job..' Job.')
 		Map.SetBlipFlashes(GetBlipFromEntity(GetPlayerPed(GetPlayerFromServerId(player))))
 	end

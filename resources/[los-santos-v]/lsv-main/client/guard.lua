@@ -7,6 +7,7 @@ local blacklistWeapons = {
 
 RegisterNetEvent('lsv:playerBanned')
 AddEventHandler('lsv:playerBanned', function(name, cheatName)
+	FlashMinimapDisplay()
 	Gui.DisplayNotification('<C>'..tostring(name)..'</C> was banned ('..tostring(cheatName)..').')
 end)
 

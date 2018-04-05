@@ -12,6 +12,7 @@ AddEventHandler('lsv:crewLeaved', function(player)
 	local playerIndex = Player.isCrewMember(player)
 
 	if playerIndex then
+		FlashMinimapDisplay()
 		table.remove(Player.crewMembers, playerIndex)
 		Gui.DisplayNotification(Gui.GetPlayerName(player, "~b~").." left the Crew.")
 	elseif player == GetPlayerServerId(PlayerId()) then
@@ -60,6 +61,8 @@ RegisterNetEvent('lsv:invitationAccepted')
 AddEventHandler('lsv:invitationAccepted', function(player)
 	TriggerServerEvent('lsv:updateCrewMembers', player, Player.crewMembers)
 	table.insert(Player.crewMembers, player)
+
+	FlashMinimapDisplay()
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 	Gui.DisplayNotification(Gui.GetPlayerName(player)..' has accepted your Crew Invitation.')
 	TriggerServerEvent('lsv:addCrewMember', player)
@@ -84,6 +87,8 @@ RegisterNetEvent('lsv:addedCrewMember')
 AddEventHandler('lsv:addedCrewMember', function(player, member, members)
 	if player ~= GetPlayerServerId(PlayerId()) and GetPlayerServerId(PlayerId()) ~= member and Player.isCrewMember(player) then
 		table.insert(Player.crewMembers, member)
+
+		FlashMinimapDisplay()
 		PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 		Gui.DisplayNotification(GetPlayerName(member)..' has joined to your Crew.')
 	end

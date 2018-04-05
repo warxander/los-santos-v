@@ -21,7 +21,10 @@ AddEventHandler('lsv:setBounty', function(bountyServerPlayerId)
 		bountyScaleform:RenderFullscreenTimed(5000)
 
 		bountyScaleform:Delete()
-	else Gui.DisplayNotification('A Bounty has been set on '..Gui.GetPlayerName(bountyServerPlayerId, '~r~')..'.') end
+	else
+		FlashMinimapDisplay()
+		Gui.DisplayNotification('A Bounty has been set on '..Gui.GetPlayerName(bountyServerPlayerId, '~r~')..'.')
+	end
 end)
 
 
