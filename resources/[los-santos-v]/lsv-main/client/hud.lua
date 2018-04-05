@@ -5,6 +5,7 @@ AddEventHandler('lsv:init', function(isRegistered)
 	local tips = {
 		"Performing Jobs and taking out players will increase your RP.",
 		"Earn RP (Reputation Points, not RolePlay) to unlock new customization options.",
+		"Get extra RP for killing players who are doing a Job.",
 		"Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.",
 		"Use Report Player option from Interaction menu to improve your overall game experience.",
 		"Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.",
