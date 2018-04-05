@@ -35,9 +35,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 	JobWatcher.StartJob('Asset Recovery')
 
-	FlashMinimapDisplay()
-	PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-	Gui.DisplayNotification('You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off location.')
+	Gui.StartJob('You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off location.')
 
 	local eventStartTime = GetGameTimer()
 
@@ -116,18 +114,5 @@ AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
 
 	World.SetWantedLevel(0)
 
-	StartScreenEffect("SuccessMichael", 0, false)
-
-	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
-	elseif not IsPlayerDead(PlayerId()) then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
-
-	local status = success and 'COMPLETED' or 'FAILED'
-	local message = success and '+'..Settings.assetRecovery.reward..' RP' or reason or ''
-
-	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-
-	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'ASSET RECOVERY '..status, message)
-	scaleform:RenderFullscreenTimed(5000)
-
-	scaleform:Delete()
+	Gui.FinishJob('Asset Recovery', success, reason, Settings.assetRecovery.reward)
 end)

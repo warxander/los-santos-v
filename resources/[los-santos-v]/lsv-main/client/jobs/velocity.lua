@@ -25,9 +25,7 @@ AddEventHandler('lsv:startVelocity', function()
 
 	JobWatcher.StartJob('Velocity')
 
-	FlashMinimapDisplay()
-	PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-	Gui.DisplayNotification('You have started Velocity. Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
+	Gui.StartJob('You have started Velocity. Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
 
 	detonationSound = GetSoundId()
 
@@ -140,18 +138,5 @@ AddEventHandler('lsv:velocityFinished', function(success, reason)
 	ReleaseSoundId(detonationSound)
 	detonationSound = nil
 
-	StartScreenEffect("SuccessMichael", 0, false)
-
-	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
-	elseif not IsPlayerDead(PlayerId()) then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
-
-	local status = success and 'COMPLETED' or 'FAILED'
-	local message = success and '+'..Settings.velocity.reward..' RP' or reason or ''
-
-	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-
-	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'VELOCITY '..status, message)
-	scaleform:RenderFullscreenTimed(5000)
-
-	scaleform:Delete()
+	Gui.FinishJob('Velocity', success, reason, Settings.velocity.reward)
 end)

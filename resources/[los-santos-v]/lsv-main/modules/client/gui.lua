@@ -121,3 +121,28 @@ end
 function Gui.DrawPlaceMarker(x, y, z, radius, r, g, b, a)
 	DrawMarker(1, x, y, z, 0, 0, 0, 0, 0, 0, radius, radius, radius, r, g, b, a, false, nil, nil, false)
 end
+
+
+function Gui.StartJob(message)
+	FlashMinimapDisplay()
+	PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
+	Gui.DisplayNotification(message)
+end
+
+
+function Gui.FinishJob(name, success, reason, reward)
+	StartScreenEffect('SuccessMichael', 0, false)
+
+	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
+	elseif not IsPlayerDead(PlayerId()) then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
+
+	local status = success and 'COMPLETED' or 'FAILED'
+	local message = success and '+'..reward..' RP' or reason or ''
+
+	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
+
+	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', string.upper(name)..' '..status, message)
+	scaleform:RenderFullscreenTimed(5000)
+
+	scaleform:Delete()
+end
