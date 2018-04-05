@@ -46,6 +46,7 @@ Settings.pickupMinDistance = 25.
 Settings.RPPerKill = 50
 Settings.RPPerKillstreak = 25
 Settings.RPPerJob = 50
+Settings.RPGainedNotificationTime = 3500
 
 
 -- Bounties

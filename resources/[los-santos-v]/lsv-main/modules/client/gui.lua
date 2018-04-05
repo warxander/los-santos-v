@@ -1,5 +1,8 @@
 Gui = { }
 
+local RPGained = 0
+local RPGainedTime = nil
+
 
 function Gui.GetPlayerName(serverId, color, lowercase)
 	local player = GetPlayerServerId(PlayerId())
@@ -137,7 +140,7 @@ function Gui.FinishJob(name, success, reason, reward)
 	elseif not IsPlayerDead(PlayerId()) then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
 
 	local status = success and 'COMPLETED' or 'FAILED'
-	local message = success and '+'..reward..' RP' or reason or ''
+	local message = reason or ''
 
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 
@@ -146,3 +149,36 @@ function Gui.FinishJob(name, success, reason, reward)
 
 	scaleform:Delete()
 end
+
+
+AddEventHandler('lsv:RPUpdated', function(RP)
+	RPGained = RPGained + RP
+	RPGainedTime = GetGameTimer()
+end)
+
+
+AddEventHandler('lsv:init', function()
+	RPGainedTime = GetGameTimer()
+
+	Streaming.RequestStreamedTextureDict('MPHud')
+
+	local screenWidth, screenHeight = GetScreenResolution()
+	local spriteScale = 18.0
+	local textScale = 0.5
+
+	while true do
+		Citizen.Wait(0)
+
+		if GetTimeDifference(GetGameTimer(), RPGainedTime) < Settings.RPGainedNotificationTime then
+			if RPGained ~=0 and not IsPlayerDead(PlayerId()) then
+				local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId()))
+				local z = playerZ + 1.0
+				local _, screenX, screenY = GetScreenCoordFromWorldCoord(playerX, playerY, z)
+
+				DrawSprite('MPHud', 'mp_anim_rp', screenX, screenY, spriteScale / screenWidth, spriteScale / screenHeight, 0.0, 255, 255, 255, 255)
+				Gui.DrawText('+'..RPGained, { x = screenX + spriteScale / 2 / screenWidth, y = screenY - spriteScale / 2 / screenHeight - 0.004 }, 4,
+					Color.GetHudFromBlipColor(Color.BlipWhite()), textScale, true, true)
+			end
+		else RPGained = 0 end
+	end
+end)
