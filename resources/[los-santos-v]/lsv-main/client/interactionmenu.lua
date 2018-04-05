@@ -98,7 +98,7 @@ AddEventHandler('lsv:init', function()
 				else
 					TriggerEvent('lsv:updateWalkStyle', getClipSetBySex(walkStyleSelectedIndex, IsPedMale(PlayerPedId())))
 				end
-			elseif not Player.isJobInProgress and WarMenu.MenuButton('Jobs', 'jobs') then
+			elseif not JobWatcher.IsAnyJobInProgress() and WarMenu.MenuButton('Jobs', 'jobs') then
 			elseif WarMenu.MenuButton('Invite To Crew', 'inviteToCrew') then
 			elseif Utils.GetTableLength(Player.crewMembers) ~= 0 and WarMenu.Button('Leave Crew') then
 				TriggerServerEvent('lsv:leaveCrew')

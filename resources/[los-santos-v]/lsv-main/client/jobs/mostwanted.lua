@@ -4,7 +4,7 @@ AddEventHandler('lsv:startMostWanted', function()
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 	Gui.DisplayNotification('You have started Most Wanted. Stay alive with a wanted level.')
 
-	Player.StartJob('Most Wanted')
+	JobWatcher.StartJob('Most Wanted')
 
 	local eventStartTime = GetGameTimer()
 
@@ -36,7 +36,7 @@ end)
 
 RegisterNetEvent('lsv:mostWantedFinished')
 AddEventHandler('lsv:mostWantedFinished', function(success, reason)
-	Player.FinishJob('Most Wanted')
+	JobWatcher.FinishJob('Most Wanted')
 
 	World.SetWantedLevel(0)
 

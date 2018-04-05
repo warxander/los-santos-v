@@ -33,7 +33,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	dropOffLocationBlip = Map.CreateRadiusBlip(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, Settings.assetRecovery.dropRadius, Color.BlipYellow())
 	SetBlipAlpha(dropOffLocationBlip, 0)
 
-	Player.StartJob('Asset Recovery')
+	JobWatcher.StartJob('Asset Recovery')
 
 	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
 	Gui.DisplayNotification('You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off location.')
@@ -44,7 +44,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 		while true do
 			Citizen.Wait(0)
 
-			if Player.isJobInProgress then Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
+			if JobWatcher.IsAnyJobInProgress() then Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
 			else return end
 		end
 	end)
@@ -100,7 +100,7 @@ end)
 
 RegisterNetEvent('lsv:assetRecoveryFinished')
 AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
-	Player.FinishJob('Asset Recovery')
+	JobWatcher.FinishJob('Asset Recovery')
 
 	vehicle = nil
 

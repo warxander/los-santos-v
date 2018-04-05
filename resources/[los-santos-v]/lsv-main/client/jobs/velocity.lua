@@ -23,7 +23,7 @@ AddEventHandler('lsv:startVelocity', function()
 	SetBlipRoute(vehicleBlip, true)
 	Map.SetBlipText(vehicleBlip, 'Rocket Voltic')
 
-	Player.StartJob('Velocity')
+	JobWatcher.StartJob('Velocity')
 
 	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
 	Gui.DisplayNotification('You have started Velocity. Enter the Rocket Voltic and stay above minimum speed to avoid detonation.')
@@ -42,7 +42,7 @@ AddEventHandler('lsv:startVelocity', function()
 		while true do
 			Citizen.Wait(0)
 
-			if Player.isJobInProgress then
+			if JobWatcher.IsAnyJobInProgress() then
 				local totalTime = Settings.velocity.enterVehicleTime
 				if preparationStage then totalTime = Settings.velocity.preparationTime
 				elseif detonationStage then totalTime = Settings.velocity.detonationTime
@@ -128,7 +128,7 @@ end)
 
 RegisterNetEvent('lsv:velocityFinished')
 AddEventHandler('lsv:velocityFinished', function(success, reason)
-	Player.FinishJob('Velocity')
+	JobWatcher.FinishJob('Velocity')
 
 	vehicle = nil
 

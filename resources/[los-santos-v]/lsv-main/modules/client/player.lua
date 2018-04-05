@@ -9,21 +9,7 @@ Player.killstreak = 0
 Player.kills = 0
 Player.deaths = 0
 
-Player.isJobInProgress = false
-
 Player.crewMembers = { } -- { serverPlayerId }
-
-
-function Player.StartJob(eventName)
-	Player.isJobInProgress = true
-	TriggerServerEvent('lsv:jobStarted', eventName)
-end
-
-
-function Player.FinishJob(eventName)
-	Player.isJobInProgress = false
-	TriggerServerEvent('lsv:jobFinished', eventName)
-end
 
 
 function Player.isCrewMember(serverId)

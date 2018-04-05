@@ -21,6 +21,7 @@ server_scripts {
 	"modules/server/db.lua",
 	"modules/server/scoreboard.lua",
 	"modules/server/autosave.lua",
+	"modules/server/jobwatcher.lua",
 }
 
 
@@ -39,7 +40,6 @@ server_scripts {
 	"server/shop/ammunation.lua",
 	"server/shop/skinshop.lua",
 
-	"server/jobs/jobs.lua",
 	"server/jobs/mostwanted.lua",
 	"server/jobs/assetrecovery.lua",
 	"server/jobs/headhunter.lua",
@@ -65,6 +65,7 @@ client_scripts {
 	"modules/client/pickup.lua",
 	"modules/client/map.lua",
 	"modules/client/scoreboard.lua",
+	"modules/client/jobwatcher.lua",
 }
 
 

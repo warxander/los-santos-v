@@ -1,3 +1,6 @@
+JobWatcher = { }
+
+
 RegisterServerEvent('lsv:jobStarted')
 AddEventHandler('lsv:jobStarted', function(job)
 	local player = source
