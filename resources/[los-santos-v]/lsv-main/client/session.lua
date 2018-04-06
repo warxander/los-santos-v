@@ -38,18 +38,6 @@ end)
 
 
 AddEventHandler('lsv:init', function()
-	while true do
-		Citizen.Wait(0)
-
-		if IsPlayerDead(PlayerId()) then return
-		elseif GetEntityHeightAboveGround(PlayerPedId()) < Settings.autoParachutingHeight and IsPedInParachuteFreeFall(PlayerPedId()) then
-			ForcePedToOpenParachute(PlayerPedId())
-		end
-	end
-end)
-
-
-AddEventHandler('lsv:init', function()
 	NetworkSetFriendlyFireOption(true)
 	SetCanAttackFriendly(PlayerPedId(), true, true)
 
