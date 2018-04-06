@@ -321,6 +321,13 @@ function spawnPlayer(spawnIdx, cb)
 		--RemoveAllPedWeapons(ped) -- TODO: make configurable (V behavior?)
 		ClearPlayerWantedLevel(PlayerId())
 
+		-- https://forum.fivem.net/t/info-invisible-or-glitched-peds-list-wiki/40748/23
+		local model = spawnModel
+		SetPedComponentVariation(PlayerPedId(), 0, 0, 1, 0)
+		SetTimeout(1000, function()
+			if IsPedModel(PlayerPedId(), model) then SetPedComponentVariation(PlayerPedId(), 0, 0, 0, 0) end
+		end)
+
 		-- why is this even a flag?
 		--SetCharWillFlyThroughWindscreen(ped, false)
 
