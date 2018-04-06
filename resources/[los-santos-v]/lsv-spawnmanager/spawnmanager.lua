@@ -251,12 +251,18 @@ function spawnPlayer(spawnIdx, cb)
 
 				local x = playerX + GetValidRandomPickupRadius(radiusIncrement)
 				local y = playerY + GetValidRandomPickupRadius(radiusIncrement)
-				local unk, groundZ = GetGroundZFor_3dCoord(x, y, playerZ)
-				local validCoords, coords = GetSafeCoordForPed(x, y, groundZ, false, 16)
+				local z = playerZ < 0. and playerZ + 50. or playerZ
 
-				if validCoords and groundZ > 0. then
+				RequestCollisionAtCoord(x, y, z)
+				Citizen.Wait(50)
+
+				local _, groundZ = GetGroundZFor_3dCoord(x, y, z)
+				local validCoords, coords = GetSafeCoordForPed(x, y, groundZ + 1., false, 16)
+				x, y, z = table.unpack(coords)
+
+				if validCoords then
 					spawn = { }
-					spawn.x, spawn.y, spawn.z = table.unpack(coords)
+					spawn.x, spawn.y, spawn.z = x, y, z
 				else
 					if tryCount ~= 100 then tryCount = tryCount + 1
 					else
