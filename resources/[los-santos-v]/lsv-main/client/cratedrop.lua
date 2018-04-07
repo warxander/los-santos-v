@@ -66,7 +66,7 @@ AddEventHandler('lsv:removeCrate', function(player, weaponClipCount, RP)
 		Player.SaveWeapons()
 	end
 
-	resetCrateDropData()
+	if crateDropData then resetCrateDropData() end
 end)
 
 
