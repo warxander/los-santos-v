@@ -17,8 +17,6 @@ local skinshops = {
 	{ blip = nil, ['x'] = 11.053486824036, ['y'] = 6514.693359375, ['z'] = 31.877849578857 },
 }
 
-local skinshopColor = Color.GetHudFromBlipColor(Color.BlipGreen())
-
 
 local function skinRP(id)
 	if id == Player.skin then return 'Used' end
@@ -70,6 +68,7 @@ end)
 
 AddEventHandler('lsv:init', function()
 	local skinshopOpenedMenuIndex = nil
+	local skinshopColor = Color.GetHudFromBlipColor(Color.BlipGreen())
 
 	while true do
 		Citizen.Wait(0)

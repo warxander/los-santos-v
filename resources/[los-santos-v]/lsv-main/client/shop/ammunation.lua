@@ -15,8 +15,6 @@ local ammunations = {
 	{ blip = nil, ['x'] = 1693.8348388672, ['y'] = 3759.2829589844, ['z'] = 34.705318450928 },
 }
 
-local ammunationColor = Color.GetHudFromBlipColor(Color.BlipRed())
-
 
 local function weaponTintRP(weaponTintIndex, weaponHash)
 	if GetPedWeaponTintIndex(PlayerPedId(), weaponHash) == weaponTintIndex then return 'Used' end
@@ -96,6 +94,7 @@ end)
 
 AddEventHandler('lsv:init', function()
 	local ammunationOpenedMenuIndex = nil
+	local ammunationColor = Color.GetHudFromBlipColor(Color.BlipRed())
 
 	while true do
 		Citizen.Wait(0)
