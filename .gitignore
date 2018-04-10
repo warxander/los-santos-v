@@ -2,6 +2,7 @@
 *.bat
 *.sh
 *.config
+TODO
 log
 errors
 CitizenMP.Server.exe
