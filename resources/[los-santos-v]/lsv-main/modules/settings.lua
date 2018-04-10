@@ -79,7 +79,9 @@ Settings.velocity = {
 -- Most Wanted Job
 Settings.mostWanted = {
 	time = 300000,
-	reward = 1500,
+	minReward = 1000,
+	maxReward = 5000,
+	RPPerCop = 50,
 }
 
 
