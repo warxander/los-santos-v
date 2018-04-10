@@ -38,12 +38,13 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	Gui.StartJob('You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off location.')
 
 	local eventStartTime = GetGameTimer()
+	local jobId = JobWatcher.GetJobId()
 
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(0)
 
-			if JobWatcher.IsAnyJobInProgress() then Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
+			if JobWatcher.IsJobInProgress(jobId) then Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
 			else return end
 		end
 	end)

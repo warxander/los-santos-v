@@ -37,11 +37,13 @@ AddEventHandler('lsv:startVelocity', function()
 	local startTimeToDetonate = GetGameTimer()
 	local startPreparationStageTime = GetGameTimer()
 
+	local jobId = JobWatcher.GetJobId()
+
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(0)
 
-			if JobWatcher.IsAnyJobInProgress() then
+			if JobWatcher.IsJobInProgress(jobId) then
 				local totalTime = Settings.velocity.enterVehicleTime
 				if preparationStage then totalTime = Settings.velocity.preparationTime
 				elseif detonationStage then totalTime = Settings.velocity.detonationTime

@@ -1,6 +1,7 @@
 JobWatcher = { }
 
 local isAnyJobInProgress = false
+local jobId = 0
 
 local players = { }
 
@@ -10,8 +11,19 @@ function JobWatcher.IsAnyJobInProgress()
 end
 
 
+function JobWatcher.IsJobInProgress(jobId)
+	return isAnyJobInProgress and jobId == jobId
+end
+
+
+function JobWatcher.GetJobId()
+	return jobId
+end
+
+
 function JobWatcher.StartJob(jobName)
 	isAnyJobInProgress = true
+	jobId = jobId + 1
 	TriggerServerEvent('lsv:jobStarted', jobName)
 end
 
