@@ -25,8 +25,6 @@ AddEventHandler('lsv:startVelocity', function()
 
 	JobWatcher.StartJob('Velocity')
 
-	Gui.StartJob('You have started Velocity. Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
-
 	detonationSound = GetSoundId()
 
 	local isInVehicle = false
@@ -38,6 +36,8 @@ AddEventHandler('lsv:startVelocity', function()
 	local startPreparationStageTime = GetGameTimer()
 
 	local jobId = JobWatcher.GetJobId()
+
+	Gui.StartJob(jobId, 'You have started Velocity. Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
 
 	Citizen.CreateThread(function()
 		while true do
@@ -140,5 +140,5 @@ AddEventHandler('lsv:velocityFinished', function(success, reason)
 	ReleaseSoundId(detonationSound)
 	detonationSound = nil
 
-	Gui.FinishJob('Velocity', success, reason, Settings.velocity.reward)
+	Gui.FinishJob('Velocity', success, reason)
 end)

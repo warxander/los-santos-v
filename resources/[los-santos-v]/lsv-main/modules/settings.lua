@@ -116,7 +116,8 @@ Settings.assetRecovery = {
 		},
 	},
 	dropRadius = 25.,
-	reward = 1500,
+	minReward = 1000,
+	maxReward = 5000,
 }
 
 

@@ -3,9 +3,10 @@ AddEventHandler('lsv:startMostWanted', function()
 
 	JobWatcher.StartJob('Most Wanted')
 
-	Gui.StartJob('You have started Most Wanted. Stay alive with a wanted level.')
-
 	local eventStartTime = GetGameTimer()
+	local jobId = JobWatcher.GetJobId()
+
+	Gui.StartJob(jobId, 'You have started Most Wanted. Stay alive with a wanted level.')
 
 	while true do
 		Citizen.Wait(0)
@@ -39,5 +40,5 @@ AddEventHandler('lsv:mostWantedFinished', function(success, reason)
 
 	World.SetWantedLevel(0)
 
-	Gui.FinishJob('Most Wanted', success, reason, Settings.mostWanted.reward)
+	Gui.FinishJob('Most Wanted', success, reason)
 end)

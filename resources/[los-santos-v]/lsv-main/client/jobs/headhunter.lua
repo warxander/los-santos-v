@@ -35,11 +35,11 @@ AddEventHandler('lsv:startHeadhunter', function()
 
 	JobWatcher.StartJob('Headhunter')
 
-	Gui.StartJob('You have started Headhunter. Assassinate the target and lose the cops.')
-
 	local eventStartTime = GetGameTimer()
 	local jobId = JobWatcher.GetJobId()
 	local loseTheCopsStage = false
+
+	Gui.StartJob(jobId, 'You have started Headhunter. Assassinate the target and lose the cops.')
 
 	Citizen.CreateThread(function()
 		while true do
@@ -91,5 +91,5 @@ AddEventHandler('lsv:headhunterFinished', function(success, reason)
 
 	World.SetWantedLevel(0)
 
-	Gui.FinishJob('Headhunter', success, reason, Settings.headhunter.reward)
+	Gui.FinishJob('Headhunter', success, reason)
 end)

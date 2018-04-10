@@ -126,14 +126,19 @@ function Gui.DrawPlaceMarker(x, y, z, radius, r, g, b, a)
 end
 
 
-function Gui.StartJob(message)
+function Gui.StartJob(jobId, message, tip)
 	FlashMinimapDisplay()
 	PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
 	Gui.DisplayNotification(message)
+
+	if not tip then return end
+	SetTimeout(3000, function()
+		if JobWatcher.IsJobInProgress(jobId) then Gui.DisplayHelpText(tip) end
+	end)
 end
 
 
-function Gui.FinishJob(name, success, reason, reward)
+function Gui.FinishJob(name, success, reason)
 	StartScreenEffect('SuccessMichael', 0, false)
 
 	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)

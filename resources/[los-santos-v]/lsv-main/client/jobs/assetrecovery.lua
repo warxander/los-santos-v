@@ -35,16 +35,19 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 	JobWatcher.StartJob('Asset Recovery')
 
-	Gui.StartJob('You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off location.')
-
 	local eventStartTime = GetGameTimer()
+	local isInVehicle = false
 	local jobId = JobWatcher.GetJobId()
+
+	Gui.StartJob(jobId, 'You have started Asset Recovery. Steal the vehicle and deliver it to the drop-off location.', 'Minimize the vehicle damage to get extra RP.')
 
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(0)
 
-			if JobWatcher.IsJobInProgress(jobId) then Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
+			if JobWatcher.IsJobInProgress(jobId) then
+				Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
+				if isInVehicle then Gui.DrawBar(0.13, 'VEHICLE HEALTH', math.floor(GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle) * 100)..'%', nil, 2) end
 			else return end
 		end
 	end)
@@ -60,7 +63,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 				return
 			end
 
-			local isInVehicle = IsPedInVehicle(PlayerPedId(), vehicle, false)
+			isInVehicle = IsPedInVehicle(PlayerPedId(), vehicle, false)
 
 			Gui.DisplayObjectiveText(isInVehicle and 'Deliver the vehicle to the ~y~drop off~w~.' or 'Steal the ~g~vehicle~w~.')
 
@@ -86,7 +89,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 				local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
 
 				if GetDistanceBetweenCoords(playerX, playerY, playerZ, variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, false) < Settings.assetRecovery.dropRadius then
-					TriggerServerEvent('lsv:assetRecoveryFinished')
+					TriggerServerEvent('lsv:assetRecoveryFinished', GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle))
 					return
 				end
 			end
@@ -115,5 +118,5 @@ AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
 
 	World.SetWantedLevel(0)
 
-	Gui.FinishJob('Asset Recovery', success, reason, Settings.assetRecovery.reward)
+	Gui.FinishJob('Asset Recovery', success, reason)
 end)
