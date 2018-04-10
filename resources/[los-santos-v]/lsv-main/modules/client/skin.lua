@@ -16,18 +16,17 @@ function Skin.ChangePlayerSkin(id)
 	SetPlayerModel(PlayerId(), model)
 
 	-- https://forum.fivem.net/t/info-invisible-or-glitched-peds-list-wiki/40748/23
-	SetPedComponentVariation(PlayerPedId(), 0, 0, 1, 0)
-	SetTimeout(1000, function()
-		if IsPedModel(PlayerPedId(), model) then SetPedComponentVariation(PlayerPedId(), 0, 0, 0, 0) end
-	end)
+	local ped = PlayerPedId()
+	SetPedRandomComponentVariation(ped, false)
+	SetTimeout(1000, function() SetPedDefaultComponentVariation(ped) end)
 
 	Player.skin = id
-	SetPedArmour(PlayerPedId(), armor)
-	SetEntityHealth(PlayerPedId(), health)
+	SetPedArmour(ped, armor)
+	SetEntityHealth(ped, health)
 
 	if Settings.giveParachuteAtSpawn then
 		if isHasParachute then
-			GiveWeaponToPed(PlayerPedId(), GetHashKey("GADGET_PARACHUTE"), 1, false, false)
+			GiveWeaponToPed(ped, GetHashKey("GADGET_PARACHUTE"), 1, false, false)
 		end
 	end
 
