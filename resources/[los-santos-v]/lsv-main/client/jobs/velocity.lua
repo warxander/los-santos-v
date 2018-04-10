@@ -34,10 +34,11 @@ AddEventHandler('lsv:startVelocity', function()
 	local eventStartTime = GetGameTimer()
 	local startTimeToDetonate = GetGameTimer()
 	local startPreparationStageTime = GetGameTimer()
+	local almostDetonated = 0
 
 	local jobId = JobWatcher.GetJobId()
 
-	Gui.StartJob(jobId, 'You have started Velocity. Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
+	Gui.StartJob(jobId, 'You have started Velocity. Enter the Rocket Voltic and stay at the top speed to avoid detonation.', 'Avoid almost detonated state to get extra RP.')
 
 	Citizen.CreateThread(function()
 		while true do
@@ -62,6 +63,7 @@ AddEventHandler('lsv:startVelocity', function()
 				if isInVehicle then
 					local vehicleSpeedMph = math.floor(GetEntitySpeed(vehicle) * 2.236936)
 					Gui.DrawBar(0.13, 'SPEED', vehicleSpeedMph..' MPH', nil, 2)
+					Gui.DrawBar(0.13, 'ALMOST DETONATED', almostDetonated, nil, 3)
 				end
 
 				Gui.DisplayObjectiveText(isInVehicle and 'Stay above '..Settings.velocity.minSpeed..' mph to avoid detonation.' or 'Enter the ~g~Rocket Voltic~w~.')
@@ -96,6 +98,8 @@ AddEventHandler('lsv:startVelocity', function()
 					if not detonationStage then
 						detonationStage = true
 						startTimeToDetonate = GetGameTimer()
+						TriggerServerEvent('lsv:velocityAboutToDetonate')
+						almostDetonated = almostDetonated + 1
 						PlaySoundFrontend(detonationSound, '5s_To_Event_Start_Countdown', 'GTAO_FM_Events_Soundset', false)
 					end
 

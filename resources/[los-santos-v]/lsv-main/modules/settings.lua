@@ -70,7 +70,9 @@ Settings.velocity = {
 		{ x = -1215.8439941406, y = -1346.943359375, z = 3.6422889232635, heading = 293.01425170898 },
 	},
 	minSpeed = 60,
-	reward = 1500,
+	minReward = 1000,
+	maxReward = 5000,
+	RPPerAboutToDetonate = 500,
 }
 
 
