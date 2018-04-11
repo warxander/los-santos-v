@@ -44,6 +44,7 @@ server_scripts {
 	"server/jobs/assetrecovery.lua",
 	"server/jobs/headhunter.lua",
 	"server/jobs/velocity.lua",
+	"server/jobs/marketmanipulation.lua",
 }
 
 
@@ -93,4 +94,5 @@ client_scripts {
 	"client/jobs/assetrecovery.lua",
 	"client/jobs/headhunter.lua",
 	"client/jobs/velocity.lua",
+	"client/jobs/marketmanipulation.lua",
 }

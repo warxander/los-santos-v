@@ -3,7 +3,10 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if WarMenu.IsMenuOpened('jobs') then
-			if WarMenu.Button('Velocity') then
+			if WarMenu.Button('Market Manipulation') then
+				TriggerEvent('lsv:startMarketManipulation')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Velocity') then
 				TriggerEvent('lsv:startVelocity')
 				WarMenu.CloseMenu()
 			elseif WarMenu.Button('Most Wanted') then
