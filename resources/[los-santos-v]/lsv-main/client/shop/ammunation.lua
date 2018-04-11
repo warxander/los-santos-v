@@ -53,6 +53,22 @@ AddEventHandler('lsv:init', function()
 
 	while true do
 		if WarMenu.IsMenuOpened('ammunation') then
+			if WarMenu.Button('Refill Ammo') then
+				local weapons = Player.GetPlayerWeapons()
+				local ped = PlayerPedId()
+
+				for _, weapon in ipairs(weapons) do
+					if not Weapon.GetWeapon(weapon.id).unique then
+						local weaponHash = GetHashKey(weapon.id)
+						local _, maxAmmo = GetMaxAmmo(ped, weaponHash)
+						SetPedAmmo(ped, weaponHash, maxAmmo)
+					end
+				end
+
+				Player.SaveWeapons()
+				Gui.DisplayNotification('You have refilled ammo.')
+			end
+
 			for id, weapon in pairs(Weapon.GetWeapons()) do
 				local weaponHash = GetHashKey(id)
 
