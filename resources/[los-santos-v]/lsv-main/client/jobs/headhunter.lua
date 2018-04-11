@@ -38,6 +38,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 	local eventStartTime = GetGameTimer()
 	local jobId = JobWatcher.GetJobId()
 	local loseTheCopsStage = false
+	local loseTheCopsStageStartTime = nil
 
 	Gui.StartJob(jobId, 'You have started Headhunter. Assassinate the target and lose the cops.')
 
@@ -63,7 +64,9 @@ AddEventHandler('lsv:startHeadhunter', function()
 			if isTargetDead and not loseTheCopsStage then
 				StartScreenEffect("SuccessTrevor", 0, false)
 				World.SetWantedLevel(Settings.headhunter.wantedLevel)
+				Gui.DisplayHelpText('Lose the cops faster to get extra RP.')
 				loseTheCopsStage = true
+				loseTheCopsStageStartTime = GetGameTimer()
 			end
 
 			if loseTheCopsStage and IsPlayerDead(PlayerId()) then
@@ -72,7 +75,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 			end
 
 			if loseTheCopsStage and GetPlayerWantedLevel(PlayerId()) == 0 then
-				TriggerServerEvent('lsv:headhunterFinished')
+				TriggerServerEvent('lsv:headhunterFinished', eventStartTime, loseTheCopsStageStartTime, GetGameTimer())
 				return
 			end
 		else

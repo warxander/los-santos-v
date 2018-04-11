@@ -195,7 +195,8 @@ Settings.headhunter = {
 		"WEAPON_RPG",
 	},
 	wantedLevel = 4,
-	reward = 1500,
+	minReward = 1000,
+	maxReward = 5000,
 }
 
 -- Crate Drops
