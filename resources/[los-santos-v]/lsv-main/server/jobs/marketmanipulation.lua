@@ -6,7 +6,7 @@ AddEventHandler('lsv:marketManipulationFinished', function()
 	local player = source
 
 	if not players[player] then
-		TriggerClientEvent('lsv:marketManipulationFinished', false, 'Time is over.')
+		TriggerClientEvent('lsv:marketManipulationFinished', player, false, 'Time is over.')
 		return
 	end
 
@@ -14,7 +14,7 @@ AddEventHandler('lsv:marketManipulationFinished', function()
 		math.min(Settings.marketManipulation.maxReward - Settings.marketManipulation.minReward, players[player] * Settings.marketManipulation.RPPerRobbery)
 
 	Db.UpdateRP(player, reward, function()
-		TriggerClientEvent('lsv:marketManipulationFinished', true)
+		TriggerClientEvent('lsv:marketManipulationFinished', player, true)
 		players[player] = nil
 	end)
 end)
