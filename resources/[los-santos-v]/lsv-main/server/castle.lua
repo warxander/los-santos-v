@@ -79,7 +79,7 @@ AddEventHandler('lsv:castleAddPoint', function()
 	local player = source
 
 	if not castleData then
-		logger:Error('Attempt to add point for already finished event')
+		logger:Warning('Attempt to add point for already finished event')
 		return
 	end
 
@@ -96,6 +96,7 @@ AddEventHandler('lsv:playerConnected', function(player)
 	if not castleData then return end
 
 	TriggerClientEvent('lsv:startCastle', player, castleData.placeIndex)
+	TriggerClientEvent('lsv:updateCastlePlayers', player, castleData.players)
 end)
 
 
@@ -105,6 +106,7 @@ AddEventHandler('lsv:playerDropped', function(player)
 	if Scoreboard.GetPlayersCount() == 0 then
 		logger:Info('Stop')
 		castleData = nil
+		eventFinishedTime = GetGameTimer()
 		return
 	end
 

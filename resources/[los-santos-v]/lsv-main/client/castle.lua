@@ -69,7 +69,7 @@ AddEventHandler('lsv:finishCastle', function(winners)
 	if JobWatcher.IsAnyJobInProgress() then
 		castleData = nil
 		FlashMinimapDisplay()
-		Gui.DisplayNotification(Gui.GetPlayerName(winners[1].id, '~p~')..' won King of the Castle.')
+		Gui.DisplayNotification(Gui.GetPlayerName(winners[1], '~p~')..' won King of the Castle.')
 		return
 	end
 
@@ -87,7 +87,7 @@ AddEventHandler('lsv:finishCastle', function(winners)
 
 	local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
 
-	local messageText = isPlayerWinner and 'You won King of the Castle with a score of '..getPlayerPoints() or Gui.GetPlayerName(winners[1].id)..' became the King.'
+	local messageText = isPlayerWinner and 'You won King of the Castle with a score of '..getPlayerPoints() or Gui.GetPlayerName(winners[1])..' became the King.'
 
 	castleData = nil
 
