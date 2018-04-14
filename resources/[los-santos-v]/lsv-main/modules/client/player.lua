@@ -2,6 +2,8 @@ Player = { }
 
 Player.isLoaded = false
 
+Player.isFreeze = nil
+
 Player.serverId = nil
 
 Player.skin = nil
@@ -106,6 +108,17 @@ function Player.Teleport(position)
 		Citizen.Wait(0)
 		RequestCollisionAtCoord(position.x, position.y, position.z)
 	end
+end
+
+
+function Player.SetFreeze(freeze)
+	SetEntityAlpha(PlayerPedId(), freeze and 128 or 255)
+	SetPlayerControl(PlayerId(), not freeze, false)
+	FreezeEntityPosition(PlayerPedId(), freeze)
+	SetEntityCollision(PlayerPedId(), not freeze)
+	SetPlayerInvincible(PlayerId(), freeze)
+
+	Player.isFreeze = freeze
 end
 
 

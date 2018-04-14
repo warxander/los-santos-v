@@ -21,10 +21,10 @@ AddEventHandler('lsv:init', function()
 		if banned then return end
 
 		SetPedInfiniteAmmoClip(PlayerPedId(), false)
-		ResetEntityAlpha(PlayerPedId())
 		SetEntityVisible(PlayerPedId(), true)
+		if not Player.isFreeze then ResetEntityAlpha(PlayerPedId()) end
 
-		if GetPlayerInvincible(PlayerId()) and not IsEntityDead(PlayerPedId()) then
+		if GetPlayerInvincible(PlayerId()) and not IsEntityDead(PlayerPedId()) and not Player.isFreeze then
 			TriggerServerEvent('lsv:banPlayer', 'God Mode')
 			banned = true
 			return

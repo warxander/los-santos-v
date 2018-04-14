@@ -11,6 +11,7 @@ AddEventHandler('playerSpawned', function()
 
 	if not Player.isLoaded then
 		Player.isLoaded = true
+		Player.SetFreeze(true)
 		TriggerServerEvent('lsv:loadPlayer')
 	end
 end)
@@ -18,8 +19,6 @@ end)
 
 RegisterNetEvent('lsv:playerLoaded')
 AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
-	SetEntityAlpha(PlayerPedId(), 128)
-
 	SetRandomSeed(GetNetworkTime())
 
 	Skin.ChangePlayerSkin(playerData.SkinModel)
@@ -33,7 +32,7 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 
 	Player.GiveWeapons(playerData.Weapons)
 
-	SetEntityAlpha(PlayerPedId(), 255)
+	Player.SetFreeze(false)
 
 	TriggerEvent('lsv:init', isRegistered)
 end)
