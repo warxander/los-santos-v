@@ -5,9 +5,7 @@ local RPGainedTime = nil
 
 
 function Gui.GetPlayerName(serverId, color, lowercase)
-	local player = GetPlayerServerId(PlayerId())
-
-	if player == serverId then
+	if Player.ServerId() == serverId then
 		if lowercase then
 			return "you"
 		else

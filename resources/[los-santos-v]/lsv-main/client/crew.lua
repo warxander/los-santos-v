@@ -15,7 +15,7 @@ AddEventHandler('lsv:crewLeaved', function(player)
 		FlashMinimapDisplay()
 		table.remove(Player.crewMembers, playerIndex)
 		Gui.DisplayNotification(Gui.GetPlayerName(player, "~b~").." left the Crew.")
-	elseif player == GetPlayerServerId(PlayerId()) then
+	elseif player == Player.ServerId() then
 		Utils.Clear(Player.crewMembers)
 		Gui.DisplayNotification(Gui.GetPlayerName(player, "~b~").." left the Crew.")
 	end
@@ -85,7 +85,7 @@ end)
 
 RegisterNetEvent('lsv:addedCrewMember')
 AddEventHandler('lsv:addedCrewMember', function(player, member, members)
-	if player ~= GetPlayerServerId(PlayerId()) and GetPlayerServerId(PlayerId()) ~= member and Player.isCrewMember(player) then
+	if player ~= Player.ServerId() and Player.ServerId() ~= member and Player.isCrewMember(player) then
 		table.insert(Player.crewMembers, member)
 
 		FlashMinimapDisplay()

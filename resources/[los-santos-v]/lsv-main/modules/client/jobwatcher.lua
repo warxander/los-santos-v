@@ -41,7 +41,7 @@ end
 
 RegisterNetEvent('lsv:jobStarted')
 AddEventHandler('lsv:jobStarted', function(player, job)
-	if GetPlayerServerId(PlayerId()) ~= player then
+	if Player.ServerId() ~= player then
 		table.insert(players, player)
 
 		FlashMinimapDisplay()
@@ -53,7 +53,7 @@ end)
 
 RegisterNetEvent('lsv:jobFinished')
 AddEventHandler('lsv:jobFinished', function(player, job)
-	if GetPlayerServerId(PlayerId()) ~= player then
+	if Player.ServerId() ~= player then
 		Utils.SafeRemove(players, player)
 		Gui.DisplayNotification(Gui.GetPlayerName(player, '~p~')..' has finished '..job..' Job.')
 	end

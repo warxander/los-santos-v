@@ -10,7 +10,7 @@ AddEventHandler('lsv:setBounty', function(bountyServerPlayerId)
 
 	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
 
-	if GetPlayerServerId(PlayerId()) == bountyServerPlayerId then
+	if Player.ServerId() == bountyServerPlayerId then
 		Gui.DisplayNotification(bountyText, 'CHAR_LESTER_DEATHWISH', 'Unknown', '', 2)
 
 		Citizen.Wait(1500)
@@ -30,7 +30,7 @@ end)
 
 RegisterNetEvent('lsv:bountyKilled')
 AddEventHandler('lsv:bountyKilled', function(killer)
-	if GetPlayerServerId(PlayerId()) ~= killer then
+	if Player.ServerId() ~= killer then
 		Gui.DisplayNotification('The Bounty on '..Gui.GetPlayerName(World.GetBountyPlayerId(), nil, true)..' has been claimed by '..Gui.GetPlayerName(killer))
 	end
 
