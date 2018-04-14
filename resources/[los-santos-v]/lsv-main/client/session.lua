@@ -24,6 +24,8 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 
 	Skin.ChangePlayerSkin(playerData.SkinModel)
 
+	Player.serverId = GetPlayerServerId(PlayerId())
+
 	Player.RP = playerData.RP
 
 	Player.kills = playerData.Kills

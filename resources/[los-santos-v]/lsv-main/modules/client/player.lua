@@ -2,6 +2,8 @@ Player = { }
 
 Player.isLoaded = false
 
+Player.serverId = nil
+
 Player.skin = nil
 
 Player.RP = 0
@@ -10,6 +12,11 @@ Player.kills = 0
 Player.deaths = 0
 
 Player.crewMembers = { } -- { serverPlayerId }
+
+
+function Player.ServerId()
+	return Player.serverId
+end
 
 
 function Player.isCrewMember(serverId)

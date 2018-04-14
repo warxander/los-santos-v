@@ -137,6 +137,10 @@ function Blip.Store()
 	return 52
 end
 
+function Blip.Castle()
+	return 176
+end
+
 
 function Blip.CrateDrop()
 	return 306
