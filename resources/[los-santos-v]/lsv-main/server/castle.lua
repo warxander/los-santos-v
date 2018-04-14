@@ -50,18 +50,25 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		if castleData and GetGameTimer() - castleData.eventStartTime >= Settings.castle.duration then
-			local winner = nil
+			local winners = nil
 
 			if not Utils.IsTableEmpty(castleData.players) then
-				winner = castleData.players[1].id
-				Db.UpdateRP(winner, Settings.castle.reward)
-				logger:Info('Winner { '..winner..' }')
+				winners = { }
+
+				for i = 1, 3 do
+					local playerId = castleData.players[i] and castleData.players[i].id or nil
+					table.insert(winners, playerId)
+					if playerId then
+						logger:Info('Winner { '..i..', '..playerId..' }')
+						Db.UpdateRP(playerId, Settings.castle.rewards[i])
+					end
+				end
 			else logger:Info('No winner') end
 
 			castleData = nil
 			eventFinishedTime = GetGameTimer()
 
-			TriggerClientEvent('lsv:finishCastle', -1, winner)
+			TriggerClientEvent('lsv:finishCastle', -1, winners)
 		end
 	end
 end)

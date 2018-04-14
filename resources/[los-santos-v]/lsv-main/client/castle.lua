@@ -54,13 +54,13 @@ end)
 
 
 RegisterNetEvent('lsv:finishCastle')
-AddEventHandler('lsv:finishCastle', function(winner)
+AddEventHandler('lsv:finishCastle', function(winners)
 	if castleData then
 		RemoveBlip(castleData.blip)
 		RemoveBlip(castleData.zoneBlip)
 	end
 
-	if not winner then
+	if not winners then
 		castleData = nil
 		Gui.DisplayNotification('King of the Castle has ended.')
 		return
@@ -69,22 +69,31 @@ AddEventHandler('lsv:finishCastle', function(winner)
 	if JobWatcher.IsAnyJobInProgress() then
 		castleData = nil
 		FlashMinimapDisplay()
-		Gui.DisplayNotification(Gui.GetPlayerName(winner, '~p~')..' won King of the Castle.')
+		Gui.DisplayNotification(Gui.GetPlayerName(winners[1].id, '~p~')..' won King of the Castle.')
 		return
 	end
 
-	local isPlayerWinner = winner == Player.ServerId()
+	local isPlayerWinner = false
+	for i = 1, 3 do
+		if winners[i] and winners[i] == Player.ServerId() then
+			isPlayerWinner = i
+			break
+		end
+	end
+
 
 	if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
 	elseif not IsPlayerDead(PlayerId()) then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
 
-	local messageText = isPlayerWinner and 'You won King of the Castle with a score of '..getPlayerPoints() or Gui.GetPlayerName(winner, '~p~')..' became the King.'
+	local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
+
+	local messageText = isPlayerWinner and 'You won King of the Castle with a score of '..getPlayerPoints() or Gui.GetPlayerName(winners[1].id)..' became the King.'
 
 	castleData = nil
 
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 
-	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and 'WINNER' or 'YOU LOSE', messageText, 21)
+	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
 	scaleform:RenderFullscreenTimed(5000)
 
 	scaleform:Delete()
@@ -93,6 +102,8 @@ end)
 
 Citizen.CreateThread(function()
 	local pointAddedLastTime = GetGameTimer()
+	local playerColors = { Color.BlipYellow(), Color.BlipGrey(), Color.BlipBrown() }
+	local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
 
 	while true do
 		Citizen.Wait(0)
@@ -108,7 +119,14 @@ Citizen.CreateThread(function()
 				Gui.DrawBar(0.15, 'YOUR SCORE', getPlayerPoints(), nil , 2)
 
 				if not Utils.IsTableEmpty(castleData.players) then
-					Gui.DrawBar(0.15, GetPlayerName(GetPlayerFromServerId(castleData.players[1].id)), castleData.players[1].points, Color.GetHudFromBlipColor(Color.BlipYellow()), 3)
+					local barPosition = 3
+					for i = 3, 1, -1 do
+						if castleData.players[i] then
+							Gui.DrawBar(0.15, playerPositions[i]..GetPlayerName(GetPlayerFromServerId(castleData.players[i].id)), castleData.players[i].points,
+								Color.GetHudFromBlipColor(playerColors[i]), barPosition)
+							barPosition = barPosition + 1
+						end
+					end
 				end
 
 				local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))

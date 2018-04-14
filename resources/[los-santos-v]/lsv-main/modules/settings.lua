@@ -58,7 +58,7 @@ Settings.bounty = {
 
 -- King of the Castle
 Settings.castle = {
-	timeout = 600000,
+	timeout = 900000,
 	duration = 600000,
 	places = {
 		{ x = -429.50573730469, y = 1109.7385253906, z = 327.68228149414 },
@@ -69,7 +69,7 @@ Settings.castle = {
 		{ x = -1806.5964355469, y = 443.03262329102, z = 128.50791931152 },
 	},
 	radius = 50.0,
-	reward = 5000,
+	rewards = { 5000, 2500, 1250 },
 }
 
 -- Market Manipulation Job
