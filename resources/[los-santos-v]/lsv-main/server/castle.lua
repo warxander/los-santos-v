@@ -95,7 +95,7 @@ end)
 AddEventHandler('lsv:playerConnected', function(player)
 	if not castleData then return end
 
-	TriggerClientEvent('lsv:startCastle', player, castleData.placeIndex)
+	TriggerClientEvent('lsv:startCastle', player, castleData.placeIndex, GetGameTimer() - castleData.eventStartTime)
 	TriggerClientEvent('lsv:updateCastlePlayers', player, castleData.players)
 end)
 

@@ -18,7 +18,7 @@ end
 
 
 RegisterNetEvent('lsv:startCastle')
-AddEventHandler('lsv:startCastle', function(placeIndex)
+AddEventHandler('lsv:startCastle', function(placeIndex, passedTime)
 	local place = Settings.castle.places[placeIndex]
 
 	castleData = { }
@@ -38,6 +38,7 @@ AddEventHandler('lsv:startCastle', function(placeIndex)
 	end
 
 	castleData.startTime = GetGameTimer()
+	if passedTime then castleData.startTime = castleData.startTime - passedTime end
 	castleData.players = { }
 end)
 
