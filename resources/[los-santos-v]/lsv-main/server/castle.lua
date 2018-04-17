@@ -60,7 +60,7 @@ Citizen.CreateThread(function()
 					table.insert(winners, playerId)
 					if playerId then
 						logger:Info('Winner { '..i..', '..playerId..' }')
-						Db.UpdateRP(playerId, Settings.castle.rewards[i])
+						Db.UpdateCash(playerId, Settings.castle.rewards[i])
 					end
 				end
 			else logger:Info('No winner') end

@@ -4,7 +4,7 @@ AddEventHandler('lsv:assetRecoveryFinished', function(vehicleHealthRatio)
 
 	local reward = Settings.assetRecovery.minReward + math.floor(vehicleHealthRatio * (Settings.assetRecovery.maxReward - Settings.assetRecovery.minReward))
 
-	Db.UpdateRP(player, reward, function()
+	Db.UpdateCash(player, reward, function()
 		TriggerClientEvent('lsv:assetRecoveryFinished', player, true)
 	end)
 end)

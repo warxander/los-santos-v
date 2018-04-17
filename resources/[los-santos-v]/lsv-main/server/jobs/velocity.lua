@@ -6,9 +6,9 @@ AddEventHandler('lsv:velocityFinished', function()
 	local player = source
 
 	local reward = Settings.velocity.maxReward
-	if players[player] then reward = reward - math.min(Settings.velocity.maxReward - Settings.velocity.minReward, players[player] * Settings.velocity.RPPerAboutToDetonate) end
+	if players[player] then reward = reward - math.min(Settings.velocity.maxReward - Settings.velocity.minReward, players[player] * Settings.velocity.cashPerAboutToDetonate) end
 
-	Db.UpdateRP(player, reward, function()
+	Db.UpdateCash(player, reward, function()
 		TriggerClientEvent('lsv:velocityFinished', player, true)
 		players[player] = nil
 	end)

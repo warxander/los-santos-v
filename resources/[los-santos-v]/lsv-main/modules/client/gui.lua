@@ -1,7 +1,7 @@
 Gui = { }
 
-local RPGained = 0
-local RPGainedTime = nil
+local cashGained = 0
+local cashGainedTime = nil
 
 
 function Gui.GetPlayerName(serverId, color, lowercase)
@@ -154,14 +154,14 @@ function Gui.FinishJob(name, success, reason)
 end
 
 
-AddEventHandler('lsv:RPUpdated', function(RP)
-	RPGained = RPGained + RP
-	RPGainedTime = GetGameTimer()
+AddEventHandler('lsv:cashUpdated', function(cash)
+	cashGained = cashGained + cash
+	cashGainedTime = GetGameTimer()
 end)
 
 
 AddEventHandler('lsv:init', function()
-	RPGainedTime = GetGameTimer()
+	cashGainedTime = GetGameTimer()
 
 	Streaming.RequestStreamedTextureDict('MPHud')
 
@@ -172,16 +172,18 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if GetTimeDifference(GetGameTimer(), RPGainedTime) < Settings.RPGainedNotificationTime then
-			if RPGained ~=0 and not IsPlayerDead(PlayerId()) then
+		if GetTimeDifference(GetGameTimer(), cashGainedTime) < Settings.cashGainedNotificationTime then
+			if cashGained ~=0 and not IsPlayerDead(PlayerId()) then
 				local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId()))
 				local z = playerZ + 1.0
 				local _, screenX, screenY = GetScreenCoordFromWorldCoord(playerX, playerY, z)
+				local sign = cashGained > 0 and '+' or '-'
+				local color = cashGained > 0 and Color.GetHudFromBlipColor(Color.BlipWhite()) or Color.GetHudFromBlipColor(Color.BlipRed())
 
-				DrawSprite('MPHud', 'mp_anim_rp', screenX, screenY, spriteScale / screenWidth, spriteScale / screenHeight, 0.0, 255, 255, 255, 255)
-				Gui.DrawText('+'..RPGained, { x = screenX + spriteScale / 2 / screenWidth, y = screenY - spriteScale / 2 / screenHeight - 0.004 }, 4,
-					Color.GetHudFromBlipColor(Color.BlipWhite()), textScale, true, true)
+				DrawSprite('MPHud', 'mp_anim_cash', screenX, screenY, spriteScale / screenWidth, spriteScale / screenHeight, 0.0, 255, 255, 255, 255)
+				Gui.DrawText(sign..'$'..math.abs(cashGained), { x = screenX + spriteScale / 2 / screenWidth, y = screenY - spriteScale / 2 / screenHeight - 0.004 }, 4,
+					color, textScale, true, true)
 			end
-		else RPGained = 0 end
+		else cashGained = 0 end
 	end
 end)

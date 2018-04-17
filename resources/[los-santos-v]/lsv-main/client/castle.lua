@@ -34,7 +34,7 @@ AddEventHandler('lsv:startCastle', function(placeIndex, passedTime)
 		FlashMinimapDisplay()
 		Map.SetBlipFlashes(castleData.blip)
 		PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-		Gui.DisplayNotification('Hold the Castle area by yourself to become the King and earn RP.')
+		Gui.DisplayNotification('Hold the Castle area by yourself to become the King and earn cash.')
 	end
 
 	castleData.startTime = GetGameTimer()

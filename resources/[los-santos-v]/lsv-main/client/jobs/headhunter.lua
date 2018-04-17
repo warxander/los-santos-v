@@ -64,7 +64,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 			if isTargetDead and not loseTheCopsStage then
 				StartScreenEffect("SuccessTrevor", 0, false)
 				World.SetWantedLevel(Settings.headhunter.wantedLevel)
-				Gui.DisplayHelpText('Lose the cops faster to get extra RP.')
+				Gui.DisplayHelpText('Lose the cops faster to get extra cash.')
 				loseTheCopsStage = true
 				loseTheCopsStageStartTime = GetGameTimer()
 			end

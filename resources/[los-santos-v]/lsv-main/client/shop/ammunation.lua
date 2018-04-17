@@ -16,18 +16,17 @@ local ammunations = {
 }
 
 
-local function weaponTintRP(weaponTintIndex, weaponHash)
+local function weaponTintKills(weaponTintIndex, weaponHash)
 	if GetPedWeaponTintIndex(PlayerPedId(), weaponHash) == weaponTintIndex then return 'Used' end
-	if Player.RP >= Settings.weaponTints[weaponTintIndex].RP then return '' end
-	return Settings.weaponTints[weaponTintIndex].RP..' RP'
+	if Player.kills >= Settings.weaponTints[weaponTintIndex].kills then return '' end
+	return Settings.weaponTints[weaponTintIndex].kills..' Kills'
 end
 
 
-local function weaponComponentRP(componentIndex, weapon, componentHash)
+local function weaponComponentPrice(componentIndex, weapon, componentHash)
 	local weaponHash = GetHashKey(weapon)
-	if HasPedGotWeaponComponent(PlayerPedId(), weaponHash, componentHash) then return 'Used' end
-	if Player.RP >= Weapon.GetWeapon(weapon).components[componentIndex].RP then return '' end
-	return Weapon.GetWeapon(weapon).components[componentIndex].RP..' RP'
+	if HasPedGotWeaponComponent(PlayerPedId(), weaponHash, componentHash) then return 'Owned' end
+	return '$'..Weapon.GetWeapon(weapon).components[componentIndex].cash
 end
 
 
@@ -86,7 +85,7 @@ AddEventHandler('lsv:init', function()
 			local selectedWeaponHash = GetHashKey(selectedWeapon)
 
 			for componentIndex, component in ipairs(Weapon.GetWeapon(selectedWeapon).components) do
-				if WarMenu.Button(component.name, weaponComponentRP(componentIndex, selectedWeapon, component.hash)) and
+				if WarMenu.Button(component.name, weaponComponentPrice(componentIndex, selectedWeapon, component.hash)) and
 					not HasPedGotWeaponComponent(PlayerPedId(), selectedWeaponHash, component.hash) then
 						TriggerServerEvent('lsv:updateWeaponComponent', selectedWeapon, componentIndex)
 				end
@@ -94,7 +93,7 @@ AddEventHandler('lsv:init', function()
 
 			if GetWeaponTintCount(selectedWeaponHash) == Utils.GetTableLength(Settings.weaponTints) then
 				for weaponTintIndex, weaponTint in pairs(Settings.weaponTints) do
-					if WarMenu.Button(weaponTint.name, weaponTintRP(weaponTintIndex, selectedWeaponHash)) and GetPedWeaponTintIndex(PlayerPedId(), selectedWeaponHash) ~= weaponTintIndex then
+					if WarMenu.Button(weaponTint.name, weaponTintKills(weaponTintIndex, selectedWeaponHash)) and GetPedWeaponTintIndex(PlayerPedId(), selectedWeaponHash) ~= weaponTintIndex then
 						TriggerServerEvent('lsv:updateWeaponTint', selectedWeaponHash, weaponTintIndex)
 					end
 				end
@@ -140,7 +139,7 @@ AddEventHandler('lsv:weaponTintUpdated', function(weaponHash, weaponTintIndex)
 	if weaponHash then
 		SetPedWeaponTintIndex(PlayerPedId(), weaponHash, weaponTintIndex)
 		Player.SaveWeapons()
-	else Gui.DisplayNotification('~r~You don\'t have enough RP.') end
+	else Gui.DisplayNotification('~r~You don\'t have enough kills.') end
 end)
 
 
@@ -149,5 +148,5 @@ AddEventHandler('lsv:weaponComponentUpdated', function(weapon, componentIndex)
 	if weapon then
 		GiveWeaponComponentToPed(PlayerPedId(), GetHashKey(weapon), Weapon.GetWeapon(weapon).components[componentIndex].hash)
 		Player.SaveWeapons()
-	else Gui.DisplayNotification('~r~You don\'t have enough RP.') end
+	else Gui.DisplayNotification('~r~You don\'t have enough cash.') end
 end)

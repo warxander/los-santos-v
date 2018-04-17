@@ -2,7 +2,7 @@ RegisterServerEvent('lsv:updatePlayerSkin')
 AddEventHandler('lsv:updatePlayerSkin', function(id)
 	local player = source
 
-	if Scoreboard.GetPlayerRP(player) >= Settings.skins[id].RP then
+	if Scoreboard.GetPlayerKills(player) >= Settings.skins[id].kills then
 		Db.SetValue(player, "SkinModel", Db.ToString(id), function()
 			TriggerClientEvent('lsv:playerSkinUpdated', player, id)
 		end)

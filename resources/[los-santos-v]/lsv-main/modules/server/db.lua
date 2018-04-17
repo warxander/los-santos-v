@@ -19,16 +19,16 @@ function Db.UpdateNumericValue(player, field, value, callback)
 end
 
 
-function Db.UpdateRP(player, RP, callback)
-	if RP == 0 then
+function Db.UpdateCash(player, cash, callback)
+	if cash == 0 then
 		if callback then callback() end
 		return
 	end
 
-	Db.UpdateNumericValue(player, 'RP', RP, function()
+	Db.UpdateNumericValue(player, 'Cash', cash, function()
 		if callback then callback() end
-		Scoreboard.UpdateRP(player, RP)
-		TriggerClientEvent('lsv:RPUpdated', player, RP)
+		Scoreboard.UpdateCash(player, cash)
+		TriggerClientEvent('lsv:cashUpdated', player, cash)
 	end)
 end
 

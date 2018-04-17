@@ -18,10 +18,10 @@ local skinshops = {
 }
 
 
-local function skinRP(id)
+local function skinKills(id)
 	if id == Player.skin then return 'Used' end
-	if Player.RP >= Settings.skins[id].RP then return '' end
-	return Settings.skins[id].RP..' RP'
+	if Player.kills >= Settings.skins[id].kills then return '' end
+	return Settings.skins[id].kills..' Kills'
 end
 
 
@@ -47,13 +47,13 @@ AddEventHandler('lsv:init', function()
 	end
 
 	table.sort(orderedSkins, function(l, r)
-		return l.value.RP < r.value.RP
+		return l.value.kills < r.value.kills
 	end)
 
 	while true do
 		if WarMenu.IsMenuOpened('skinshop') then
 			for _, v in ipairs(orderedSkins) do
-				if WarMenu.Button(v.value.name, skinRP(v.key)) and v.key ~= Player.skin then
+				if WarMenu.Button(v.value.name, skinKills(v.key)) and v.key ~= Player.skin then
 					TriggerServerEvent('lsv:updatePlayerSkin', v.key)
 				end
 			end
@@ -96,5 +96,5 @@ end)
 RegisterNetEvent('lsv:playerSkinUpdated')
 AddEventHandler('lsv:playerSkinUpdated', function(id)
 	if id then Skin.ChangePlayerSkin(id)
-	else Gui.DisplayNotification('~r~You don\'t have enough RP.') end
+	else Gui.DisplayNotification('~r~You don\'t have enough kills.') end
 end)

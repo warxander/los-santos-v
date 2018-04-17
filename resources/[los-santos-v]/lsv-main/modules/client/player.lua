@@ -8,7 +8,7 @@ Player.serverId = nil
 
 Player.skin = nil
 
-Player.RP = 0
+Player.cash = 0
 Player.killstreak = 0
 Player.kills = 0
 Player.deaths = 0
@@ -122,9 +122,9 @@ function Player.SetFreeze(freeze)
 end
 
 
-RegisterNetEvent('lsv:RPUpdated')
-AddEventHandler('lsv:RPUpdated', function(RP)
-	Player.RP = Player.RP + RP
+RegisterNetEvent('lsv:cashUpdated')
+AddEventHandler('lsv:cashUpdated', function(cash)
+	Player.cash = Player.cash + cash
 end)
 
 

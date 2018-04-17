@@ -6,9 +6,9 @@ AddEventHandler('lsv:mostWantedFinished', function()
 	local player = source
 
 	local reward = Settings.mostWanted.minReward
-	if players[player] then reward = reward + math.min(Settings.mostWanted.maxReward - Settings.mostWanted.minReward, players[player] * Settings.mostWanted.RPPerCop) end
+	if players[player] then reward = reward + math.min(Settings.mostWanted.maxReward - Settings.mostWanted.minReward, players[player] * Settings.mostWanted.cashPerCop) end
 
-	Db.UpdateRP(player, reward, function()
+	Db.UpdateCash(player, reward, function()
 		TriggerClientEvent('lsv:mostWantedFinished', player, true)
 		players[player] = nil
 	end)

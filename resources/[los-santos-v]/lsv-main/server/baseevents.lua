@@ -37,12 +37,12 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 
 	if killer ~= -1 then
 		Db.UpdateKills(killer, function()
-			local killerRP = Settings.RPPerKill + (Settings.RPPerKillstreak * Scoreboard.GetPlayerKillstreak(killer))
-			if JobWatcher.IsDoingJob(victim) then killerRP = killerRP + Settings.RPPerJob end
+			local killerCash = Settings.cashPerKill + (Settings.cashPerKillstreak * Scoreboard.GetPlayerKillstreak(killer))
+			if JobWatcher.IsDoingJob(victim) then killerCash = killerCash + Settings.cashPerJob end
 
 			Scoreboard.UpdateKillstreak(killer)
 
-			Db.UpdateRP(killer, killerRP, function()
+			Db.UpdateCash(killer, killerCash, function()
 				TriggerClientEvent('lsv:onPlayerKilled', -1, victim, killer, getKilledMessage())
 			end)
 		end)

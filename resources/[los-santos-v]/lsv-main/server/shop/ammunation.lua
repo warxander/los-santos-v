@@ -2,9 +2,9 @@ RegisterServerEvent('lsv:updateWeaponTint')
 AddEventHandler('lsv:updateWeaponTint', function(weaponHash, weaponTintIndex)
 	local player = source
 
-	local isEnoughRP = Scoreboard.GetPlayerRP(player) >= Settings.weaponTints[weaponTintIndex].RP
+	local isEnoughKills = Scoreboard.GetPlayerKills(player) >= Settings.weaponTints[weaponTintIndex].kills
 
-	TriggerClientEvent('lsv:weaponTintUpdated', player, isEnoughRP and weaponHash, weaponTintIndex)
+	TriggerClientEvent('lsv:weaponTintUpdated', player, isEnoughKills and weaponHash, weaponTintIndex)
 end)
 
 
@@ -12,7 +12,11 @@ RegisterServerEvent('lsv:updateWeaponComponent')
 AddEventHandler('lsv:updateWeaponComponent', function(weapon, componentIndex)
 	local player = source
 
-	local isEnoughRP = Scoreboard.GetPlayerRP(player) >= Weapon.GetWeapon(weapon).components[componentIndex].RP
+	local componentPrice = Weapon.GetWeapon(weapon).components[componentIndex].cash
 
-	TriggerClientEvent('lsv:weaponComponentUpdated', player, isEnoughRP and weapon, componentIndex)
+	if Scoreboard.GetPlayerCash(player) >= componentPrice then
+		Db.UpdateCash(player, -componentPrice, function()
+			TriggerClientEvent('lsv:weaponComponentUpdated', player, weapon, componentIndex)
+		end)
+	else TriggerClientEvent('lsv:weaponComponentUpdated', player, nil) end
 end)

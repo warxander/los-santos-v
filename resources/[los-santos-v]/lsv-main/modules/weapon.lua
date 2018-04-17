@@ -13,51 +13,51 @@ local weapons = {
 	["WEAPON_STUNGUN"] = {
 		name = "Stun Gun",
 		components = { },
-		RP = 1000,
+		cash = 100,
 	},
 
 	["WEAPON_FLASHLIGHT"] = {
 		name = "Flashlight",
 		components = { },
-		RP = 1000,
+		cash = 100,
 	},
 
 	["WEAPON_NIGHTSTICK"] = {
 		name = "Nightstick",
 		components = { },
-		RP = 5000,
+		cash = 500,
 	},
 
 	["WEAPON_HAMMER"] = {
 		name = "Hammer",
 		components = { },
-		RP = 5000,
+		cash = 500,
 	},
 
 	["WEAPON_BAT"] = {
 		name = "Bat",
 		components = { },
-		RP = 5000,
+		cash = 500,
 	},
 
 	["WEAPON_GOLFCLUB"] = {
 		name = "Golf Club",
 		components = { },
-		RP = 6000,
+		cash = 600,
 	},
 
 	["WEAPON_CROWBAR"] = {
 		name = "Crowbar",
 		components = { },
-		RP = 7000,
+		cash = 700,
 	},
 
 	["WEAPON_SAWNOFFSHOTGUN"] = {
 		name = "Sawed-Off Shotgun",
 		components = {
-			{ hash = 2242268665, name = "Gilded Gun Metal Finish", RP = 67500 },
+			{ hash = 2242268665, name = "Gilded Gun Metal Finish", cash = 6750 },
 		},
-		RP = 30000,
+		cash = 3000,
 	},
 
 	["WEAPON_RPG"] = {
@@ -75,43 +75,43 @@ local weapons = {
 	["WEAPON_GRENADE"] = {
 		name = "Grenade",
 		components = { },
-		RP = 25000,
+		cash = 2500,
 	},
 
 	["WEAPON_STICKYBOMB"] = {
 		name = "Sticky Bomb",
 		components = { },
-		RP = 60000,
+		cash = 6000,
 	},
 
 	["WEAPON_SMOKEGRENADE"] = {
 		name = "Tear Gas",
 		components = { },
-		RP = 15000,
+		cash = 1500,
 	},
 
 	["WEAPON_MOLOTOV"] = {
 		name = "Molotov Cocktail",
 		components = { },
-		RP = 35000,
+		cash = 3500,
 	},
 
 	["WEAPON_BOTTLE"] = {
 		name = "Broken Bottle",
 		components = { },
-		RP = 3000,
+		cash = 300,
 	},
 
 	["WEAPON_GUSENBERG"] = {
 		name = "Gusenberg Sweeper",
 		components = { },
-		RP = 146000,
+		cash = 14600,
 	},
 
 	["WEAPON_DAGGER"] = {
 		name = "Antique Cavalry Dagger",
 		components = { },
-		RP = 20000,
+		cash = 2000,
 	},
 
 	["WEAPON_MUSKET"] = {
@@ -128,67 +128,67 @@ local weapons = {
 	["WEAPON_PROXMINE"] = {
 		name = "Proximity Mine",
 		components = { },
-		RP = 100000,
+		cash = 10000,
 	},
 
 	["WEAPON_FLAREGUN"] = {
 		name = "Flare Gun",
 		components = { },
-		RP = 37500,
+		cash = 3750,
 	},
 
 	["WEAPON_MARKSMANPISTOL"] = {
 		name = "Marksman Pistol",
 		components = { },
-		RP = 43500,
+		cash = 4350,
 	},
 
 	["WEAPON_KNUCKLE"] = {
 		name = "Knuckle Dusters",
 		components = { },
-		RP = 75000,
+		cash = 7500,
 	},
 
 	["WEAPON_HATCHET"] = {
 		name = "Hatchet",
 		components = { },
-		RP = 75000,
+		cash = 7500,
 	},
 
 	["WEAPON_MACHETE"] = {
 		name = "Machete",
 		components = { },
-		RP = 89000,
+		cash = 890,
 	},
 
 	["WEAPON_SWITCHBLADE"] = {
 		name = "Switchblade",
 		components = { },
-		RP = 19500,
+		cash = 1950,
 	},
 
 	["WEAPON_REVOLVER"] = {
 		name = "Heavy Revolver",
 		components = { },
-		RP = 54000,
+		cash = 5400,
 	},
 
 	["WEAPON_DBSHOTGUN"] = {
 		name = "Double Barrel Shotgun",
 		components = { },
-		RP = 154500,
+		cash = 15450,
 	},
 
 	["WEAPON_AUTOSHOTGUN"] = {
 		name = "Sweeper Shotgun",
 		components = { },
-		RP = 149000,
+		cash = 14900,
 	},
 
 	["WEAPON_BATTLEAXE"] = {
 		name = "Battle Axe",
 		components = { },
-		RP = 95000,
+		cash = 950,
 	},
 
 	["WEAPON_COMPACTLAUNCHER"] = {
@@ -200,158 +200,158 @@ local weapons = {
 	["WEAPON_PIPEBOMB"] = {
 		name = "Pipe Bomb",
 		components = { },
-		RP = 50000,
+		cash = 5000,
 	},
 
 	["WEAPON_POOLCUE"] = {
 		name = "Pool Cue",
 		components = { },
-		RP = 62500,
+		cash = 625,
 	},
 
 	["WEAPON_WRENCH"] = {
 		name = "Pipe Wrench",
 		components = { },
-		RP = 71500,
+		cash = 715,
 	},
 
 	["WEAPON_PISTOL"] = {
 		name = "Pistol",
 		components = {
-			{ hash = 4275109233, name = "Default clip", RP = 0 },
-			{ hash = 3978713628, name = "Extended clip", RP = 3750 },
-			{ hash = 899381934,  name = "Flashlight", RP = 2500 },
-			{ hash = 1709866683, name = "Suppressor", RP = 7500 },
-			{ hash = 3610841222, name = "Yusuf Amir Luxury Finish", RP = 11250 },
+			{ hash = 4275109233, name = "Default clip", cash = 0 },
+			{ hash = 3978713628, name = "Extended clip", cash = 3750 },
+			{ hash = 899381934,  name = "Flashlight", cash = 2500 },
+			{ hash = 1709866683, name = "Suppressor", cash = 7500 },
+			{ hash = 3610841222, name = "Yusuf Amir Luxury Finish", cash = 11250 },
 		},
-		RP = 0,
+		cash = 0,
 	},
 
 	["WEAPON_MINISMG"] = {
 		name = "Mini SMG",
 		components = {
-			{ hash = 2227745491, name = "Default clip", RP = 0 },
-			{ hash = 2474561719, name = "Extended clip", RP = 66750 },
+			{ hash = 2227745491, name = "Default clip", cash = 0 },
+			{ hash = 2474561719, name = "Extended clip", cash = 6670 },
 		},
-		RP = 89000,
+		cash = 8900,
 	},
 
 	["WEAPON_MACHINEPISTOL"] = {
 		name = "Machine Pistol",
 		components = {
-			{ hash = 1198425599, name = "Default clip", RP = 0 },
-			{ hash = 3106695545, name = "Extended clip", RP = 46875 },
-			{ hash = 3271853210, name = "Suppressor", RP = 93750 },
-			{ hash = 2850671348, name = "Drum Magazine", RP = 125000 },
+			{ hash = 1198425599, name = "Default clip", cash = 0 },
+			{ hash = 3106695545, name = "Extended clip", cash = 4690 },
+			{ hash = 3271853210, name = "Suppressor", cash = 9370 },
+			{ hash = 2850671348, name = "Drum Magazine", cash = 12500 },
 		},
-		RP = 62500,
+		cash = 6250,
 	},
 
 	["WEAPON_COMPACTRIFLE"] = {
 		name = "Compact Rifle",
 		components = {
-			{ hash = 1363085923, name = "Default clip", RP = 0 },
-			{ hash = 1509923832, name = "Extended clip", RP = 109875 },
-			{ hash = 3322377230, name = "Drum Magazine", RP = 293000 },
+			{ hash = 1363085923, name = "Default clip", cash = 0 },
+			{ hash = 1509923832, name = "Extended clip", cash = 10980 },
+			{ hash = 3322377230, name = "Drum Magazine", cash = 29300 },
 		},
-		RP = 146500,
+		cash = 14650,
 	},
 
 	["WEAPON_COMBATPDW"] = {
 		name = "Combat PDW",
 		components = {
-			{ hash = 1125642654, name = "Default clip", RP = 0 },
-			{ hash = 860508675,  name = "Extended clip", RP = 88125 },
-			{ hash = 1857603803, name = "Drum Magazine", RP = 235000 },
-			{ hash = 2855028148, name = "Scope", RP = 205625 },
-			{ hash = 202788691,  name = "Grip", RP = 146875 },
+			{ hash = 1125642654, name = "Default clip", cash = 0 },
+			{ hash = 860508675,  name = "Extended clip", cash = 8810 },
+			{ hash = 1857603803, name = "Drum Magazine", cash = 23500 },
+			{ hash = 2855028148, name = "Scope", cash = 20560 },
+			{ hash = 202788691,  name = "Grip", cash = 14680 },
 		},
-		RP = 117500,
+		cash = 11750,
 	},
 
 	["WEAPON_SNSPISTOL"] = {
 		name = "SNS Pistol",
 		components = {
-			{ hash = 4169150169, name = "Default clip", RP = 0 },
-			{ hash = 2063610803, name = "Extended clip", RP = 20625 },
-			{ hash = 2150886575, name = "Etched Wood Grip Finish", RP = 61875 },
+			{ hash = 4169150169, name = "Default clip", cash = 0 },
+			{ hash = 2063610803, name = "Extended clip", cash = 2060 },
+			{ hash = 2150886575, name = "Etched Wood Grip Finish", cash = 6180 },
 		},
-		RP = 27500,
+		cash = 2750,
 	},
 
 	["WEAPON_HEAVYPISTOL"] = {
 		name = "Heavy Pistol",
 		components = {
-			{ hash = 222992026,  name = "Default clip", RP = 0 },
-			{ hash = 1694090795, name = "Extended clip", RP = 28125 },
-			{ hash = 899381934,  name = "Flashlight", RP = 18750 },
-			{ hash = 3271853210, name = "Suppressor", RP = 56250 },
-			{ hash = 2053798779, name = "Etched Wood Grip Finish", RP = 84375 },
+			{ hash = 222992026,  name = "Default clip", cash = 0 },
+			{ hash = 1694090795, name = "Extended clip", cash = 2810 },
+			{ hash = 899381934,  name = "Flashlight", cash = 1870 },
+			{ hash = 3271853210, name = "Suppressor", cash = 5620 },
+			{ hash = 2053798779, name = "Etched Wood Grip Finish", cash = 8430 },
 		},
-		RP = 37500,
+		cash = 3750,
 	},
 
 	["WEAPON_SPECIALCARBINE"] = {
 		name = "Special Carbine",
 		components = {
-			{ hash = 3334989185, name = "Default clip", RP = 0 },
-			{ hash = 2089537806, name = "Extended clip", RP = 110625 },
-			{ hash = 1801039530, name = "Drum Magazine", RP = 295000 },
-			{ hash = 2076495324, name = "Flashlight", RP = 73750 },
-			{ hash = 2805810788, name = "Suppressor", RP = 221250 },
-			{ hash = 2698550338, name = "Scope", RP = 258125 },
-			{ hash = 202788691,  name = "Grip", RP = 184375 },
-			{ hash = 1929467122, name = "Etched Gun Metal Finish", RP = 331875 },
+			{ hash = 3334989185, name = "Default clip", cash = 0 },
+			{ hash = 2089537806, name = "Extended clip", cash = 11060 },
+			{ hash = 1801039530, name = "Drum Magazine", cash = 29500 },
+			{ hash = 2076495324, name = "Flashlight", cash = 7370 },
+			{ hash = 2805810788, name = "Suppressor", cash = 22120 },
+			{ hash = 2698550338, name = "Scope", cash = 25810 },
+			{ hash = 202788691,  name = "Grip", cash = 18430 },
+			{ hash = 1929467122, name = "Etched Gun Metal Finish", cash = 33180 },
 		},
-		RP = 147500,
+		cash = 14750,
 	},
 
 	["WEAPON_BULLPUPRIFLE"] = {
 		name = "Bullpup Rifle",
 		components = {
-			{ hash = 3315675008, name = "Default clip", RP = 0 },
-			{ hash = 3009973007, name = "Extended clip", RP = 108750 },
-			{ hash = 2076495324, name = "Flashlight", RP = 72500 },
-			{ hash = 2205435306, name = "Suppressor", RP = 217500 },
-			{ hash = 2855028148, name = "Scope", RP = 253750 },
-			{ hash = 202788691,  name = "Grip", RP = 181250 },
-			{ hash = 2824322168, name = "Gilded Gun Metal Finish", RP = 326250 },
+			{ hash = 3315675008, name = "Default clip", cash = 0 },
+			{ hash = 3009973007, name = "Extended clip", cash = 10870 },
+			{ hash = 2076495324, name = "Flashlight", cash = 7250 },
+			{ hash = 2205435306, name = "Suppressor", cash = 21750 },
+			{ hash = 2855028148, name = "Scope", cash = 25370 },
+			{ hash = 202788691,  name = "Grip", cash = 18120 },
+			{ hash = 2824322168, name = "Gilded Gun Metal Finish", cash = 32620 },
 		},
-		RP = 145000,
+		cash = 14500,
 	},
 
 	["WEAPON_VINTAGEPISTOL"] = {
 		name = "Vintage Pistol",
 		components = {
-			{ hash = 1168357051, name = "Default clip", RP = 0 },
-			{ hash = 867832552,  name = "Extended clip", RP = 25875 },
-			{ hash = 3271853210, name = "Suppressor", RP = 51750 },
+			{ hash = 1168357051, name = "Default clip", cash = 0 },
+			{ hash = 867832552,  name = "Extended clip", cash = 2580 },
+			{ hash = 3271853210, name = "Suppressor", cash = 5170 },
 		},
-		RP = 34500,
+		cash = 3450,
 	},
 
 	["WEAPON_HEAVYSHOTGUN"] = {
 		name = "Heavy Shotgun",
 		components = {
-			{ hash = 844049759,  name = "Default clip", RP = 0 },
-			{ hash = 2535257853, name = "Extended clip", RP = 101625 },
-			{ hash = 2294798931, name = "Drum Magazine", RP = 271000 },
-			{ hash = 2076495324, name = "Flashlight", RP = 67750 },
-			{ hash = 2805810788, name = "Suppressor", RP = 203250 },
-			{ hash = 202788691,  name = "Grip", RP = 169375 },
+			{ hash = 844049759,  name = "Default clip", cash = 0 },
+			{ hash = 2535257853, name = "Extended clip", cash = 10160 },
+			{ hash = 2294798931, name = "Drum Magazine", cash = 27100 },
+			{ hash = 2076495324, name = "Flashlight", cash = 6770 },
+			{ hash = 2805810788, name = "Suppressor", cash = 20320 },
+			{ hash = 202788691,  name = "Grip", cash = 16930 },
 		},
-		RP = 135500,
+		cash = 13550,
 	},
 
 	["WEAPON_MARKSMANRIFLE"] = {
 		name = "Marksman Rifle",
 		components = {
-			{ hash = 3627761985, name = "Default clip", RP = 0 },
-			{ hash = 3439143621, name = "Extended clip", RP = 112500 },
-			{ hash = 2076495324, name = "Flashlight", RP = 75000 },
-			{ hash = 2205435306, name = "Suppressor", RP = 225000 },
-			{ hash = 202788691,  name = "Grip", RP = 187500 },
-			{ hash = 371102273,  name = "Yusuf Amir Luxury Finish", RP = 337500 },
+			{ hash = 3627761985, name = "Default clip", cash = 0 },
+			{ hash = 3439143621, name = "Extended clip", cash = 11250 },
+			{ hash = 2076495324, name = "Flashlight", cash = 7500 },
+			{ hash = 2205435306, name = "Suppressor", cash = 22500 },
+			{ hash = 202788691,  name = "Grip", cash = 18750 },
+			{ hash = 371102273,  name = "Yusuf Amir Luxury Finish", cash = 33750 },
 		},
 		unique = true,
 	},
@@ -359,25 +359,25 @@ local weapons = {
 	["WEAPON_COMBATPISTOL"] = {
 		name = "Combat Pistol",
 		components = {
-			{ hash = 119648377,  name = "Default clip", RP = 0 },
-			{ hash = 3598405421, name = "Extended clip", RP = 24000 },
-			{ hash = 899381934,  name = "Flashlight", RP = 16000 },
-			{ hash = 3271853210, name = "Suppressor", RP = 48000 },
-			{ hash = 3328527730, name = "Yusuf Amir Luxury Finish", RP = 72000 },
+			{ hash = 119648377,  name = "Default clip", cash = 0 },
+			{ hash = 3598405421, name = "Extended clip", cash = 2400 },
+			{ hash = 899381934,  name = "Flashlight", cash = 1600 },
+			{ hash = 3271853210, name = "Suppressor", cash = 4800 },
+			{ hash = 3328527730, name = "Yusuf Amir Luxury Finish", cash = 7200 },
 		},
-		RP = 32000,
+		cash = 3200,
 	},
 
 	["WEAPON_APPISTOL"] = {
 		name = "AP Pistol",
 		components = {
-			{ hash = 834974250,  name = "Default clip", RP = 0 },
-			{ hash = 614078421,  name = "Extended clip", RP = 37500 },
-			{ hash = 899381934,  name = "Flashlight", RP = 25000 },
-			{ hash = 3271853210, name = "Suppressor", RP = 75000 },
-			{ hash = 2608252716, name = "Gilded Gun Metal Finish", RP = 112500 },
+			{ hash = 834974250,  name = "Default clip", cash = 0 },
+			{ hash = 614078421,  name = "Extended clip", cash = 3750 },
+			{ hash = 899381934,  name = "Flashlight", cash = 2500 },
+			{ hash = 3271853210, name = "Suppressor", cash = 7500 },
+			{ hash = 2608252716, name = "Gilded Gun Metal Finish", cash = 11250 },
 		},
-		RP = 50000,
+		cash = 5000,
 	},
 
 	["WEAPON_DOUBLEACTION"] = {
@@ -389,159 +389,159 @@ local weapons = {
 	["WEAPON_PISTOL50"] = {
 		name = "Pistol .50",
 		components = {
-			{ hash = 580369945,  name = "Default clip", RP = 0 },
-			{ hash = 3654528146, name = "Extended clip", RP = 30000 },
-			{ hash = 899381934,  name = "Flashlight", RP = 20000 },
-			{ hash = 2805810788, name = "Suppressor", RP = 60000 },
-			{ hash = 2008591151, name = "Platinum Pearl Deluxe Finish", RP = 90000 },
+			{ hash = 580369945,  name = "Default clip", cash = 0 },
+			{ hash = 3654528146, name = "Extended clip", cash = 3000 },
+			{ hash = 899381934,  name = "Flashlight", cash = 2000 },
+			{ hash = 2805810788, name = "Suppressor", cash = 6000 },
+			{ hash = 2008591151, name = "Platinum Pearl Deluxe Finish", cash = 9000 },
 		},
-		RP = 40000,
+		cash = 4000,
 	},
 
 	["WEAPON_MICROSMG"] = {
 		name = "Micro SMG",
 		components = {
-			{ hash = 3410538224, name = "Default clip", RP = 0 },
-			{ hash = 283556395,  name = "Extended clip", RP = 28125 },
-			{ hash = 899381934,  name = "Flashlight", RP = 18750 },
-			{ hash = 2805810788, name = "Suppressor", RP = 56250 },
-			{ hash = 2637152041, name = "Scope", RP = 65625 },
-			{ hash = 1215999497, name = "Yusuf Amir Luxury Finish", RP = 84375 },
+			{ hash = 3410538224, name = "Default clip", cash = 0 },
+			{ hash = 283556395,  name = "Extended clip", cash = 2810 },
+			{ hash = 899381934,  name = "Flashlight", cash = 1870 },
+			{ hash = 2805810788, name = "Suppressor", cash = 5620 },
+			{ hash = 2637152041, name = "Scope", cash = 6560 },
+			{ hash = 1215999497, name = "Yusuf Amir Luxury Finish", cash = 8430 },
 		},
-		RP = 37500,
+		cash = 3750,
 	},
 
 	["WEAPON_SMG"] = {
 		name = "SMG",
 		components = {
-			{ hash = 643254679,  name = "Default clip", RP = 0 },
-			{ hash = 889808635,  name = "Extended clip", RP = 56250 },
-			{ hash = 2043113590, name = "Drum Magazine", RP = 150000 },
-			{ hash = 2076495324, name = "Flashlight", RP = 37500 },
-			{ hash = 3271853210, name = "Suppressor", RP = 112500 },
-			{ hash = 1019656791, name = "Scope", RP = 131250 },
-			{ hash = 663170192,  name = "Yusuf Amir Luxury Finish", RP = 168750 },
+			{ hash = 643254679,  name = "Default clip", cash = 0 },
+			{ hash = 889808635,  name = "Extended clip", cash = 5620 },
+			{ hash = 2043113590, name = "Drum Magazine", cash = 15000 },
+			{ hash = 2076495324, name = "Flashlight", cash = 3750 },
+			{ hash = 3271853210, name = "Suppressor", cash = 11250 },
+			{ hash = 1019656791, name = "Scope", cash = 13120 },
+			{ hash = 663170192,  name = "Yusuf Amir Luxury Finish", cash = 16870 },
 		},
-		RP = 75000,
+		cash = 7500,
 	},
 
 	["WEAPON_ASSAULTSMG"] = {
 		name = "Assault SMG",
 		components = {
-			{ hash = 2366834608, name = "Default clip", RP = 0 },
-			{ hash = 3141985303, name = "Extended clip", RP = 94125 },
-			{ hash = 2076495324, name = "Flashlight", RP = 62750 },
-			{ hash = 2805810788, name = "Suppressor", RP = 188250 },
-			{ hash = 2637152041, name = "Scope", RP = 219625 },
-			{ hash = 663517359,  name = "Yusuf Amir Luxury Finish", RP = 282375 },
+			{ hash = 2366834608, name = "Default clip", cash = 0 },
+			{ hash = 3141985303, name = "Extended clip", cash = 9410 },
+			{ hash = 2076495324, name = "Flashlight", cash = 6270 },
+			{ hash = 2805810788, name = "Suppressor", cash = 18820 },
+			{ hash = 2637152041, name = "Scope", cash = 21960 },
+			{ hash = 663517359,  name = "Yusuf Amir Luxury Finish", cash = 28230 },
 		},
-		RP = 125500,
+		cash = 12550,
 	},
 
 	["WEAPON_ASSAULTRIFLE"] = {
 		name = "Assault Rifle",
 		components = {
-			{ hash = 3193891350, name = "Default clip", RP = 0 },
-			{ hash = 2971750299, name = "Extended clip", RP = 64125 },
-			{ hash = 2076495324, name = "Flashlight", RP = 42750 },
-			{ hash = 2805810788, name = "Suppressor", RP = 128250 },
-			{ hash = 2637152041, name = "Scope", RP = 149625 },
-			{ hash = 202788691,  name = "Grip", RP = 106875 },
-			{ hash = 1319990579, name = "Yusuf Amir Luxury Finish", RP = 192375 },
+			{ hash = 3193891350, name = "Default clip", cash = 0 },
+			{ hash = 2971750299, name = "Extended clip", cash = 6410 },
+			{ hash = 2076495324, name = "Flashlight", cash = 4270 },
+			{ hash = 2805810788, name = "Suppressor", cash = 12820 },
+			{ hash = 2637152041, name = "Scope", cash = 14960 },
+			{ hash = 202788691,  name = "Grip", cash = 10680 },
+			{ hash = 1319990579, name = "Yusuf Amir Luxury Finish", cash = 19230 },
 		},
-		RP = 85500,
+		cash = 8550,
 	},
 
 	["WEAPON_CARBINERIFLE"] = {
 		name = "Carbine Rifle",
 		components = {
-			{ hash = 2680042476, name = "Default clip", RP = 0 },
-			{ hash = 2433783441, name = "Extended clip", RP = 97500 },
-			{ hash = 3127044405, name = "Box Magazine", RP = 260000 },
-			{ hash = 2076495324, name = "Flashlight", RP = 65000 },
-			{ hash = 2205435306, name = "Suppressor", RP = 195000 },
-			{ hash = 2698550338, name = "Scope", RP = 227500 },
-			{ hash = 202788691,  name = "Grip", RP = 162500 },
-			{ hash = 202788691,  name = "Yusuf Amir Luxury Finish", RP = 292500 },
+			{ hash = 2680042476, name = "Default clip", cash = 0 },
+			{ hash = 2433783441, name = "Extended clip", cash = 9750 },
+			{ hash = 3127044405, name = "Box Magazine", cash = 26000 },
+			{ hash = 2076495324, name = "Flashlight", cash = 6500 },
+			{ hash = 2205435306, name = "Suppressor", cash = 19500 },
+			{ hash = 2698550338, name = "Scope", cash = 22750 },
+			{ hash = 202788691,  name = "Grip", cash = 16250 },
+			{ hash = 202788691,  name = "Yusuf Amir Luxury Finish", cash = 29250 },
 		},
-		RP = 130000,
+		cash = 13000,
 	},
 
 	["WEAPON_ADVANCEDRIFLE"] = {
 		name = "Advanced Rifle",
 		components = {
-			{ hash = 4203716879, name = "Default clip", RP = 0 },
-			{ hash = 2395064697, name = "Extended clip", RP = 106875 },
-			{ hash = 2076495324, name = "Flashlight", RP = 71250 },
-			{ hash = 2205435306, name = "Suppressor", RP = 213750 },
-			{ hash = 2855028148, name = "Scope", RP = 249375 },
-			{ hash = 930927479,  name = "Gilded Gun Metal Finish", RP = 320625 },
+			{ hash = 4203716879, name = "Default clip", cash = 0 },
+			{ hash = 2395064697, name = "Extended clip", cash = 10680 },
+			{ hash = 2076495324, name = "Flashlight", cash = 7120 },
+			{ hash = 2205435306, name = "Suppressor", cash = 21370 },
+			{ hash = 2855028148, name = "Scope", cash = 24930 },
+			{ hash = 930927479,  name = "Gilded Gun Metal Finish", cash = 32060 },
 		},
-		RP = 142500,
+		cash = 14250,
 	},
 
 	["WEAPON_MG"] = {
 		name = "MG",
 		components = {
-			{ hash = 4097109892, name = "Default clip", RP = 0 },
-			{ hash = 2182449991, name = "Extended clip", RP = 101250 },
-			{ hash = 1006677997, name = "Scope", RP = 236250 },
-			{ hash = 3604658878, name = "Yusuf Amir Luxury Finish", RP = 303750 },
+			{ hash = 4097109892, name = "Default clip", cash = 0 },
+			{ hash = 2182449991, name = "Extended clip", cash = 10120 },
+			{ hash = 1006677997, name = "Scope", cash = 23620 },
+			{ hash = 3604658878, name = "Yusuf Amir Luxury Finish", cash = 30370 },
 		},
-		RP = 135000,
+		cash = 13500,
 	},
 
 	["WEAPON_COMBATMG"] = {
 		name = "Combat MG",
 		components = {
-			{ hash = 3791631178, name = "Default clip", RP = 0 },
-			{ hash = 3603274966, name = "Extended clip", RP = 111000 },
-			{ hash = 202788691,  name = "Grip", RP = 185000 },
-			{ hash = 2698550338, name = "Scope", RP = 259000 },
-			{ hash = 2466172125, name = "Etched Gun Metal Finish", RP = 333000 },
+			{ hash = 3791631178, name = "Default clip", cash = 0 },
+			{ hash = 3603274966, name = "Extended clip", cash = 11100 },
+			{ hash = 202788691,  name = "Grip", cash = 18500 },
+			{ hash = 2698550338, name = "Scope", cash = 25900 },
+			{ hash = 2466172125, name = "Etched Gun Metal Finish", cash = 33300 },
 		},
-		RP = 148000,
+		cash = 14800,
 	},
 
 	["WEAPON_PUMPSHOTGUN"] = {
 		name = "Pump Shotgun",
 		components = {
-			{ hash = 2076495324, name = "Flashlight", RP = 17500 },
-			{ hash = 3859329886, name = "Suppressor", RP = 52500 },
-			{ hash = 2732039643, name = "Yusuf Amir Luxury Finish", RP = 78750 },
+			{ hash = 2076495324, name = "Flashlight", cash = 1750 },
+			{ hash = 3859329886, name = "Suppressor", cash = 5250 },
+			{ hash = 2732039643, name = "Yusuf Amir Luxury Finish", cash = 7870 },
 		},
-		RP = 35000,
+		cash = 3500,
 	},
 
 	["WEAPON_ASSAULTSHOTGUN"] = {
 		name = "Assault Shotgun",
 		components = {
-			{ hash = 2498239431, name = "Default clip", RP = 0 },
-			{ hash = 2260565874, name = "Extended clip", RP = 75000 },
-			{ hash = 2076495324, name = "Flashlight", RP = 50000 },
-			{ hash = 2205435306, name = "Suppressor", RP = 150000 },
-			{ hash = 202788691,  name = "Grip", RP = 125000 },
+			{ hash = 2498239431, name = "Default clip", cash = 0 },
+			{ hash = 2260565874, name = "Extended clip", cash = 7500 },
+			{ hash = 2076495324, name = "Flashlight", cash = 5000 },
+			{ hash = 2205435306, name = "Suppressor", cash = 15000 },
+			{ hash = 202788691,  name = "Grip", cash = 12500 },
 		},
-		RP = 100000,
+		cash = 10000,
 	},
 
 	["WEAPON_BULLPUPSHOTGUN"] = {
 		name = "Bullpup Shotgun",
 		components = {
-			{ hash = 2076495324, name = "Flashlight", RP = 40000 },
-			{ hash = 2805810788, name = "Suppressor", RP = 120000 },
-			{ hash = 202788691,  name = "Grip", RP = 100000 },
+			{ hash = 2076495324, name = "Flashlight", cash = 4000 },
+			{ hash = 2805810788, name = "Suppressor", cash = 12000 },
+			{ hash = 202788691,  name = "Grip", cash = 10000 },
 		},
-		RP = 80000,
+		cash = 8000,
 	},
 
 	["WEAPON_SNIPERRIFLE"] = {
 		name = "Sniper Rifle",
 		components = {
-			{ hash = 2805810788, name = "Suppressor", RP = 300000 },
-			{ hash = 3527687644, name = "Scope", RP = 0 },
-			{ hash = 3159677559, name = "Advanced Scope", RP = 350000 },
-			{ hash = 1077065191, name = "Etched Wood Grip Finish", RP = 450000 },
+			{ hash = 2805810788, name = "Suppressor", cash = 30000 },
+			{ hash = 3527687644, name = "Scope", cash = 0 },
+			{ hash = 3159677559, name = "Advanced Scope", cash = 35000 },
+			{ hash = 1077065191, name = "Etched Wood Grip Finish", cash = 45000 },
 		},
 		unique = true,
 	},
@@ -549,8 +549,8 @@ local weapons = {
 	["WEAPON_HEAVYSNIPER"] = {
 		name = "Heavy Sniper",
 		components = {
-			{ hash = 3527687644, name = "Scope", RP = 0 },
-			{ hash = 3159677559, name = "Advanced Scope", RP = 667625 },
+			{ hash = 3527687644, name = "Scope", cash = 0 },
+			{ hash = 3159677559, name = "Advanced Scope", cash = 66760 },
 		},
 		unique = true,
 	},
@@ -558,9 +558,9 @@ local weapons = {
 	["WEAPON_GRENADELAUNCHER"] = {
 		name = "Grenade Launcher",
 		components = {
-			{ hash = 2076495324, name = "Flashlight", RP = 162000 },
-			{ hash = 2855028148, name = "Scope", RP = 567000 },
-			{ hash = 202788691,  name = "Grip", RP = 405000 },
+			{ hash = 2076495324, name = "Flashlight", cash = 16200 },
+			{ hash = 2855028148, name = "Scope", cash = 56700 },
+			{ hash = 202788691,  name = "Grip", cash = 40500 },
 		},
 		unique = true,
 	},

@@ -25,7 +25,7 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 
 	Player.serverId = GetPlayerServerId(PlayerId())
 
-	Player.RP = playerData.RP
+	Player.cash = playerData.Cash
 
 	Player.kills = playerData.Kills
 	Player.deaths = playerData.Deaths
