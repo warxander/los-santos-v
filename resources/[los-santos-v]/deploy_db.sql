@@ -20,10 +20,4 @@ CREATE TABLE Reports (
 	FOREIGN KEY (PlayerID) REFERENCES Players(PlayerID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
--- Remove this line
-INSERT INTO Reports (PlayerID) SELECT PlayerID FROM Players;
---
-
-
 COMMIT;
