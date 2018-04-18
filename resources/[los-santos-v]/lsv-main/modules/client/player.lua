@@ -16,6 +16,18 @@ Player.deaths = 0
 Player.crewMembers = { } -- { serverPlayerId }
 
 
+function Player.Init(playerData)
+	Player.serverId = GetPlayerServerId(PlayerId())
+	Player.cash = playerData.Cash
+	Player.kills = playerData.Kills
+	Player.deaths = playerData.Deaths
+
+	Skin.ChangePlayerSkin(playerData.SkinModel)
+
+	Player.GiveWeapons(playerData.Weapons)
+end
+
+
 function Player.ServerId()
 	return Player.serverId
 end

@@ -21,16 +21,7 @@ RegisterNetEvent('lsv:playerLoaded')
 AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 	SetRandomSeed(GetNetworkTime())
 
-	Skin.ChangePlayerSkin(playerData.SkinModel)
-
-	Player.serverId = GetPlayerServerId(PlayerId())
-
-	Player.cash = playerData.Cash
-
-	Player.kills = playerData.Kills
-	Player.deaths = playerData.Deaths
-
-	Player.GiveWeapons(playerData.Weapons)
+	Player.Init(playerData)
 
 	Player.SetFreeze(false)
 
@@ -39,11 +30,7 @@ end)
 
 
 AddEventHandler('lsv:init', function()
-	NetworkSetFriendlyFireOption(true)
-	SetCanAttackFriendly(PlayerPedId(), true, true)
-
-	SetIgnoreLowPriorityShockingEvents(-1, true)
-
+	World.EnablePvp(true)
 	World.SetWantedLevel(0)
 
 	if Settings.disableHealthRegen then SetPlayerHealthRechargeMultiplier(PlayerId(), 0) end

@@ -3,6 +3,12 @@ World = { }
 local bountyPlayerId = nil
 
 
+function World.EnablePvp(enabled)
+	NetworkSetFriendlyFireOption(enabled)
+	SetCanAttackFriendly(PlayerPedId(), enabled, enabled)
+end
+
+
 function World.SetBountyPlayerId(playerId)
 	bountyPlayerId = playerId
 end
@@ -18,6 +24,7 @@ function World.SetWantedLevel(level)
 	local player = PlayerId()
 
 	if disable or GetPlayerWantedLevel(player) < level then
+		SetIgnoreLowPriorityShockingEvents(player, disable)
 		SetPoliceIgnorePlayer(player, disable)
 		SetDispatchCopsForPlayer(player, not disable)
 
