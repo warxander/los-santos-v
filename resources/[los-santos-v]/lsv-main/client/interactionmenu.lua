@@ -14,23 +14,14 @@ local walkStyleClipSets = {
 	{ maleClipSet = "MOVE_M@TOUGH_GUY@", femaleClipSet = "MOVE_F@TOUGH_GUY@" },
 }
 
+local reportedPlayers = { }
+local reportingPlayer = nil
+local reportingReasons = { "Inappropriate Player Name", "Harassment", "Cheating", "Spam" }
+
 local function getClipSetBySex(clipSetIndex, isMale)
 	if isMale then return walkStyleClipSets[clipSetIndex].maleClipSet end
 	return walkStyleClipSets[clipSetIndex].femaleClipSet
 end
-
-
-AddEventHandler('lsv:init', function()
-	WarMenu.CreateMenu('interaction', GetPlayerName(PlayerId()))
-	WarMenu.SetTitleColor('interaction', 255, 255, 255)
-	WarMenu.SetTitleBackgroundColor('interaction', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
-	WarMenu.SetTitleBackgroundSprite('interaction', 'commonmenu', 'interaction_bgd')
-
-	WarMenu.CreateSubMenu('jobs', 'interaction', 'Jobs')
-	WarMenu.CreateSubMenu('inviteToCrew', 'interaction', 'Invite to Crew')
-	WarMenu.CreateSubMenu('reportPlayer', 'interaction', 'Report Player')
-	WarMenu.CreateSubMenu('reportReason', 'reportPlayer', 'Select a reason for reporting')
-end)
 
 
 AddEventHandler('lsv:updateWalkStyle', function(animSet)
@@ -43,6 +34,16 @@ end)
 
 
 AddEventHandler('lsv:init', function()
+	WarMenu.CreateMenu('interaction', GetPlayerName(PlayerId()))
+	WarMenu.SetTitleColor('interaction', 255, 255, 255)
+	WarMenu.SetTitleBackgroundColor('interaction', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
+	WarMenu.SetTitleBackgroundSprite('interaction', 'commonmenu', 'interaction_bgd')
+
+	WarMenu.CreateSubMenu('jobs', 'interaction', 'Jobs')
+	WarMenu.CreateSubMenu('inviteToCrew', 'interaction', 'Invite to Crew')
+	WarMenu.CreateSubMenu('reportPlayer', 'interaction', 'Report Player')
+	WarMenu.CreateSubMenu('reportReason', 'reportPlayer', 'Select a reason for reporting')
+
 	while true do
 		if WarMenu.IsMenuOpened('interaction') then
 			if IsEntityDead(PlayerPedId()) then
@@ -125,9 +126,68 @@ AddEventHandler('lsv:init', function()
 			end
 
 			WarMenu.Display()
-		elseif IsControlJustReleased(0, 244) and not IsEntityDead(PlayerPedId()) then --M by default
+		elseif WarMenu.IsMenuOpened('reportPlayer') then
+			for i = 0, Settings.maxPlayerCount do
+				if i ~= PlayerId() and NetworkIsPlayerActive(i) then
+					local target = GetPlayerServerId(i)
+					if not Utils.IndexOf(reportedPlayers, target) and WarMenu.MenuButton(GetPlayerName(i), 'reportReason') then
+						reportingPlayer = target
+					end
+				end
+			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('reportReason') then
+			for _, reason in ipairs(reportingReasons) do
+				if WarMenu.Button(reason) then
+					TriggerServerEvent('lsv:reportPlayer', reportingPlayer, reason)
+					table.insert(reportedPlayers, reportingPlayer)
+					reportingPlayer = nil
+					WarMenu.CloseMenu()
+				end
+			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('jobs') then
+			if WarMenu.Button('Market Manipulation') then
+				TriggerEvent('lsv:startMarketManipulation')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Velocity') then
+				TriggerEvent('lsv:startVelocity')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Most Wanted') then
+				TriggerEvent('lsv:startMostWanted')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Asset Recovery') then
+				TriggerEvent('lsv:startAssetRecovery')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Headhunter') then
+				TriggerEvent('lsv:startHeadhunter')
+				WarMenu.CloseMenu()
+			end
+
+			WarMenu.Display()
+		end
+
+		Citizen.Wait(0)
+	end
+end)
+
+
+AddEventHandler('lsv:init', function()
+	while true do
+		Citizen.Wait(0)
+
+		if not WarMenu.IsAnyMenuOpened() and IsControlJustPressed(1, 244) then
 			WarMenu.OpenMenu('interaction')
 		end
+	end
+end)
+
+
+AddEventHandler('lsv:init', function()
+	while true do
+		Citizen.Wait(0)
 
 		if quickGpsBlip and not IsEntityDead(PlayerPedId()) then
 			local x, y, z = GetBlipCoords(quickGpsBlip)
@@ -140,7 +200,5 @@ AddEventHandler('lsv:init', function()
 				quickGpsBlip = nil
 			end
 		end
-
-		Citizen.Wait(0)
 	end
 end)

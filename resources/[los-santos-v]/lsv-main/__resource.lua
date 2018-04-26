@@ -91,7 +91,6 @@ client_scripts {
 	"client/shop/skinshop.lua",
 	"client/shop/ammunation.lua",
 
-	"client/jobs/jobs.lua",
 	"client/jobs/mostwanted.lua",
 	"client/jobs/assetrecovery.lua",
 	"client/jobs/headhunter.lua",
