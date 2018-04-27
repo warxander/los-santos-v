@@ -18,7 +18,7 @@ AddEventHandler('lsv:setBounty', function(bountyServerPlayerId)
 		local bountyScaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 
 		bountyScaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'BOUNTY', bountyText)
-		bountyScaleform:RenderFullscreenTimed(5000)
+		bountyScaleform:RenderFullscreenTimed(7000)
 
 		bountyScaleform:Delete()
 	else

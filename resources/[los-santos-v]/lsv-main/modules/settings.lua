@@ -21,7 +21,6 @@ Settings.kdRatioMinStat = 100
 -- Player
 Settings.disableHealthRegen = false
 Settings.giveArmorAtSpawn = true
-Settings.autoParachutingHeight = 80
 Settings.giveParachuteAtSpawn = true
 Settings.infinitePlayerStamina = true
 Settings.weaponClipCount = 10
@@ -46,7 +45,7 @@ Settings.pickupMinDistance = 25.
 Settings.cashPerKill = 50
 Settings.cashPerKillstreak = 25
 Settings.cashPerJob = 50
-Settings.cashGainedNotificationTime = 3500
+Settings.cashGainedNotificationTime = 5000
 
 
 -- Bounties

@@ -95,7 +95,7 @@ AddEventHandler('lsv:finishCastle', function(winners)
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 
 	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
-	scaleform:RenderFullscreenTimed(5000)
+	scaleform:RenderFullscreenTimed(10000)
 
 	scaleform:Delete()
 end)

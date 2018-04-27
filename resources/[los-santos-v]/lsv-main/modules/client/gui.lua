@@ -148,7 +148,7 @@ function Gui.FinishJob(name, success, reason)
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 
 	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', string.upper(name)..' '..status, message)
-	scaleform:RenderFullscreenTimed(5000)
+	scaleform:RenderFullscreenTimed(7000)
 
 	scaleform:Delete()
 end
