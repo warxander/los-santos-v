@@ -57,8 +57,8 @@ Settings.bounty = {
 
 -- King of the Castle
 Settings.castle = {
-	timeout = 900000,
-	duration = 600000,
+	timeout = 600000,
+	duration = 900000,
 	places = {
 		{ x = -429.50573730469, y = 1109.7385253906, z = 327.68228149414 },
 		{ x = -530.98455810547, y = 5290.9985351563, z = 74.174285888672 },
