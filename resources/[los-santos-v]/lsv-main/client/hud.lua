@@ -5,6 +5,7 @@ AddEventHandler('lsv:init', function(isRegistered)
 	local tips = {
 		"Performing Jobs and taking out enemy players will give your cash.",
 		"Get extra cash for killing players who are doing a Job.",
+		"Stunt Jumps will give you a small amount of cash.",
 		"Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.",
 		"Use Report Player option from Interaction menu to improve your overall game experience.",
 		"Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.",

@@ -48,6 +48,11 @@ Settings.cashPerJob = 50
 Settings.cashGainedNotificationTime = 5000
 
 
+-- Stunt Jumps
+Settings.stuntJumpMinHeight = 18.
+Settings.stuntJumpCashPerMeter = 2
+
+
 -- Bounties
 Settings.bounty = {
 	timeout = 300000,
