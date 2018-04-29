@@ -17,6 +17,8 @@ end
 
 
 AddEventHandler('lsv:init', function()
+	local lastStuntJumpTime = GetGameTimer()
+
 	while true do
 		Citizen.Wait(0)
 
@@ -34,7 +36,7 @@ AddEventHandler('lsv:init', function()
 		end
 
 		if playerVehicle and not IsPlayerDead(PlayerId()) then
-			if IsEntityInAir(playerVehicle) then
+			if IsEntityInAir(playerVehicle) and GetTimeDifference(GetGameTimer(), lastStuntJumpTime) > Settings.stuntMinInterval then
 				local height = GetEntityHeightAboveGround(playerVehicle)
 				if height > 0.0 then
 					if not isStuntJumpInProcess then
@@ -55,6 +57,7 @@ AddEventHandler('lsv:init', function()
 				if isStuntJumpSucceeded then
 					currentCoords = GetEntityCoords(playerPed, true)
 					TriggerServerEvent('lsv:stuntJumpCompleted', stuntJumpHeight, CalculateTravelDistanceBetweenPoints(startingCoords.x, startingCoords.y, startingCoords.z, currentCoords.x, currentCoords.y, currentCoords.z))
+					lastStuntJumpTime = GetGameTimer()
 				elseif isStuntJumpHeightEnough then Gui.DisplayNotification('Stunt Jump failed.') end
 
 				resetStuntJump()
