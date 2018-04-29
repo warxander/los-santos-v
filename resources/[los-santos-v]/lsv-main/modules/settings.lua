@@ -51,6 +51,7 @@ Settings.cashGainedNotificationTime = 5000
 -- Stunt Jumps
 Settings.stuntJumpMinHeight = 18.
 Settings.stuntJumpCashPerMeter = 2
+Settings.stuntJumpMaxReward = 2000
 
 
 -- Bounties
