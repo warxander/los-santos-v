@@ -124,7 +124,7 @@ Citizen.CreateThread(function()
 					for i = 3, 1, -1 do
 						if castleData.players[i] then
 							Gui.DrawBar(0.15, playerPositions[i]..GetPlayerName(GetPlayerFromServerId(castleData.players[i].id)), castleData.players[i].points,
-								Color.GetHudFromBlipColor(playerColors[i]), barPosition)
+								Color.GetHudFromBlipColor(playerColors[i]), barPosition, true)
 							barPosition = barPosition + 1
 						end
 					end

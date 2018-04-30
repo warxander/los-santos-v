@@ -94,28 +94,30 @@ function Gui.DisplayObjectiveText(text)
 end
 
 
-function Gui.DrawBar(width, text, subText, color, position)
+function Gui.DrawBar(width, text, subText, color, position, isPlayerText)
 	local barIndex = position or 1
 	local rectHeight = 0.038
 	local rectX = GetSafeZoneSize() - width + width / 2
 	local rectY = GetSafeZoneSize() - rectHeight + rectHeight / 2 - (barIndex - 1) * (rectHeight + 0.005)
 	local hTextMargin = 0.003
-	local textFont = 0
+	local textFont = isPlayerText and 4 or 0
+	local subTextFont = 0
 	local textColor = color or Color.GetHudFromBlipColor(Color.BlipWhite())
-	local textScale = 0.32
+	local textScale = isPlayerText and 0.5 or 0.32
 	local subTextScale = 0.5
+	local textMargin = isPlayerText and 0.013 or 0.008
 
 	Streaming.RequestStreamedTextureDict("timerbars")
 
 	DrawSprite("timerbars", "all_black_bg", rectX, rectY, width, rectHeight, 0, 0, 0, 0, 128)
-	Gui.DrawText(text, { x = GetSafeZoneSize() - width + hTextMargin, y = rectY - 0.008 }, textFont, textColor, textScale)
-	Gui.DrawText(subText, { x = GetSafeZoneSize() - hTextMargin, y = rectY - 0.0175 }, textFont, textColor, subTextScale, false, false, false, true, width / 2)
+	Gui.DrawText(text, { x = GetSafeZoneSize() - width + hTextMargin, y = rectY - textMargin }, textFont, textColor, textScale, isPlayerText)
+	Gui.DrawText(subText, { x = GetSafeZoneSize() - hTextMargin, y = rectY - 0.0175 }, subTextFont, textColor, subTextScale, false, false, false, true, width / 2)
 end
 
 
-function Gui.DrawTimerBar(width, text, seconds, position)
+function Gui.DrawTimerBar(width, text, seconds, position, isPlayerText)
 	local textColor = seconds <= 10 and Color.GetHudFromBlipColor(Color.BlipRed()) or Color.GetHudFromBlipColor(Color.BlipWhite())
-	Gui.DrawBar(width, text, string.format("%02.f", math.floor(seconds / 60))..':'..string.format("%02.f", math.floor(seconds % 60)), textColor, position)
+	Gui.DrawBar(width, text, string.format("%02.f", math.floor(seconds / 60))..':'..string.format("%02.f", math.floor(seconds % 60)), textColor, position, isPlayerText)
 end
 
 
