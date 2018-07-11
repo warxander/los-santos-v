@@ -28,6 +28,7 @@ Settings.defaultPlayerWeapons = {
 	{ id = "WEAPON_KNIFE", ammo = 0, components = { } },
 	{ id = "WEAPON_PISTOL", ammo = 80, components = { }, selected = true },
 }
+Settings.skillStat = 50
 
 
 -- Crew

@@ -6,6 +6,8 @@ local function initPlayer(player, playerStats, isRegistered)
 	if not playerStats.Weapons then playerStats.Weapons = Settings.defaultPlayerWeapons
 	else playerStats.Weapons = json.decode(playerStats.Weapons) end
 
+	playerStats.SkillStat = Settings.skillStat
+
 	TriggerClientEvent('lsv:playerLoaded', player, playerStats, isRegistered)
 	TriggerClientEvent('lsv:playerConnected', -1, player)
 

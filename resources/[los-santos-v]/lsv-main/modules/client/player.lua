@@ -22,6 +22,11 @@ function Player.Init(playerData)
 	Player.kills = playerData.Kills
 	Player.deaths = playerData.Deaths
 
+	StatSetInt(GetHashKey('MP0_LUNG_CAPACITY'), playerData.SkillStat, true)
+	StatSetInt(GetHashKey('MP0_STAMINA'), playerData.SkillStat, true)
+	StatSetInt(GetHashKey('MP0_STRENGTH'), playerData.SkillStat, true)
+	StatSetInt(GetHashKey('MP0_SHOOTING_ABILITY'), playerData.SkillStat, true)
+
 	Skin.ChangePlayerSkin(playerData.SkinModel)
 
 	Player.GiveWeapons(playerData.Weapons)
