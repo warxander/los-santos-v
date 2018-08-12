@@ -68,6 +68,7 @@ AddEventHandler('lsv:init', function()
 
 					Gui.DisplayNotification("Picked up "..pickup.name..".")
 				elseif math.abs(pickup.x - playerX) > Settings.pickupMaxSpawnRadius or math.abs(pickup.y - playerY) > Settings.pickupMaxSpawnRadius then
+					RemoveBlip(pickup['blip'])
 					RemovePickup(pickup['pickup'])
 					pickup['pickup'] = nil
 				end
