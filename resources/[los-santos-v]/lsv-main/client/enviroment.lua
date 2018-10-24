@@ -1,5 +1,5 @@
 local time = { hours = 12, minutes = 0, seconds = 0 }
-local weather = "CLEAR" --"CLEAR", "EXTRASUNNY", "CLOUDS", "OVERCAST", "RAIN", "CLEARING", "THUNDER", "SMOG", "FOGGY", "SNOWLIGHT", "BLIZZARD", "XMAS"
+local weather = "HALLOWEEN" --"CLEAR", "EXTRASUNNY", "CLOUDS", "OVERCAST", "RAIN", "CLEARING", "THUNDER", "SMOG", "FOGGY", "SNOWLIGHT", "BLIZZARD", "XMAS", "HALLOWEEN"
 local isSnowLoaded = false
 
 
