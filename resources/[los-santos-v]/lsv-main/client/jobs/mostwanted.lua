@@ -1,5 +1,5 @@
 AddEventHandler('lsv:startMostWanted', function()
-	World.SetWantedLevel(5)
+	World.SetWantedLevel(2)
 
 	JobWatcher.StartJob('Most Wanted')
 
