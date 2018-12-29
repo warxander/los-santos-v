@@ -34,14 +34,6 @@ Settings.skillStat = 50
 -- Crew
 Settings.crewInvitationTimeout = 10000
 
-
--- Pickups
-Settings.pickupMaxCount = 5
-Settings.pickupMinSpawnRadius = 25.
-Settings.pickupMaxSpawnRadius = 100.
-Settings.pickupMinDistance = 25.
-
-
 -- Cash
 Settings.cashPerKill = 50
 Settings.cashPerKillstreak = 25
