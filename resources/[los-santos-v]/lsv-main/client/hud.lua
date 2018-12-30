@@ -11,7 +11,7 @@ AddEventHandler('lsv:init', function(isRegistered)
 		"Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.",
 		"Press ~INPUT_ENTER_CHEAT_CODE~ to enlarge the Radar.",
 		"Press ~INPUT_DUCK~ to enter stealth mode.",
-		"Visit ~BLIP_GUN_SHOP~ to customize your weapons.",
+		"Visit ~BLIP_GUN_SHOP~ to buy and customize weapons.",
 		"Visit ~BLIP_CLOTHES_STORE~ to change your character.",
 		"Join our Discord server\n~b~https://discord.gg/fAtxuhx",
 	}

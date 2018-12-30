@@ -71,6 +71,48 @@ Settings.castle = {
 	rewards = { 5000, 2500, 1250 },
 }
 
+
+-- AmmuNation Refill Ammo
+Settings.ammuNationRefillAmmo = {
+	['Pistol Rounds'] = {
+		ammo = 24,
+		price = 16,
+	},
+	['Shotgun Shells'] = {
+		ammo = 16,
+		price = 48,
+	},
+	['SMG Rounds'] = {
+		ammo = 30,
+		price = 72,
+	},
+	['MG Rounds'] = {
+		ammo = 100,
+		price = 135,
+	},
+	['Assault Rifle Rounds'] = {
+		ammo = 60,
+		price = 124,
+	},
+	['Tear Gas Units'] = {
+		ammo = 3,
+		price = 14,
+	},
+	['Grenade Units'] = {
+		ammo = 3,
+		price = 31,
+	},
+	['Molotov Cocktail Units'] = {
+		ammo = 3,
+		price = 67,
+	},
+	['Sticky Bomb Units'] = {
+		ammo = 3,
+		price = 94,
+	}
+}
+
+
 -- Market Manipulation Job
 Settings.marketManipulation = {
 	time = 600000,
