@@ -172,6 +172,24 @@ Settings.mostWanted = {
 	minReward = 1000,
 	maxReward = 5000,
 	cashPerCop = 50,
+	notification = {
+		timeout = 45000,
+		messages = {
+			'You, my friend have found your level in life... You\'ve joined a society of morons called the police force!',
+			'Nice name badge! ...But they misspelt \'dick\'.',
+			'Let\'s be clear. Only an idiot joins the cops! ...See? You don\'t even understand simple sentences!',
+			'Oh, you look so... tough, officer! ...I know you were bullied in school.',
+			'Aren\'t you just a great example to us all? ...Living proof that shit can talk!',
+			'Hey... Aren\'t you cool? ...I was being sarcastic. You look like a twat.',
+			'Does parking orders get you excited? ...Or do you prefer beating up suspects?',
+			'I bet you love giving orders... And arresting jaywalkers and tourists...',
+			'What exactly are you looking at? ...Because I\'m looking at a turd.',
+			'Nice uniform! ...But you should be working in Burger Shot!',
+			'The police force, now that\'s a bad joke! ...Police "farce" would be a better name.',
+			'You look ridiculous in that uniform. But I bet you\'re probably used to looking ridiculous.',
+			'How did you get in the police force? ...You look like you belong in a mental home.'
+		},
+	}
 }
 
 

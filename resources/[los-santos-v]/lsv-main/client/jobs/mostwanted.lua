@@ -7,6 +7,7 @@ AddEventHandler('lsv:startMostWanted', function()
 	local jobId = JobWatcher.GetJobId()
 	local copsKilled = 0
 	local killedCopPeds = { }
+	local lastNotificationTime = nil
 
 	Gui.StartJob(jobId, 'You have started Most Wanted. Stay alive with a wanted level.', 'Kill cops to get extra cash.')
 
@@ -22,6 +23,11 @@ AddEventHandler('lsv:startMostWanted', function()
 			if GetPlayerWantedLevel(PlayerId()) == 0 then
 				TriggerEvent('lsv:mostWantedFinished', false, 'You lose the cops.')
 				return
+			end
+
+			if not lastNotificationTime or GetTimeDifference(GetGameTimer(), lastNotificationTime) >= Settings.mostWanted.notification.timeout then
+				Gui.DisplayNotification(Utils.GetRandom(Settings.mostWanted.notification.messages), 'CHAR_DEFAULT', GetPlayerName(PlayerId()))
+				lastNotificationTime = GetGameTimer()
 			end
 
 			local handle, ped = FindFirstPed()
