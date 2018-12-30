@@ -69,6 +69,6 @@ end)
 
 RegisterNetEvent('lsv:stuntJumpCompleted')
 AddEventHandler('lsv:stuntJumpCompleted', function(height, distance)
-	FlashMinimapDisplay()
-	Gui.DisplayNotification('~b~Stunt Jump completed~w~.\nDistance: '..string.format('%.1f', distance)..'m\nHeight: '..string.format('%.1f', height)..'m')
+	StartScreenEffect('SuccessMichael', 0, false)
+	SetTimeout(2500, function() Gui.DisplayNotification('~b~Stunt Jump completed~w~.\nDistance: '..string.format('%.1f', distance)..'m\nHeight: '..string.format('%.1f', height)..'m') end)
 end)
