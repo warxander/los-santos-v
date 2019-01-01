@@ -107,7 +107,28 @@ function Scoreboard.DisplayThisFrame()
 	local tablePosition = { ['y'] = tablePositionHeader.y + tableHeight + headerTableSpacing }
 	local tableAvatarPositionWidth = (tableHeight * 9 / 16)
 
-	for index = 1, math.min(Settings.scoreboardMaxPlayers, Utils.GetTableLength(scoreboard)) do
+	-- Find yourself in scoreboard
+	local isPlayerInScoreboard = nil
+	local scoreboardLength = Utils.GetTableLength(scoreboard)
+	if scoreboardLength > Settings.scoreboardMaxPlayers then
+		for index = 1, Settings.scoreboardMaxPlayers do
+			if scoreboard[index].id == PlayerId() then
+				isPlayerInScoreboard = true
+				break
+			end
+		end
+	else isPlayerInScoreboard = true end
+
+	if not isPlayerInScoreboard then
+		for index = Settings.scoreboardMaxPlayers, scoreboardLength do
+			if scoreboard[index].id == PlayerId() then
+				scoreboard[Settings.scoreboardMaxPlayers] = scoreboard[index]
+				break
+			end
+		end
+	end
+
+	for index = 1, math.min(Settings.scoreboardMaxPlayers, scoreboardLength) do
 		local avatarPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth / 2, ['y'] = tablePosition.y }
 		local playerPosition = { ['x'] = avatarPosition.x + tablePositionWidth / 2, ['y'] = tablePosition.y }
 		local onlineStatusPosition = { ['x'] = avatarPosition.x + tableAvatarPositionWidth / 2 + onlineStatusWidth / 2, ['y'] = tablePosition.y }
