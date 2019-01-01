@@ -35,9 +35,9 @@ Settings.skillStat = 10
 Settings.crewInvitationTimeout = 10000
 
 -- Cash
-Settings.cashPerKill = 50
+Settings.cashPerKill = 75
 Settings.cashPerKillstreak = 25
-Settings.cashPerJob = 50
+Settings.cashPerJob = 500
 Settings.cashGainedNotificationTime = 5000
 
 
@@ -51,7 +51,7 @@ Settings.stuntMinInterval = 30000
 -- Bounties
 Settings.bounty = {
 	timeout = 300000,
-	reward = 150,
+	reward = 750,
 }
 
 
@@ -68,7 +68,7 @@ Settings.castle = {
 		{ x = -1806.5964355469, y = 443.03262329102, z = 128.50791931152 },
 	},
 	radius = 50.0,
-	rewards = { 5000, 2500, 1250 },
+	rewards = { 7500, 5000, 2500 },
 }
 
 
@@ -140,7 +140,7 @@ Settings.marketManipulation = {
 		{ ['x'] = 1176.9967041016, ['y'] = 2711.8190917969, ['z'] = 38.097778320313 },
 		{ ['x'] = -104.46595001221, ['y'] = 6477.015625, ['z'] = 32.505443572998 },
 	},
-	minReward = 1000,
+	minReward = 1500,
 	maxReward = 5000,
 	cashPerRobbery = 250,
 }
@@ -160,7 +160,7 @@ Settings.velocity = {
 		{ x = -1215.8439941406, y = -1346.943359375, z = 3.6422889232635, heading = 293.01425170898 },
 	},
 	minSpeed = 60,
-	minReward = 1000,
+	minReward = 1500,
 	maxReward = 5000,
 	cashPerAboutToDetonate = 500,
 }
@@ -169,7 +169,7 @@ Settings.velocity = {
 -- Most Wanted Job
 Settings.mostWanted = {
 	time = 240000,
-	minReward = 1000,
+	minReward = 1500,
 	maxReward = 5000,
 	cashPerCop = 50,
 	notification = {
@@ -228,7 +228,7 @@ Settings.assetRecovery = {
 		},
 	},
 	dropRadius = 25.,
-	minReward = 1000,
+	minReward = 1500,
 	maxReward = 5000,
 }
 
@@ -271,13 +271,13 @@ Settings.headhunter = {
 		"WEAPON_RPG",
 	},
 	wantedLevel = 3,
-	minReward = 1000,
+	minReward = 1500,
 	maxReward = 5000,
 }
 
 -- Crate Drops
 Settings.crateDropSettings = {
-	cash = 500,
+	cash = 1000,
 	weaponClipCount = 5,
 	weapons = {
 		{ id = "WEAPON_COMPACTLAUNCHER", name = "Compact Grenade Launcher" },
