@@ -43,7 +43,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 	local isTargetBlipHided = false
 	local isTargetWandering = false
 
-	Gui.StartJob(jobId, 'You have started Headhunter. Find and assassinate the target.')
+	Gui.StartJob(jobId, 'Find and assassinate the target.')
 
 	Citizen.CreateThread(function()
 		while true do

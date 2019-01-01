@@ -24,7 +24,7 @@ AddEventHandler('lsv:startMarketManipulation', function()
 	local totalRobberies = 0
 	local jobId = JobWatcher.GetJobId()
 
-	Gui.StartJob(jobId, 'You have started Market Manipulation. Rob stores and banks within the time limit.')
+	Gui.StartJob(jobId, 'Rob stores and banks within the time limit.')
 
 	while true do
 		Citizen.Wait(0)

@@ -9,7 +9,7 @@ AddEventHandler('lsv:startMostWanted', function()
 	local killedCopPeds = { }
 	local lastNotificationTime = nil
 
-	Gui.StartJob(jobId, 'You have started Most Wanted. Stay alive with a wanted level.', 'Kill cops to get extra cash.')
+	Gui.StartJob(jobId, 'Stay alive with a wanted level.', 'Kill cops to get extra cash.')
 
 	while true do
 		Citizen.Wait(0)
