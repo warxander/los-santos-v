@@ -1,10 +1,14 @@
+local targetPed = nil
 local targetBlip = nil
+local targetAreaBlip = nil
 
 
 local function removeTargetBlip()
 	if not targetBlip then return end
 	RemoveBlip(targetBlip)
+	RemoveBlip(targetAreaBlip)
 	targetBlip = nil
+	targetAreaBlip = nil
 end
 
 
@@ -13,25 +17,22 @@ AddEventHandler('lsv:startHeadhunter', function()
 
 	Streaming.RequestModel(target.pedModel)
 
-	local targetPedModelHash = GetHashKey(target.pedModel)
-	local targetPed = CreatePed(11, targetPedModelHash, target.location.x, target.location.y, target.location.z, GetRandomFloatInRange(0.0, 360.0), true, true)
-	SetPedRelationshipGroupHash(targetPed, GetHashKey("HATES_PLAYER"))
-	SetPedArmour(targetPed, 500)
-	SetEntityHealth(targetPed, 500)
-	GiveDelayedWeaponToPed(targetPed, GetHashKey(Utils.GetRandom(Settings.headhunter.weapons)), 25000, true)
-	TaskWanderStandard(targetPed, 10.0, 10)
-
-	SetModelAsNoLongerNeeded(targetPedModelHash)
-
-	targetBlip = AddBlipForEntity(targetPed)
+	targetBlip = AddBlipForCoord(target.location.x, target.location.y, target.location.z)
 	SetBlipColour(targetBlip, Color.BlipRed())
 	SetBlipHighDetail(targetBlip, true)
-	SetBlipSprite(targetBlip, Blip.Target())
 	SetBlipColour(targetBlip, Color.BlipRed())
-	SetBlipRouteColour(targetBlip, Color.BlipRed())
 	SetBlipRoute(targetBlip, true)
+	SetBlipRouteColour(targetBlip, Color.BlipRed())
 
-	Map.SetBlipFlashes(targetBlip)
+	targetAreaBlip = Map.CreateRadiusBlip(target.location.x, target.location.y, target.location.z, Settings.headhunter.radius, Color.BlipRed())
+
+	local targetPedModelHash = GetHashKey(target.pedModel)
+	targetPed = CreatePed(26, targetPedModelHash, target.location.x, target.location.y, target.location.z, GetRandomFloatInRange(0.0, 360.0), true, true)
+	SetPedArmour(targetPed, 1500)
+	SetEntityHealth(targetPed, 1500)
+	GiveDelayedWeaponToPed(targetPed, GetHashKey(Utils.GetRandom(Settings.headhunter.weapons)), 25000, false)
+	SetPedDropsWeaponsWhenDead(targetPed, false)
+	SetModelAsNoLongerNeeded(targetPedModelHash)
 
 	JobWatcher.StartJob('Headhunter')
 
@@ -39,8 +40,10 @@ AddEventHandler('lsv:startHeadhunter', function()
 	local jobId = JobWatcher.GetJobId()
 	local loseTheCopsStage = false
 	local loseTheCopsStageStartTime = nil
+	local isTargetBlipHided = false
+	local isTargetWandering = false
 
-	Gui.StartJob(jobId, 'You have started Headhunter. Assassinate the target and lose the cops.')
+	Gui.StartJob(jobId, 'You have started Headhunter. Find and assassinate the target.')
 
 	Citizen.CreateThread(function()
 		while true do
@@ -56,10 +59,38 @@ AddEventHandler('lsv:startHeadhunter', function()
 
 		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.headhunter.time then
 			local isTargetDead = IsEntityDead(targetPed)
+			local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
+			local isInJobArea = GetDistanceBetweenCoords(playerX, playerY, playerZ, target.location.x, target.location.y, target.location.z, false) < Settings.headhunter.radius
 
-			if isTargetDead then removeTargetBlip() end
+			if not isTargetWandering then
+				if not IsEntityWaitingForWorldCollision(targetPed) and HasCollisionLoadedAroundEntity(targetPed) then
+					TaskWanderStandard(targetPed, 10., 10)
+					isTargetWandering = true
+				end
+			end
 
-			Gui.DisplayObjectiveText(isTargetDead and 'Lose the cops.' or 'Assassinate the ~r~target~w~.')
+			if isInJobArea and not isTargetBlipHided then
+				SetBlipRoute(targetBlip, false)
+				isTargetBlipHided = true
+			end
+
+			if isTargetDead then
+				removeTargetBlip()
+			else
+				local targetX, targetY, targetZ = table.unpack(GetEntityCoords(targetPed, true))
+				if GetDistanceBetweenCoords(targetX, targetY, targetZ, target.location.x, target.location.y, target.location.z, false) > Settings.headhunter.radius then
+					TriggerEvent('lsv:headhunterFinished', false, 'Target has left the area.')
+					return
+				end
+
+				SetBlipAlpha(targetAreaBlip, isInJobArea and 96 or 0)
+				SetBlipAlpha(targetBlip, isInJobArea and 0 or 255)
+			end
+
+			local missionText = isInJobArea and 'Find and assassinate the ~r~target~w~.' or 'Go to the ~r~marked area~w~.'
+			if isTargetDead then missionText = 'Lose the cops.' end
+
+			Gui.DisplayObjectiveText(missionText)
 
 			if isTargetDead and not loseTheCopsStage then
 				StartScreenEffect("SuccessTrevor", 0, false)
@@ -91,6 +122,7 @@ AddEventHandler('lsv:headhunterFinished', function(success, reason)
 	JobWatcher.FinishJob('Headhunter')
 
 	removeTargetBlip()
+	if DoesEntityExist(targetPed) then RemovePedElegantly(targetPed) end
 
 	World.SetWantedLevel(0)
 

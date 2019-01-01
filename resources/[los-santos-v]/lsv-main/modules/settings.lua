@@ -235,31 +235,32 @@ Settings.assetRecovery = {
 
 -- Headhunter Job
 Settings.headhunter = {
-	time = 600000,
+	time = 1200000,
+	radius = 200.,
 	targets = {
 		{
-			location = { x = -1847.6923828125, y = -1228.1429443359, z = 13.017274856567 },
+			location = { x = -1813.0296630859, y = -1207.5499267578, z = 19.169616699219 },
 			pedModel = "a_m_y_beachvesp_01",
 		},
 
 		{
-			location = { x = -920.48883056641, y = -352.99243164063, z = 38.96821975708 },
-			pedModel = "a_m_y_hasjew_01",
+			location = { x = -1191.2917480469, y = -508.70294189453, z = 35.566139221191 },
+			pedModel = "u_m_m_filmdirector",
 		},
 
 		{
-			location = { x = 722.82415771484, y = -760.00848388672, z = 25.20599937439 },
-			pedModel = "s_m_y_garbage",
+			location = { x = -175.79162597656, y = -604.76159667969, z = 48.222152709961 },
+			pedModel = "s_m_m_highsec_01",
 		},
 
 		{
-			location = { x = 814.84204101563, y = -1280.7314453125, z = 26.336791992188 },
-			pedModel = "s_m_y_cop_01",
+			location = { x = 624.09893798828, y = -3021.7360839844, z = 6.2169780731201 },
+			pedModel = "s_m_y_dockwork_01",
 		},
 
 		{
-			location = { x = 337.9733581543, y = -2048.1398925781, z = 21.116983413696 },
-			pedModel = "g_m_y_mexgang_01",
+			location = { x = -619.80187988281, y = 323.91040039063, z = 82.263603210449 },
+			pedModel = "u_m_m_jesus_01",
 		},
 	},
 	weapons = {
@@ -269,7 +270,7 @@ Settings.headhunter = {
 		"WEAPON_MINISMG",
 		"WEAPON_RPG",
 	},
-	wantedLevel = 4,
+	wantedLevel = 3,
 	minReward = 1000,
 	maxReward = 5000,
 }
