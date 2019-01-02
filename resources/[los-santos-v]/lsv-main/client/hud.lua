@@ -79,7 +79,7 @@ end)
 
 -- Wasted Screen
 -- TODO Rework with spawn manager
-Citizen.CreateThread(function()
+AddEventHandler('lsv:init', function()
 	local scaleform = Scaleform:Request('MP_BIG_MESSAGE_FREEMODE')
 	RequestScriptAudioBank('MP_WASTED', 0)
 

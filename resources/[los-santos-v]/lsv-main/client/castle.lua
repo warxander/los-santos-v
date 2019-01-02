@@ -101,7 +101,7 @@ AddEventHandler('lsv:finishCastle', function(winners)
 end)
 
 
-Citizen.CreateThread(function()
+AddEventHandler('lsv:init', function()
 	local pointAddedLastTime = GetGameTimer()
 	local playerColors = { Color.BlipYellow(), Color.BlipGrey(), Color.BlipBrown() }
 	local playerPositions = { '1st: ', '2nd: ', '3rd: ' }

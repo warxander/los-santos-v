@@ -1,4 +1,4 @@
-Citizen.CreateThread(function()
+AddEventHandler('lsv:init', function()
 	local timeLeft = nil
 	local currentPosition = nil
 	local previousPosition = nil
