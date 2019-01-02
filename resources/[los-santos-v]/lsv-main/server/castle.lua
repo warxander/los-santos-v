@@ -18,6 +18,8 @@ local function getPlayerIndexById(id)
 end
 
 local function sortPlayersByPoints(l, r)
+	if not l then return false end
+	if not r then return true end
 	return l.points > r.points
 end
 
