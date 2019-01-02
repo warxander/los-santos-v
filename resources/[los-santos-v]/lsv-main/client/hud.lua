@@ -1,6 +1,4 @@
-AddEventHandler('lsv:init', function(isRegistered)
-	if not isRegistered then return end
-
+AddEventHandler('lsv:init', function()
 	--https://pastebin.com/amtjjcHb
 	local tips = {
 		"Performing Jobs and taking out enemy players will give your cash.",
@@ -13,7 +11,6 @@ AddEventHandler('lsv:init', function(isRegistered)
 		"Press ~INPUT_DUCK~ to enter stealth mode.",
 		"Visit ~BLIP_GUN_SHOP~ to buy and customize weapons.",
 		"Visit ~BLIP_CLOTHES_STORE~ to change your character.",
-		"Join our Discord server\n~b~https://discord.gg/fAtxuhx",
 	}
 	local tipTime = 10000
 	local tipInterval = 30000

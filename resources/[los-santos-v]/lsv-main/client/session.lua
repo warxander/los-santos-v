@@ -40,7 +40,7 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 	PlaceObjectOnGroundProperly(PlayerPedId())
 	Player.SetFreeze(false)
 
-	TriggerEvent('lsv:init', isRegistered)
+	TriggerEvent('lsv:init')
 end)
 
 
