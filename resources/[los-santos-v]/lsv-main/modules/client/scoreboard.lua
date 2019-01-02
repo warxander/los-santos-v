@@ -73,7 +73,7 @@ AddEventHandler('lsv:updateScoreboard', function(serverScoreboard)
 		local id = GetPlayerFromServerId(scoreboard[i].id)
 
 		if not NetworkIsPlayerActive(id) and id ~= PlayerId() then
-			TriggerEvent('lsv:playerDisconnected', scoreboard[i].name)
+			TriggerServerEvent('lsv:playerOutOfSync', scoreboard[i].id)
 			table.remove(scoreboard, i)
 		else
 			scoreboard[i].id = id
