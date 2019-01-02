@@ -90,6 +90,7 @@ AddEventHandler('lsv:init', function()
 				end
 
 				WarMenu.CloseMenu()
+			elseif WarMenu.MenuButton('Ammu-Nation', 'ammunation') then
 			elseif WarMenu.ComboBox('Walk Style', walkStyles, walkStyleCurrentIndex, walkStyleSelectedIndex, function(currentIndex, selectedIndex)
 				walkStyleSelectedIndex = selectedIndex
 				walkStyleCurrentIndex = currentIndex

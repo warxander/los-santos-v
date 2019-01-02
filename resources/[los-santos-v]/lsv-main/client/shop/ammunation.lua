@@ -244,6 +244,7 @@ end)
 AddEventHandler('lsv:init', function()
 	local ammunationOpenedMenuIndex = nil
 	local ammunationColor = Color.GetHudFromBlipColor(Color.BlipRed())
+	local openedFromInteractionMenu = true -- It's hacky but seems to work
 
 	while true do
 		Citizen.Wait(0)
@@ -257,18 +258,21 @@ AddEventHandler('lsv:init', function()
 
 					if IsControlJustReleased(0, 38) then
 						ammunationOpenedMenuIndex = ammunationIndex
+						openedFromInteractionMenu = false
 						WarMenu.OpenMenu('ammunation')
 					end
 				end
 			else
-				local isAmmunationMenuOpened = WarMenu.IsMenuOpened('ammunation') or
+				local isAmmunationMenuOpened = not openedFromInteractionMenu and
+					(WarMenu.IsMenuOpened('ammunation') or
 					WarMenu.IsMenuOpened('ammunation_weapons') or
 					WarMenu.IsMenuOpened('ammunation_weaponCategories') or
 					WarMenu.IsMenuOpened('ammunation_ammunition') or
 					WarMenu.IsMenuOpened('ammunation_weaponUpgrades') or
-					WarMenu.IsMenuOpened('ammunation_upgradeWeapons')
+					WarMenu.IsMenuOpened('ammunation_upgradeWeapons'))
 
 				if isAmmunationMenuOpened and ammunationIndex == ammunationOpenedMenuIndex then
+					openedFromInteractionMenu = true
 					WarMenu.CloseMenu()
 				end
 			end
