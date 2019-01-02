@@ -27,7 +27,7 @@ function Player.Init(playerData)
 	StatSetInt(GetHashKey('MP0_STRENGTH'), playerData.SkillStat, true)
 	StatSetInt(GetHashKey('MP0_SHOOTING_ABILITY'), playerData.SkillStat, true)
 
-	Skin.ChangePlayerSkin(playerData.SkinModel)
+	Skin.ChangePlayerSkin(playerData.SkinModel, true)
 
 	Player.GiveWeapons(playerData.Weapons)
 end

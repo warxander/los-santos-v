@@ -26,13 +26,18 @@ function Streaming.RequestAnimSet(animSet)
 end
 
 
-function Streaming.RequestModel(model)
+function Streaming.RequestModel(model, sync)
 	local hash = GetHashKey(model)
-	
+
 	if not is_valid_hash(model, hash, 'RequestModel') then return end
 
 	if not HasModelLoaded(hash) then
 		RequestModel(hash)
+		if sync then
+			LoadAllObjectsNow()
+			return
+		end
+
 		while not HasModelLoaded(hash) do Citizen.Wait(0) end
 	end
 end
