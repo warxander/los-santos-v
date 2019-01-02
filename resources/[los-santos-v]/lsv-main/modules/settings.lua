@@ -141,7 +141,7 @@ Settings.marketManipulation = {
 		{ ['x'] = 1176.9967041016, ['y'] = 2711.8190917969, ['z'] = 38.097778320313 },
 		{ ['x'] = -104.46595001221, ['y'] = 6477.015625, ['z'] = 32.505443572998 },
 	},
-	minReward = 1500,
+	minReward = 2500,
 	maxReward = 5000,
 	cashPerRobbery = 250,
 }
@@ -161,7 +161,7 @@ Settings.velocity = {
 		{ x = -1215.8439941406, y = -1346.943359375, z = 3.6422889232635, heading = 293.01425170898 },
 	},
 	minSpeed = 60,
-	minReward = 1500,
+	minReward = 2500,
 	maxReward = 5000,
 	cashPerAboutToDetonate = 500,
 }
@@ -170,9 +170,9 @@ Settings.velocity = {
 -- Most Wanted Job
 Settings.mostWanted = {
 	time = 240000,
-	minReward = 1500,
+	minReward = 2500,
 	maxReward = 5000,
-	cashPerCop = 50,
+	cashPerCop = 100,
 	notification = {
 		timeout = 45000,
 		messages = {
@@ -229,7 +229,7 @@ Settings.assetRecovery = {
 		},
 	},
 	dropRadius = 25.,
-	minReward = 1500,
+	minReward = 2500,
 	maxReward = 5000,
 }
 
@@ -272,7 +272,7 @@ Settings.headhunter = {
 		"WEAPON_RPG",
 	},
 	wantedLevel = 3,
-	minReward = 1500,
+	minReward = 2500,
 	maxReward = 5000,
 }
 
