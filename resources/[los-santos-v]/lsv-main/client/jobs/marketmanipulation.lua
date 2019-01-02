@@ -4,8 +4,9 @@ local storePickups = { }
 
 AddEventHandler('lsv:startMarketManipulation', function()
 	local pickupHash = GetHashKey('PICKUP_MONEY_CASE')
+	local placesCount = Utils.GetTableLength(Settings.marketManipulation.places)
 
-	for i = 1, Utils.GetTableLength(Settings.marketManipulation.places) do
+	for i = 1, placesCount do
 		local place = Settings.marketManipulation.places[i]
 
 		storePickups[i] = CreatePickupRotate(pickupHash, place.x, place.y, place.z, 0., 0., 0., 512)
@@ -35,7 +36,7 @@ AddEventHandler('lsv:startMarketManipulation', function()
 				return
 			end
 
-			for i = Utils.GetTableLength(Settings.marketManipulation.places), 1, -1 do
+			for i = placesCount, 1, -1 do
 				if HasPickupBeenCollected(storePickups[i]) then
 					SetBlipSprite(storeBlips[i], Blip.Completed())
 					SetBlipAsShortRange(storeBlips[i], true)
