@@ -71,11 +71,6 @@ AddEventHandler('lsv:init', function()
 end)
 
 
-local function AddTextEntry(key, value)
-	Citizen.InvokeNative(GetHashKey("ADD_TEXT_ENTRY"), key, value)
-end
-
-
 -- Wasted Screen
 -- TODO Rework with spawn manager
 Citizen.CreateThread(function()
