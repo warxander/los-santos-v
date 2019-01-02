@@ -49,7 +49,7 @@ AddEventHandler('lsv:startMarketManipulation', function()
 			end
 
 			Gui.DisplayObjectiveText('Rob stores and banks.')
-			Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.marketManipulation.time - GetGameTimer() + eventStartTime) / 1000))
+			Gui.DrawTimerBar(0.13, 'JOB TIME', math.floor((Settings.marketManipulation.time - GetGameTimer() + eventStartTime) / 1000))
 			Gui.DrawBar(0.13, 'TOTAL ROBBERIES', totalRobberies, nil, 2)
 		else
 			TriggerServerEvent('lsv:marketManipulationFinished')

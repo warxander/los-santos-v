@@ -46,7 +46,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 			Citizen.Wait(0)
 
 			if JobWatcher.IsJobInProgress(jobId) then
-				Gui.DrawTimerBar(0.13, 'TIME LEFT', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
+				Gui.DrawTimerBar(0.13, 'JOB TIME', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
 				if isInVehicle then Gui.DrawBar(0.13, 'VEHICLE HEALTH', math.floor(GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle) * 100)..'%', nil, 2) end
 			else return end
 		end

@@ -50,7 +50,7 @@ AddEventHandler('lsv:startMostWanted', function()
 
 			local passedTime = GetGameTimer() - eventStartTime
 			local secondsLeft = math.floor((Settings.mostWanted.time - passedTime) / 1000)
-			Gui.DrawTimerBar(0.13, 'TIME LEFT', secondsLeft)
+			Gui.DrawTimerBar(0.13, 'JOB TIME', secondsLeft)
 			Gui.DrawBar(0.13, 'COPS KILLED', copsKilled, nil, 2)
 			Gui.DisplayObjectiveText('Stay alive with a wanted level.')
 		else

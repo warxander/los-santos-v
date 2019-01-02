@@ -49,7 +49,7 @@ AddEventHandler('lsv:startVelocity', function()
 				elseif detonationStage then totalTime = Settings.velocity.detonationTime
 				elseif isInVehicle and not preparationStage then totalTime = Settings.velocity.driveTime end
 
-				local title = 'TIME LEFT'
+				local title = 'JOB TIME'
 				if preparationStage then title = 'BOMB ACTIVATION'
 				elseif detonationStage then title = 'DETONATE IN' end
 
