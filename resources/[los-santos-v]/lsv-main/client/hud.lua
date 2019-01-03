@@ -87,21 +87,21 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if IsEntityDead(PlayerPedId()) then
-				StartScreenEffect('DeathFailOut', 0, 0)
-				ShakeGameplayCam('DEATH_FAIL_IN_EFFECT_SHAKE', 1.0)
-				PlaySoundFrontend(-1, 'MP_Flash', 'WastedSounds', 1)
+			StartScreenEffect('DeathFailOut', 0, 0)
+			ShakeGameplayCam('DEATH_FAIL_IN_EFFECT_SHAKE', 1.0)
+			PlaySoundFrontend(-1, 'MP_Flash', 'WastedSounds', 1)
 
-				Citizen.Wait(500)
+			Citizen.Wait(500)
 
-				scaleform:Call('SHOW_SHARD_WASTED_MP_MESSAGE', '~r~WASTED')
+			scaleform:Call('SHOW_SHARD_WASTED_MP_MESSAGE', '~r~WASTED')
 
-				while IsEntityDead(PlayerPedId()) do
-					scaleform:RenderFullscreen()
-					Citizen.Wait(0)
-				end
+			while IsEntityDead(PlayerPedId()) do
+				scaleform:RenderFullscreen()
+				Citizen.Wait(0)
+			end
 
-				StopScreenEffect('DeathFailOut')
-				StopGameplayCamShaking(true)
+			StopScreenEffect('DeathFailOut')
+			StopGameplayCamShaking(true)
 		end
 	end
 end)
