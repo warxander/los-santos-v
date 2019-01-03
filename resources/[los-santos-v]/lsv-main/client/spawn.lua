@@ -26,9 +26,14 @@ local function spawnPlayer()
 			Citizen.Wait(0)
 
 			local diff = { r = radius * math.sqrt(GetRandomFloatInRange(0.0, 1.0)), theta = GetRandomFloatInRange(0.0, 1.0) * 2 * math.pi }
+			local xDiff = diff.r * math.cos(diff.theta)
+			if xDiff >= 0 then xDiff = math.max(radius, xDiff) else xDiff = math.min(-radius, xDiff) end
 
-			local x = playerX + diff.r * math.cos(diff.theta)
-			local y = playerY + diff.r * math.sin(diff.theta)
+			local yDiff = diff.r * math.sin(diff.theta)
+			if yDiff >= 0 then yDiff = math.max(radius, yDiff) else yDiff = math.min(-radius, yDiff) end
+
+			local x = playerX + xDiff
+			local y = playerY + yDiff
 
 			local _, groundZ = GetGroundZFor_3dCoord(x, y, z)
 			local validCoords, coords = GetSafeCoordForPed(x, y, groundZ + 1., false, 16)
