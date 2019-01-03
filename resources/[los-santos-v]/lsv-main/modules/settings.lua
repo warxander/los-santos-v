@@ -77,7 +77,7 @@ Settings.castle = {
 Settings.ammuNationRefillAmmo = {
 	['Pistol Rounds'] = {
 		ammo = 24,
-		price = 16,
+		price = 0,
 	},
 	['Shotgun Shells'] = {
 		ammo = 16,
