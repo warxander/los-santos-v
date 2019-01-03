@@ -63,8 +63,8 @@ local function spawnPlayer()
 	ClearPedWetness(ped)
 
 	-- https://forum.fivem.net/t/info-invisible-or-glitched-peds-list-wiki/40748/23
-	SetPedRandomComponentVariation(ped, false)
-	SetTimeout(1000, function() SetPedDefaultComponentVariation(ped) end)
+	SetPedComponentVariation(ped, 0, 0, 1, 0)
+	SetTimeout(1500, function() SetPedComponentVariation(ped, 0, 0, 0, 0) end)
 
 	while not HasCollisionLoadedAroundEntity(ped) do Citizen.Wait(0) end
 	if GetIsLoadingScreenActive() then ShutdownLoadingScreen() end
