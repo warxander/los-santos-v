@@ -28,7 +28,8 @@ AddEventHandler('lsv:init', function()
 			if playerVehicle then resetStuntJump() end
 		else
 			local vehicle = GetVehiclePedIsUsing(playerPed)
-			if not playerVehicle then playerVehicle = vehicle
+			if not playerVehicle and not IsPedInAnyHeli(playerPed) and not IsPedInAnyPlane(playerPed) then
+				playerVehicle = vehicle
 			else
 				if playerVehicle ~= vehicle then resetStuntJump() end
 				playerVehicle = vehicle
