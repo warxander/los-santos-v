@@ -74,6 +74,7 @@ client_scripts {
 
 -- Client scripts
 client_scripts {
+	"client/spawn.lua",
 	"client/enviroment.lua",
 	"client/afk.lua",
 	"client/session.lua",
