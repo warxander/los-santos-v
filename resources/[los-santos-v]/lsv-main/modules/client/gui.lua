@@ -178,13 +178,14 @@ AddEventHandler('lsv:init', function()
 			if cashGained ~=0 and not IsPlayerDead(PlayerId()) then
 				local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId()))
 				local z = playerZ + 1.0
-				local _, screenX, screenY = GetScreenCoordFromWorldCoord(playerX, playerY, z)
 				local sign = cashGained > 0 and '+' or '-'
 				local color = cashGained > 0 and Color.GetHudFromBlipColor(Color.BlipWhite()) or Color.GetHudFromBlipColor(Color.BlipRed())
 
-				DrawSprite('MPHud', 'mp_anim_cash', screenX, screenY, spriteScale / screenWidth, spriteScale / screenHeight, 0.0, 255, 255, 255, 255)
-				Gui.DrawText(sign..'$'..math.abs(cashGained), { x = screenX + spriteScale / 2 / screenWidth, y = screenY - spriteScale / 2 / screenHeight - 0.004 }, 4,
+				SetDrawOrigin(playerX, playerY, z, 0)
+				DrawSprite('MPHud', 'mp_anim_cash', 0.0, 0.0, spriteScale / screenWidth, spriteScale / screenHeight, 0.0, 255, 255, 255, 255)
+				Gui.DrawText(sign..'$'..math.abs(cashGained), { x = spriteScale / 2 / screenWidth, y = -spriteScale / 2 / screenHeight - 0.004 }, 4,
 					color, textScale, true, true)
+				ClearDrawOrigin()
 			end
 		else cashGained = 0 end
 	end
