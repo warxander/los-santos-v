@@ -10,7 +10,7 @@ AddEventHandler('lsv:init', function()
 		for i = Utils.GetTableLength(pickups), 1, -1 do
 			local needToRemove = HasPickupBeenCollected(pickups[i].pickup)
 			if needToRemove then Gui.DisplayNotification('Picked up First Aid Kit.') else
-				needToRemove = DoesPickupExist(pickups[i].pickup)
+				needToRemove = not DoesPickupExist(pickups[i].pickup)
 				if not needToRemove then
 					local pickupX, pickupY, pickupZ = table.unpack(GetPickupCoords(pickups[i].pickup))
 					needToRemove = GetDistanceBetweenCoords(playerX, playerY, playerZ, pickupX, pickupY, pickupZ, false) > Settings.pickup.radius
