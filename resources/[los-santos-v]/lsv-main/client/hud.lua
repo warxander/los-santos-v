@@ -66,31 +66,42 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if IsControlPressed(0, 20) then Scoreboard.DisplayThisFrame() end
+		if IsControlPressed(0, 20) then
+			Scoreboard.DisplayThisFrame()
+		elseif IsEntityDead(PlayerPedId()) and IsControlPressed(0, 24) then
+			TimeToRespawn = math.max(0, TimeToRespawn - Settings.spawn.respawnFasterPerControlPressed)
+		end
 	end
 end)
 
 
--- Wasted Screen
--- TODO Rework with spawn manager
 AddEventHandler('lsv:init', function()
 	local scaleform = Scaleform:Request('MP_BIG_MESSAGE_FREEMODE')
+	scaleform:Call('SHOW_SHARD_WASTED_MP_MESSAGE', '~r~WASTED')
+
+	local respawnFasterScaleform = Scaleform:Request('INSTRUCTIONAL_BUTTONS')
+	respawnFasterScaleform:Call('SET_DATA_SLOT', 0, '~INPUT_ATTACK~', 'Respawn Faster')
+	respawnFasterScaleform:Call('DRAW_INSTRUCTIONAL_BUTTONS')
+
 	RequestScriptAudioBank('MP_WASTED', 0)
 
 	while true do
 		Citizen.Wait(0)
 
 		if IsEntityDead(PlayerPedId()) then
-			StartScreenEffect('DeathFailOut', 0, 0)
+			StartScreenEffect('DeathFailOut', 0, true)
 			ShakeGameplayCam('DEATH_FAIL_IN_EFFECT_SHAKE', 1.0)
 			PlaySoundFrontend(-1, 'MP_Flash', 'WastedSounds', 1)
 
-			Citizen.Wait(500)
-
-			scaleform:Call('SHOW_SHARD_WASTED_MP_MESSAGE', '~r~WASTED')
+			local scaleformTimer = GetGameTimer()
+			while GetTimeDifference(GetGameTimer(), scaleformTimer) <= 500 do
+				respawnFasterScaleform:RenderFullscreen()
+				Citizen.Wait(0)
+			end
 
 			while IsEntityDead(PlayerPedId()) do
 				scaleform:RenderFullscreen()
+				respawnFasterScaleform:RenderFullscreen()
 				Citizen.Wait(0)
 			end
 

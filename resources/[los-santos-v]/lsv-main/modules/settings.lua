@@ -31,8 +31,9 @@ Settings.spawn = {
 		{ x = -529.57513427734, y = 92.357269287109, z = 60.316272735596 },
 		{ x = -692.64880371094, y = -627.58905029297, z = 31.556943893433 },
 	},
-	deathTime = 2000,
+	deathTime = 7000,
 	timeout = 30000,
+	respawnFasterPerControlPressed = 150, -- holy
 	tryCount = 100,
 	radius = { min = 75., increment = 25. },
 }

@@ -1,3 +1,5 @@
+TimeToRespawn = Settings.spawn.deathTime
+
 local diedAtTimer = nil
 local isSpawnInProcess = false
 local isFirstSpawn = true
@@ -8,7 +10,7 @@ local function spawnPlayer()
 	isSpawnInProcess = true
 
 	if not GetIsLoadingScreenActive() then
-		DoScreenFadeOut(3000)
+		DoScreenFadeOut(500)
 		while IsScreenFadingOut() do Citizen.Wait(0) end
 	end
 
@@ -93,14 +95,17 @@ Citizen.CreateThread(function()
 					spawnPlayer()
 					isFirstSpawn = false
 				elseif not isSpawnInProcess then
-					if diedAtTimer and GetTimeDifference(GetGameTimer(), diedAtTimer) > Settings.spawn.deathTime or isFirstSpawn then
+					if diedAtTimer and GetTimeDifference(GetGameTimer(), diedAtTimer) > TimeToRespawn or isFirstSpawn then
 						spawnPlayer()
 					end
 				end
 			end
 
 			if IsEntityDead(PlayerPedId()) then
-				if not diedAtTimer then diedAtTimer = GetGameTimer() end
+				if not diedAtTimer then
+					diedAtTimer = GetGameTimer()
+					TimeToRespawn = Settings.spawn.deathTime
+				end
 			else diedAtTimer = nil end
 		end
 	end
