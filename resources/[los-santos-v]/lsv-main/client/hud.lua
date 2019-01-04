@@ -61,12 +61,6 @@ AddEventHandler('lsv:onPlayerKilled', function(player, killer, message)
 end)
 
 
-RegisterNetEvent('lsv:playerOutOfSync')
-AddEventHandler('lsv:playerOutOfSync', function()
-	Gui.DisplayNotification('~r~WARNING: You was probably out of sync with the server.\nPlease re-login if you have an issue in game session.')
-end)
-
-
 -- GUI
 AddEventHandler('lsv:init', function()
 	while true do

@@ -161,9 +161,3 @@ function Scoreboard.ResetKillstreak(player)
 
 	scoreboard[playerIndex].killstreak = 0
 end
-
-
-RegisterServerEvent('lsv:playerOutOfSync')
-AddEventHandler('lsv:playerOutOfSync', function(player)
-	TriggerClientEvent('lsv:playerOutOfSync', player)
-end)
