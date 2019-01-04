@@ -80,6 +80,7 @@ client_scripts {
 	"client/session.lua",
 	"client/report.lua",
 	"client/hud.lua",
+	"client/pickup.lua",
 	"client/playertags.lua",
 	"client/cratedrop.lua",
 	"client/interactionmenu.lua",

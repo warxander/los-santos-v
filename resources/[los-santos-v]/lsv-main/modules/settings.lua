@@ -38,6 +38,13 @@ Settings.spawn = {
 }
 
 
+-- Pickup
+Settings.pickup = {
+	radius = 150.,
+	chance = 0.20,
+}
+
+
 -- Place markers
 Settings.placeMarkerRadius = 1.25
 Settings.placeMarkerOpacity = 196
