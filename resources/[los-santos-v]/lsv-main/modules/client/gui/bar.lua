@@ -20,11 +20,12 @@ function Gui.DrawBar(title, text, color, index, isPlayerText)
 	local y = SafeZone.Bottom() - Bar.Height / 2 - (index - 1) * (Bar.Height + 0.0038) - 0.05
 	local color = color or Color.GetHudFromBlipColor(Color.BlipWhite())
 	local font = isPlayerText and 4 or 0
-	local margin = isPlayerText and 0.014 or 0.009
+	local scale = isPlayerText and 0.5 or 0.3
+	local margin = isPlayerText and 0.017 or 0.009
 
 	DrawSprite(Bar.TextureDict, Bar.Texture, x, y, Bar.Width, Bar.Height, 0.0, 255, 255, 255, 160)
 
-	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - margin }, font, color, 0.3, isPlayerText, false, false, true)
+	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - margin }, font, color, scale, isPlayerText, false, false, true)
 	Gui.DrawText(text, { x = SafeZone.Right() - 0.00285, y = y - 0.0165 }, 0, color, 0.425, false, false, false, true)
 end
 

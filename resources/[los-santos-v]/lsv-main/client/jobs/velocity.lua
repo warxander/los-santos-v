@@ -51,13 +51,18 @@ AddEventHandler('lsv:startVelocity', function()
 
 				local title = 'JOB TIME'
 				if preparationStage then title = 'BOMB ACTIVATION'
-				elseif detonationStage then title = 'DETONATE IN' end
+				elseif detonationStage then title = 'DETONATING' end
 
 				local startTime = eventStartTime
 				if detonationStage then startTime = startTimeToDetonate
 				elseif preparationStage then startTime = startPreparationStageTime end
 
-				Gui.DrawTimerBar(title, math.max(0, math.floor((totalTime - GetGameTimer() + startTime) / 1000)))
+				local timeLeft = totalTime - GetGameTimer() + startTime
+				if detonationStage then
+					Gui.DrawProgressBar(title, 1.0 - timeLeft / Settings.velocity.detonationTime, Color.GetHudFromBlipColor(Color.BlipRed()))
+				else
+					Gui.DrawTimerBar(title, math.floor(timeLeft / 1000))
+				end
 
 				if isInVehicle and not IsPlayerDead(PlayerId()) then
 					local vehicleSpeedMph = math.floor(GetEntitySpeed(vehicle) * 2.236936)

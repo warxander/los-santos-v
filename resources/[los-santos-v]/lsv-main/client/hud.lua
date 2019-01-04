@@ -70,7 +70,7 @@ AddEventHandler('lsv:init', function()
 			Scoreboard.DisplayThisFrame()
 		elseif IsPlayerDead(PlayerId()) then
 			if DeathTimer then
-				if IsControlPressed(0, 24) then DeathTimer = DeathTimer - Settings.spawn.respawnFasterPerControlPressed end
+				if IsControlJustReleased(0, 24) then DeathTimer = DeathTimer - Settings.spawn.respawnFasterPerControlPressed end
 				Gui.DrawProgressBar('RESPAWNING', 1.0 - GetTimeDifference(GetGameTimer(), DeathTimer) / TimeToRespawn, Color.GetHudFromBlipColor(Color.BlipRed()))
 			end
 		end

@@ -82,7 +82,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 					TriggerEvent('lsv:headhunterFinished', false, 'Target has left the area.')
 					return
 				elseif isInJobArea and not IsPlayerDead(PlayerId()) then
-					Gui.DrawBar('DISTANCE', string.format("%.1f", GetDistanceBetweenCoords(targetX, targetY, targetZ, playerX, playerY, playerZ, false)), nil, 2)
+					Gui.DrawProgressBar('DISTANCE', 1.0 - GetDistanceBetweenCoords(targetX, targetY, targetZ, playerX, playerY, playerZ, false) / Settings.headhunter.radius, Color.GetHudFromBlipColor(Color.BlipRed()), 2)
 				end
 
 				SetBlipAlpha(targetAreaBlip, isInJobArea and 96 or 0)

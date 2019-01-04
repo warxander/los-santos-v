@@ -33,7 +33,7 @@ Settings.spawn = {
 	},
 	deathTime = 6000,
 	timeout = 30000,
-	respawnFasterPerControlPressed = 50, -- holy
+	respawnFasterPerControlPressed = 250, -- holy
 	tryCount = 100,
 	radius = { min = 75., increment = 25. },
 }
