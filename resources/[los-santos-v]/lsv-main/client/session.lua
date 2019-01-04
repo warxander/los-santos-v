@@ -29,14 +29,20 @@ RegisterNetEvent('lsv:playerLoaded')
 AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 	SetRandomSeed(GetNetworkTime())
 
-	while GetPlayerSwitchState() ~= 5 do Citizen.Wait(0) end
+	while GetPlayerSwitchState() ~= 5 do
+		HideHudAndRadarThisFrame()
+		Citizen.Wait(0)
+	end
 	ShutdownLoadingScreen()
 	DoScreenFadeOut(0)
 	DoScreenFadeIn(500)
 	ShutdownLoadingScreenNui()
 	Player.Init(playerData)
 	SwitchInPlayer(PlayerPedId())
-	while GetPlayerSwitchState() ~= 12 and not HasCollisionLoadedAroundEntity(PlayerPedId()) do Citizen.Wait(0) end
+	while GetPlayerSwitchState() ~= 12 and not HasCollisionLoadedAroundEntity(PlayerPedId()) do
+		HideHudAndRadarThisFrame()
+		Citizen.Wait(0)
+	end
 	PlaceObjectOnGroundProperly(PlayerPedId())
 	Player.SetFreeze(false)
 
