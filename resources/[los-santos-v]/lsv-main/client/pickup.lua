@@ -33,7 +33,7 @@ AddEventHandler('lsv:onPlayerKilled', function(player, killer)
 		local ped = GetPlayerPed(victim)
 		if DoesEntityExist(ped) and GetRandomFloatInRange(0.0, 1.0) <= Settings.pickup.chance then
 			local x, y, z = table.unpack(GetEntityCoords(ped))
-			SetTimeout(1000, function()
+			SetTimeout(250, function()
 				local pickup = { }
 				pickup.pickup = CreatePickupRotate(GetHashKey('PICKUP_HEALTH_STANDARD'), x, y, z, 0.0, 0.0, 0.0, 8, 1)
 				pickup.blip = Map.CreatePickupBlip(pickup.pickup, 'PICKUP_HEALTH_STANDARD', Color.BlipGreen())
