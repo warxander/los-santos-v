@@ -57,12 +57,12 @@ AddEventHandler('lsv:startVelocity', function()
 				if detonationStage then startTime = startTimeToDetonate
 				elseif preparationStage then startTime = startPreparationStageTime end
 
-				Gui.DrawTimerBar(preparationStage and 0.16 or 0.13, title, math.max(0, math.floor((totalTime - GetGameTimer() + startTime) / 1000)))
+				Gui.DrawTimerBar(title, math.max(0, math.floor((totalTime - GetGameTimer() + startTime) / 1000)))
 
 				if isInVehicle and not IsPlayerDead(PlayerId()) then
 					local vehicleSpeedMph = math.floor(GetEntitySpeed(vehicle) * 2.236936)
-					Gui.DrawBar(0.13, 'SPEED', vehicleSpeedMph..' MPH', nil, 2)
-					Gui.DrawBar(0.13, 'ALMOST DETONATED', almostDetonated, nil, 3)
+					Gui.DrawBar('SPEED', vehicleSpeedMph..' MPH', nil, 2)
+					Gui.DrawBar('ALMOST DETONATED', almostDetonated, nil, 3)
 				end
 
 				Gui.DisplayObjectiveText(isInVehicle and 'Stay above '..Settings.velocity.minSpeed..' mph to avoid detonation.' or 'Enter the ~g~Rocket Voltic~w~.')

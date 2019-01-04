@@ -58,13 +58,16 @@ client_scripts {
 	"modules/settings.lua",
 	"modules/weapon.lua",
 
+	"modules/client/gui/safezone.lua",
+	"modules/client/gui/gui.lua",
+	"modules/client/gui/bar.lua",
+
 	"modules/client/world.lua",
 	"modules/client/streaming.lua",
 	"modules/client/scaleform.lua",
 	"modules/client/skin.lua",
 	"modules/client/color.lua",
 	"modules/client/player.lua",
-	"modules/client/gui.lua",
 	"modules/client/pickup.lua",
 	"modules/client/map.lua",
 	"modules/client/scoreboard.lua",

@@ -116,14 +116,14 @@ AddEventHandler('lsv:init', function()
 			SetBlipAlpha(castleData.zoneBlip, isAnyJobInProgress and 0 or 128)
 
 			if not isAnyJobInProgress and not IsPlayerDead(PlayerId()) then
-				Gui.DrawTimerBar(0.15, 'EVENT END', math.max(0, math.floor((Settings.castle.duration - GetGameTimer() + castleData.startTime) / 1000)))
-				Gui.DrawBar(0.15, 'YOUR SCORE', getPlayerPoints(), nil , 2)
+				Gui.DrawTimerBar('EVENT END', math.max(0, math.floor((Settings.castle.duration - GetGameTimer() + castleData.startTime) / 1000)))
+				Gui.DrawBar('YOUR SCORE', getPlayerPoints(), nil , 2)
 
 				if not Utils.IsTableEmpty(castleData.players) then
 					local barPosition = 3
 					for i = 3, 1, -1 do
 						if castleData.players[i] then
-							Gui.DrawBar(0.15, playerPositions[i]..GetPlayerName(GetPlayerFromServerId(castleData.players[i].id)), castleData.players[i].points,
+							Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(castleData.players[i].id)), castleData.players[i].points,
 								Color.GetHudFromBlipColor(playerColors[i]), barPosition, true)
 							barPosition = barPosition + 1
 						end

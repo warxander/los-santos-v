@@ -1,6 +1,6 @@
+DeathTimer = nil
 TimeToRespawn = Settings.spawn.deathTime
 
-local diedAtTimer = nil
 local isSpawnInProcess = false
 local isFirstSpawn = true
 
@@ -95,18 +95,18 @@ Citizen.CreateThread(function()
 					spawnPlayer()
 					isFirstSpawn = false
 				elseif not isSpawnInProcess then
-					if diedAtTimer and GetTimeDifference(GetGameTimer(), diedAtTimer) > TimeToRespawn or isFirstSpawn then
+					if DeathTimer and GetTimeDifference(GetGameTimer(), DeathTimer) > TimeToRespawn or isFirstSpawn then
 						spawnPlayer()
 					end
 				end
 			end
 
 			if IsPlayerDead(PlayerId()) then
-				if not diedAtTimer then
-					diedAtTimer = GetGameTimer()
+				if not DeathTimer then
+					DeathTimer = GetGameTimer()
 					TimeToRespawn = Settings.spawn.deathTime
 				end
-			else diedAtTimer = nil end
+			else DeathTimer = nil end
 		end
 	end
 end)

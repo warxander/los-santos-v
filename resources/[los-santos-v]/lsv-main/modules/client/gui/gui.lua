@@ -79,8 +79,9 @@ function Gui.DrawText(text, position, font, color, scale, shadow, outline, cente
 	if center then
 		SetTextCentre(true)
 	elseif rightJustify then
-		SetTextWrap(position.x - width, position.x)
 		SetTextRightJustify(true)
+		if width then SetTextWrap(position.x - width, position.x)
+		else SetTextWrap(SafeZone.Left(), position.x) end
 	end
 
 	EndTextCommandDisplayText(position.x, position.y)
@@ -91,33 +92,6 @@ function Gui.DisplayObjectiveText(text)
 	BeginTextCommandPrint("STRING")
 	AddTextComponentString(tostring(text))
 	EndTextCommandPrint(1, true)
-end
-
-
-function Gui.DrawBar(width, text, subText, color, position, isPlayerText)
-	local barIndex = position or 1
-	local rectHeight = 0.038
-	local rectX = GetSafeZoneSize() - width + width / 2
-	local rectY = GetSafeZoneSize() - rectHeight + rectHeight / 2 - (barIndex - 1) * (rectHeight + 0.005)
-	local hTextMargin = 0.003
-	local textFont = isPlayerText and 4 or 0
-	local subTextFont = 0
-	local textColor = color or Color.GetHudFromBlipColor(Color.BlipWhite())
-	local textScale = isPlayerText and 0.5 or 0.32
-	local subTextScale = 0.5
-	local textMargin = isPlayerText and 0.013 or 0.008
-
-	Streaming.RequestStreamedTextureDict("timerbars")
-
-	DrawSprite("timerbars", "all_black_bg", rectX, rectY, width, rectHeight, 0, 0, 0, 0, 128)
-	Gui.DrawText(text, { x = GetSafeZoneSize() - width + hTextMargin, y = rectY - textMargin }, textFont, textColor, textScale, isPlayerText)
-	Gui.DrawText(subText, { x = GetSafeZoneSize() - hTextMargin, y = rectY - 0.0175 }, subTextFont, textColor, subTextScale, false, false, false, true, width / 2)
-end
-
-
-function Gui.DrawTimerBar(width, text, seconds, position, isPlayerText)
-	local textColor = seconds <= 10 and Color.GetHudFromBlipColor(Color.BlipRed()) or Color.GetHudFromBlipColor(Color.BlipWhite())
-	Gui.DrawBar(width, text, string.format("%02.f", math.floor(seconds / 60))..':'..string.format("%02.f", math.floor(seconds % 60)), textColor, position, isPlayerText)
 end
 
 

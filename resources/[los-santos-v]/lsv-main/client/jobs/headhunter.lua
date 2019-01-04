@@ -49,7 +49,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 		while true do
 			Citizen.Wait(0)
 
-			if JobWatcher.IsJobInProgress(jobId) then Gui.DrawTimerBar(0.13, 'JOB TIME', math.floor((Settings.headhunter.time - GetGameTimer() + eventStartTime) / 1000))
+			if JobWatcher.IsJobInProgress(jobId) then Gui.DrawTimerBar('JOB TIME', math.floor((Settings.headhunter.time - GetGameTimer() + eventStartTime) / 1000))
 			else return end
 		end
 	end)
@@ -82,7 +82,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 					TriggerEvent('lsv:headhunterFinished', false, 'Target has left the area.')
 					return
 				elseif isInJobArea and not IsPlayerDead(PlayerId()) then
-					Gui.DrawBar(0.13, 'DISTANCE', string.format("%.1f", GetDistanceBetweenCoords(targetX, targetY, targetZ, playerX, playerY, playerZ, false)), nil, 2)
+					Gui.DrawBar('DISTANCE', string.format("%.1f", GetDistanceBetweenCoords(targetX, targetY, targetZ, playerX, playerY, playerZ, false)), nil, 2)
 				end
 
 				SetBlipAlpha(targetAreaBlip, isInJobArea and 96 or 0)
