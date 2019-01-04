@@ -51,7 +51,7 @@ AddEventHandler('lsv:init', function()
 
 	while true do
 		if WarMenu.IsMenuOpened('interaction') then
-			if IsEntityDead(PlayerPedId()) then
+			if IsPlayerDead(PlayerId()) then
 				WarMenu.CloseMenu()
 			elseif WarMenu.ComboBox('Quick GPS', quickGpsLocations, quickGpsCurrentIndex, quickGpsSelectedIndex, function(currentIndex, selectedIndex) --TODO WTF IS THAT? REFACTOR ME!!!
 					quickGpsSelectedIndex = selectedIndex
@@ -195,7 +195,7 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if quickGpsBlip and not IsEntityDead(PlayerPedId()) then
+		if quickGpsBlip and not IsPlayerDead(PlayerId()) then
 			local x, y, z = GetBlipCoords(quickGpsBlip)
 			local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
 

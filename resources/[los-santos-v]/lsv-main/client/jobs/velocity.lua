@@ -59,7 +59,7 @@ AddEventHandler('lsv:startVelocity', function()
 
 				Gui.DrawTimerBar(preparationStage and 0.16 or 0.13, title, math.max(0, math.floor((totalTime - GetGameTimer() + startTime) / 1000)))
 
-				if isInVehicle then
+				if isInVehicle and not IsPlayerDead(PlayerId()) then
 					local vehicleSpeedMph = math.floor(GetEntitySpeed(vehicle) * 2.236936)
 					Gui.DrawBar(0.13, 'SPEED', vehicleSpeedMph..' MPH', nil, 2)
 					Gui.DrawBar(0.13, 'ALMOST DETONATED', almostDetonated, nil, 3)

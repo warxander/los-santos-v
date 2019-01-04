@@ -81,7 +81,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 				if GetDistanceBetweenCoords(targetX, targetY, targetZ, target.location.x, target.location.y, target.location.z, false) > Settings.headhunter.radius then
 					TriggerEvent('lsv:headhunterFinished', false, 'Target has left the area.')
 					return
-				elseif isInJobArea then
+				elseif isInJobArea and not IsPlayerDead(PlayerId()) then
 					Gui.DrawBar(0.13, 'DISTANCE', string.format("%.1f", GetDistanceBetweenCoords(targetX, targetY, targetZ, playerX, playerY, playerZ, false)), nil, 2)
 				end
 

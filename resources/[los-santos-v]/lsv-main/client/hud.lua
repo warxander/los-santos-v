@@ -68,7 +68,7 @@ AddEventHandler('lsv:init', function()
 
 		if IsControlPressed(0, 20) then
 			Scoreboard.DisplayThisFrame()
-		elseif IsEntityDead(PlayerPedId()) and IsControlPressed(0, 24) then
+		elseif IsPlayerDead(PlayerId()) and IsControlPressed(0, 24) then
 			TimeToRespawn = math.max(0, TimeToRespawn - Settings.spawn.respawnFasterPerControlPressed)
 		end
 	end
@@ -88,7 +88,7 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if IsEntityDead(PlayerPedId()) then
+		if IsPlayerDead(PlayerId()) then
 			StartScreenEffect('DeathFailOut', 0, true)
 			ShakeGameplayCam('DEATH_FAIL_IN_EFFECT_SHAKE', 1.0)
 			PlaySoundFrontend(-1, 'MP_Flash', 'WastedSounds', 1)
@@ -99,7 +99,7 @@ AddEventHandler('lsv:init', function()
 				Citizen.Wait(0)
 			end
 
-			while IsEntityDead(PlayerPedId()) do
+			while IsPlayerDead(PlayerId()) do
 				scaleform:RenderFullscreen()
 				respawnFasterScaleform:RenderFullscreen()
 				Citizen.Wait(0)

@@ -115,7 +115,7 @@ AddEventHandler('lsv:init', function()
 			SetBlipAlpha(castleData.blip, isAnyJobInProgress and 0 or 255)
 			SetBlipAlpha(castleData.zoneBlip, isAnyJobInProgress and 0 or 128)
 
-			if not isAnyJobInProgress then
+			if not isAnyJobInProgress and not IsPlayerDead(PlayerId()) then
 				Gui.DrawTimerBar(0.15, 'EVENT END', math.max(0, math.floor((Settings.castle.duration - GetGameTimer() + castleData.startTime) / 1000)))
 				Gui.DrawBar(0.15, 'YOUR SCORE', getPlayerPoints(), nil , 2)
 

@@ -101,7 +101,7 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			if IsEntityDead(PlayerPedId()) then
+			if IsPlayerDead(PlayerId()) then
 				if not diedAtTimer then
 					diedAtTimer = GetGameTimer()
 					TimeToRespawn = Settings.spawn.deathTime
