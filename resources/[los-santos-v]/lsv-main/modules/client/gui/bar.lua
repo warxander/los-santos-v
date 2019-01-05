@@ -1,11 +1,11 @@
 local Bar = { }
 Bar.__index = Bar
 
-Bar.Width = 0.165
+Bar.Width = 0.145
 Bar.Height = 0.035
 
 Bar.ProgressWidth = Bar.Width / 2.65
-Bar.ProgressHeight = Bar.Height / 2.65
+Bar.ProgressHeight = Bar.Height / 3.25
 
 Bar.Texture = 'all_black_bg'
 Bar.TextureDict = 'timerbars'
@@ -21,12 +21,12 @@ function Gui.DrawBar(title, text, color, index, isPlayerText)
 	local color = color or Color.GetHudFromBlipColor(Color.BlipWhite())
 	local font = isPlayerText and 4 or 0
 	local scale = isPlayerText and 0.5 or 0.3
-	local margin = isPlayerText and 0.017 or 0.009
+	local margin = isPlayerText and 0.015 or 0.007
 
 	DrawSprite(Bar.TextureDict, Bar.Texture, x, y, Bar.Width, Bar.Height, 0.0, 255, 255, 255, 160)
 
 	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - margin }, font, color, scale, isPlayerText, false, false, true)
-	Gui.DrawText(text, { x = SafeZone.Right() - 0.00285, y = y - 0.0165 }, 0, color, 0.425, false, false, false, true)
+	Gui.DrawText(text, { x = SafeZone.Right() - 0.00285, y = y - 0.0175 }, 0, color, 0.5, false, false, false, true)
 end
 
 
@@ -46,7 +46,7 @@ function Gui.DrawProgressBar(title, progress, color, index)
 
 	DrawSprite(Bar.TextureDict, Bar.Texture, x, y, Bar.Width, Bar.Height, 0.0, 255, 255, 255, 160)
 
-	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - 0.009 }, 0, Color.GetHudFromBlipColor(Color.BlipWhite()), 0.3, false, false, false, true)
+	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - 0.011 }, 0, Color.GetHudFromBlipColor(Color.BlipWhite()), 0.3, false, false, false, true)
 
 	local color = color or { r = 255, g = 255, b = 255 }
 	local progressX = x + Bar.Width / 2 - Bar.ProgressWidth / 2 - 0.00285 * 2
