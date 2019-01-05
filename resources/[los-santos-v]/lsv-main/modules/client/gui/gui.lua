@@ -27,17 +27,9 @@ end
 
 
 function Gui.DisplayHelpText(text)
-	if IsHelpMessageBeingDisplayed() then return end
-	BeginTextCommandDisplayHelp("STRING")
+	BeginTextCommandDisplayHelp('STRING')
 	AddTextComponentScaleform(tostring(text))
 	EndTextCommandDisplayHelp(0, 0, 1, -1)
-end
-
-
-function Gui.DisplayHelpTextThisFrame(text)
-	BeginTextCommandDisplayHelp("STRING")
-	AddTextComponentScaleform(tostring(text))
-	EndTextCommandDisplayHelp(0, 0, 0, -1)
 end
 
 
@@ -100,15 +92,13 @@ function Gui.DrawPlaceMarker(x, y, z, radius, r, g, b, a)
 end
 
 
-function Gui.StartJob(jobId, message, tip)
-	FlashMinimapDisplay()
-	PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-	Gui.DisplayNotification(message)
-
-	if not tip then return end
-	SetTimeout(3000, function()
-		if JobWatcher.IsJobInProgress(jobId) then Gui.DisplayHelpText(tip) end
-	end)
+function Gui.StartJob(jobId, name, message, tip)
+	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
+	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', name, message or "")
+	if tip then SetTimeout(11000, function() Gui.DisplayHelpText(tip) end) end
+	PlaySoundFrontend(-1, 'EVENT_START_TEXT', 'GTAO_FM_EVENTS_SOUNDSET', true)
+	scaleform:RenderFullscreenTimed(10000)
+	scaleform:Delete()
 end
 
 

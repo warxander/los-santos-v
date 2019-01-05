@@ -38,7 +38,7 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 	if killer ~= -1 then
 		Db.UpdateKills(killer, function()
 			local killerCash = Settings.cashPerKill + (Settings.cashPerKillstreak * Scoreboard.GetPlayerKillstreak(killer))
-			if JobWatcher.IsDoingJob(victim) then killerCash = killerCash + Settings.cashPerJob end
+			if JobWatcher.IsDoingJob(victim) then killerCash = killerCash + Settings.cashPerMission end
 
 			Scoreboard.UpdateKillstreak(killer)
 

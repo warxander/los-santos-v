@@ -1,12 +1,12 @@
 AddEventHandler('lsv:init', function()
 	--https://pastebin.com/amtjjcHb
 	local tips = {
-		"Performing Jobs and taking out enemy players will give your cash.",
-		"Get extra cash for killing players who are doing a Job.",
+		"Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.",
+		"Performing Missions and taking out enemy players will give your cash.",
+		"Get extra cash for killing players who are doing a Mission.",
 		"Stunt Jumps will give you a small amount of cash.",
 		"Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.",
 		"Use Report Player option from Interaction menu to improve your overall game experience.",
-		"Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.",
 		"Press ~INPUT_ENTER_CHEAT_CODE~ to enlarge the Radar.",
 		"Press ~INPUT_DUCK~ to enter stealth mode.",
 		"Visit ~BLIP_GUN_SHOP~ to buy and customize weapons.",
@@ -71,7 +71,7 @@ AddEventHandler('lsv:init', function()
 		elseif IsPlayerDead(PlayerId()) then
 			if DeathTimer then
 				if IsControlJustReleased(0, 24) then DeathTimer = DeathTimer - Settings.spawn.respawnFasterPerControlPressed end
-				Gui.DrawProgressBar('RESPAWNING', 1.0 - GetTimeDifference(GetGameTimer(), DeathTimer) / TimeToRespawn, Color.GetHudFromBlipColor(Color.BlipRed()))
+				Gui.DrawProgressBar('RESPAWNING', GetTimeDifference(GetGameTimer(), DeathTimer) / TimeToRespawn, Color.GetHudFromBlipColor(Color.BlipRed()))
 			end
 		end
 	end

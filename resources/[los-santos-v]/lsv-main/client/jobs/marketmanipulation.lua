@@ -18,14 +18,15 @@ AddEventHandler('lsv:startMarketManipulation', function()
 		storeBlips[i] = blip
 	end
 
-
 	JobWatcher.StartJob('Market Manipulation')
 
 	local eventStartTime = GetGameTimer()
 	local totalRobberies = 0
 	local jobId = JobWatcher.GetJobId()
 
-	Gui.StartJob(jobId, 'Rob stores and banks within the time limit.')
+	Citizen.CreateThread(function()
+		Gui.StartJob(jobId, 'Market Manipulation', 'Rob stores and banks within the time limit.')
+	end)
 
 	while true do
 		Citizen.Wait(0)
@@ -42,17 +43,18 @@ AddEventHandler('lsv:startMarketManipulation', function()
 					SetBlipAsShortRange(storeBlips[i], true)
 
 					TriggerServerEvent('lsv:marketManipulationRobbed')
+					Gui.DisplayNotification('You grabbed a decent cash.')
 					totalRobberies = totalRobberies + 1
 					storePickups[i] = nil
 
-					World.SetWantedLevel(3)
+					World.SetWantedLevel(2)
 				end
 			end
 
 			Gui.DisplayObjectiveText('Rob stores and banks.')
 
 			if not IsPlayerDead(PlayerId()) then
-				Gui.DrawTimerBar('JOB TIME', math.floor((Settings.marketManipulation.time - GetGameTimer() + eventStartTime) / 1000))
+				Gui.DrawTimerBar('MISSION TIME', math.floor((Settings.marketManipulation.time - GetGameTimer() + eventStartTime) / 1000))
 				Gui.DrawBar('TOTAL ROBBERIES', totalRobberies, nil, 2)
 			end
 		else

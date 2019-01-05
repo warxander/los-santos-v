@@ -37,7 +37,7 @@ local function scaleform_render_timed(scaleform, time, renderFunc, ...)
 	local startTime = GetGameTimer()
 	local transOutTime = 500
 
-	while GetTimeDifference(GetGameTimer(), startTime) < time + transOutTime and not IsPlayerDead(PlayerId()) do
+	while Player.IsActive() and GetTimeDifference(GetGameTimer(), startTime) < time + transOutTime do
 		Citizen.Wait(0)
 
 		if GetGameTimer() - startTime > time then

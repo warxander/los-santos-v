@@ -2,6 +2,8 @@ local logger = Logger:CreateNamedLogger('Castle')
 
 local castleData = nil
 
+local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
+
 
 local function getPlayerPoints()
 	if not castleData then
@@ -67,7 +69,12 @@ AddEventHandler('lsv:finishCastle', function(winners)
 		return
 	end
 
-	if JobWatcher.IsAnyJobInProgress() then
+	if not Player.IsActive() then
+		castleData = nil
+		return
+	end
+
+	if Player.IsOnMission() then
 		castleData = nil
 		FlashMinimapDisplay()
 		Gui.DisplayNotification(Gui.GetPlayerName(winners[1], '~p~')..' won King of the Castle.')
@@ -82,15 +89,12 @@ AddEventHandler('lsv:finishCastle', function(winners)
 		end
 	end
 
-
-	if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
-	elseif not IsPlayerDead(PlayerId()) then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
-
-	local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
-
 	local messageText = isPlayerWinner and 'You won King of the Castle with a score of '..getPlayerPoints() or Gui.GetPlayerName(winners[1])..' became the King.'
 
 	castleData = nil
+
+	if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
+	else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
 
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 
@@ -109,13 +113,13 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		local isAnyJobInProgress = JobWatcher.IsAnyJobInProgress()
-
 		if castleData then
+			local isAnyJobInProgress = JobWatcher.IsAnyJobInProgress()
+
 			SetBlipAlpha(castleData.blip, isAnyJobInProgress and 0 or 255)
 			SetBlipAlpha(castleData.zoneBlip, isAnyJobInProgress and 0 or 128)
 
-			if not isAnyJobInProgress and not IsPlayerDead(PlayerId()) and not IsPlayerSwitchInProgress() then
+			if Player.IsInFreeroam() then
 				Gui.DrawTimerBar('EVENT END', math.max(0, math.floor((Settings.castle.duration - GetGameTimer() + castleData.startTime) / 1000)))
 				Gui.DrawBar('YOUR SCORE', getPlayerPoints(), nil , 2)
 
@@ -135,7 +139,7 @@ AddEventHandler('lsv:init', function()
 
 				Gui.DisplayObjectiveText(isPlayerInCastleArea and 'Defend the ~p~Castle area~w~.' or 'Enter the ~p~Castle area~w~ to become the King.')
 
-				if isPlayerInCastleArea and not IsPlayerDead(PlayerId()) and GetTimeDifference(GetGameTimer(), pointAddedLastTime) >= 1000 then
+				if isPlayerInCastleArea and GetTimeDifference(GetGameTimer(), pointAddedLastTime) >= 1000 then
 					TriggerServerEvent('lsv:castleAddPoint')
 					pointAddedLastTime = GetGameTimer()
 				end

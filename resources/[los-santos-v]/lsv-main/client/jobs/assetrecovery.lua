@@ -39,15 +39,21 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	local isInVehicle = false
 	local jobId = JobWatcher.GetJobId()
 
-	Gui.StartJob(jobId, 'Steal the vehicle and deliver it to the drop-off location.', 'Minimize the vehicle damage to get extra cash.')
-
 	Citizen.CreateThread(function()
+		Gui.StartJob(jobId, 'Asset Recovery', 'Steal the vehicle and deliver it to the drop-off location.')
+
 		while true do
 			Citizen.Wait(0)
 
 			if JobWatcher.IsJobInProgress(jobId) and not IsPlayerDead(PlayerId()) then
-				Gui.DrawTimerBar('JOB TIME', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
-				if isInVehicle then Gui.DrawBar('VEHICLE HEALTH', math.floor(GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle) * 100)..'%', nil, 2) end
+				Gui.DrawTimerBar('MISSION TIME', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
+				if isInVehicle then
+					local healthProgress = GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle)
+					local color = Color.GetHudFromBlipColor(Color.BlipGreen())
+					if healthProgress < 0.33 then color = Color.GetHudFromBlipColor(Color.BlipRed())
+					elseif healthProgress < 0.66 then color = Color.GetHudFromBlipColor(Color.BlipYellow()) end
+					Gui.DrawProgressBar('VEHICLE HEALTH', healthProgress, color, 2)
+				end
 			else return end
 		end
 	end)
@@ -65,14 +71,17 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 			isInVehicle = IsPedInVehicle(PlayerPedId(), vehicle, false)
 
-			Gui.DisplayObjectiveText(isInVehicle and 'Deliver the vehicle to the ~y~drop off~w~.' or 'Steal the ~g~vehicle~w~.')
+			Gui.DisplayObjectiveText(isInVehicle and 'Deliver the ~g~vehicle~w~ to the ~y~drop off~w~.' or 'Steal the ~g~vehicle~w~.')
 
 			SetBlipAlpha(vehicleBlip, isInVehicle and 0 or 255)
 			SetBlipAlpha(dropOffBlip, isInVehicle and 255 or 0)
 			SetBlipAlpha(dropOffLocationBlip, isInVehicle and 128 or 0)
 
 			if isInVehicle then
-				if not NetworkGetEntityIsNetworked(vehicle) then NetworkRegisterEntityAsNetworked(vehicle) end
+				if not NetworkGetEntityIsNetworked(vehicle) then
+					NetworkRegisterEntityAsNetworked(vehicle)
+					SetTimeout(3000, function() Gui.DisplayHelpText('Minimize the vehicle damage to get extra cash.') end)
+				end
 
 				if routeBlip ~= dropOffBlip then
 					SetBlipRoute(dropOffBlip, true)

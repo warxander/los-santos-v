@@ -51,7 +51,7 @@ AddEventHandler('lsv:invitedToCrew', function(player)
 				return
 			end
 
-			Gui.DisplayHelpTextThisFrame('Press ~INPUT_SELECT_CHARACTER_MICHAEL~ to accept Crew Invitation from '..Gui.GetPlayerName(player))
+			Gui.DisplayHelpText('Press ~INPUT_SELECT_CHARACTER_MICHAEL~ to accept Crew Invitation from '..Gui.GetPlayerName(player))
 		end
 	end
 end)

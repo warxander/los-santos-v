@@ -9,7 +9,9 @@ AddEventHandler('lsv:startMostWanted', function()
 	local killedCopPeds = { }
 	local lastNotificationTime = nil
 
-	Gui.StartJob(jobId, 'Stay alive with a wanted level.', 'Kill cops to get extra cash.')
+	Citizen.CreateThread(function()
+		Gui.StartJob(jobId, 'Most Wanted', 'Stay alive with a wanted level.', 'Kill cops to get extra cash.')
+	end)
 
 	while true do
 		Citizen.Wait(0)
@@ -50,7 +52,7 @@ AddEventHandler('lsv:startMostWanted', function()
 
 			local passedTime = GetGameTimer() - eventStartTime
 			local secondsLeft = math.floor((Settings.mostWanted.time - passedTime) / 1000)
-			Gui.DrawTimerBar('JOB TIME', secondsLeft)
+			Gui.DrawTimerBar('MISSION TIME', secondsLeft)
 			Gui.DrawBar('COPS KILLED', copsKilled, nil, 2)
 			Gui.DisplayObjectiveText('Stay alive with a wanted level.')
 		else

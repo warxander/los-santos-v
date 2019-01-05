@@ -162,6 +162,11 @@ function Blip.LosSantosCustoms()
 end
 
 
+function Blip.Mission()
+	return 304
+end
+
+
 function Blip.RocketVoltic()
 	return 533
 end

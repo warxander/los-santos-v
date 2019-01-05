@@ -37,7 +37,9 @@ AddEventHandler('lsv:startVelocity', function()
 
 	local jobId = JobWatcher.GetJobId()
 
-	Gui.StartJob(jobId, 'Enter the Rocket Voltic and stay at the top speed to avoid detonation.', 'Avoid almost detonated state to get extra cash.')
+	Citizen.CreateThread(function()
+		Gui.StartJob(jobId, 'Velocity', 'Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
+	end)
 
 	Citizen.CreateThread(function()
 		while true do
@@ -49,8 +51,8 @@ AddEventHandler('lsv:startVelocity', function()
 				elseif detonationStage then totalTime = Settings.velocity.detonationTime
 				elseif isInVehicle and not preparationStage then totalTime = Settings.velocity.driveTime end
 
-				local title = 'JOB TIME'
-				if preparationStage then title = 'BOMB ACTIVATION'
+				local title = 'MISSION TIME'
+				if preparationStage then title = 'BOMB ACTIVE IN'
 				elseif detonationStage then title = 'DETONATING' end
 
 				local startTime = eventStartTime
@@ -94,6 +96,7 @@ AddEventHandler('lsv:startVelocity', function()
 				if GetTimeDifference(GetGameTimer(), startPreparationStageTime) >= Settings.velocity.preparationTime then
 					preparationStage = false
 					eventStartTime = GetGameTimer()
+					SetTimeout(3000, function() Gui.DisplayHelpText('Avoid almost detonated state to get extra cash.') end)
 				end
 			elseif GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.velocity.driveTime then
 				local vehicleSpeedMph = math.floor(GetEntitySpeed(vehicle) * 2.236936) -- https://runtime.fivem.net/doc/reference.html#_0xD5037BA82E12416F

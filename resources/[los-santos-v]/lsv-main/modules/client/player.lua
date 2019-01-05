@@ -33,6 +33,21 @@ function Player.Init(playerData)
 end
 
 
+function Player.IsActive()
+	return not IsPlayerDead(PlayerId()) and not Player.isFreeze and not IsPlayerSwitchInProgress() and not GetIsLoadingScreenActive()
+end
+
+
+function Player.IsOnMission()
+	return Player.IsActive() and JobWatcher.IsAnyJobInProgress()
+end
+
+
+function Player.IsInFreeroam()
+	return Player.IsActive() and not Player.IsOnMission()
+end
+
+
 function Player.ServerId()
 	return Player.serverId
 end

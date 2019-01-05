@@ -78,7 +78,7 @@ AddEventHandler('lsv:init', function()
 
 			if Vdist(skinshop.x, skinshop.y, skinshop.z, table.unpack(GetEntityCoords(PlayerPedId(), true))) < Settings.placeMarkerRadius then
 				if not WarMenu.IsAnyMenuOpened() then
-					Gui.DisplayHelpTextThisFrame('Press ~INPUT_PICKUP~ to browse characters.')
+					Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to browse characters.')
 
 					if IsControlJustReleased(0, 38) then
 						skinshopOpenedMenuIndex = skinshopIndex

@@ -43,13 +43,13 @@ AddEventHandler('lsv:startHeadhunter', function()
 	local isTargetBlipHided = false
 	local isTargetWandering = false
 
-	Gui.StartJob(jobId, 'Find and assassinate the target.')
-
 	Citizen.CreateThread(function()
+		Gui.StartJob(jobId, 'Headhunter', 'Find and assassinate the target.')
+
 		while true do
 			Citizen.Wait(0)
 
-			if JobWatcher.IsJobInProgress(jobId) then Gui.DrawTimerBar('JOB TIME', math.floor((Settings.headhunter.time - GetGameTimer() + eventStartTime) / 1000))
+			if JobWatcher.IsJobInProgress(jobId) then Gui.DrawTimerBar('MISSION TIME', math.floor((Settings.headhunter.time - GetGameTimer() + eventStartTime) / 1000))
 			else return end
 		end
 	end)
@@ -72,6 +72,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 			if isInJobArea and not isTargetBlipHided then
 				SetBlipRoute(targetBlip, false)
 				isTargetBlipHided = true
+				SetTimeout(1000, function() Gui.DisplayHelpText('Use distance meter at the bottom right corner to locate the target.') end)
 			end
 
 			if isTargetDead then
@@ -97,7 +98,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 			if isTargetDead and not loseTheCopsStage then
 				StartScreenEffect("SuccessTrevor", 0, false)
 				World.SetWantedLevel(Settings.headhunter.wantedLevel)
-				Gui.DisplayHelpText('Lose the cops faster to get extra cash.')
+				SetTimeout(1000, function() Gui.DisplayHelpText('Lose the cops faster to get extra cash.') end)
 				loseTheCopsStage = true
 				loseTheCopsStageStartTime = GetGameTimer()
 			end
