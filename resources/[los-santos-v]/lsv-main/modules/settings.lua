@@ -73,9 +73,9 @@ Settings.skillStat = 20
 Settings.crewInvitationTimeout = 10000
 
 -- Cash
-Settings.cashPerKill = 75
-Settings.cashPerKillstreak = 25
-Settings.cashPerMission = 500
+Settings.cashPerKill = 100
+Settings.cashPerKillstreak = 50
+Settings.cashPerMission = 1000
 Settings.cashGainedNotificationTime = 5000
 
 
@@ -89,7 +89,7 @@ Settings.stuntMinInterval = 30000
 -- Bounties
 Settings.bounty = {
 	timeout = 300000,
-	reward = 750,
+	reward = 1500,
 }
 
 
@@ -107,7 +107,7 @@ Settings.castle = {
 		{ x = -1033.8146972656, y = -1072.1015625, z = 4.0820965766907 },
 	},
 	radius = 50.0,
-	rewards = { 7500, 5000, 2500 },
+	rewards = { 10000, 7500, 5000 },
 }
 
 
@@ -201,9 +201,9 @@ Settings.marketManipulation = {
 		{ ['x'] = 1176.9967041016, ['y'] = 2711.8190917969, ['z'] = 38.097778320313 },
 		{ ['x'] = -104.46595001221, ['y'] = 6477.015625, ['z'] = 32.505443572998 },
 	},
-	minReward = 2500,
-	maxReward = 5000,
-	cashPerRobbery = 250,
+	minReward = 5000,
+	maxReward = 10000,
+	cashPerRobbery = 500,
 }
 
 
@@ -221,8 +221,8 @@ Settings.velocity = {
 		{ x = -1215.8439941406, y = -1346.943359375, z = 3.6422889232635, heading = 293.01425170898 },
 	},
 	minSpeed = 60,
-	minReward = 2500,
-	maxReward = 5000,
+	minReward = 5000,
+	maxReward = 10000,
 	cashPerAboutToDetonate = 500,
 }
 
@@ -230,8 +230,8 @@ Settings.velocity = {
 -- Most Wanted Mission
 Settings.mostWanted = {
 	time = 240000,
-	minReward = 2500,
-	maxReward = 5000,
+	minReward = 5000,
+	maxReward = 10000,
 	cashPerCop = 100,
 	notification = {
 		timeout = 45000,
@@ -289,8 +289,8 @@ Settings.assetRecovery = {
 		},
 	},
 	dropRadius = 25.,
-	minReward = 2500,
-	maxReward = 5000,
+	minReward = 5000,
+	maxReward = 10000,
 }
 
 
@@ -332,13 +332,13 @@ Settings.headhunter = {
 		"WEAPON_RPG",
 	},
 	wantedLevel = 3,
-	minReward = 2500,
-	maxReward = 5000,
+	minReward = 5000,
+	maxReward = 10000,
 }
 
 -- Crate Drops
 Settings.crateDropSettings = {
-	cash = 1000,
+	cash = 2500,
 	weaponClipCount = 5,
 	weapons = {
 		{ id = "WEAPON_COMPACTLAUNCHER", name = "Compact Grenade Launcher" },
