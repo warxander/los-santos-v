@@ -45,14 +45,16 @@ AddEventHandler('lsv:startAssetRecovery', function()
 		while true do
 			Citizen.Wait(0)
 
-			if JobWatcher.IsJobInProgress(jobId) and not IsPlayerDead(PlayerId()) then
-				Gui.DrawTimerBar('MISSION TIME', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
-				if isInVehicle then
-					local healthProgress = GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle)
-					local color = Color.GetHudFromBlipColor(Color.BlipGreen())
-					if healthProgress < 0.33 then color = Color.GetHudFromBlipColor(Color.BlipRed())
-					elseif healthProgress < 0.66 then color = Color.GetHudFromBlipColor(Color.BlipYellow()) end
-					Gui.DrawProgressBar('VEHICLE HEALTH', healthProgress, color, 2)
+			if JobWatcher.IsJobInProgress(jobId) then
+				if not IsPlayerDead(PlayerId()) then
+					Gui.DrawTimerBar('MISSION TIME', math.floor((Settings.assetRecovery.time - GetGameTimer() + eventStartTime) / 1000))
+					if isInVehicle then
+						local healthProgress = GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle)
+						local color = Color.GetHudFromBlipColor(Color.BlipGreen())
+						if healthProgress < 0.33 then color = Color.GetHudFromBlipColor(Color.BlipRed())
+						elseif healthProgress < 0.66 then color = Color.GetHudFromBlipColor(Color.BlipYellow()) end
+						Gui.DrawProgressBar('VEHICLE HEALTH', healthProgress, color, 2)
+					end
 				end
 			else return end
 		end
