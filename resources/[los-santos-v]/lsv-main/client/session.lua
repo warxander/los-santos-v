@@ -38,6 +38,7 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 
 	while GetPlayerSwitchState() ~= 5 do
 		HideHudAndRadarThisFrame()
+		SetCloudHatOpacity(0.01)
 		Citizen.Wait(0)
 	end
 	ShutdownLoadingScreen()
@@ -49,6 +50,7 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 	SwitchInPlayer(PlayerPedId())
 	while GetPlayerSwitchState() ~= 12 and not HasCollisionLoadedAroundEntity(PlayerPedId()) do
 		HideHudAndRadarThisFrame()
+		SetCloudHatOpacity(0.01)
 		Citizen.Wait(0)
 	end
 	PlaceObjectOnGroundProperly(PlayerPedId())
