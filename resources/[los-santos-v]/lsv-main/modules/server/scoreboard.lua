@@ -35,39 +35,39 @@ local function calculateKdRatio(kills, deaths)
 end
 
 
-local function findPlayerIndex(player) -- TODO Use player server id as key
-	for index, playerStats in ipairs(scoreboard) do
-		if playerStats.id == player then return index end
-	end
-
-	return nil
-end
-
-
 local function updateScoreboard()
-	table.sort(scoreboard, sortScoreboard)
+	local clientScoreboard = { }
 
-	TriggerClientEvent('lsv:updateScoreboard', -1, scoreboard)
+	for _, player in pairs(scoreboard) do table.insert(clientScoreboard, player) end
+
+	table.sort(clientScoreboard, sortScoreboard)
+
+	TriggerClientEvent('lsv:updateScoreboard', -1, clientScoreboard)
 end
 
 
 function Scoreboard.AddPlayer(player, playerStats)
-	table.insert(scoreboard, { ['id'] = player, ['name'] = GetPlayerName(player), ['cash'] = playerStats.Cash,
-		['kdRatio'] = calculateKdRatio(playerStats.Kills, playerStats.Deaths),
-		['kills'] = playerStats.Kills, ['deaths'] = playerStats.Deaths, ['killstreak'] = 0 })
+	if not scoreboard[player] then
+		scoreboard[player] = {
+			id = player,
+			name = GetPlayerName(player),
+			cash = playerStats.Cash,
+			kdRatio = calculateKdRatio(playerStats.Kills, playerStats.Deaths),
+			kills = playerStats.Kills,
+			deaths = playerStats.Deaths,
+			killstreak = 0,
+		}
 
-	updateScoreboard()
+		updateScoreboard()
+	end
 end
 
 
 function Scoreboard.RemovePlayer(player)
-	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
-
-	table.remove(scoreboard, playerIndex)
-
-	updateScoreboard()
+	if scoreboard[player] then
+		scoreboard[player] = nil
+		updateScoreboard()
+	end
 end
 
 
@@ -77,87 +77,62 @@ end
 
 
 function Scoreboard.GetRandomPlayer()
-	return scoreboard[math.random(Utils.GetTableLength(scoreboard))].id
+	return Utils.GetRandom(scoreboard).id
 end
 
 
 function Scoreboard.GetPlayerCash(player)
-	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
-
-	return scoreboard[playerIndex].cash
+	return scoreboard[player].cash
 end
 
 
 function Scoreboard.GetPlayerKillstreak(player)
-	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
-
-	return scoreboard[playerIndex].killstreak
+	return scoreboard[player].killstreak
 end
 
 
 function Scoreboard.GetPlayerKills(player)
-	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
-
-	return scoreboard[playerIndex].kills
+	return scoreboard[player].kills
 end
 
 
 function Scoreboard.UpdateCash(player, cash)
-	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
-
-	scoreboard[playerIndex].cash = scoreboard[playerIndex].cash + cash
-
-	updateScoreboard()
+	if scoreboard[player] then
+		scoreboard[player].cash = scoreboard[player].cash + cash
+		updateScoreboard()
+	end
 end
 
 
 function Scoreboard.UpdateKills(player)
-	local playerIndex = findPlayerIndex(player)
+	if scoreboard[player] then
+		scoreboard[player].kills = scoreboard[player].kills + 1
+		scoreboard[player].kdRatio = calculateKdRatio(scoreboard[player].kills, scoreboard[player].deaths)
 
-	if not playerIndex then return end
-
-	scoreboard[playerIndex].kills = scoreboard[playerIndex].kills + 1
-	scoreboard[playerIndex].kdRatio = calculateKdRatio(scoreboard[playerIndex].kills, scoreboard[playerIndex].deaths)
-
-	updateScoreboard()
+		updateScoreboard()
+	end
 end
 
 
 function Scoreboard.UpdateDeaths(player)
-	local playerIndex = findPlayerIndex(player)
+	if scoreboard[player] then
+		scoreboard[player].deaths = scoreboard[player].deaths + 1
+		scoreboard[player].kdRatio = calculateKdRatio(scoreboard[player].kills, scoreboard[player].deaths)
 
-	if not playerIndex then return end
-
-	scoreboard[playerIndex].deaths = scoreboard[playerIndex].deaths + 1
-	scoreboard[playerIndex].kdRatio = calculateKdRatio(scoreboard[playerIndex].kills, scoreboard[playerIndex].deaths)
-
-	updateScoreboard()
+		updateScoreboard()
+	end
 end
 
 
 function Scoreboard.UpdateKillstreak(player)
-	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
-
-	scoreboard[playerIndex].killstreak = scoreboard[playerIndex].killstreak + 1
-
-	updateScoreboard()
+	if scoreboard[player] then
+		scoreboard[player].killstreak = scoreboard[player].killstreak + 1
+	end
 end
 
 
 function Scoreboard.ResetKillstreak(player)
-	local playerIndex = findPlayerIndex(player)
-
-	if not playerIndex then return end
-
-	scoreboard[playerIndex].killstreak = 0
+	if scoreboard[player] then
+		scoreboard[player].killstreak = 0
+	end
 end
