@@ -95,7 +95,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 				local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
 
-				if GetDistanceBetweenCoords(playerX, playerY, playerZ, variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, false) < Settings.assetRecovery.dropRadius then
+				if GetDistanceBetweenCoords(playerX, playerY, playerZ, variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, true) < Settings.assetRecovery.dropRadius then
 					TriggerServerEvent('lsv:assetRecoveryFinished', GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle))
 					return
 				end

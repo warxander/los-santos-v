@@ -13,7 +13,7 @@ AddEventHandler('lsv:init', function()
 				needToRemove = not DoesPickupExist(pickups[i].pickup)
 				if not needToRemove then
 					local pickupX, pickupY, pickupZ = table.unpack(GetPickupCoords(pickups[i].pickup))
-					needToRemove = GetDistanceBetweenCoords(playerX, playerY, playerZ, pickupX, pickupY, pickupZ, false) > Settings.pickup.radius
+					needToRemove = GetDistanceBetweenCoords(playerX, playerY, playerZ, pickupX, pickupY, pickupZ, true) > Settings.pickup.radius
 				end
 			end
 

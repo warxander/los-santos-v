@@ -136,7 +136,7 @@ AddEventHandler('lsv:init', function()
 				end
 
 				local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
-				local isPlayerInCastleArea = GetDistanceBetweenCoords(playerX, playerY, playerZ, castleData.place.x, castleData.place.y, castleData.place.z, false) <= Settings.castle.radius
+				local isPlayerInCastleArea = GetDistanceBetweenCoords(playerX, playerY, playerZ, castleData.place.x, castleData.place.y, castleData.place.z, true) <= Settings.castle.radius
 
 				Gui.DisplayObjectiveText(isPlayerInCastleArea and 'Defend the ~p~Castle area~w~.' or 'Enter the ~p~Castle area~w~ to become the King.')
 
