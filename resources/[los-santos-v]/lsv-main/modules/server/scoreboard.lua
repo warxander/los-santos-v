@@ -76,6 +76,11 @@ function Scoreboard.GetPlayersCount()
 end
 
 
+function Scoreboard.IsPlayerOnline(player)
+	return scoreboard[player]
+end
+
+
 function Scoreboard.GetRandomPlayer()
 	return Utils.GetRandom(scoreboard).id
 end

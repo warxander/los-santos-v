@@ -25,8 +25,10 @@ RegisterServerEvent('baseevents:onPlayerDied')
 AddEventHandler('baseevents:onPlayerDied', function()
 	local player = source
 	Db.UpdateDeaths(player, function()
-		Scoreboard.ResetKillstreak(player)
-		TriggerClientEvent('lsv:onPlayerDied', -1, player, true)
+		if Scoreboard.IsPlayerOnline(player) then
+			Scoreboard.ResetKillstreak(player)
+			TriggerClientEvent('lsv:onPlayerDied', -1, player, true)
+		end
 	end)
 end)
 
@@ -34,22 +36,27 @@ end)
 RegisterServerEvent('baseevents:onPlayerKilled')
 AddEventHandler('baseevents:onPlayerKilled', function(killer)
 	local victim = source
+	local isVictimDoingJob = JobWatcher.IsDoingJob(victim)
 
 	if killer ~= -1 then
 		Db.UpdateKills(killer, function()
-			local killerCash = Settings.cashPerKill + (Settings.cashPerKillstreak * Scoreboard.GetPlayerKillstreak(killer))
-			if JobWatcher.IsDoingJob(victim) then killerCash = killerCash + Settings.cashPerMission end
+			if Scoreboard.IsPlayerOnline(killer) then
+				local killerCash = Settings.cashPerKill + (Settings.cashPerKillstreak * Scoreboard.GetPlayerKillstreak(killer))
+				if isVictimDoingJob then killerCash = killerCash + Settings.cashPerMission end
 
-			Scoreboard.UpdateKillstreak(killer)
+				Scoreboard.UpdateKillstreak(killer)
 
-			Db.UpdateCash(killer, killerCash, function()
-				TriggerClientEvent('lsv:onPlayerKilled', -1, victim, killer, getKilledMessage())
-			end)
+				Db.UpdateCash(killer, killerCash, function()
+					TriggerClientEvent('lsv:onPlayerKilled', -1, victim, killer, getKilledMessage())
+				end)
+			end
 		end)
 	end
 
 	Db.UpdateDeaths(victim, function()
-		Scoreboard.ResetKillstreak(victim)
+		if Scoreboard.IsPlayerOnline(victim) then
+			Scoreboard.ResetKillstreak(victim)
+		end
 
 		if killer ~= -1 then return end
 
