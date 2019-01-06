@@ -151,6 +151,7 @@ AddEventHandler('lsv:init', function()
 						blip = AddBlipForEntity(ped)
 						SetBlipHighDetail(blip, true)
 						SetBlipScale(blip, 0.9)
+						SetBlipCategory(blip, 7)
 					end
 
 					local isPlayerDead = IsPlayerDead(id)
