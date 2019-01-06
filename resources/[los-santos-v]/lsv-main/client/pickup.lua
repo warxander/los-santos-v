@@ -9,7 +9,7 @@ AddEventHandler('lsv:init', function()
 
 		for i = Utils.GetTableLength(pickups), 1, -1 do
 			local needToRemove = HasPickupBeenCollected(pickups[i].pickup)
-			if needToRemove then Gui.DisplayNotification('Picked up First Aid Kit.') else
+			if needToRemove then Gui.DisplayNotification('Picked up '..Pickup.GetName(pickups[i].pickup)..'.') else
 				needToRemove = not DoesPickupExist(pickups[i].pickup)
 				if not needToRemove then
 					local pickupX, pickupY, pickupZ = table.unpack(GetPickupCoords(pickups[i].pickup))
@@ -31,14 +31,21 @@ AddEventHandler('lsv:onPlayerKilled', function(player, killer)
 	local victim = GetPlayerFromServerId(player)
 	if killer == Player.ServerId() and NetworkIsPlayerActive(victim) then
 		local ped = GetPlayerPed(victim)
-		if DoesEntityExist(ped) and GetRandomFloatInRange(0.0, 1.0) <= Settings.pickup.chance then
-			local x, y, z = table.unpack(GetEntityCoords(ped))
-			SetTimeout(250, function()
+		if DoesEntityExist(ped) then
+			local pedDrop = nil
+			for _, drop in ipairs(Settings.pickup.drops) do
+				if GetRandomFloatInRange(0.0, 1.0) <= drop.chance then
+					pedDrop = drop
+					break
+				end
+			end
+			if pedDrop then
+				local x, y, z = table.unpack(GetEntityCoords(ped))
 				local pickup = { }
-				pickup.pickup = CreatePickupRotate(GetHashKey('PICKUP_HEALTH_STANDARD'), x, y, z, 0.0, 0.0, 0.0, 8, 1)
-				pickup.blip = Map.CreatePickupBlip(pickup.pickup, 'PICKUP_HEALTH_STANDARD', Color.BlipGreen())
+				pickup.pickup = CreatePickupRotate(GetHashKey(pedDrop.id), x, y, z, 0.0, 0.0, 0.0, 8, 1)
+				pickup.blip = Map.CreatePickupBlip(pickup.pickup, pedDrop.id)
 				table.insert(pickups, pickup)
-			end)
+			end
 		end
 	end
 end)

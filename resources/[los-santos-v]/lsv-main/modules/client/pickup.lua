@@ -91,8 +91,9 @@ end
 
 
 function Pickup.GetName(id)
+	local pickupHash = GetPickupHash(id)
 	for _, pickup in ipairs(pickups) do
-		if pickup.id == id then
+		if GetHashKey(pickup.id) == pickupHash then
 			local name = pickup.name
 			if pickup.ammo then name = name.." Ammo" end
 			return name

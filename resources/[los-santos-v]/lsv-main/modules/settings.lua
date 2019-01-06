@@ -42,7 +42,17 @@ Settings.spawn = {
 -- Pickup
 Settings.pickup = {
 	radius = 150.,
-	chance = 0.20,
+	drops = {
+		{
+			id = 'PICKUP_ARMOUR_STANDARD',
+			chance = 0.15,
+		},
+
+		{
+			id = 'PICKUP_HEALTH_STANDARD',
+			chance = 0.20,
+		},
+	}
 }
 
 
