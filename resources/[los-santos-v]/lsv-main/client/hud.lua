@@ -6,11 +6,11 @@ AddEventHandler('lsv:init', function()
 		"Get extra cash for killing players who are doing a Mission.",
 		"Stunt Jumps will give you a small amount of cash.",
 		"Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.",
-		"Use Report Player option from Interaction menu to improve your overall game experience.",
+		"Use Interaction Menu or visit ~BLIP_GUN_SHOP~ to customize your loadout.",
 		"Press ~INPUT_ENTER_CHEAT_CODE~ to enlarge the Radar.",
 		"Press ~INPUT_DUCK~ to enter stealth mode.",
-		"Visit ~BLIP_GUN_SHOP~ to buy and customize weapons.",
 		"Visit ~BLIP_CLOTHES_STORE~ to change your character.",
+		"Use Report Player option from Interaction menu to improve your overall game experience.",
 	}
 	local tipTime = 10000
 	local tipInterval = 30000
