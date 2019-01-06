@@ -16,11 +16,18 @@ AddEventHandler('playerSpawned', function()
 	end
 end)
 
-SetManualShutdownLoadingScreenNui(true)
-SwitchOutPlayer(PlayerPedId(), 0, 1)
+
 Citizen.CreateThread(function()
-	if not IsPlayerSwitchInProgress() then
-		SwitchOutPlayer(PlayerPedId(), 0, 1)
+	SetManualShutdownLoadingScreenNui(true)
+	StartAudioScene('MP_LEADERBOARD_SCENE')
+
+	while true do
+		Citizen.Wait(0)
+
+		if PlayerPedId() ~= -1 then
+			SwitchOutPlayer(PlayerPedId(), 0, 1)
+			return
+		end
 	end
 end)
 
@@ -35,8 +42,9 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 	end
 	ShutdownLoadingScreen()
 	DoScreenFadeOut(0)
-	DoScreenFadeIn(500)
 	ShutdownLoadingScreenNui()
+	DoScreenFadeIn(500)
+	StopAudioScene('MP_LEADERBOARD_SCENE')
 	Player.Init(playerData)
 	SwitchInPlayer(PlayerPedId())
 	while GetPlayerSwitchState() ~= 12 and not HasCollisionLoadedAroundEntity(PlayerPedId()) do
