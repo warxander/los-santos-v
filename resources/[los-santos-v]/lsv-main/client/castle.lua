@@ -20,7 +20,7 @@ end
 
 
 RegisterNetEvent('lsv:startCastle')
-AddEventHandler('lsv:startCastle', function(placeIndex, passedTime)
+AddEventHandler('lsv:startCastle', function(placeIndex, passedTime, players)
 	local place = Settings.castle.places[placeIndex]
 
 	castleData = { }
@@ -32,7 +32,7 @@ AddEventHandler('lsv:startCastle', function(placeIndex, passedTime)
 	SetBlipColour(castleData.blip, Color.BlipPurple())
 	SetBlipHighDetail(castleData.blip, true)
 
-	if not JobWatcher.IsAnyJobInProgress() then
+	if Player.IsInFreeroam() then
 		FlashMinimapDisplay()
 		Map.SetBlipFlashes(castleData.blip)
 		PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
@@ -42,6 +42,7 @@ AddEventHandler('lsv:startCastle', function(placeIndex, passedTime)
 	castleData.startTime = GetGameTimer()
 	if passedTime then castleData.startTime = castleData.startTime - passedTime end
 	castleData.players = { }
+	if players then castleData.players = players end
 end)
 
 
