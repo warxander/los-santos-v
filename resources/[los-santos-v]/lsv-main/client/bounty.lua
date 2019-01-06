@@ -1,5 +1,3 @@
--- TODO Instancing players?
-
 local bountyText = 'Watch out, someone has put a Bounty on you.'
 
 RegisterNetEvent('lsv:setBounty')
@@ -30,7 +28,7 @@ end)
 
 RegisterNetEvent('lsv:bountyKilled')
 AddEventHandler('lsv:bountyKilled', function(killer)
-	if Player.ServerId() ~= killer then
+	if Player.ServerId() ~= killer and World.GetBountyPlayerId() then
 		Gui.DisplayNotification('The Bounty on '..Gui.GetPlayerName(World.GetBountyPlayerId(), nil, true)..' has been claimed by '..Gui.GetPlayerName(killer))
 	end
 
