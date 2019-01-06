@@ -21,8 +21,6 @@ AddEventHandler('lsv:startHeadhunter', function()
 	SetBlipColour(targetBlip, Color.BlipRed())
 	SetBlipHighDetail(targetBlip, true)
 	SetBlipColour(targetBlip, Color.BlipRed())
-	SetBlipRoute(targetBlip, true)
-	SetBlipRouteColour(targetBlip, Color.BlipRed())
 
 	targetAreaBlip = Map.CreateRadiusBlip(target.location.x, target.location.y, target.location.z, Settings.headhunter.radius, Color.BlipRed())
 
@@ -70,7 +68,6 @@ AddEventHandler('lsv:startHeadhunter', function()
 			end
 
 			if isInJobArea and not isTargetBlipHided then
-				SetBlipRoute(targetBlip, false)
 				isTargetBlipHided = true
 				SetTimeout(1000, function() Gui.DisplayHelpText('Use distance meter at the bottom right corner to locate the target.') end)
 			end

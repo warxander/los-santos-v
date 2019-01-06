@@ -20,14 +20,12 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	SetBlipHighDetail(vehicleBlip, true)
 	SetBlipSprite(vehicleBlip, Blip.PersonalVehicleCar())
 	SetBlipColour(vehicleBlip, Color.BlipGreen())
-	SetBlipRouteColour(vehicleBlip, Color.BlipGreen())
 	SetBlipAlpha(vehicleBlip, 0)
 	Map.SetBlipText(vehicleBlip, 'Vehicle')
 
 	dropOffBlip = AddBlipForCoord(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z)
 	SetBlipColour(dropOffBlip, Color.BlipYellow())
 	SetBlipHighDetail(dropOffBlip, true)
-	SetBlipRouteColour(dropOffBlip, Color.BlipYellow())
 	SetBlipAlpha(dropOffBlip, 0)
 
 	dropOffLocationBlip = Map.CreateRadiusBlip(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, Settings.assetRecovery.dropRadius, Color.BlipYellow())
@@ -86,11 +84,9 @@ AddEventHandler('lsv:startAssetRecovery', function()
 				end
 
 				if routeBlip ~= dropOffBlip then
-					SetBlipRoute(dropOffBlip, true)
 					routeBlip = dropOffBlip
 				end
 			elseif routeBlip ~= vehicleBlip then
-				SetBlipRoute(vehicleBlip, true)
 				routeBlip = vehicleBlip
 			end
 

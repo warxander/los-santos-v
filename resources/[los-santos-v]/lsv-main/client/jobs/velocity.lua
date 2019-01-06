@@ -19,8 +19,6 @@ AddEventHandler('lsv:startVelocity', function()
 	SetBlipHighDetail(vehicleBlip, true)
 	SetBlipSprite(vehicleBlip, Blip.RocketVoltic())
 	SetBlipColour(vehicleBlip, Color.BlipGreen())
-	SetBlipRouteColour(vehicleBlip, Color.BlipGreen())
-	SetBlipRoute(vehicleBlip, true)
 
 	JobWatcher.StartJob('Velocity')
 
