@@ -43,11 +43,6 @@ AddEventHandler('lsv:init', function()
 	WarMenu.CreateSubMenu('reportPlayer', 'interaction', 'Report Player')
 	WarMenu.CreateSubMenu('reportReason', 'reportPlayer', 'Select a reason for reporting')
 
-	-- This is the most dirty hack I've ever made
-	-- But WarMenu really sucks
-	RequestStreamedTextureDict('shopui_title_gunclub')
-	while not HasStreamedTextureDictLoaded('shopui_title_gunclub') do Citizen.Wait(0) end
-
 	while true do
 		if WarMenu.IsMenuOpened('interaction') then
 			if IsPlayerDead(PlayerId()) then
