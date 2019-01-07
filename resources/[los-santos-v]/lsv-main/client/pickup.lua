@@ -8,13 +8,10 @@ AddEventHandler('lsv:init', function()
 		local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId()))
 
 		for i = Utils.GetTableLength(pickups), 1, -1 do
-			local needToRemove = HasPickupBeenCollected(pickups[i].pickup)
-			if needToRemove then Gui.DisplayNotification('Picked up '..Pickup.GetName(pickups[i].pickup)..'.') else
-				needToRemove = not DoesPickupExist(pickups[i].pickup)
-				if not needToRemove then
-					local pickupX, pickupY, pickupZ = table.unpack(GetPickupCoords(pickups[i].pickup))
-					needToRemove = GetDistanceBetweenCoords(playerX, playerY, playerZ, pickupX, pickupY, pickupZ, true) > Settings.pickup.radius
-				end
+			local needToRemove = HasPickupBeenCollected(pickups[i].pickup) or not DoesPickupExist(pickups[i].pickup)
+			if not needToRemove then
+				local pickupX, pickupY, pickupZ = table.unpack(GetPickupCoords(pickups[i].pickup))
+				needToRemove = GetDistanceBetweenCoords(playerX, playerY, playerZ, pickupX, pickupY, pickupZ, true) > Settings.pickup.radius
 			end
 
 			if needToRemove then
