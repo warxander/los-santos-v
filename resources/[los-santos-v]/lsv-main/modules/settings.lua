@@ -62,7 +62,6 @@ Settings.placeMarkerOpacity = 196
 
 
 -- Scoreboard
-Settings.scoreboardMaxPlayers = 16
 Settings.kdRatioMinStat = 100
 
 
