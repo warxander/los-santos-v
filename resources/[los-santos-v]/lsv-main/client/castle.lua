@@ -48,12 +48,9 @@ end)
 
 RegisterNetEvent('lsv:updateCastlePlayers')
 AddEventHandler('lsv:updateCastlePlayers', function(players)
-	if not castleData then
-		logger:Warning('Attempt to update players for empty data')
-		return
+	if castleData then
+		castleData.players = players
 	end
-
-	castleData.players = players
 end)
 
 
