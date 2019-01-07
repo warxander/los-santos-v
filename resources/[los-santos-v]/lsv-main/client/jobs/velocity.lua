@@ -37,40 +37,40 @@ AddEventHandler('lsv:startVelocity', function()
 
 	Citizen.CreateThread(function()
 		Gui.StartJob(jobId, 'Velocity', 'Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
-	end)
 
-	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(0)
 
 			if JobWatcher.IsJobInProgress(jobId) then
-				local totalTime = Settings.velocity.enterVehicleTime
-				if preparationStage then totalTime = Settings.velocity.preparationTime
-				elseif detonationStage then totalTime = Settings.velocity.detonationTime
-				elseif isInVehicle and not preparationStage then totalTime = Settings.velocity.driveTime end
+				if not IsPlayerDead(PlayerId()) then
+					local totalTime = Settings.velocity.enterVehicleTime
+					if preparationStage then totalTime = Settings.velocity.preparationTime
+					elseif detonationStage then totalTime = Settings.velocity.detonationTime
+					elseif isInVehicle and not preparationStage then totalTime = Settings.velocity.driveTime end
 
-				local title = 'MISSION TIME'
-				if preparationStage then title = 'BOMB ACTIVE IN'
-				elseif detonationStage then title = 'DETONATING' end
+					local title = 'MISSION TIME'
+					if preparationStage then title = 'BOMB ACTIVE IN'
+					elseif detonationStage then title = 'DETONATING' end
 
-				local startTime = eventStartTime
-				if detonationStage then startTime = startTimeToDetonate
-				elseif preparationStage then startTime = startPreparationStageTime end
+					local startTime = eventStartTime
+					if detonationStage then startTime = startTimeToDetonate
+					elseif preparationStage then startTime = startPreparationStageTime end
 
-				local timeLeft = totalTime - GetGameTimer() + startTime
-				if detonationStage then
-					Gui.DrawProgressBar(title, 1.0 - timeLeft / Settings.velocity.detonationTime, Color.GetHudFromBlipColor(Color.BlipRed()))
-				else
-					Gui.DrawTimerBar(title, math.floor(timeLeft / 1000))
+					local timeLeft = totalTime - GetGameTimer() + startTime
+					if detonationStage then
+						Gui.DrawProgressBar(title, 1.0 - timeLeft / Settings.velocity.detonationTime, Color.GetHudFromBlipColor(Color.BlipRed()))
+					else
+						Gui.DrawTimerBar(title, math.floor(timeLeft / 1000))
+					end
+
+					if isInVehicle then
+						local vehicleSpeedMph = math.floor(GetEntitySpeed(vehicle) * 2.236936)
+						Gui.DrawBar('SPEED', vehicleSpeedMph..' MPH', nil, 2)
+						Gui.DrawBar('ALMOST DETONATED', almostDetonated, nil, 3)
+					end
+
+					Gui.DisplayObjectiveText(isInVehicle and 'Stay above '..Settings.velocity.minSpeed..' mph to avoid detonation.' or 'Enter the ~g~Rocket Voltic~w~.')
 				end
-
-				if isInVehicle and not IsPlayerDead(PlayerId()) then
-					local vehicleSpeedMph = math.floor(GetEntitySpeed(vehicle) * 2.236936)
-					Gui.DrawBar('SPEED', vehicleSpeedMph..' MPH', nil, 2)
-					Gui.DrawBar('ALMOST DETONATED', almostDetonated, nil, 3)
-				end
-
-				Gui.DisplayObjectiveText(isInVehicle and 'Stay above '..Settings.velocity.minSpeed..' mph to avoid detonation.' or 'Enter the ~g~Rocket Voltic~w~.')
 			else return end
 		end
 	end)
