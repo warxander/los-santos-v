@@ -167,21 +167,24 @@ AddEventHandler('lsv:init', function()
 
 					local serverId = GetPlayerServerId(id)
 					local isPlayerBounty = serverId == World.GetBountyPlayerId()
+					local isPlayerHotProperty = serverId == World.HotPropertyCurrentPlayer
 					local isPlayerInCrew = Player.isCrewMember(serverId)
 					local isPlayerDoingJob = JobWatcher.IsDoingJob(serverId)
 
 					local blipSprite = Blip.Standard()
 					if isPlayerDead then blipSprite = Blip.Dead()
+					elseif isPlayerHotProperty then blipSprite = Blip.HotProperty()
 					elseif isPlayerBounty then blipSprite = Blip.BountyHit()
 					elseif isPlayerDoingJob then blipSprite = Blip.PolicePlayer() end
 
 					local blipColor = Color.BlipWhite()
 					if isPlayerInCrew then blipColor = Color.BlipBlue()
+					elseif isPlayerHotProperty then blipColor = Color.BlipRed()
 					elseif isPlayerBounty then blipColor = Color.BlipRed()
 					elseif isPlayerDoingJob then blipColor = Color.BlipPurple() end
 
 					local blipAlpha = 255
-					if GetPedStealthMovement(ped) and not isPlayerInCrew then blipAlpha = 0 end
+					if GetPedStealthMovement(ped) and not isPlayerInCrew and not isPlayerBounty and not isPlayerHotProperty then blipAlpha = 0 end
 
 					if GetBlipSprite(blip) ~= blipSprite then SetBlipSprite(blip, blipSprite) end
 					if GetBlipAlpha(blip) ~= blipAlpha then SetBlipAlpha(blip, blipAlpha) end

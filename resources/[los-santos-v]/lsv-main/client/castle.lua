@@ -6,11 +6,6 @@ local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
 
 
 local function getPlayerPoints()
-	if not castleData then
-		logger:Error('Attempt to get player points from empty data')
-		return nil
-	end
-
 	for i, v in pairs(castleData.players) do
 		if v.id == Player.ServerId() then return v.points end
 	end

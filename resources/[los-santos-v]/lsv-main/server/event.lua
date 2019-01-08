@@ -1,6 +1,6 @@
 local logger = Logger:CreateNamedLogger('Event')
 
-local events = { 'Castle' }
+local events = { 'HotProperty', 'Castle' }
 local eventIndex = 0
 local isEventInProgress = false
 

@@ -56,6 +56,7 @@ local pickupBlips = {
 	["PICKUP_ARMOUR_STANDARD"] = 175,
 	["PICKUP_HEALTH_SNACK"] = 153,
 	["PICKUP_HEALTH_STANDARD"] = 153,
+	["PICKUP_MONEY_CASE"] = 436,
 }
 
 
@@ -146,6 +147,9 @@ function Blip.CrateDrop()
 	return 306
 end
 
+function Blip.HotProperty()
+	return 436
+end
 
 function Blip.AmmuNation()
 	return 110

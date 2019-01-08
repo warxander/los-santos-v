@@ -2,6 +2,7 @@ World = { }
 
 local bountyPlayerId = nil
 
+World.HotPropertyCurrentPlayer = nil
 
 function World.EnablePvp(enabled)
 	NetworkSetFriendlyFireOption(enabled)
