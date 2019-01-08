@@ -71,7 +71,7 @@ end)
 
 
 function Scoreboard.DisplayThisFrame()
-	local scoreboardPosition = { ['x'] = (1.0 - tableWidth) / 2, ['y'] = SafeZone.Left() }
+	local scoreboardPosition = { ['x'] = (1.0 - tableWidth) / 2, ['y'] = SafeZone.Top() }
 
 	local tableHeader = { ['y'] = scoreboardPosition.y + tableHeight / 2 }
 	local tableHeaderText = { ['y'] = tableHeader.y - tableHeight / 2 + tableTextVerticalMargin }
