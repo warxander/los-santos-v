@@ -3,7 +3,7 @@ AddEventHandler('lsv:headhunterFinished', function(eventStartTime, loseTheCopsSt
 	local player = source
 
 	local totalLoseTheCopsTime = eventStartTime + Settings.headhunter.time - loseTheCopsStartTime
-	local reward = math.max(Settings.headhunter.minReward, math.floor((eventEndTime - totalLoseTheCopsTime) / totalLoseTheCopsTime * Settings.headhunter.maxReward))
+	local reward = Settings.headhunter.minReward + math.floor((eventEndTime - totalLoseTheCopsTime) / totalLoseTheCopsTime * (Settings.headhunter.maxReward - Settings.headhunter.minReward))
 
 	Db.UpdateCash(player, reward, function()
 		TriggerClientEvent('lsv:headhunterFinished', player, true)
