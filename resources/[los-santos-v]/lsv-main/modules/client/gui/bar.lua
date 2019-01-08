@@ -30,7 +30,7 @@ function Gui.DrawBar(title, text, color, index, isPlayerText)
 end
 
 
-function Gui.DrawTimerBar(text, seconds, index, isPlayerText)
+function Gui.DrawTimerBar(text, seconds, isPlayerText, index)
 	local color = seconds <= 10 and Color.GetHudFromBlipColor(Color.BlipRed()) or Color.GetHudFromBlipColor(Color.BlipWhite())
 	Gui.DrawBar(text, string.format("%02.f", math.floor(seconds / 60))..':'..string.format("%02.f", math.floor(seconds % 60)), color, index, isPlayerText)
 end

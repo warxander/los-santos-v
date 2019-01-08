@@ -238,10 +238,8 @@ Settings.velocity = {
 
 -- Most Wanted Mission
 Settings.mostWanted = {
-	time = 240000,
-	minReward = 5000,
+	time = 600000,
 	maxReward = 10000,
-	cashPerCop = 100,
 	notification = {
 		timeout = 45000,
 		messages = {

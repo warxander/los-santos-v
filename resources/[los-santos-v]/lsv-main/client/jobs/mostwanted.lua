@@ -1,29 +1,24 @@
 AddEventHandler('lsv:startMostWanted', function()
-	World.SetWantedLevel(2)
-
 	JobWatcher.StartJob('Most Wanted')
 
 	local eventStartTime = GetGameTimer()
 	local jobId = JobWatcher.GetJobId()
-	local copsKilled = 0
-	local killedCopPeds = { }
 	local lastNotificationTime = nil
 
 	Citizen.CreateThread(function()
-		Gui.StartJob(jobId, 'Most Wanted', 'Stay alive with a wanted level.', 'Kill cops to get extra cash.')
+		Gui.StartJob(jobId, 'Most Wanted', 'Survive the longest with a wanted level.')
 	end)
 
 	while true do
 		Citizen.Wait(0)
 
 		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.mostWanted.time then
-			if IsPlayerDead(PlayerId()) then
-				TriggerEvent('lsv:mostWantedFinished', false)
-				return
-			end
+			World.SetWantedLevel(5)
 
-			if GetPlayerWantedLevel(PlayerId()) == 0 then
-				TriggerEvent('lsv:mostWantedFinished', false, 'You lose the cops.')
+			local passedTime = GetGameTimer() - eventStartTime
+
+			if IsPlayerDead(PlayerId()) then
+				TriggerServerEvent('lsv:mostWantedFinished', passedTime)
 				return
 			end
 
@@ -32,31 +27,12 @@ AddEventHandler('lsv:startMostWanted', function()
 				lastNotificationTime = GetGameTimer()
 			end
 
-			local handle, ped = FindFirstPed()
-			if handle ~= -1 then
-				repeat
-					if IsPedDeadOrDying(ped, true) then
-						local pedType = GetPedType(ped)
-						local isPedCop = pedType == 6 or pedType == 27
-
-						if isPedCop and GetPedSourceOfDeath(ped) == PlayerPedId() and not Utils.IndexOf(killedCopPeds, NetworkGetNetworkIdFromEntity(ped)) then
-							table.insert(killedCopPeds, PedToNet(ped))
-							TriggerServerEvent('lsv:mostWantedCopKilled')
-							copsKilled = copsKilled + 1
-						end
-					end
-					status, ped = FindNextPed(handle)
-				until not status
-				EndFindPed(handle)
-			end
-
-			local passedTime = GetGameTimer() - eventStartTime
 			local secondsLeft = math.floor((Settings.mostWanted.time - passedTime) / 1000)
 			Gui.DrawTimerBar('MISSION TIME', secondsLeft)
-			Gui.DrawBar('COPS KILLED', copsKilled, nil, 2)
-			Gui.DisplayObjectiveText('Stay alive with a wanted level.')
+			Gui.DrawTimerBar('TIME SURVIVED', math.floor(passedTime / 1000), nil, 2)
+			Gui.DisplayObjectiveText('Survive the longest with a wanted level.')
 		else
-			TriggerServerEvent('lsv:mostWantedFinished')
+			TriggerServerEvent('lsv:mostWantedFinished', Settings.mostWanted.time)
 			return
 		end
 	end
