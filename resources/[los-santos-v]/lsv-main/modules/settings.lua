@@ -102,9 +102,15 @@ Settings.bounty = {
 }
 
 
+-- Events
+Settings.event = {
+	timeout = 600000,
+	minPlayers = 3,
+}
+
+
 -- King of the Castle
 Settings.castle = {
-	timeout = 600000,
 	duration = 900000,
 	places = {
 		{ x = -429.50573730469, y = 1109.7385253906, z = 327.68228149414 },

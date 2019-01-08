@@ -35,6 +35,7 @@ server_scripts {
 	"server/bounty.lua",
 	"server/guard.lua",
 	"server/castle.lua",
+	"server/event.lua",
 	"server/crew.lua",
 	"server/pingkick.lua",
 	"server/stunt.lua",
