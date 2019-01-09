@@ -26,8 +26,8 @@ end)
 
 
 RegisterNetEvent('lsv:playerDisconnected')
-AddEventHandler('lsv:playerDisconnected', function(name)
-	Gui.DisplayNotification('<C>'..name..'</C> left.')
+AddEventHandler('lsv:playerDisconnected', function(name, player, reason)
+	Gui.DisplayNotification('<C>'..name..'</C> left ~m~('..reason..')')
 end)
 
 

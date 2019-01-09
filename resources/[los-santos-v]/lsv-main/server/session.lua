@@ -23,7 +23,7 @@ AddEventHandler('playerDropped', function(reason)
 
 	Scoreboard.RemovePlayer(player)
 
-	TriggerClientEvent('lsv:playerDisconnected', -1, playerName, player)
+	TriggerClientEvent('lsv:playerDisconnected', -1, playerName, player, reason)
 
 	TriggerEvent('lsv:playerDropped', player)
 end)
