@@ -2,7 +2,7 @@ local bountyText = 'Watch out, someone has put a Bounty on you.'
 
 RegisterNetEvent('lsv:setBounty')
 AddEventHandler('lsv:setBounty', function(bountyServerPlayerId)
-	World.SetBountyPlayerId(bountyServerPlayerId)
+	World.BountyPlayer = bountyServerPlayerId
 
 	if not bountyServerPlayerId then return end
 
@@ -28,9 +28,9 @@ end)
 
 RegisterNetEvent('lsv:bountyKilled')
 AddEventHandler('lsv:bountyKilled', function(killer)
-	if Player.ServerId() ~= killer and World.GetBountyPlayerId() then
-		Gui.DisplayNotification('The Bounty on '..Gui.GetPlayerName(World.GetBountyPlayerId(), nil, true)..' has been claimed by '..Gui.GetPlayerName(killer))
+	if Player.ServerId() ~= killer and World.BountyPlayer then
+		Gui.DisplayNotification('The Bounty on '..Gui.GetPlayerName(World.BountyPlayer, nil, true)..' has been claimed by '..Gui.GetPlayerName(killer))
 	end
 
-	World.SetBountyPlayerId(nil)
+	World.BountyPlayer = nil
 end)

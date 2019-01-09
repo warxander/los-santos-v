@@ -166,8 +166,8 @@ AddEventHandler('lsv:init', function()
 					local isPlayerDead = IsPlayerDead(id)
 
 					local serverId = GetPlayerServerId(id)
-					local isPlayerBounty = serverId == World.GetBountyPlayerId()
-					local isPlayerHotProperty = serverId == World.HotPropertyCurrentPlayer
+					local isPlayerBounty = serverId == World.BountyPlayer
+					local isPlayerHotProperty = serverId == World.HotPropertyPlayer
 					local isPlayerInCrew = Player.isCrewMember(serverId)
 					local isPlayerDoingJob = JobWatcher.IsDoingJob(serverId)
 

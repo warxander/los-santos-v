@@ -52,7 +52,7 @@ AddEventHandler('lsv:startHotProperty', function(placeIndex, passedTime, players
 	propertyData.players = { }
 	if players then propertyData.players = players end
 
-	World.HotPropertyCurrentPlayer = currentPlayer
+	World.HotPropertyPlayer = currentPlayer
 
 	local playerColors = { Color.BlipYellow(), Color.BlipGrey(), Color.BlipBrown() }
 	local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
@@ -72,7 +72,7 @@ AddEventHandler('lsv:startHotProperty', function(placeIndex, passedTime, players
 			end
 		end
 
-		if World.HotPropertyCurrentPlayer == Player.ServerId() and GetTimeDifference(GetGameTimer(), lastTimeIncreased) >= 1000 then
+		if World.HotPropertyPlayer == Player.ServerId() and GetTimeDifference(GetGameTimer(), lastTimeIncreased) >= 1000 then
 			TriggerServerEvent('lsv:hotPropertyTimeUpdated')
 			lastTimeIncreased = GetGameTimer()
 		end
@@ -100,10 +100,10 @@ AddEventHandler('lsv:startHotProperty', function(placeIndex, passedTime, players
 			end
 
 			local eventObjectiveText = 'Collect the ~g~briefcase~w~ and hold on to it.'
-			if World.HotPropertyCurrentPlayer then
-				if World.HotPropertyCurrentPlayer == Player.ServerId() then
+			if World.HotPropertyPlayer then
+				if World.HotPropertyPlayer == Player.ServerId() then
 					eventObjectiveText = 'Hold on to the briefcase for as long as possible.'
-				else eventObjectiveText = Gui.GetPlayerName(World.HotPropertyCurrentPlayer, '~w~')..' has the ~r~briefcase~w~. Take it from him.' end
+				else eventObjectiveText = Gui.GetPlayerName(World.HotPropertyPlayer, '~w~')..' has the ~r~briefcase~w~. Take it from him.' end
 			end
 			Gui.DisplayObjectiveText(eventObjectiveText)
 		end
@@ -123,7 +123,7 @@ RegisterNetEvent('lsv:hotPropertyCollected')
 AddEventHandler('lsv:hotPropertyCollected', function(player)
 	removeBriefcase()
 
-	World.HotPropertyCurrentPlayer = player
+	World.HotPropertyPlayer = player
 end)
 
 
@@ -131,7 +131,7 @@ RegisterNetEvent('lsv:hotPropertyDropped')
 AddEventHandler('lsv:hotPropertyDropped', function(player)
 	local x, y, z = table.unpack(GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(player))))
 	createBriefcase(x, y, z)
-	World.HotPropertyCurrentPlayer = nil
+	World.HotPropertyPlayer = nil
 end)
 
 
@@ -169,7 +169,7 @@ AddEventHandler('lsv:finishHotProperty', function(winners)
 	if isPlayerWinner then messageText = 'You won Hot Property with a time of '..getPlayerTime() end
 
 	propertyData = nil
-	World.HotPropertyCurrentPlayer = nil
+	World.HotPropertyPlayer = nil
 
 	if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
 	else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end

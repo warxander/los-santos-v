@@ -1,22 +1,12 @@
 World = { }
 
-local bountyPlayerId = nil
+World.HotPropertyPlayer = nil
+World.BountyPlayer = nil
 
-World.HotPropertyCurrentPlayer = nil
 
 function World.EnablePvp(enabled)
 	NetworkSetFriendlyFireOption(enabled)
 	SetCanAttackFriendly(PlayerPedId(), enabled, enabled)
-end
-
-
-function World.SetBountyPlayerId(playerId)
-	bountyPlayerId = playerId
-end
-
-
-function World.GetBountyPlayerId()
-	return bountyPlayerId
 end
 
 
