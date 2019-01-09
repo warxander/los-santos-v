@@ -45,12 +45,12 @@ Settings.pickup = {
 	drops = {
 		{
 			id = 'PICKUP_ARMOUR_STANDARD',
-			chance = 0.15,
+			chance = 0.25,
 		},
 
 		{
 			id = 'PICKUP_HEALTH_STANDARD',
-			chance = 0.20,
+			chance = 0.30,
 		},
 	}
 }
