@@ -6,7 +6,7 @@ AddEventHandler('lsv:startMostWanted', function()
 	local lastNotificationTime = nil
 
 	Citizen.CreateThread(function()
-		Gui.StartJob(jobId, 'Most Wanted', 'Survive the longest with a wanted level.')
+		Gui.StartJob('Most Wanted', 'Survive the longest with a wanted level.')
 	end)
 
 	while true do

@@ -92,7 +92,7 @@ function Gui.DrawPlaceMarker(x, y, z, radius, r, g, b, a)
 end
 
 
-function Gui.StartJob(jobId, name, message, tip)
+function Gui.StartJob(name, message, tip)
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', name, message or "")
 	if tip then SetTimeout(11000, function() Gui.DisplayHelpText(tip) end) end

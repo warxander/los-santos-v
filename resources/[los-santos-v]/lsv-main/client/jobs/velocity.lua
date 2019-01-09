@@ -36,7 +36,7 @@ AddEventHandler('lsv:startVelocity', function()
 	local jobId = JobWatcher.GetJobId()
 
 	Citizen.CreateThread(function()
-		Gui.StartJob(jobId, 'Velocity', 'Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
+		Gui.StartJob('Velocity', 'Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
 
 		while true do
 			Citizen.Wait(0)

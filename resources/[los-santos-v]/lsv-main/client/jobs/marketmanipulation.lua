@@ -25,7 +25,7 @@ AddEventHandler('lsv:startMarketManipulation', function()
 	local jobId = JobWatcher.GetJobId()
 
 	Citizen.CreateThread(function()
-		Gui.StartJob(jobId, 'Market Manipulation', 'Rob stores and banks within the time limit.')
+		Gui.StartJob('Market Manipulation', 'Rob stores and banks within the time limit.')
 	end)
 
 	while true do

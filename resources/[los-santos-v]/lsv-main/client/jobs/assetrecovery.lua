@@ -38,7 +38,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	local jobId = JobWatcher.GetJobId()
 
 	Citizen.CreateThread(function()
-		Gui.StartJob(jobId, 'Asset Recovery', 'Steal the vehicle and deliver it to the drop-off location.')
+		Gui.StartJob('Asset Recovery', 'Steal the vehicle and deliver it to the drop-off location.')
 
 		while true do
 			Citizen.Wait(0)
