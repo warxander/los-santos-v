@@ -115,14 +115,15 @@ AddEventHandler('lsv:playerDropped', function(player)
 		return
 	end
 
-	logger:Info('Dropped { '..player..' }')
 	local playerIndex = getPlayerIndexById(player)
 	if playerIndex then
 		table.remove(propertyData.players, playerIndex)
 		table.sort(propertyData.players, sortPlayersByTotalTime)
 		TriggerClientEvent('lsv:updateHotPropertyPlayers', -1, propertyData.players)
 	end
+
 	if propertyData.currentPlayer == player then
+		logger:Info('Dropped { '..player..' }')
 		propertyData.currentPlayer = nil
 		TriggerClientEvent('lsv:hotPropertyDropped', -1, player)
 	end
