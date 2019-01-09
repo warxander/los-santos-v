@@ -6,6 +6,7 @@ local function createBriefcase(x, y, z)
 	propertyData.pickup = CreatePickupRotate(GetHashKey('PICKUP_MONEY_CASE'), x, y, z, 0.0, 0.0, 0.0, 8, 1)
 	propertyData.blip = Map.CreatePickupBlip(propertyData.pickup, 'PICKUP_MONEY_CASE', Color.BlipGreen())
 	SetBlipAsShortRange(propertyData.blip, false)
+	SetBlipScale(propertyData.blip, 1.1)
 end
 
 local function removeBriefcase()

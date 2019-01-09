@@ -159,7 +159,6 @@ AddEventHandler('lsv:init', function()
 					if not DoesBlipExist(blip) then
 						blip = AddBlipForEntity(ped)
 						SetBlipHighDetail(blip, true)
-						SetBlipScale(blip, 0.9)
 						SetBlipCategory(blip, 7)
 					end
 
@@ -176,6 +175,10 @@ AddEventHandler('lsv:init', function()
 					elseif isPlayerHotProperty then blipSprite = Blip.HotProperty()
 					elseif isPlayerBounty then blipSprite = Blip.BountyHit()
 					elseif isPlayerDoingJob then blipSprite = Blip.PolicePlayer() end
+
+					local scale = 0.9
+					if isPlayerDead or isPlayerHotProperty or isPlayerDoingJob then scale = 1.1 end
+					SetBlipScale(blip, scale)
 
 					local blipColor = Color.BlipWhite()
 					if isPlayerInCrew then blipColor = Color.BlipBlue()

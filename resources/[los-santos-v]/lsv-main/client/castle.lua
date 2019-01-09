@@ -24,6 +24,7 @@ AddEventHandler('lsv:startCastle', function(placeIndex, passedTime, players)
 
 	castleData.blip = AddBlipForCoord(place.x, place.y, place.z)
 	SetBlipSprite(castleData.blip, Blip.Castle())
+	SetBlipScale(castleData.blip, 1.1)
 	SetBlipColour(castleData.blip, Color.BlipPurple())
 	SetBlipHighDetail(castleData.blip, true)
 
