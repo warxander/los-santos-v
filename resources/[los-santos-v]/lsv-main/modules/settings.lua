@@ -82,8 +82,8 @@ Settings.skillStat = 20
 Settings.crewInvitationTimeout = 10000
 
 -- Cash
-Settings.cashPerKill = 100
-Settings.cashPerKillstreak = 50
+Settings.cashPerKill = 150
+Settings.cashPerKillstreak = 75
 Settings.cashPerMission = 1000
 Settings.cashGainedNotificationTime = 5000
 
