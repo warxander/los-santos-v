@@ -176,8 +176,8 @@ AddEventHandler('lsv:init', function()
 					elseif isPlayerBounty then blipSprite = Blip.BountyHit()
 					elseif isPlayerDoingJob then blipSprite = Blip.PolicePlayer() end
 
-					local scale = 0.9
-					if isPlayerDead or isPlayerHotProperty or isPlayerDoingJob then scale = 1.1 end
+					local scale = 0.85
+					if isPlayerHotProperty or isPlayerDoingJob or isPlayerBounty then scale = 1.0 end
 					SetBlipScale(blip, scale)
 
 					local blipColor = Color.BlipWhite()
