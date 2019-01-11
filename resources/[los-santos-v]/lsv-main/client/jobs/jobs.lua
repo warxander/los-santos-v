@@ -14,7 +14,7 @@ AddEventHandler('lsv:init', function()
 		local mission = { }
 		mission.startTime = nil
 		mission.mission = Utils.GetRandom(missionIds)
-		mission.blip = Map.CreatePlaceBlip(Blip.Mission(), place.x, place.y, place.z, missionNames[mission.mission], Color.BlipPurple())
+		mission.blip = Map.CreatePlaceBlip(Blip.Mission(), place.x, place.y, place.z, missionNames[mission.mission], Color.BlipBlue())
 		table.insert(missionPlaces, mission)
 	end
 
