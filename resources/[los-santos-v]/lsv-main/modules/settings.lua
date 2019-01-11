@@ -39,6 +39,20 @@ Settings.spawn = {
 }
 
 
+-- World
+Settings.world = { }
+Settings.world.blacklistVehicles = {
+	'rhino',
+	'hydra',
+	'lazer',
+	'buzzard',
+	'akula',
+	'annihilator',
+	'hunter',
+	'savage',
+}
+
+
 -- Pickup
 Settings.pickup = {
 	radius = 150.,

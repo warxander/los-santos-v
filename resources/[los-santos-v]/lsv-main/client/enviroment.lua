@@ -4,6 +4,41 @@ local isSnowLoaded = false
 
 
 Citizen.CreateThread(function()
+	local vehiclesToDelete = { }
+
+	while true do
+		Citizen.Wait(25)
+
+		local handle, vehicle = FindFirstVehicle()
+		if handle ~= -1 then
+			local finished = false
+			repeat
+				local modelHash = GetEntityModel(vehicle)
+				for _, blacklistModel in ipairs(Settings.world.blacklistVehicles) do
+					if GetHashKey(blacklistModel) == modelHash then
+						table.insert(vehiclesToDelete, vehicle)
+						break
+					end
+				end
+				finished, vehicle = FindNextVehicle(handle)
+			until not finished
+		end
+
+		Citizen.Wait(1) --amortize performance
+
+		for i = Utils.GetTableLength(vehiclesToDelete), 1, -1 do
+			if DoesEntityExist(vehiclesToDelete[i]) then
+				SetEntityAsMissionEntity(vehiclesToDelete[i], true, true)
+				DeleteVehicle(vehiclesToDelete[i])
+			end
+
+			table.remove(vehiclesToDelete, i)
+		end
+	end
+end)
+
+
+Citizen.CreateThread(function()
 	SetBlackout(blackout)
 
 	while true do
