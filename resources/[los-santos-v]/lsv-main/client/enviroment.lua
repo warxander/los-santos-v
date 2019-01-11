@@ -23,6 +23,7 @@ Citizen.CreateThread(function()
 				finished, vehicle = FindNextVehicle(handle)
 			until not finished
 		end
+		EndFindVehicle(handle)
 
 		Citizen.Wait(1) --amortize performance
 
