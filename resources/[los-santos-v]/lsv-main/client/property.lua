@@ -40,7 +40,7 @@ AddEventHandler('lsv:startHotProperty', function(placeIndex, passedTime, players
 	-- This is shit. New players will not see briefcase. Should fix in 1s
 	if not currentPlayer and not passedTime then createBriefcase(place.x, place.y, place.z) end
 
-	if Player.IsInFreeroam() then
+	if propertyData.blip and Player.IsInFreeroam() then
 		FlashMinimapDisplay()
 		Map.SetBlipFlashes(propertyData.blip)
 		PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
@@ -130,7 +130,9 @@ end)
 
 RegisterNetEvent('lsv:hotPropertyDropped')
 AddEventHandler('lsv:hotPropertyDropped', function(player)
+	if not propertyData then return end
 	local x, y, z = table.unpack(GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(player))))
+	removeBriefcase()
 	createBriefcase(x, y, z)
 	World.HotPropertyPlayer = nil
 end)
