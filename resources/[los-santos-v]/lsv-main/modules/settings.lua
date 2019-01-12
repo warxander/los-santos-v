@@ -473,8 +473,8 @@ Settings.skins = {
 		kills = 90,
 	},
 
-	["cs_debra"] = {
-		name = "Debra",
+	["csb_maude"] = {
+		name = "Maude Eccles",
 		kills = 100,
 	},
 
@@ -488,8 +488,8 @@ Settings.skins = {
 		kills = 120,
 	},
 
-	["cs_johnnyklebitz"] = {
-		name = "Johnny Klebitz",
+	["csb_mweather"] = {
+		name = "Merryweather Security",
 		kills = 130,
 	},
 
@@ -622,8 +622,8 @@ Settings.skins = {
 		kills = 2250,
 	},
 
-	["cs_martinmadrazo"] = {
-		name = "Martin Madrazo",
+	["csb_abigail"] = {
+		name = "Abigail Mathers",
 		kills = 2500,
 	},
 
