@@ -151,6 +151,8 @@ end)
 
 AddEventHandler('lsv:init', function()
 	while true do
+		local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId()))
+
 		for id = 0, Settings.maxPlayerCount do
 			if id ~= PlayerId() then
 				local ped = GetPlayerPed(id)
@@ -188,7 +190,15 @@ AddEventHandler('lsv:init', function()
 					elseif isPlayerDoingJob then blipColor = Color.BlipPurple() end
 
 					local blipAlpha = 0
-					if isPlayerInCrew or isPlayerBounty or isPlayerHotProperty or isPlayerDoingJob then blipAlpha = 255 end
+					if isPlayerInCrew or isPlayerBounty or isPlayerHotProperty or isPlayerDoingJob or isPlayerDead then
+						blipAlpha = 255
+					elseif not GetPedStealthMovement(ped) then
+						local x, y, z = table.unpack(GetEntityCoords(ped))
+						local distance = GetDistanceBetweenCoords(playerX, playerY, playerZ, x, y, z, false)
+						if distance < Settings.playerBlipDistance then
+							blipAlpha = 255 - math.floor(distance / Settings.playerBlipDistance) * 255
+						end
+					end
 
 					if GetBlipSprite(blip) ~= blipSprite then SetBlipSprite(blip, blipSprite) end
 					if GetBlipAlpha(blip) ~= blipAlpha then SetBlipAlpha(blip, blipAlpha) end
