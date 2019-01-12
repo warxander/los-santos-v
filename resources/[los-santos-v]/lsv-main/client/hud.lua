@@ -194,9 +194,8 @@ AddEventHandler('lsv:init', function()
 						blipAlpha = 255
 					elseif not GetPedStealthMovement(ped) then
 						local x, y, z = table.unpack(GetEntityCoords(ped))
-						local distance = GetDistanceBetweenCoords(playerX, playerY, playerZ, x, y, z, false)
-						if distance < Settings.playerBlipDistance then
-							blipAlpha = 255 - math.floor(distance / Settings.playerBlipDistance) * 255
+						if GetDistanceBetweenCoords(playerX, playerY, playerZ, x, y, z, false) < Settings.playerBlipDistance then
+							blipAlpha = 255
 						end
 					end
 
