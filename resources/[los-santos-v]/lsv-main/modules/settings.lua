@@ -441,237 +441,59 @@ Settings.crateDropSettings = {
 
 -- Skins
 Settings.skins = {
-	["s_m_y_blackops_01"] = {
+	["u_m_y_baygor"] = {
 		name = "Default",
 		kills = 0,
 	},
 
-
-
-	["csb_anita"] = {
-		name = "Anita Mendoza",
-		kills = 50,
-	},
-
-	["csb_anton"] = {
-		name = "Anton Beaudelaire",
-		kills = 60,
-	},
-
-	["ig_ashley"] = {
-		name = "Ashley Butler",
-		kills = 70,
-	},
-
-	["ig_casey"] = {
-		name = "Casey",
-		kills = 80,
-	},
-
-	["ig_clay"] = {
-		name = "Clay Simons",
-		kills = 90,
-	},
-
-	["csb_maude"] = {
-		name = "Maude Eccles",
-		kills = 100,
-	},
-
-	["csb_hugh"] = {
-		name = "Hugh Harrison",
-		kills = 110,
-	},
-
-	["ig_jay_norris"] = {
-		name = "Jay Norris",
-		kills = 120,
-	},
-
-	["csb_mweather"] = {
-		name = "Merryweather Security",
-		kills = 130,
-	},
-
-	["ig_karen_daniels"] = {
-		name = "Karen Daniels",
-		kills = 140,
-	},
-
-	["ig_natalia"] = {
-		name = "Natalia Zverovna",
-		kills = 150,
-	},
-
-	["ig_ortega"] = {
-		name = "Ortega",
-		kills = 160,
-	},
-
-	["csb_oscar"] = {
-		name = "Oscar Guzman",
-		kills = 170,
-	},
-
-	["ig_dreyfuss"] = {
-		name = "Peter Dreyfuss",
-		kills = 180,
-	},
-
-	["ig_tanisha"] = {
-		name = "Tanisha Jackson",
-		kills = 190,
-	},
-
-	["ig_terry"] = {
-		name = "Terry Thorpe",
-		kills = 200,
-	},
-
-
-
-	["ig_andreas"] = {
-		name = "Andreas Sanchez",
-		kills = 250,
-	},
-
-	["ig_taostranslator"] = {
-		name = "Cheng's translator",
-		kills = 300,
-	},
-
-	["ig_denise"] = {
-		name = "Denise Clinton",
-		kills = 350,
-	},
-
-	["ig_oneil"] = {
-		name = "Elwood O'Neil",
-		kills = 400,
-	},
-
-	["ig_fabien"] = {
-		name = "Fabien LaRouche",
-		kills = 450,
-	},
-
-	["ig_floyd"] = {
-		name = "Floyd Hebert",
+	["g_m_m_chemwork_01"] = {
+		name = "Chemist",
 		kills = 500,
 	},
 
-	["ig_drfriedlander"] = {
-		name = "Isiah Friedlander",
-		kills = 550,
-	},
-
-	["ig_lazlow"] = {
-		name = "Lazlow Jones",
-		kills = 600,
-	},
-
-	["ig_patricia"] = {
-		name = "Patricia Madrazo",
-		kills = 650,
-	},
-
-	["ig_roccopelosi"] = {
-		name = "Rocco Pelosi",
-		kills = 700,
-	},
-
-	["ig_siemonyetarian"] = {
-		name = "Simeon Yetarian",
-		kills = 750,
-	},
-
-	["ig_taocheng"] = {
-		name = "Tao Cheng",
-		kills = 800,
-	},
-
-
-
-	["ig_amandatownley"] = {
-		name = "Amanda De Santa",
+	["s_m_y_fireman_01"] = {
+		name = "Fireman",
 		kills = 1000,
 	},
 
-	["ig_jimmydisanto"] = {
-		name = "Jimmy De Santa",
-		kills = 1250,
-	},
-
-	["ig_tracydisanto"] = {
-		name = "Tracey De Santa",
+	["s_m_m_fibsec_01"] = {
+		name = "FIB Security",
 		kills = 1500,
 	},
 
-	["ig_brad"] = {
-		name = "Brad Snider",
-		kills = 1750,
-	},
-
-	["ig_stretch"] = {
-		name = "Stretch",
+	["s_m_y_clown_01"] = {
+		name = "Clown",
 		kills = 2000,
 	},
 
-	["ig_chengsr"] = {
-		name = "Wei Cheng",
-		kills = 2250,
-	},
-
-	["csb_abigail"] = {
-		name = "Abigail Mathers",
+	["u_m_y_zombie_01"] = {
+		name = "Zombie",
 		kills = 2500,
 	},
 
-	["ig_solomon"] = {
-		name = "Solomon Richards",
-		kills = 2750,
-	},
-
-	["ig_nervousron"] = {
-		name = "Ron Jakowski",
+	["s_m_m_strperf_01"] = {
+		name = "Street Performer",
 		kills = 3000,
 	},
 
-	["ig_wade"] = {
-		name = "Wade Hebert",
-		kills = 3250,
-	},
-
-	["ig_molly"] = {
-		name = "Molly Schultz",
+	["u_m_y_pogo_01"] = {
+		name = "Pogo",
 		kills = 3500,
 	},
 
-
-
-	["ig_lestercrest"] = {
-		name = "Lester Crest",
-		kills = 5500,
+	["s_m_m_movalien_01"] = {
+		name = "Alien",
+		kills = 4000,
 	},
 
-	["ig_davenorton"] = {
-		name = "Dave Norton",
-		kills = 6000,
+	["u_m_y_rsranger_01"] = {
+		name = "RS Ranger",
+		kills = 4500,
 	},
 
-	["ig_lamardavis"] = {
-		name = "Lamar Devis",
-		kills = 6500,
-	},
-
-	["ig_stevehains"] = {
-		name = "Steve Haines",
-		kills = 7000,
-	},
-
-	["ig_devin"] = {
-		name = "Devin Weston",
-		kills = 7500,
+	["u_m_y_imporage"] = {
+		name = "Imporage",
+		kills = 5000,
 	},
 }
 

@@ -3,7 +3,7 @@ SET AUTOCOMMIT = 0;
 
 CREATE TABLE Players (
 	PlayerID varchar(50) NOT NULL,
-	SkinModel varchar(50) NOT NULL DEFAULT "s_m_y_blackops_01",
+	SkinModel varchar(50) NOT NULL DEFAULT "u_m_y_baygor",
 	Weapons MEDIUMTEXT DEFAULT NULL,
 	Kills INT UNSIGNED NOT NULL DEFAULT 0,
 	Deaths INT UNSIGNED NOT NULL DEFAULT 0,
