@@ -187,8 +187,8 @@ AddEventHandler('lsv:init', function()
 					elseif isPlayerBounty then blipColor = Color.BlipRed()
 					elseif isPlayerDoingJob then blipColor = Color.BlipPurple() end
 
-					local blipAlpha = 255
-					if GetPedStealthMovement(ped) and not isPlayerInCrew and not isPlayerBounty and not isPlayerHotProperty then blipAlpha = 0 end
+					local blipAlpha = 0
+					if isPlayerInCrew or isPlayerBounty or isPlayerHotProperty or isPlayerDoingJob then blipAlpha = 255 end
 
 					if GetBlipSprite(blip) ~= blipSprite then SetBlipSprite(blip, blipSprite) end
 					if GetBlipAlpha(blip) ~= blipAlpha then SetBlipAlpha(blip, blipAlpha) end
