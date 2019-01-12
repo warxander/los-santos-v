@@ -125,7 +125,8 @@ AddEventHandler('lsv:setupHud', function(hud)
 		Citizen.Wait(0)
 
 		if hud.discordUrl ~= '' then
-			Gui.DrawText(hud.discordUrl, { x = 0.5, y = 0.98 }, 7, { r = 254, g = 254, b = 254, a = 96 }, 0.25, true, false, true)
+			Gui.SetTextParams(7, { r = 254, g = 254, b = 254, a = 96 }, 0.25, true, false, true)
+			Gui.DrawText(hud.discordUrl, { x = 0.5, y = 0.98 })
 		end
 
 		RemoveMultiplayerBankCash()

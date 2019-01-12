@@ -25,8 +25,10 @@ function Gui.DrawBar(title, text, color, index, isPlayerText)
 
 	DrawSprite(Bar.TextureDict, Bar.Texture, x, y, Bar.Width, Bar.Height, 0.0, 255, 255, 255, 160)
 
-	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - margin }, font, color, scale, isPlayerText, false, false, true)
-	Gui.DrawText(text, { x = SafeZone.Right() - 0.00285, y = y - 0.0175 }, 0, color, 0.5, false, false, false, true)
+	Gui.SetTextParams(font, color, scale, isPlayerText, false, false)
+	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - margin }, Bar.Width / 2)
+	Gui.SetTextParams(0, color, 0.5, false, false, false)
+	Gui.DrawText(text, { x = SafeZone.Right() - 0.00285, y = y - 0.0175 }, Bar.Width / 2)
 end
 
 
@@ -46,7 +48,8 @@ function Gui.DrawProgressBar(title, progress, color, index)
 
 	DrawSprite(Bar.TextureDict, Bar.Texture, x, y, Bar.Width, Bar.Height, 0.0, 255, 255, 255, 160)
 
-	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - 0.011 }, 0, Color.GetHudFromBlipColor(Color.BlipWhite()), 0.3, false, false, false, true)
+	Gui.SetTextParams(0, Color.GetHudFromBlipColor(Color.BlipWhite()), 0.3, false, false, false)
+	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - 0.011 }, Bar.Width / 2)
 
 	local color = color or { r = 255, g = 255, b = 255 }
 	local progressX = x + Bar.Width / 2 - Bar.ProgressWidth / 2 - 0.00285 * 2

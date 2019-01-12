@@ -4,6 +4,11 @@ local cashGained = 0
 local cashGainedTime = nil
 
 
+Citizen.CreateThread(function()
+	AddTextEntry('MONEY_ENTRY', '$~1~')
+end)
+
+
 function Gui.GetPlayerName(serverId, color, lowercase)
 	if Player.ServerId() == serverId then
 		if lowercase then
@@ -50,7 +55,7 @@ function Gui.DrawRect(position, width, height, color)
 end
 
 
-function Gui.DrawText(text, position, font, color, scale, shadow, outline, center, rightJustify, width)
+function Gui.SetTextParams(font, color, scale, shadow, outline, center)
 	SetTextFont(font)
 	SetTextColour(color.r, color.g, color.b, color.a)
 	SetTextScale(scale, scale)
@@ -65,23 +70,50 @@ function Gui.DrawText(text, position, font, color, scale, shadow, outline, cente
 		SetTextOutline()
 	end
 
-	BeginTextCommandDisplayText("STRING")
-	AddTextComponentSubstringPlayerName(tostring(text))
-
 	if center then
 		SetTextCentre(true)
-	elseif rightJustify then
-		SetTextRightJustify(true)
-		if width then SetTextWrap(position.x - width, position.x)
-		else SetTextWrap(SafeZone.Left(), position.x) end
 	end
+end
 
+
+function Gui.DrawText(text, position, width)
+	BeginTextCommandDisplayText('STRING')
+	AddTextComponentSubstringPlayerName(tostring(text))
+	if width then
+		SetTextRightJustify(true)
+		SetTextWrap(position.x - width, position.x)
+	end
+	EndTextCommandDisplayText(position.x, position.y)
+end
+
+
+function Gui.DrawNumeric(number, position)
+	BeginTextCommandDisplayText('NUMBER')
+	if type(number) == 'number' and not string.find(number, '%.') then
+		AddTextComponentInteger(number)
+	else
+		AddTextComponentFloat(number, 2)
+	end
+	EndTextCommandDisplayText(position.x, position.y)
+end
+
+
+function Gui.DrawNumericTextEntry(entry, position, ...) -- Generalize it more?
+	local params = { ... }
+	BeginTextCommandDisplayText(entry)
+	for _, v in ipairs(params) do
+		if type(v) == 'number' and not string.find(v, '%.') then -- Move it to Utils?
+			AddTextComponentInteger(v)
+		else
+			AddTextComponentFloat(v, 2) -- Configure it?
+		end
+	end
 	EndTextCommandDisplayText(position.x, position.y)
 end
 
 
 function Gui.DisplayObjectiveText(text)
-	BeginTextCommandPrint("STRING")
+	BeginTextCommandPrint('STRING')
 	AddTextComponentString(tostring(text))
 	EndTextCommandPrint(1, true)
 end
@@ -147,8 +179,8 @@ AddEventHandler('lsv:init', function()
 
 				SetDrawOrigin(playerX, playerY, z, 0)
 				DrawSprite('MPHud', 'mp_anim_cash', 0.0, 0.0, spriteScale / screenWidth, spriteScale / screenHeight, 0.0, 255, 255, 255, 255)
-				Gui.DrawText(sign..'$'..math.abs(cashGained), { x = spriteScale / 2 / screenWidth, y = -spriteScale / 2 / screenHeight - 0.004 }, 4,
-					color, textScale, true, true)
+				Gui.SetTextParams(4, color, textScale, true, true)
+				Gui.DrawText(sign..'$'..math.abs(cashGained), { x = spriteScale / 2 / screenWidth, y = -spriteScale / 2 / screenHeight - 0.004 })
 				ClearDrawOrigin()
 			end
 		else cashGained = 0 end
