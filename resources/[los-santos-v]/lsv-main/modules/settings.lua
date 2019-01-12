@@ -6,7 +6,7 @@ Settings.maxPlayerCount = 32 -- For internal usage only, do not touch it!
 Settings.afkTimeout = 300 --in seconds
 Settings.autoSavingTimeout = 180000
 Settings.pingThreshold = 200
-Settings.playerBlipDistance = 125.
+Settings.playerBlipDistance = 350.
 
 
 -- Spawn settings
