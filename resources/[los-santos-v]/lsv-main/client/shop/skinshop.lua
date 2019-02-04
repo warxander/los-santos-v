@@ -19,8 +19,8 @@ local skinshops = {
 
 
 local function skinKills(id)
-	if id == Player.skin then return 'Used' end
-	if Player.kills >= Settings.skins[id].kills then return '' end
+	if id == Player.Skin then return 'Used' end
+	if Player.Kills >= Settings.skins[id].kills then return '' end
 	return Settings.skins[id].kills..' Kills'
 end
 
@@ -31,9 +31,9 @@ end
 
 
 AddEventHandler('lsv:init', function()
-	for _, skinshop in pairs(skinshops) do
+	table.foreach(skinshops, function(skinshop)
 		skinshop.blip = Map.CreatePlaceBlip(Blip.Clothes(), skinshop.x, skinshop.y, skinshop.z)
-	end
+	end)
 
 	WarMenu.CreateMenu('skinshop', '')
 	WarMenu.SetSubTitle('skinshop', 'Select Your Character')
@@ -42,9 +42,9 @@ AddEventHandler('lsv:init', function()
 	WarMenu.SetMenuButtonPressedSound('skinshop', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	local orderedSkins = { }
-	for k, v in pairs(Settings.skins) do
-		table.insert(orderedSkins, { key = k, value = v})
-	end
+	table.foreach(Settings.skins, function(v, k)
+		table.insert(orderedSkins, { key = k, value = v })
+	end)
 
 	table.sort(orderedSkins, function(l, r)
 		return l.value.kills < r.value.kills
@@ -52,11 +52,11 @@ AddEventHandler('lsv:init', function()
 
 	while true do
 		if WarMenu.IsMenuOpened('skinshop') then
-			for _, v in ipairs(orderedSkins) do
-				if WarMenu.Button(v.value.name, skinKills(v.key)) and v.key ~= Player.skin then
+			table.foreach(orderedSkins, function(v)
+				if WarMenu.Button(v.value.name, skinKills(v.key)) and v.key ~= Player.Skin then
 					TriggerServerEvent('lsv:updatePlayerSkin', v.key)
 				end
-			end
+			end)
 
 			WarMenu.Display()
 		end
@@ -73,21 +73,23 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		for skinshopIndex, skinshop in ipairs(skinshops) do
-			Gui.DrawPlaceMarker(skinshop.x, skinshop.y, skinshop.z - 1, Settings.placeMarkerRadius, skinshopColor.r, skinshopColor.g, skinshopColor.b, Settings.placeMarkerOpacity)
+		if not IsPlayerDead(PlayerId()) then
+			table.foreach(skinshops, function(skinshop, skinshopIndex)
+				Gui.DrawPlaceMarker(skinshop.x, skinshop.y, skinshop.z - 1, Settings.placeMarkerRadius, skinshopColor.r, skinshopColor.g, skinshopColor.b, Settings.placeMarkerOpacity)
 
-			if Vdist(skinshop.x, skinshop.y, skinshop.z, table.unpack(GetEntityCoords(PlayerPedId(), true))) < Settings.placeMarkerRadius then
-				if not WarMenu.IsAnyMenuOpened() then
-					Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to browse characters.')
+				if Player.DistanceTo(skinshop, true) < Settings.placeMarkerRadius then
+					if not WarMenu.IsAnyMenuOpened() then
+						Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to browse characters.')
 
-					if IsControlJustReleased(0, 38) then
-						skinshopOpenedMenuIndex = skinshopIndex
-						WarMenu.OpenMenu('skinshop')
+						if IsControlJustReleased(0, 38) then
+							skinshopOpenedMenuIndex = skinshopIndex
+							WarMenu.OpenMenu('skinshop')
+						end
 					end
+				elseif WarMenu.IsMenuOpened('skinshop') and skinshopIndex == skinshopOpenedMenuIndex then
+					WarMenu.CloseMenu()
 				end
-			elseif WarMenu.IsMenuOpened('skinshop') and skinshopIndex == skinshopOpenedMenuIndex then
-				WarMenu.CloseMenu()
-			end
+			end)
 		end
 	end
 end)

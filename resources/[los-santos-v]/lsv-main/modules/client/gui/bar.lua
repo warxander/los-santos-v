@@ -26,15 +26,15 @@ function Gui.DrawBar(title, text, color, index, isPlayerText)
 	DrawSprite(Bar.TextureDict, Bar.Texture, x, y, Bar.Width, Bar.Height, 0.0, 255, 255, 255, 160)
 
 	Gui.SetTextParams(font, color, scale, isPlayerText, false, false)
-	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - margin }, Bar.Width / 2)
+	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - margin }, SafeZone.Size() - Bar.Width / 2)
 	Gui.SetTextParams(0, color, 0.5, false, false, false)
 	Gui.DrawText(text, { x = SafeZone.Right() - 0.00285, y = y - 0.0175 }, Bar.Width / 2)
 end
 
 
-function Gui.DrawTimerBar(text, seconds, isPlayerText, index)
-	local color = seconds <= 10 and Color.GetHudFromBlipColor(Color.BlipRed()) or Color.GetHudFromBlipColor(Color.BlipWhite())
-	Gui.DrawBar(text, string.format("%02.f", math.floor(seconds / 60))..':'..string.format("%02.f", math.floor(seconds % 60)), color, index, isPlayerText)
+function Gui.DrawTimerBar(text, ms, isPlayerText, index)
+	local color = ms <= 10000 and Color.GetHudFromBlipColor(Color.BlipRed()) or Color.GetHudFromBlipColor(Color.BlipWhite())
+	Gui.DrawBar(text, ms_to_string(ms), color, index, isPlayerText)
 end
 
 
@@ -49,7 +49,7 @@ function Gui.DrawProgressBar(title, progress, color, index)
 	DrawSprite(Bar.TextureDict, Bar.Texture, x, y, Bar.Width, Bar.Height, 0.0, 255, 255, 255, 160)
 
 	Gui.SetTextParams(0, Color.GetHudFromBlipColor(Color.BlipWhite()), 0.3, false, false, false)
-	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - 0.011 }, Bar.Width / 2)
+	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - 0.011 }, SafeZone.Size() - Bar.Width / 2)
 
 	local color = color or { r = 255, g = 255, b = 255 }
 	local progressX = x + Bar.Width / 2 - Bar.ProgressWidth / 2 - 0.00285 * 2

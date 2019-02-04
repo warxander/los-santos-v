@@ -6,7 +6,7 @@ AddEventHandler('lsv:setBounty', function(bountyServerPlayerId)
 
 	if not bountyServerPlayerId then return end
 
-	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
+	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
 
 	if Player.ServerId() == bountyServerPlayerId then
 		Gui.DisplayNotification(bountyText, 'CHAR_LESTER_DEATHWISH', 'Unknown', '', 2)

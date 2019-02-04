@@ -20,7 +20,7 @@ end
 AddEventHandler('lsv:startCastle', function()
 	castleData = { }
 	castleData.players = { }
-	castleData.placeIndex = math.random(Utils.GetTableLength(Settings.castle.places))
+	castleData.placeIndex = math.random(#Settings.castle.places)
 	castleData.eventStartTime = GetGameTimer()
 
 	logger:Info('Start { '..castleData.placeIndex..' }')
@@ -33,10 +33,10 @@ AddEventHandler('lsv:startCastle', function()
 		if castleData and GetGameTimer() - castleData.eventStartTime >= Settings.castle.duration then
 			local winners = nil
 
-			if not Utils.IsTableEmpty(castleData.players) then
+			if #castleData.players ~= 0 then
 				winners = { }
 
-				for i = 1, Utils.GetTableLength(Settings.castle.rewards) do
+				for i = 1, #Settings.castle.rewards do
 					if castleData.players[i] then
 						logger:Info('Winner { '..i..', '..castleData.players[i].id..' }')
 						Db.UpdateCash(castleData.players[i].id, Settings.castle.rewards[i])

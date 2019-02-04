@@ -39,7 +39,7 @@ AddEventHandler('lsv:init', function()
 					if not isStuntJumpInProcess then
 						logger:Debug('Started')
 						isStuntJumpInProcess = true
-						startingCoords = GetEntityCoords(playerPed, true)
+						startingCoords = Player.Position(true)
 					end
 
 					if height > stuntJumpHeight then
@@ -52,7 +52,7 @@ AddEventHandler('lsv:init', function()
 				local isStuntJumpSucceeded = isStuntJumpHeightEnough and IsVehicleDriveable(playerVehicle) and not IsVehicleStuckOnRoof(playerVehicle)
 
 				if isStuntJumpSucceeded then
-					currentCoords = GetEntityCoords(playerPed, true)
+					currentCoords = Player.Position(true)
 					TriggerServerEvent('lsv:stuntJumpCompleted', stuntJumpHeight, CalculateTravelDistanceBetweenPoints(startingCoords.x, startingCoords.y, startingCoords.z, currentCoords.x, currentCoords.y, currentCoords.z))
 					lastStuntJumpTime = GetGameTimer()
 				elseif isStuntJumpHeightEnough then Gui.DisplayNotification('Stunt Jump failed.') end

@@ -1,12 +1,15 @@
 local logger = Logger:CreateNamedLogger('Session')
 
-local function initPlayer(player, playerStats, isRegistered)
-	Scoreboard.AddPlayer(player, playerStats)
 
+local function initPlayer(player, playerStats, isRegistered)
 	if not playerStats.Weapons then playerStats.Weapons = Settings.defaultPlayerWeapons
 	else playerStats.Weapons = json.decode(playerStats.Weapons) end
 
 	playerStats.SkillStat = Settings.skillStat
+
+	if not playerStats.PatreonTier then playerStats.PatreonTier = 0 end
+
+	Scoreboard.AddPlayer(player, playerStats)
 
 	TriggerClientEvent('lsv:playerLoaded', player, playerStats, isRegistered)
 	TriggerClientEvent('lsv:playerConnected', -1, player)
@@ -37,14 +40,14 @@ AddEventHandler('lsv:loadPlayer', function()
 	logger:Info('Load { '..playerName..', '..player..', '..GetPlayerIdentifiers(player)[1]..' }')
 
 	Db.FindPlayer(player, function(data)
-		if Utils.IsTableEmpty(data) then
+		if #data == 0 then
 			Db.RegisterPlayer(player, function(data)
 				initPlayer(player, data[1], true)
 				logger:Info('Register { '..playerName..', '..player..' }')
 			end)
 		else
 			if data[1].Banned then
-				DropPlayer(player, "You're permanently banned from this server.")
+				DropPlayer(player, 'You\'re permanently banned from this server.')
 				return
 			end
 
@@ -59,9 +62,9 @@ RegisterServerEvent('lsv:savePlayerWeapons')
 AddEventHandler('lsv:savePlayerWeapons', function(weapons)
 	local player = source
 
-	if not weapons or type(weapons) ~= 'table' or Utils.IsTableEmpty(weapons) then return end
-
-	Db.SetValue(player, 'Weapons', Db.ToString(json.encode(weapons)))
+	if #weapons ~= 0 then
+		Db.SetValue(player, 'Weapons', Db.ToString(json.encode(weapons)))
+	end
 end)
 
 
@@ -71,5 +74,15 @@ AddEventHandler('lsv:kickAFKPlayer', function()
 
 	logger:Info('Drop AFK player { '..player..' }')
 
-	DropPlayer(player, "You were AFK for more than "..math.ceil(Settings.afkTimeout / 60).." minutes.")
+	DropPlayer(player, 'You were AFK for more than '..math.ceil(Settings.afkTimeout / 60)..' minutes.')
+end)
+
+
+RegisterServerEvent('lsv:playerSessionFailed')
+AddEventHandler('lsv:playerSessionFailed', function()
+	local player = source
+
+	logger:Warning('Drop broken player { '..player..' }')
+
+	DropPlayer(player, 'Your session was broken somehow (very likely). Please try reconnecting or contact with the server owner.')
 end)

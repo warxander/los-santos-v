@@ -2,15 +2,15 @@ AddEventHandler('playerSpawned', function()
 	local playerPed = PlayerPedId()
 
 	if Settings.giveArmorAtSpawn then
-		SetPedArmour(playerPed, GetPlayerMaxArmour(PlayerId()))
+		SetPedArmour(playerPed, Settings.maxArmour)
 	end
 
 	if Settings.giveParachuteAtSpawn then
-		GiveWeaponToPed(playerPed, GetHashKey("GADGET_PARACHUTE"), 1, false, false)
+		GiveWeaponToPed(playerPed, GetHashKey('GADGET_PARACHUTE'), 1, false, false)
 	end
 
-	if not Player.isLoaded then
-		Player.isLoaded = true
+	if not Player.Loaded then
+		Player.Loaded = true
 		Player.SetFreeze(true)
 		TriggerServerEvent('lsv:loadPlayer')
 	end
@@ -65,6 +65,9 @@ AddEventHandler('lsv:init', function()
 	World.SetWantedLevel(0)
 
 	if Settings.disableHealthRegen then SetPlayerHealthRechargeMultiplier(PlayerId(), 0) end
+	if Settings.giveArmorAtSpawn then
+		SetPedArmour(PlayerPedId(), Settings.maxArmour)
+	end
 
 	if Settings.infinitePlayerStamina then
 		while true do
@@ -73,4 +76,13 @@ AddEventHandler('lsv:init', function()
 			ResetPlayerStamina(PlayerId())
 		end
 	end
+end)
+
+
+-- As I understood, events start triggering twice when player session is broken
+-- So this is my attempt to fix those players (by kicking them, ha-ha-ha)
+local initialized = false
+AddEventHandler('lsv:init', function()
+	if not initialized then initialized = true
+	else TriggerServerEvent('lsv:playerSessionFailed') end
 end)

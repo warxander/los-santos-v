@@ -15,8 +15,9 @@ AddEventHandler('lsv:marketManipulationFinished', function()
 
 	Db.UpdateCash(player, reward, function()
 		TriggerClientEvent('lsv:marketManipulationFinished', player, true)
-		players[player] = nil
 	end)
+
+	players[player] = nil
 end)
 
 

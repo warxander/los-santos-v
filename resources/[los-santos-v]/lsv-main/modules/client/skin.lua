@@ -11,17 +11,17 @@ function Skin.ChangePlayerSkin(id)
 	local weapons = Player.GetPlayerWeapons()
 	local health = GetEntityHealth(PlayerPedId())
 	local armor = GetPedArmour(PlayerPedId())
-	local isHasParachute = HasPedGotWeapon(PlayerPedId(), GetHashKey("GADGET_PARACHUTE"), false)
+	local isHasParachute = HasPedGotWeapon(PlayerPedId(), GetHashKey('GADGET_PARACHUTE'), false)
 
 	SetPlayerModel(PlayerId(), model)
 
-	Player.skin = id
+	Player.Skin = id
 	SetPedArmour(ped, armor)
 	SetEntityHealth(ped, health)
 
 	if Settings.giveParachuteAtSpawn then
 		if isHasParachute then
-			GiveWeaponToPed(ped, GetHashKey("GADGET_PARACHUTE"), 1, false, false)
+			GiveWeaponToPed(ped, GetHashKey('GADGET_PARACHUTE'), 1, false, false)
 		end
 	end
 

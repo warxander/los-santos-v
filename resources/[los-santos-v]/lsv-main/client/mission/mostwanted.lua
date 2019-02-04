@@ -1,21 +1,38 @@
 AddEventHandler('lsv:startMostWanted', function()
-	JobWatcher.StartJob('Most Wanted')
+	MissionManager.StartMission('Most Wanted')
 
 	local eventStartTime = GetGameTimer()
-	local jobId = JobWatcher.GetJobId()
+	local passedTime = 0
 	local lastNotificationTime = nil
 
+	Gui.StartMission('Most Wanted', 'Survive the longest with a wanted level.')
+
 	Citizen.CreateThread(function()
-		Gui.StartJob('Most Wanted', 'Survive the longest with a wanted level.')
+		while true do
+			Citizen.Wait(0)
+
+			if not MissionManager.Mission then return end
+
+			if Player.IsActive() then
+				Gui.DrawTimerBar('MISSION TIME', Settings.mostWanted.time - passedTime)
+				Gui.DrawTimerBar('TIME SURVIVED', passedTime, nil, 2)
+				Gui.DisplayObjectiveText('Survive the longest with a wanted level.')
+			end
+		end
 	end)
 
 	while true do
 		Citizen.Wait(0)
 
+		if not MissionManager.Mission then
+			TriggerEvent('lsv:mostWantedFinished', false)
+			return
+		end
+
 		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.mostWanted.time then
 			World.SetWantedLevel(5)
 
-			local passedTime = GetGameTimer() - eventStartTime
+			passedTime = GetGameTimer() - eventStartTime
 
 			if IsPlayerDead(PlayerId()) then
 				TriggerServerEvent('lsv:mostWantedFinished', passedTime)
@@ -23,14 +40,9 @@ AddEventHandler('lsv:startMostWanted', function()
 			end
 
 			if not lastNotificationTime or GetTimeDifference(GetGameTimer(), lastNotificationTime) >= Settings.mostWanted.notification.timeout then
-				Gui.DisplayNotification(Utils.GetRandom(Settings.mostWanted.notification.messages), 'CHAR_DEFAULT', GetPlayerName(PlayerId()))
+				Gui.DisplayNotification(table.random(Settings.mostWanted.notification.messages), 'CHAR_DEFAULT', GetPlayerName(PlayerId()))
 				lastNotificationTime = GetGameTimer()
 			end
-
-			local secondsLeft = math.floor((Settings.mostWanted.time - passedTime) / 1000)
-			Gui.DrawTimerBar('MISSION TIME', secondsLeft)
-			Gui.DrawTimerBar('TIME SURVIVED', math.floor(passedTime / 1000), nil, 2)
-			Gui.DisplayObjectiveText('Survive the longest with a wanted level.')
 		else
 			TriggerServerEvent('lsv:mostWantedFinished', Settings.mostWanted.time)
 			return
@@ -41,9 +53,9 @@ end)
 
 RegisterNetEvent('lsv:mostWantedFinished')
 AddEventHandler('lsv:mostWantedFinished', function(success, reason)
-	JobWatcher.FinishJob('Most Wanted')
+	MissionManager.FinishMission('Most Wanted')
 
 	World.SetWantedLevel(0)
 
-	Gui.FinishJob('Most Wanted', success, reason)
+	Gui.FinishMission('Most Wanted', success, reason)
 end)

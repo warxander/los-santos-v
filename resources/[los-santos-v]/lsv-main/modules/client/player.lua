@@ -1,26 +1,24 @@
 Player = { }
 
-Player.isLoaded = false
 
-Player.isFreeze = nil
+Player.Frozen = false
+Player.Loaded = false
+Player.Kills = 0
+Player.Skin = nil
 
-Player.serverId = nil
-
-Player.skin = nil
-
-Player.cash = 0
-Player.killstreak = 0
-Player.kills = 0
-Player.deaths = 0
-
-Player.crewMembers = { } -- { serverPlayerId }
+local cash = 0
+local serverId = nil
 
 
 function Player.Init(playerData)
-	Player.serverId = GetPlayerServerId(PlayerId())
-	Player.cash = playerData.Cash
-	Player.kills = playerData.Kills
-	Player.deaths = playerData.Deaths
+	cash = playerData.Cash
+
+	serverId = GetPlayerServerId(PlayerId())
+
+	Player.Kills = playerData.Kills
+	Player.PatreonTier = playerData.PatreonTier
+
+	SetPlayerMaxArmour(PlayerId(), Settings.maxArmour)
 
 	StatSetInt(GetHashKey('MP0_LUNG_CAPACITY'), playerData.SkillStat, true)
 	StatSetInt(GetHashKey('MP0_STAMINA'), playerData.SkillStat, true)
@@ -34,27 +32,22 @@ end
 
 
 function Player.IsActive()
-	return not IsPlayerDead(PlayerId()) and not Player.isFreeze and not IsPlayerSwitchInProgress() and not GetIsLoadingScreenActive()
+	return not IsPlayerDead(PlayerId()) and not Player.Frozen and not IsPlayerSwitchInProgress() and not GetIsLoadingScreenActive()
 end
 
 
 function Player.IsOnMission()
-	return Player.IsActive() and JobWatcher.IsAnyJobInProgress()
+	return Player.IsActive() and MissionManager.Mission
 end
 
 
 function Player.IsInFreeroam()
-	return Player.IsActive() and not Player.IsOnMission()
+	return Player.IsActive() and not MissionManager.Mission
 end
 
 
 function Player.ServerId()
-	return Player.serverId
-end
-
-
-function Player.isCrewMember(serverId)
-	return Utils.IndexOf(Player.crewMembers, serverId)
+	return serverId
 end
 
 
@@ -63,7 +56,7 @@ function Player.GetPlayerWeapons()
 	local ammoTypes = { }
 	local result = { }
 
-	for id, weapon in pairs(Weapon.GetWeapons()) do
+	table.foreach(Weapon.GetWeapons(), function(weapon, id)
 		local weaponHash = GetHashKey(id)
 
 		if HasPedGotWeapon(player, weaponHash, false) then
@@ -84,17 +77,17 @@ function Player.GetPlayerWeapons()
 			end
 
 			playerWeapon.components = { }
-			for _, component in ipairs(weapon.components) do
+			table.foreach(weapon.components, function(component)
 				if HasPedGotWeaponComponent(player, weaponHash, component.hash) then
 					table.insert(playerWeapon.components, component.hash)
 				end
-			end
+			end)
 
 			playerWeapon.tintIndex = GetPedWeaponTintIndex(player, weaponHash)
 
 			table.insert(result, playerWeapon)
 		end
-	end
+	end)
 
 	return result
 end
@@ -103,17 +96,17 @@ end
 function Player.GiveWeapons(weapons)
 	local player = PlayerPedId()
 
-	for _, weapon in ipairs(weapons) do
+	table.foreach(weapons, function(weapon)
 		local weaponHash = GetHashKey(weapon.id)
 
 		GiveWeaponToPed(player, weaponHash, weapon.ammo, false, weapon.selected or false)
 
-		for _, component in ipairs(weapon.components) do
+		table.foreach(weapon.components, function(component)
 			GiveWeaponComponentToPed(player, GetHashKey(weapon.id), component)
-		end
+		end)
 
 		SetPedWeaponTintIndex(player, weaponHash, weapon.tintIndex)
-	end
+	end)
 end
 
 
@@ -126,6 +119,16 @@ function Player.Save()
 	Player.SaveWeapons()
 
 	TriggerServerEvent('lsv:playerSaved')
+end
+
+function Player.Position(alive)
+	return GetEntityCoords(PlayerPedId(), alive)
+end
+
+
+function Player.DistanceTo(position, useZ)
+	local playerPosition = Player.Position()
+	return Vdist(playerPosition.x, playerPosition.y, playerPosition.z, position.x, position.y, position.z, useZ)
 end
 
 
@@ -150,13 +153,13 @@ function Player.SetFreeze(freeze)
 	SetEntityCollision(PlayerPedId(), not freeze)
 	SetPlayerInvincible(PlayerId(), freeze)
 
-	Player.isFreeze = freeze
+	Player.Frozen = freeze
 end
 
 
 RegisterNetEvent('lsv:cashUpdated')
-AddEventHandler('lsv:cashUpdated', function(cash)
-	Player.cash = Player.cash + cash
+AddEventHandler('lsv:cashUpdated', function(cashDiff)
+	cash = cash + cashDiff
 end)
 
 

@@ -4,8 +4,8 @@ Citizen.CreateThread(function()
 	math.randomseed(os.time())
 	math.random(); math.random(); math.random();
 
-	hud.discordUrl = GetConvar("discord_url", "")
-	hud.pauseMenuTitle = GetConvar("pause_menu_title", "")
+	hud.discordUrl = GetConvar('discord_url', '')
+	hud.pauseMenuTitle = GetConvar('pause_menu_title', '')
 end)
 
 

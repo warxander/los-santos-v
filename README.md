@@ -1,5 +1,5 @@
 # Los Santos V
-FiveM GTAO-like Freeroam game mode
+FiveM Freeroam Deathmatch game mode
 
 ## How To Install
 0. Use `git clone --recursive-submodules` to download all sources and keep it up-to-date.

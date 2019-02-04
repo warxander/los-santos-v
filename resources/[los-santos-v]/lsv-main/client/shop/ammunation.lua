@@ -33,6 +33,7 @@ local weaponCategories = {
 		'WEAPON_SMG',
 		'WEAPON_ASSAULTSMG',
 		'WEAPON_MG',
+		'WEAPON_GUSENBERG',
 		'WEAPON_COMBATMG'
 	},
 	['Assault Rifles'] = {
@@ -61,8 +62,9 @@ local ammoByWeaponTypes = {
 	['SMG Rounds'] = {
 		'WEAPON_MICROSMG',
 		'WEAPON_SMG',
-		'WEAPON_ASSAULTSMG'
+		'WEAPON_ASSAULTSMG',
 	},
+	['Gusenberg Rounds'] = { 'WEAPON_GUSENBERG' },
 	['MG Rounds'] = {
 		'WEAPON_MG',
 		'WEAPON_COMBATMG'
@@ -89,7 +91,7 @@ local ammoByWeaponTypes = {
 
 local function weaponTintKills(weaponTintIndex, weaponHash)
 	if GetPedWeaponTintIndex(PlayerPedId(), weaponHash) == weaponTintIndex then return 'Used' end
-	if Player.kills >= Settings.weaponTints[weaponTintIndex].kills then return '' end
+	if Player.Kills >= Settings.weaponTints[weaponTintIndex].kills then return '' end
 	return Settings.weaponTints[weaponTintIndex].kills..' Kills'
 end
 
@@ -122,9 +124,9 @@ AddEventHandler('lsv:init', function()
 	local selectedWeapon = nil
 	local selectedWeaponCategory = nil
 
-	for _, ammunation in ipairs(ammunations) do
+	table.foreach(ammunations, function(ammunation)
 		ammunation.blip = Map.CreatePlaceBlip(Blip.AmmuNation(), ammunation.x, ammunation.y, ammunation.z)
-	end
+	end)
 
 	WarMenu.CreateMenu('ammunation', '')
 	WarMenu.SetSubTitle('ammunation', '')
@@ -153,16 +155,16 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_weaponCategories') then
-			for weaponCategory, _ in pairs(weaponCategories) do
+			table.foreach(weaponCategories, function(_, weaponCategory)
 				if WarMenu.MenuButton(weaponCategory, 'ammunation_weapons') then
 					WarMenu.SetSubTitle('ammunation_weapons', weaponCategory)
 					selectedWeaponCategory = weaponCategory
 				end
-			end
+			end)
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_weapons') then
-			for _, weapon in ipairs(weaponCategories[selectedWeaponCategory]) do
+			table.foreach(weaponCategories[selectedWeaponCategory], function(weapon)
 				if WarMenu.Button(Weapon.GetWeapon(weapon).name, weaponPrice(weapon)) then
 					if HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) then
 						Gui.DisplayNotification('You already have this weapon.')
@@ -170,19 +172,12 @@ AddEventHandler('lsv:init', function()
 						TriggerServerEvent('lsv:purchaseWeapon', weapon)
 					end
 				end
-			end
+			end)
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_ammunition') then
-			for ammoType, weapons in pairs(ammoByWeaponTypes) do
-				local playerWeaponByAmmoType = nil
-
-				for _, weapon in pairs(weapons) do
-					if HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) then
-						playerWeaponByAmmoType = weapon
-						break
-					end
-				end
+			table.foreach(ammoByWeaponTypes, function(weapons, ammoType)
+				local playerWeaponByAmmoType = table.find_if(weapons, function(weapon) return HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) end)
 
 				if playerWeaponByAmmoType then
 					local weaponHash = GetHashKey(playerWeaponByAmmoType)
@@ -199,38 +194,38 @@ AddEventHandler('lsv:init', function()
 						end
 					end
 				end
-			end
+			end)
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_upgradeWeapons') then
 			local playerWeapons = Player.GetPlayerWeapons()
 
-			for _, weapon in ipairs(playerWeapons) do
+			table.foreach(playerWeapons, function(weapon)
 				local weaponName = Weapon.GetWeapon(weapon.id).name
 				if WarMenu.MenuButton(weaponName, 'ammunation_weaponUpgrades') then
 					WarMenu.SetSubTitle('ammunation_weaponUpgrades', weaponName..' UPGRADES')
 					SetCurrentPedWeapon(PlayerPedId(), GetHashKey(weapon.id), true)
 					selectedWeapon = weapon.id
 				end
-			end
+			end)
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_weaponUpgrades') then
 			local selectedWeaponHash = GetHashKey(selectedWeapon)
 
-			for componentIndex, component in ipairs(Weapon.GetWeapon(selectedWeapon).components) do
+			table.foreach(Weapon.GetWeapon(selectedWeapon).components, function(component, componentIndex)
 				if WarMenu.Button(component.name, weaponComponentPrice(componentIndex, selectedWeapon, component.hash)) and
 					not HasPedGotWeaponComponent(PlayerPedId(), selectedWeaponHash, component.hash) then
 						TriggerServerEvent('lsv:updateWeaponComponent', selectedWeapon, componentIndex)
 				end
-			end
+			end)
 
-			if GetWeaponTintCount(selectedWeaponHash) == Utils.GetTableLength(Settings.weaponTints) then
-				for weaponTintIndex, weaponTint in ipairs(Settings.weaponTints) do
+			if GetWeaponTintCount(selectedWeaponHash) == table.length(Settings.weaponTints) then
+				table.foreach(Settings.weaponTints, function(weaponTint, weaponTintIndex)
 					if WarMenu.Button(weaponTint.name, weaponTintKills(weaponTintIndex, selectedWeaponHash)) and GetPedWeaponTintIndex(PlayerPedId(), selectedWeaponHash) ~= weaponTintIndex then
 						TriggerServerEvent('lsv:updateWeaponTint', selectedWeaponHash, weaponTintIndex)
 					end
-				end
+				end)
 			end
 
 			WarMenu.Display()
@@ -249,33 +244,35 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		for ammunationIndex, ammunation in ipairs(ammunations) do
-			Gui.DrawPlaceMarker(ammunation.x, ammunation.y, ammunation.z - 1, Settings.placeMarkerRadius, ammunationColor.r, ammunationColor.g, ammunationColor.b, Settings.placeMarkerOpacity)
+		if not IsPlayerDead(PlayerId()) then
+			table.foreach(ammunations, function(ammunation, ammunationIndex)
+				Gui.DrawPlaceMarker(ammunation.x, ammunation.y, ammunation.z - 1, Settings.placeMarkerRadius, ammunationColor.r, ammunationColor.g, ammunationColor.b, Settings.placeMarkerOpacity)
 
-			if Vdist(ammunation.x, ammunation.y, ammunation.z, table.unpack(GetEntityCoords(PlayerPedId(), true))) < Settings.placeMarkerRadius then
-				if not WarMenu.IsAnyMenuOpened() then
-					Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to browse weapons.')
+				if Player.DistanceTo(ammunation, true) < Settings.placeMarkerRadius then
+					if not WarMenu.IsAnyMenuOpened() then
+						Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to browse weapons.')
 
-					if IsControlJustReleased(0, 38) then
-						ammunationOpenedMenuIndex = ammunationIndex
-						openedFromInteractionMenu = false
-						WarMenu.OpenMenu('ammunation')
+						if IsControlJustReleased(0, 38) then
+							ammunationOpenedMenuIndex = ammunationIndex
+							openedFromInteractionMenu = false
+							WarMenu.OpenMenu('ammunation')
+						end
+					end
+				else
+					local isAmmunationMenuOpened = not openedFromInteractionMenu and
+						(WarMenu.IsMenuOpened('ammunation') or
+						WarMenu.IsMenuOpened('ammunation_weapons') or
+						WarMenu.IsMenuOpened('ammunation_weaponCategories') or
+						WarMenu.IsMenuOpened('ammunation_ammunition') or
+						WarMenu.IsMenuOpened('ammunation_weaponUpgrades') or
+						WarMenu.IsMenuOpened('ammunation_upgradeWeapons'))
+
+					if isAmmunationMenuOpened and ammunationIndex == ammunationOpenedMenuIndex then
+						openedFromInteractionMenu = true
+						WarMenu.CloseMenu()
 					end
 				end
-			else
-				local isAmmunationMenuOpened = not openedFromInteractionMenu and
-					(WarMenu.IsMenuOpened('ammunation') or
-					WarMenu.IsMenuOpened('ammunation_weapons') or
-					WarMenu.IsMenuOpened('ammunation_weaponCategories') or
-					WarMenu.IsMenuOpened('ammunation_ammunition') or
-					WarMenu.IsMenuOpened('ammunation_weaponUpgrades') or
-					WarMenu.IsMenuOpened('ammunation_upgradeWeapons'))
-
-				if isAmmunationMenuOpened and ammunationIndex == ammunationOpenedMenuIndex then
-					openedFromInteractionMenu = true
-					WarMenu.CloseMenu()
-				end
-			end
+			end)
 		end
 	end
 end)

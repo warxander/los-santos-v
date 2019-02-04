@@ -16,12 +16,12 @@ AddEventHandler('lsv:init', function()
 			if currentPosition == previousPosition and currentHeading == previousHeading then
 				if timeLeft > 0 then
 					if timeLeft == math.ceil(Settings.afkTimeout / 4) then
-						Gui.DisplayNotification("~r~You will be kicked in "..timeLeft.." seconds for being AFK.")
+						Gui.DisplayNotification('~r~You will be kicked in '..timeLeft..' seconds for being AFK.')
 					end
 
 					timeLeft = timeLeft - 1
 				else
-					TriggerServerEvent("lsv:kickAFKPlayer")
+					TriggerServerEvent('lsv:kickAFKPlayer')
 				end
 			else
 				timeLeft = Settings.afkTimeout

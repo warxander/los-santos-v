@@ -19,8 +19,8 @@ Citizen.CreateThread(function()
 
 		if not crateDropData and Scoreboard.GetPlayersCount() > 1 then
 			crateDropData = { }
-			crateDropData.positionIndex = math.random(Utils.GetTableLength(Settings.crateDropSettings.positions))
-			crateDropData.weaponIndex = math.random(Utils.GetTableLength(Settings.crateDropSettings.weapons))
+			crateDropData.positionIndex = math.random(#Settings.crateDropSettings.positions)
+			crateDropData.weaponIndex = math.random(#Settings.crateDropSettings.weapons)
 
 			logger:Info('Spawn { '..crateDropData.positionIndex..', '..crateDropData.weaponIndex..' }')
 

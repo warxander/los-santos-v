@@ -20,23 +20,23 @@ end
 
 
 function Logger:Info(message)
-	log("Info", self.name, message)
+	log('Info', self.name, message)
 end
 
 
 function Logger:Error(message)
-	log("Error", self.name, message)
+	log('Error', self.name, message)
 end
 
 
 function Logger:Warning(message)
-	log("Warning", self.name, message)
+	log('Warning', self.name, message)
 end
 
 
 function Logger:Debug(message)
 	if not Settings.debug then return end
-	log("Debug", self.name, message)
+	log('Debug', self.name, message)
 end
 
 

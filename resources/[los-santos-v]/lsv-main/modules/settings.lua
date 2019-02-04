@@ -6,7 +6,6 @@ Settings.maxPlayerCount = 32 -- For internal usage only, do not touch it!
 Settings.afkTimeout = 300 --in seconds
 Settings.autoSavingTimeout = 180000
 Settings.pingThreshold = 200
-Settings.playerBlipDistance = 150.
 
 
 -- Spawn settings
@@ -51,6 +50,8 @@ Settings.world.blacklistVehicles = {
 	'annihilator',
 	'hunter',
 	'savage',
+	'khanjali',
+	'apc',
 }
 
 
@@ -61,6 +62,7 @@ Settings.pickup = {
 		{
 			id = 'PICKUP_ARMOUR_STANDARD',
 			chance = 0.25,
+			armour = true,
 		},
 
 		{
@@ -87,14 +89,12 @@ Settings.giveParachuteAtSpawn = true
 Settings.infinitePlayerStamina = true
 Settings.weaponClipCount = 10
 Settings.defaultPlayerWeapons = {
-	{ id = "WEAPON_KNIFE", ammo = 0, components = { } },
-	{ id = "WEAPON_PISTOL", ammo = 80, components = { }, selected = true },
+	{ id = 'WEAPON_KNIFE', ammo = 0, components = { } },
+	{ id = 'WEAPON_PISTOL', ammo = 80, components = { }, selected = true },
 }
-Settings.skillStat = 20
+Settings.skillStat = 40
+Settings.maxArmour = 100
 
-
--- Crew
-Settings.crewInvitationTimeout = 10000
 
 -- Cash
 Settings.cashPerKill = 150
@@ -119,7 +119,7 @@ Settings.bounty = {
 
 -- Events
 Settings.event = {
-	timeout = 600000,
+	timeout = 300000,
 	minPlayers = 3,
 }
 
@@ -171,6 +171,10 @@ Settings.ammuNationRefillAmmo = {
 		ammo = 30,
 		price = 72,
 	},
+	['Gusenberg Rounds'] = {
+		ammo = 30,
+		price = 129,
+	},
 	['MG Rounds'] = {
 		ammo = 100,
 		price = 135,
@@ -199,26 +203,10 @@ Settings.ammuNationRefillAmmo = {
 
 
 -- Missions
-Settings.mission = {
-	timeout = 900000,
-	places = {
-		{ x = -57.338516235352, y = -2448.7080078125, z = 7.2357640266418 },
-		{ x = 1013.4348754883, y = -2150.8464355469, z = 31.533414840698 },
-		{ x = 1213.0318603516, y = -1251.0944824219, z = 36.325752258301 },
-		{ x = 707.24340820313, y = -966.26904296875, z = 30.412851333618 },
-		{ x = -29.890213012695, y = -1104.3305664063, z = 26.422355651855 },
-		{ x = 114.35282897949, y = -1961.0159912109, z = 21.334199905396 },
-		{ x = -429.37182617188, y = -1727.9987792969, z = 19.783857345581 },
-		{ x = -1320.5399169922, y = -1264.0423583984, z = 4.5883016586304 },
-		{ x = -1747.4803466797, y = -394.7268371582, z = 43.688488006592 },
-		{ x = -1274.0612792969, y = 315.11770629883, z = 65.511779785156 },
-		{ x = -564.36932373047, y = 278.0114440918, z = 83.13631439209 },
-		{ x = -288.54412841797, y = -710.89288330078, z = 33.493518829346 },
-		{ x = 81.447616577148, y = 274.64431762695, z = 110.21018981934 },
-		{ x = -1008.0339355469, y = -487.32397460938, z = 39.969467163086 },
-		{ x = -66.46614074707, y = 490.74649047852, z = 144.69189453125 },
-	},
+Settings.missions = {
+	timeout = 300000,
 }
+
 
 -- Market Manipulation Mission
 Settings.marketManipulation = {
@@ -380,22 +368,23 @@ Settings.headhunter = {
 	maxReward = 10000,
 }
 
+
 -- Crate Drops
 Settings.crateDropSettings = {
 	cash = 2500,
 	weaponClipCount = 5,
 	weapons = {
-		{ id = "WEAPON_COMPACTLAUNCHER", name = "Compact Grenade Launcher" },
-		{ id = "WEAPON_GRENADELAUNCHER", name = "Grenade Launcher" },
-		{ id = "WEAPON_RPG", name = "Rocket Laucher" },
-		{ id = "WEAPON_HOMINGLAUNCHER", name = "Homing Laucher" },
-		{ id = "WEAPON_MINIGUN", name = "Minigun" },
-		{ id = "WEAPON_HEAVYSNIPER", name = "Heavy Sniper" },
-		{ id = "WEAPON_SNIPERRIFLE", name = "Sniper Rifle" },
-		{ id = "WEAPON_MARKSMANRIFLE", name = "Marksman Rifle" },
-		{ id = "WEAPON_DOUBLEACTION", name = "Double-Action Revolver" },
+		{ id = 'WEAPON_COMPACTLAUNCHER', name = 'Compact Grenade Launcher' },
+		{ id = 'WEAPON_GRENADELAUNCHER', name = 'Grenade Launcher' },
+		{ id = 'WEAPON_RPG', name = 'Rocket Laucher' },
+		{ id = 'WEAPON_HOMINGLAUNCHER', name = 'Homing Laucher' },
+		{ id = 'WEAPON_MINIGUN', name = 'Minigun' },
+		{ id = 'WEAPON_HEAVYSNIPER', name = 'Heavy Sniper' },
+		{ id = 'WEAPON_SNIPERRIFLE', name = 'Sniper Rifle' },
+		{ id = 'WEAPON_MARKSMANRIFLE', name = 'Marksman Rifle' },
+		{ id = 'WEAPON_DOUBLEACTION', name = 'Double-Action Revolver' },
 	},
-	timeout = 600000,
+	timeout = 300000,
 	notifyBeforeTimeout = 60000,
 	positions = {
 		{ ['x'] = 699.15850830078, ['y'] = -1594.9453125, ['z'] = 9.6801643371582 },
@@ -420,18 +409,18 @@ Settings.crateDropSettings = {
 		{ ['x'] = -2095.2294921875, ['y'] = 2519.5354003906, ['z'] = 0.95100903511047 },
 	},
 	guards = {
-		hash = "s_m_y_marine_03",
+		hash = 's_m_y_marine_03',
 		radius = 16.,
 		armor = 200,
 		weapons = {
-			"WEAPON_SNIPERRIFLE",
-			"WEAPON_SPECIALCARBINE",
-			"WEAPON_ADVANCEDRIFLE",
-			"WEAPON_BULLPUPSHOTGUN",
-			"WEAPON_RPG",
-			"WEAPON_CARBINERIFLE",
-			"WEAPON_ADVANCEDRIFLE",
-			"WEAPON_MINIGUN",
+			'WEAPON_SNIPERRIFLE',
+			'WEAPON_SPECIALCARBINE',
+			'WEAPON_ADVANCEDRIFLE',
+			'WEAPON_BULLPUPSHOTGUN',
+			'WEAPON_RPG',
+			'WEAPON_CARBINERIFLE',
+			'WEAPON_ADVANCEDRIFLE',
+			'WEAPON_MINIGUN',
 
 		},
 		count = 13,
@@ -441,58 +430,58 @@ Settings.crateDropSettings = {
 
 -- Skins
 Settings.skins = {
-	["u_m_y_baygor"] = {
-		name = "Default",
+	['u_m_y_baygor'] = {
+		name = 'Default',
 		kills = 0,
 	},
 
-	["g_m_m_chemwork_01"] = {
-		name = "Chemist",
+	['g_m_m_chemwork_01'] = {
+		name = 'Chemist',
 		kills = 500,
 	},
 
-	["s_m_y_fireman_01"] = {
-		name = "Fireman",
+	['s_m_y_fireman_01'] = {
+		name = 'Fireman',
 		kills = 1000,
 	},
 
-	["s_m_m_fibsec_01"] = {
-		name = "FIB Security",
+	['s_m_m_fibsec_01'] = {
+		name = 'FIB Security',
 		kills = 1500,
 	},
 
-	["s_m_y_clown_01"] = {
-		name = "Clown",
+	['s_m_y_clown_01'] = {
+		name = 'Clown',
 		kills = 2000,
 	},
 
-	["u_m_y_zombie_01"] = {
-		name = "Zombie",
+	['u_m_y_zombie_01'] = {
+		name = 'Zombie',
 		kills = 2500,
 	},
 
-	["s_m_m_strperf_01"] = {
-		name = "Street Performer",
+	['s_m_m_strperf_01'] = {
+		name = 'Street Performer',
 		kills = 3000,
 	},
 
-	["u_m_y_pogo_01"] = {
-		name = "Pogo",
+	['u_m_y_pogo_01'] = {
+		name = 'Pogo',
 		kills = 3500,
 	},
 
-	["s_m_m_movalien_01"] = {
-		name = "Alien",
+	['s_m_m_movalien_01'] = {
+		name = 'Alien',
 		kills = 4000,
 	},
 
-	["u_m_y_rsranger_01"] = {
-		name = "RS Ranger",
+	['u_m_y_rsranger_01'] = {
+		name = 'RS Ranger',
 		kills = 4500,
 	},
 
-	["u_m_y_imporage"] = {
-		name = "Imporage",
+	['u_m_y_imporage'] = {
+		name = 'Imporage',
 		kills = 5000,
 	},
 }
@@ -500,42 +489,42 @@ Settings.skins = {
 -- Weapon tints
 Settings.weaponTints = {
 	[0] = {
-		name = "Normal",
+		name = 'Normal',
 		kills = 0,
 	},
 
 	[1] = {
-		name = "Green",
+		name = 'Green',
 		kills = 50,
 	},
 
 	[2] = {
-		name = "Gold",
+		name = 'Gold',
 		kills = 250,
 	},
 
 	[3] = {
-		name = "Pink",
+		name = 'Pink',
 		kills = 500,
 	},
 
 	[4] = {
-		name = "Army",
+		name = 'Army',
 		kills = 1000,
 	},
 
 	[5] = {
-		name = "LSPD",
+		name = 'LSPD',
 		kills = 1500,
 	},
 
 	[6] = {
-		name = "Orange",
+		name = 'Orange',
 		kills = 2000,
 	},
 
 	[7] = {
-		name = "Platinum",
+		name = 'Platinum',
 		kills = 2500,
 	},
 }

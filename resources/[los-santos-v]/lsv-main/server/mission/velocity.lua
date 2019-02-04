@@ -10,8 +10,9 @@ AddEventHandler('lsv:velocityFinished', function()
 
 	Db.UpdateCash(player, reward, function()
 		TriggerClientEvent('lsv:velocityFinished', player, true)
-		players[player] = nil
 	end)
+
+	players[player] = nil
 end)
 
 

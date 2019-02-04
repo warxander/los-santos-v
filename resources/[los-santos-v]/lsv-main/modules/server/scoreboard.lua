@@ -7,6 +7,9 @@ local function sortScoreboard(l, r)
 	if not l then return false end
 	if not r then return true end
 
+	if l.patreonTier > r.patreonTier then return true end
+	if l.patreonTier < r.patreonTier then return false end
+
 	if l.cash > r.cash then return true end
 	if l.cash < r.cash then return false end
 
@@ -50,6 +53,7 @@ function Scoreboard.AddPlayer(player, playerStats)
 	if not scoreboard[player] then
 		scoreboard[player] = {
 			id = player,
+			patreonTier = playerStats.PatreonTier,
 			name = GetPlayerName(player),
 			cash = playerStats.Cash,
 			kdRatio = calculateKdRatio(playerStats.Kills, playerStats.Deaths),
@@ -72,7 +76,7 @@ end
 
 
 function Scoreboard.GetPlayersCount()
-	return Utils.GetTableLength(scoreboard)
+	return table.length(scoreboard)
 end
 
 
@@ -82,7 +86,7 @@ end
 
 
 function Scoreboard.GetRandomPlayer()
-	return Utils.GetRandom(scoreboard).id
+	return table.random(scoreboard).id
 end
 
 

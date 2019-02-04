@@ -1,23 +1,23 @@
 local killedMessage = {
-	"killed",
-	"destroyed",
-	"finished",
-	"ended",
-	"murdered",
-	"wiped out",
-	"executed",
-	"erased",
-	"whacked",
-	"deaded",
-	"slain",
-	"atomized",
-	"raped",
-	"assassinated",
-	"fucked up",
+	'killed',
+	'destroyed',
+	'finished',
+	'ended',
+	'murdered',
+	'wiped out',
+	'executed',
+	'erased',
+	'whacked',
+	'deaded',
+	'slain',
+	'atomized',
+	'raped',
+	'assassinated',
+	'fucked up',
 }
 
 local function getKilledMessage()
-	return killedMessage[math.random(Utils.GetTableLength(killedMessage))]
+	return killedMessage[math.random(#killedMessage)]
 end
 
 
@@ -36,19 +36,18 @@ end)
 RegisterServerEvent('baseevents:onPlayerKilled')
 AddEventHandler('baseevents:onPlayerKilled', function(killer)
 	local victim = source
-	local isVictimDoingJob = JobWatcher.IsDoingJob(victim)
 
 	if killer ~= -1 then
 		Db.UpdateKills(killer, function()
 			if Scoreboard.IsPlayerOnline(killer) then
 				local killerCash = Settings.cashPerKill + (Settings.cashPerKillstreak * Scoreboard.GetPlayerKillstreak(killer))
-				if isVictimDoingJob then killerCash = killerCash + Settings.cashPerMission end
+				if MissionManager.IsPlayerOnMission(victim) then killerCash = killerCash + Settings.cashPerMission end
 
 				Scoreboard.UpdateKillstreak(killer)
 
 				Db.UpdateCash(killer, killerCash, function()
 					TriggerClientEvent('lsv:onPlayerKilled', -1, victim, killer, getKilledMessage())
-				end)
+				end, victim)
 			end
 		end)
 	end

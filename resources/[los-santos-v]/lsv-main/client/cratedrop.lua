@@ -19,8 +19,8 @@ AddEventHandler('lsv:init', function()
 			if HasPickupBeenCollected(crateDropData.pickup) then
 				TriggerServerEvent('lsv:cratePickedUp')
 			elseif DoesPickupExist(crateDropData.pickup) then
-				local pickupX, pickupY, pickupZ = table.unpack(GetPickupCoords(crateDropData.pickup))
-				Gui.DrawPlaceMarker(pickupX, pickupY, pickupZ - 1, Settings.placeMarkerRadius, 240, 200, 80, Settings.placeMarkerOpacity)
+				local pickupPosition = GetPickupCoords(crateDropData.pickup)
+				Gui.DrawPlaceMarker(pickupPosition.x, pickupPosition.y, pickupPosition.z - 1, Settings.placeMarkerRadius, 240, 200, 80, Settings.placeMarkerOpacity)
 			end
 		end
 
@@ -44,7 +44,7 @@ AddEventHandler('lsv:spawnCrate', function(positionIndex, weaponIndex)
 	Map.SetBlipFlashes(CrateBlip)
 
 	FlashMinimapDisplay()
-	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
+	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
 	Gui.DisplayNotification('~y~A Special Crate has been dropped.')
 end)
 

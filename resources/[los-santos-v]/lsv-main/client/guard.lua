@@ -1,7 +1,7 @@
 local banned = false
 local blacklistWeapons = {
-	"WEAPON_RAILGUN",
-	"WEAPON_GARBAGEBAG",
+	'WEAPON_RAILGUN',
+	'WEAPON_GARBAGEBAG',
 }
 
 
@@ -22,7 +22,7 @@ AddEventHandler('lsv:init', function()
 
 		SetPedInfiniteAmmoClip(PlayerPedId(), false)
 		SetEntityVisible(PlayerPedId(), true)
-		if not Player.isFreeze then ResetEntityAlpha(PlayerPedId()) end
+		if not Player.Frozen then ResetEntityAlpha(PlayerPedId()) end
 
 		if Player.IsActive() and GetPlayerInvincible(PlayerId()) then
 			TriggerServerEvent('lsv:banPlayer', 'God Mode')
@@ -30,9 +30,9 @@ AddEventHandler('lsv:init', function()
 			return
 		end
 
-		for _, weapon in ipairs(blacklistWeapons) do
+		table.foreach(blacklistWeapons, function(weapon)
 			weaponHash = GetHashKey(weapon)
 			if HasPedGotWeapon(PlayerPedId(), weaponHash, false) then RemoveWeaponFromPed(PlayerPedId(), weaponHash) end
-		end
+		end)
 	end
 end)

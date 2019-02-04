@@ -1,6 +1,6 @@
 RegisterNetEvent('lsv:reportSuccess')
 AddEventHandler('lsv:reportSuccess', function(targetName)
-	PlaySoundFrontend(-1, "CONFIRM_BEEP", "HUD_MINI_GAME_SOUNDSET", true)
+	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
 	Gui.DisplayNotification('<C>'..targetName..'</C> ~r~has been reported.')
 end)
 

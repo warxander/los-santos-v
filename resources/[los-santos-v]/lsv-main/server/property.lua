@@ -3,11 +3,8 @@ local logger = Logger:CreateNamedLogger('HotProperty')
 local propertyData = nil
 
 local function getPlayerIndexById(id)
-	for i, v in pairs(propertyData.players) do
-		if v.id == id then return i end
-	end
-
-	return nil
+	local _, index = table.find_if(propertyData.players, function(player) return player.id == id end)
+	return index
 end
 
 local function sortPlayersByTotalTime(l, r)
@@ -21,7 +18,7 @@ AddEventHandler('lsv:startHotProperty', function()
 	propertyData = { }
 	propertyData.players = { }
 	propertyData.currentPlayer = nil
-	propertyData.placeIndex = math.random(Utils.GetTableLength(Settings.castle.places))
+	propertyData.placeIndex = math.random(#Settings.castle.places)
 	propertyData.eventStartTime = GetGameTimer()
 
 	logger:Info('Start { '..propertyData.placeIndex..' }')
@@ -34,10 +31,10 @@ AddEventHandler('lsv:startHotProperty', function()
 		if propertyData and GetGameTimer() - propertyData.eventStartTime >= Settings.property.duration then
 			local winners = nil
 
-			if not Utils.IsTableEmpty(propertyData.players) then
+			if #propertyData.players ~= 0 then
 				winners = { }
 
-				for i = 1, Utils.GetTableLength(Settings.property.rewards) do
+				for i = 1, #Settings.property.rewards do
 					if propertyData.players[i] then
 						logger:Info('Winner { '..i..', '..propertyData.players[i].id..' }')
 						Db.UpdateCash(propertyData.players[i].id, Settings.property.rewards[i])

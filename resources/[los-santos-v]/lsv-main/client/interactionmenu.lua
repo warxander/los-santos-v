@@ -1,36 +1,11 @@
-local quickGpsLocations = { "None", "Crate Drop", "Ammu-Nation", "Skin Shop" }
+local quickGpsLocations = { 'None', 'Crate Drop', 'Ammu-Nation', 'Skin Shop' }
 local quickGpsCurrentIndex = 1
 local quickGpsSelectedIndex = 1
 local quickGpsBlip = nil
 
-local walkStyleCurrentIndex = 1
-local walkStyleSelectedIndex = 1
-local walkStyles = { "Normal", "Femme", "Gangster", "Posh", "Tough Guy" }
-local walkStyleClipSets = {
-	{ }, -- Normal
-	{ maleClipSet = "MOVE_M@FEMME@", femaleClipSet = "MOVE_F@FEMME@" },
-	{ maleClipSet = "MOVE_M@GANGSTER@NG", femaleClipSet = "MOVE_F@GANGSTER@NG" },
-	{ maleClipSet = "MOVE_M@POSH@", femaleClipSet = "MOVE_F@POSH@" },
-	{ maleClipSet = "MOVE_M@TOUGH_GUY@", femaleClipSet = "MOVE_F@TOUGH_GUY@" },
-}
-
 local reportedPlayers = { }
 local reportingPlayer = nil
-local reportingReasons = { "Inappropriate Player Name", "Harassment", "Cheating", "Spam" }
-
-local function getClipSetBySex(clipSetIndex, isMale)
-	if isMale then return walkStyleClipSets[clipSetIndex].maleClipSet end
-	return walkStyleClipSets[clipSetIndex].femaleClipSet
-end
-
-
-AddEventHandler('lsv:updateWalkStyle', function(animSet)
-	Streaming.RequestAnimSet(animSet)
-
-	SetPedMovementClipset(PlayerPedId(), animSet, 1.0)
-
-	RemoveAnimSet(animSet)
-end)
+local reportingReasons = { 'Inappropriate Player Name', 'Harassment', 'Cheating', 'Spam' }
 
 
 AddEventHandler('lsv:init', function()
@@ -39,7 +14,8 @@ AddEventHandler('lsv:init', function()
 	WarMenu.SetTitleBackgroundColor('interaction', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
 	WarMenu.SetTitleBackgroundSprite('interaction', 'commonmenu', 'interaction_bgd')
 
-	WarMenu.CreateSubMenu('inviteToCrew', 'interaction', 'Invite to Crew')
+	WarMenu.CreateSubMenu('missions', 'interaction', 'Missions')
+
 	WarMenu.CreateSubMenu('reportPlayer', 'interaction', 'Report Player')
 	WarMenu.CreateSubMenu('reportReason', 'reportPlayer', 'Select a reason for reporting')
 
@@ -67,20 +43,18 @@ AddEventHandler('lsv:init', function()
 					end
 
 					local minDistance = 0xffffffff
-					local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
-					for _, place in ipairs(places) do
-						local placeX, placeY, placeZ = table.unpack(GetBlipCoords(place.blip))
-						local distance = GetDistanceBetweenCoords(placeX, placeY, placeZ, playerX, playerY, playerZ, false)
+					table.foreach(places, function(place)
+						local distance = Player.DistanceTo(GetBlipCoords(place.blip), false)
 						if distance < minDistance then
 							minDistance = distance
 							blip = place.blip
 						end
-					end
+					end)
 				end
 
 				if blip then
-					local x, y, z = table.unpack(GetBlipCoords(blip))
-					quickGpsBlip = AddBlipForCoord(x, y, z)
+					local blipPosition = GetBlipCoords(blip)
+					quickGpsBlip = AddBlipForCoord(blipPosition.x, blipPosition.y, blipPosition.z)
 					SetBlipSprite(quickGpsBlip, Blip.Waypoint())
 					SetBlipColour(quickGpsBlip, Color.BlipBlue())
 					SetBlipRouteColour(quickGpsBlip, Color.BlipBlue())
@@ -90,38 +64,36 @@ AddEventHandler('lsv:init', function()
 
 				WarMenu.CloseMenu()
 			elseif WarMenu.MenuButton('Ammu-Nation', 'ammunation') then
-			elseif WarMenu.ComboBox('Walk Style', walkStyles, walkStyleCurrentIndex, walkStyleSelectedIndex, function(currentIndex, selectedIndex)
-				walkStyleSelectedIndex = selectedIndex
-				walkStyleCurrentIndex = currentIndex
-			end) then
-				if walkStyleSelectedIndex == 1 then
-					ResetPedMovementClipset(PlayerPedId(), 0.0)
-				else
-					TriggerEvent('lsv:updateWalkStyle', getClipSetBySex(walkStyleSelectedIndex, IsPedMale(PlayerPedId())))
-				end
-			elseif WarMenu.MenuButton('Invite To Crew', 'inviteToCrew') then
-			elseif Utils.GetTableLength(Player.crewMembers) ~= 0 and WarMenu.Button('Leave Crew') then
-				TriggerServerEvent('lsv:leaveCrew')
-
-				WarMenu.CloseMenu()
+			elseif not MissionManager.Mission and GetTimeDifference(GetGameTimer(), MissionManager.MissionFinishedTime) >= Settings.missions.timeout and WarMenu.MenuButton('Missions', 'missions') then
+			elseif not MissionManager.Mission and GetTimeDifference(GetGameTimer(), MissionManager.MissionFinishedTime) < Settings.missions.timeout and WarMenu.Button('Missions', ms_to_string(Settings.missions.timeout - GetTimeDifference(GetGameTimer(), MissionManager.MissionFinishedTime))) then
+				Gui.DisplayNotification('~r~Unable to start mission right now.')
 			elseif WarMenu.Button('Kill Yourself') then
 				SetEntityHealth(PlayerPedId(), 0)
 
 				WarMenu.CloseMenu()
 			elseif WarMenu.MenuButton('Report Player', 'reportPlayer') then
+			elseif MissionManager.Mission and WarMenu.Button('~r~Cancel Mission') then
+				MissionManager.CancelMission()
+				WarMenu.CloseMenu()
 			end
 
 			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('inviteToCrew') then
-			for i = 0, Settings.maxPlayerCount do
-				if i ~= PlayerId() and NetworkIsPlayerActive(i) then
-					local player = GetPlayerServerId(i)
-					if not Player.isCrewMember(player) and WarMenu.Button(GetPlayerName(i)) then
-						Gui.DisplayNotification('You have sent Crew Invitation to '..Gui.GetPlayerName(player))
-						TriggerServerEvent('lsv:inviteToCrew', player)
-						WarMenu.CloseMenu()
-					end
-				end
+		elseif WarMenu.IsMenuOpened('missions') then
+			if WarMenu.Button('Market Manipulation') then
+				TriggerEvent('lsv:startMarketManipulation')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Velocity') then
+				TriggerEvent('lsv:startVelocity')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Most Wanted') then
+				TriggerEvent('lsv:startMostWanted')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Asset Recovery') then
+				TriggerEvent('lsv:startAssetRecovery')
+				WarMenu.CloseMenu()
+			elseif WarMenu.Button('Headhunter') then
+				TriggerEvent('lsv:startHeadhunter')
+				WarMenu.CloseMenu()
 			end
 
 			WarMenu.Display()
@@ -129,7 +101,7 @@ AddEventHandler('lsv:init', function()
 			for i = 0, Settings.maxPlayerCount do
 				if i ~= PlayerId() and NetworkIsPlayerActive(i) then
 					local target = GetPlayerServerId(i)
-					if not Utils.IndexOf(reportedPlayers, target) and WarMenu.MenuButton(GetPlayerName(i), 'reportReason') then
+					if not table.find(reportedPlayers, target) and WarMenu.MenuButton(GetPlayerName(i), 'reportReason') then
 						reportingPlayer = target
 					end
 				end
@@ -137,14 +109,14 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('reportReason') then
-			for _, reason in ipairs(reportingReasons) do
+			table.foreach(reportingReasons, function(reason)
 				if WarMenu.Button(reason) then
 					TriggerServerEvent('lsv:reportPlayer', reportingPlayer, reason)
 					table.insert(reportedPlayers, reportingPlayer)
 					reportingPlayer = nil
 					WarMenu.CloseMenu()
 				end
-			end
+			end)
 
 			WarMenu.Display()
 		end
@@ -170,10 +142,7 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if quickGpsBlip and not IsPlayerDead(PlayerId()) then
-			local x, y, z = GetBlipCoords(quickGpsBlip)
-			local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId(), true))
-
-			if GetDistanceBetweenCoords(playerX, playerY, playerZ, x, y, z, false) < 50.0 then
+			if Player.DistanceTo(GetBlipCoords(quickGpsBlip), false) < 50.0 then
 				RemoveBlip(quickGpsBlip)
 				quickGpsSelectedIndex = 1
 				quickGpsCurrentIndex = 1

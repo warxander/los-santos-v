@@ -19,34 +19,32 @@ function Db.UpdateNumericValue(player, field, value, callback)
 end
 
 
-function Db.UpdateCash(player, cash, callback)
+function Db.UpdateCash(player, cash, callback, victim)
 	if cash == 0 then
 		if callback then callback() end
 		return
 	end
 
+	Scoreboard.UpdateCash(player, cash)
 	Db.UpdateNumericValue(player, 'Cash', cash, function()
 		if callback then callback() end
-		Scoreboard.UpdateCash(player, cash)
-		TriggerClientEvent('lsv:cashUpdated', player, cash)
+		TriggerClientEvent('lsv:cashUpdated', player, cash, victim)
 	end)
 end
 
 
 function Db.UpdateKills(player, callback)
+	Scoreboard.UpdateKills(player)
 	Db.UpdateNumericValue(player, 'Kills', 1, function()
 		if callback then callback() end
-		Scoreboard.UpdateKills(player)
-		TriggerClientEvent('lsv:killsUpdated', player)
 	end)
 end
 
 
 function Db.UpdateDeaths(player, callback)
+	Scoreboard.UpdateDeaths(player)
 	Db.UpdateNumericValue(player, 'Deaths', 1, function()
 		if callback then callback() end
-		Scoreboard.UpdateDeaths(player)
-		TriggerClientEvent('lsv:deathsUpdated', player)
 	end)
 end
 

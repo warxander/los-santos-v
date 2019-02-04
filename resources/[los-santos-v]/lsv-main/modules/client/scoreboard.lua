@@ -7,6 +7,13 @@ Scoreboard = { }
 local scoreboard = { }
 
 
+function Scoreboard.GetPlayerPatreonTier(playerId)
+	local serverId = GetPlayerServerId(playerId)
+	local player = table.find_if(scoreboard, function(player) return player.id == serverId end)
+	return player and player.patreonTier or nil
+end
+
+
 -- Sizes
 local headerTableSpacing = 0.0075
 
@@ -56,17 +63,10 @@ local tableDeathsTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 25
 
 
 AddEventHandler('lsv:updateScoreboard', function(serverScoreboard)
-	scoreboard = serverScoreboard
-
-	for i = Utils.GetTableLength(scoreboard), 1, -1 do
-		local id = GetPlayerFromServerId(scoreboard[i].id)
-
-		if not NetworkIsPlayerActive(id) and id ~= PlayerId() then
-			table.remove(scoreboard, i)
-		else
-			scoreboard[i].id = id
-		end
-	end
+	scoreboard = table.filter(serverScoreboard, function(player)
+		local id = GetPlayerFromServerId(player.id)
+		return id == PlayerId() or NetworkIsPlayerActive(id)
+	end)
 end)
 
 
@@ -82,36 +82,36 @@ function Scoreboard.DisplayThisFrame()
 	local tableKillsHeader = { ['x'] = tableKdRatioHeader.x + tableKdRatioWidth / 2 + tableKillsWidth / 2 , ['y'] = tableHeader.y }
 	local tableDeathsHeader = { ['x'] = tableKillsHeader.x + tableKillsWidth / 2 + tableDeathsWidth / 2 , ['y'] = tableHeader.y }
 
-	-- Draw "POSITION" header
+	-- Draw 'POSITION' header
 	Gui.DrawRect(tablePositionHeader, tablePositionWidth, tableHeight, tableHeaderColor)
 	Gui.SetTextParams(0, tableHeaderTextColor, headerScale, false, false, true)
-	Gui.DrawText("POSITION", { ['x'] = tablePositionHeader.x, ['y'] = tableHeaderText.y })
+	Gui.DrawText('POSITION', { ['x'] = tablePositionHeader.x, ['y'] = tableHeaderText.y })
 
-	-- Draw "CASH" header
+	-- Draw 'CASH' header
 	Gui.DrawRect(tableCashHeader, tableCashWidth, tableHeight, tableHeaderColor)
 	Gui.SetTextParams(0, tableHeaderTextColor, headerScale, false, false, true)
-	Gui.DrawText("CASH", { ['x'] = tableCashHeader.x, ['y'] = tableHeaderText.y })
+	Gui.DrawText('CASH', { ['x'] = tableCashHeader.x, ['y'] = tableHeaderText.y })
 
-	-- Draw "KILLSTREAK" header
+	-- Draw 'KILLSTREAK' header
 	Gui.DrawRect(tableKdRatioHeader, tableKdRatioWidth, tableHeight, tableHeaderColor)
 	Gui.SetTextParams(0, tableHeaderTextColor, headerScale, false, false, true)
-	Gui.DrawText("K/D RATIO", { ['x'] = tableKdRatioHeader.x, ['y'] = tableHeaderText.y })
+	Gui.DrawText('K/D RATIO', { ['x'] = tableKdRatioHeader.x, ['y'] = tableHeaderText.y })
 
-	-- Draw "KILLS" header
+	-- Draw 'KILLS' header
 	Gui.DrawRect(tableKillsHeader, tableKillsWidth, tableHeight, tableHeaderColor)
 	Gui.SetTextParams(0, tableHeaderTextColor, headerScale, false, false, true)
-	Gui.DrawText("KILLS", { ['x'] = tableKillsHeader.x, ['y'] = tableHeaderText.y })
+	Gui.DrawText('KILLS', { ['x'] = tableKillsHeader.x, ['y'] = tableHeaderText.y })
 
-	-- Draw "DEATHS" header
+	-- Draw 'DEATHS' header
 	Gui.DrawRect(tableDeathsHeader, tableDeathsWidth, tableHeight, tableHeaderColor)
 	Gui.SetTextParams(0, tableHeaderTextColor, headerScale, false, false, true)
-	Gui.DrawText("DEATHS", { ['x'] = tableDeathsHeader.x, ['y'] = tableHeaderText.y })
+	Gui.DrawText('DEATHS', { ['x'] = tableDeathsHeader.x, ['y'] = tableHeaderText.y })
 
 	-- Draw table
 	local tablePosition = { ['y'] = tablePositionHeader.y + tableHeight + headerTableSpacing }
 	local tableAvatarPositionWidth = (tableHeight * 9 / 16)
 
-	for index = 1, Utils.GetTableLength(scoreboard) do
+	table.foreach(scoreboard, function(player)
 		local avatarPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth / 2, ['y'] = tablePosition.y }
 		local playerPosition = { ['x'] = avatarPosition.x + tablePositionWidth / 2, ['y'] = tablePosition.y }
 		local onlineStatusPosition = { ['x'] = avatarPosition.x + tableAvatarPositionWidth / 2 + onlineStatusWidth / 2, ['y'] = tablePosition.y }
@@ -121,55 +121,55 @@ function Scoreboard.DisplayThisFrame()
 		local deathsPosition = { ['x'] = tableDeathsHeader.x, ['y'] = tablePosition.y }
 		local tableText = { ['y'] = tablePosition.y - tableHeight / 2 }
 
-		-- Draw avatar
+		-- Draw player id
 		Gui.DrawRect(avatarPosition, tableAvatarPositionWidth, tableHeight, tableCashColor)
 		Gui.SetTextParams(0, tableCashTextColor, cashScale, false, false, true)
-		Gui.DrawNumeric(index, { ['x'] = avatarPosition.x, ['y'] = tableText.y + tableTextVerticalMargin })-- TODO Draw avatar here!
+		Gui.DrawNumeric(player.id, { ['x'] = avatarPosition.x, ['y'] = tableText.y + tableTextVerticalMargin })
 
 		-- Draw player name
+		local isPatron = player.patreonTier ~= 0
 		local playerColor = Color.GetHudFromBlipColor(Color.BlipDarkBlue())
-		if scoreboard[index].id == PlayerId() then
+		if isPatron then
+			playerColor = Color.GetHudFromBlipColor(Color.BlipOrange())
+		elseif player.id == Player.ServerId() then
 			playerColor = Color.GetHudFromBlipColor(Color.BlipBlue())
-		elseif Player.isCrewMember(GetPlayerServerId(scoreboard[index].id)) then
-			playerColor = Color.GetHudFromBlipColor(Color.BlipLightBlue())
 		end
-
-		local onlineStatusColor = Color.GetHudFromBlipColor(Color.BlipLightBlue())
-		local tablePositionColor = { ['r'] = playerColor.r, ['g'] = playerColor.g, ['b'] = playerColor.b, ['a'] = 160 }
+		local tablePositionColor = { ['r'] = playerColor.r, ['g'] = playerColor.g, ['b'] = playerColor.b, ['a'] = isPatron and 228 or 160 }
 
 		Gui.DrawRect(playerPosition, tablePositionWidth - tableAvatarPositionWidth, tableHeight, tablePositionColor)
-		Gui.SetTextParams(4, tablePositionTextColor, positionScale)
-		Gui.DrawText(scoreboard[index].name, { ['x'] = playerPosition.x - (tablePositionWidth - tableAvatarPositionWidth) / 2 + onlineStatusWidth + tableTextHorizontalMargin,
+		Gui.SetTextParams(4, tablePositionTextColor, positionScale, false, isPatron)
+		Gui.DrawText(player.name, { ['x'] = playerPosition.x - (tablePositionWidth - tableAvatarPositionWidth) / 2 + onlineStatusWidth + tableTextHorizontalMargin,
 			['y'] = tableText.y })
 
 		-- Draw online status (make it real)
+		local onlineStatusColor = isPatron and Color.GetHudFromBlipColor(Color.BlipOrange()) or Color.GetHudFromBlipColor(Color.BlipWhite())
 		Gui.DrawRect(onlineStatusPosition, onlineStatusWidth, tableHeight, onlineStatusColor)
 
 		-- Draw cash
 		Gui.DrawRect(cashPosition, tableCashWidth, tableHeight, tableCashColor)
 		Gui.SetTextParams(0, tableCashTextColor, cashScale, false, false, true)
-		Gui.DrawNumericTextEntry('MONEY_ENTRY', { ['x'] = tableCashHeader.x, ['y'] = tableText.y + tableTextVerticalMargin }, scoreboard[index].cash)
+		Gui.DrawNumericTextEntry('MONEY_ENTRY', { ['x'] = tableCashHeader.x, ['y'] = tableText.y + tableTextVerticalMargin }, player.cash)
 
 		-- Draw kdRatio
 		Gui.DrawRect(kdRatioPosition, tableKdRatioWidth, tableHeight, tableKdRatioColor)
 		Gui.SetTextParams(0, tableKdRatioTextColor, kdRatioScale, false, false, true)
 		local kdRatio = '-'
-		if scoreboard[index].kdRatio then
-			kdRatio = string.format("%.2f", scoreboard[index].kdRatio)
+		if player.kdRatio then
+			kdRatio = string.format('%.2f', player.kdRatio)
 		end
 		Gui.DrawText(kdRatio, { ['x'] = tableKdRatioHeader.x, ['y'] = tableText.y + tableTextVerticalMargin })
 
 		-- Draw kills
 		Gui.DrawRect(killsPosition, tableKillsWidth, tableHeight, tableKillsColor)
 		Gui.SetTextParams(0, tableKillsTextColor, killsScale, false, false, true)
-		Gui.DrawNumeric(scoreboard[index].kills, { ['x'] = tableKillsHeader.x, ['y'] = tableText.y + tableTextVerticalMargin })
+		Gui.DrawNumeric(player.kills, { ['x'] = tableKillsHeader.x, ['y'] = tableText.y + tableTextVerticalMargin })
 
 		-- Draw deaths
 		Gui.DrawRect(deathsPosition, tableDeathsWidth, tableHeight, tableDeathsColor)
 		Gui.SetTextParams(0, tableDeathsTextColor, deathsScale, false, false, true)
-		Gui.DrawNumeric(scoreboard[index].deaths, { ['x'] = tableDeathsHeader.x, ['y'] = tableText.y + tableTextVerticalMargin })
+		Gui.DrawNumeric(player.deaths, { ['x'] = tableDeathsHeader.x, ['y'] = tableText.y + tableTextVerticalMargin })
 
 		-- Update table position
 		tablePosition.y = tablePosition.y + tableSpacing + tableHeight
-	end
+	end)
 end

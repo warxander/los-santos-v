@@ -16,9 +16,9 @@ local function spawnPlayer()
 
 	local spawnPoint = nil
 	if isFirstSpawn then
-		spawnPoint = Utils.GetRandom(Settings.spawn.points)
+		spawnPoint = table.random(Settings.spawn.points)
 	else
-		local playerX, playerY, playerZ = table.unpack(GetEntityCoords(PlayerPedId()))
+		local playerPosition = Player.Position()
 		local radius = Settings.spawn.radius.min
 		local z = 1500.
 		local tryCount = 0
@@ -34,8 +34,8 @@ local function spawnPlayer()
 			local yDiff = diff.r * math.sin(diff.theta)
 			if yDiff >= 0 then yDiff = math.max(radius, yDiff) else yDiff = math.min(-radius, yDiff) end
 
-			local x = playerX + xDiff
-			local y = playerY + yDiff
+			local x = playerPosition.x + xDiff
+			local y = playerPosition.y + yDiff
 
 			local _, groundZ = GetGroundZFor_3dCoord(x, y, z)
 			local validCoords, coords = GetSafeCoordForPed(x, y, groundZ + 1., false, 16)
@@ -51,7 +51,7 @@ local function spawnPlayer()
 				end
 			end
 
-			if GetTimeDifference(GetGameTimer(), startSpawnTimer) >= Settings.spawn.timeout then spawnPoint = Utils.GetRandom(Settings.spawn.points) end
+			if GetTimeDifference(GetGameTimer(), startSpawnTimer) >= Settings.spawn.timeout then spawnPoint = table.random(Settings.spawn.points) end
 			if spawnPoint then break end
 		end
 	end
