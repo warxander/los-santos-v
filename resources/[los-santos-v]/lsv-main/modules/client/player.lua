@@ -5,6 +5,11 @@ Player.Frozen = false
 Player.Loaded = false
 Player.Kills = 0
 Player.Skin = nil
+Player.Moderator = nil
+
+Player.Killstreak = 0
+Player.Deathstreak = 0
+Player.Vehicle = nil
 
 local cash = 0
 local serverId = nil
@@ -17,6 +22,7 @@ function Player.Init(playerData)
 
 	Player.Kills = playerData.Kills
 	Player.PatreonTier = playerData.PatreonTier
+	Player.Moderator = playerData.Moderator
 
 	SetPlayerMaxArmour(PlayerId(), Settings.maxArmour)
 
@@ -42,7 +48,7 @@ end
 
 
 function Player.IsInFreeroam()
-	return Player.IsActive() and not MissionManager.Mission
+	return Player.IsActive() and not MissionManager.Mission and not World.DuelPlayer
 end
 
 
@@ -154,6 +160,11 @@ function Player.SetFreeze(freeze)
 	SetPlayerInvincible(PlayerId(), freeze)
 
 	Player.Frozen = freeze
+end
+
+
+function Player.Kill()
+	SetEntityHealth(PlayerPedId(), 0)
 end
 
 

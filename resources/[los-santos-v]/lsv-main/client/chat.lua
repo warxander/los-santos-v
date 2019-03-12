@@ -79,3 +79,12 @@ AddEventHandler('lsv:init', function()
 
 	RegisterEmoteSuggestion('/ping') -- Not an emote at all
 end)
+
+
+AddEventHandler('lsv:setupHud', function(hud)
+	if hud.discordUrl ~= '' then
+		TriggerEvent('chat:addSuggestion', '/discord', 'Copy-paste Discord invite link', {
+			{ name = hud.discordUrl },
+		})
+	end
+end)

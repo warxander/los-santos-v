@@ -1,4 +1,4 @@
-RegisterServerEvent('lsv:updatePlayerSkin')
+RegisterNetEvent('lsv:updatePlayerSkin')
 AddEventHandler('lsv:updatePlayerSkin', function(id)
 	local player = source
 

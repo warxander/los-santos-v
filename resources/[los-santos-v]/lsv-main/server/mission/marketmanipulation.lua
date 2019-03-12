@@ -1,7 +1,7 @@
 local players = { }
 
 
-RegisterServerEvent('lsv:marketManipulationFinished')
+RegisterNetEvent('lsv:marketManipulationFinished')
 AddEventHandler('lsv:marketManipulationFinished', function()
 	local player = source
 
@@ -14,14 +14,14 @@ AddEventHandler('lsv:marketManipulationFinished', function()
 		math.min(Settings.marketManipulation.maxReward - Settings.marketManipulation.minReward, players[player] * Settings.marketManipulation.cashPerRobbery)
 
 	Db.UpdateCash(player, reward, function()
-		TriggerClientEvent('lsv:marketManipulationFinished', player, true)
+		TriggerClientEvent('lsv:marketManipulationFinished', player, true, '')
 	end)
 
 	players[player] = nil
 end)
 
 
-RegisterServerEvent('lsv:marketManipulationRobbed')
+RegisterNetEvent('lsv:marketManipulationRobbed')
 AddEventHandler('lsv:marketManipulationRobbed', function()
 	local player = source
 

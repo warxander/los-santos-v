@@ -7,9 +7,8 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1000)
 
-		local time = GetGameTimer()
 		for player, lastSavedTime in pairs(players) do
-			if time - lastSavedTime > Settings.autoSavingTimeout then
+			if lastSavedTime:Elapsed() > Settings.autoSavingTimeout then
 				TriggerClientEvent('lsv:savePlayer', player)
 			end
 		end
@@ -17,18 +16,18 @@ Citizen.CreateThread(function()
 end)
 
 
-RegisterServerEvent('lsv:playerSaved')
+RegisterNetEvent('lsv:playerSaved')
 AddEventHandler('lsv:playerSaved', function()
 	local player = source
 
 	logger:Debug('Save { '..player..', '..GetPlayerIdentifiers(player)[1]..' }')
 
-	players[player] = GetGameTimer()
+	players[player]:Restart()
 end)
 
 
 AddEventHandler('lsv:playerConnected', function(player)
-	players[player] = GetGameTimer()
+	players[player] = Timer.New()
 end)
 
 

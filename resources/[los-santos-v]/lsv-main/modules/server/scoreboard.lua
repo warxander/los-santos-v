@@ -54,6 +54,7 @@ function Scoreboard.AddPlayer(player, playerStats)
 		scoreboard[player] = {
 			id = player,
 			patreonTier = playerStats.PatreonTier,
+			moderator = playerStats.Moderator,
 			name = GetPlayerName(player),
 			cash = playerStats.Cash,
 			kdRatio = calculateKdRatio(playerStats.Kills, playerStats.Deaths),
@@ -90,6 +91,11 @@ function Scoreboard.GetRandomPlayer()
 end
 
 
+function Scoreboard.IsPlayerModerator(player)
+	return scoreboard[player].moderator
+end
+
+
 function Scoreboard.GetPlayerCash(player)
 	return scoreboard[player].cash
 end
@@ -107,7 +113,7 @@ end
 
 function Scoreboard.UpdateCash(player, cash)
 	if scoreboard[player] then
-		scoreboard[player].cash = scoreboard[player].cash + cash
+		scoreboard[player].cash = math.max(0, scoreboard[player].cash + cash)
 		updateScoreboard()
 	end
 end

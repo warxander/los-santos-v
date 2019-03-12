@@ -7,8 +7,6 @@ local dropOffLocationBlip = nil
 AddEventHandler('lsv:startAssetRecovery', function()
 	local variant = table.random(Settings.assetRecovery.variants)
 
-	MissionManager.StartMission('Asset Recovery')
-
 	Streaming.RequestModel(variant.vehicle, true)
 	local vehicleHash = GetHashKey(variant.vehicle)
 	vehicle = CreateVehicle(vehicleHash, variant.vehicleLocation.x, variant.vehicleLocation.y, variant.vehicleLocation.z, variant.vehicleLocation.heading, false, true)
@@ -16,7 +14,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	SetVehicleMod(vehicle, 16, 4)
 	SetModelAsNoLongerNeeded(vehicleHash)
 
-	local eventStartTime = GetGameTimer()
+	local eventStartTime = Timer.New()
 	local isInVehicle = false
 	local routeBlip = nil
 
@@ -49,7 +47,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 			SetBlipAlpha(dropOffLocationBlip, isInVehicle and 128 or 0)
 
 			if Player.IsActive() then
-				Gui.DrawTimerBar('MISSION TIME', Settings.assetRecovery.time - GetGameTimer() + eventStartTime)
+				Gui.DrawTimerBar('MISSION TIME', Settings.assetRecovery.time - eventStartTime:Elapsed())
 				Gui.DisplayObjectiveText(isInVehicle and 'Deliver the ~g~vehicle~w~ to the ~y~drop off~w~.' or 'Steal the ~g~vehicle~w~.')
 				if isInVehicle then
 					local healthProgress = GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle)
@@ -70,7 +68,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 			return
 		end
 
-		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.assetRecovery.time then
+		if eventStartTime:Elapsed() < Settings.assetRecovery.time then
 			if not DoesEntityExist(vehicle) or not IsVehicleDriveable(vehicle, false) then
 				TriggerEvent('lsv:assetRecoveryFinished', false, 'A vehicle has been destroyed.')
 				return
@@ -103,7 +101,7 @@ end)
 
 RegisterNetEvent('lsv:assetRecoveryFinished')
 AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
-	MissionManager.FinishMission('Asset Recovery')
+	MissionManager.FinishMission(success)
 
 	World.SetWantedLevel(0)
 

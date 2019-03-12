@@ -1,4 +1,4 @@
-RegisterServerEvent('lsv:updateWeaponTint')
+RegisterNetEvent('lsv:updateWeaponTint')
 AddEventHandler('lsv:updateWeaponTint', function(weaponHash, weaponTintIndex)
 	local player = source
 
@@ -8,7 +8,7 @@ AddEventHandler('lsv:updateWeaponTint', function(weaponHash, weaponTintIndex)
 end)
 
 
-RegisterServerEvent('lsv:updateWeaponComponent')
+RegisterNetEvent('lsv:updateWeaponComponent')
 AddEventHandler('lsv:updateWeaponComponent', function(weapon, componentIndex)
 	local player = source
 
@@ -22,7 +22,7 @@ AddEventHandler('lsv:updateWeaponComponent', function(weapon, componentIndex)
 end)
 
 
-RegisterServerEvent('lsv:purchaseWeapon')
+RegisterNetEvent('lsv:purchaseWeapon')
 AddEventHandler('lsv:purchaseWeapon', function(weapon)
 	local player = source
 
@@ -36,9 +36,7 @@ AddEventHandler('lsv:purchaseWeapon', function(weapon)
 end)
 
 
-
-
-RegisterServerEvent('lsv:refillAmmo')
+RegisterNetEvent('lsv:refillAmmo')
 AddEventHandler('lsv:refillAmmo', function(ammoType, weapon)
 	local player = source
 
@@ -47,6 +45,20 @@ AddEventHandler('lsv:refillAmmo', function(ammoType, weapon)
 	if Scoreboard.GetPlayerCash(player) >= refillPrice then
 		Db.UpdateCash(player, -refillPrice, function()
 			TriggerClientEvent('lsv:ammoRefilled', player, weapon, Settings.ammuNationRefillAmmo[ammoType].ammo)
+		end)
+	else TriggerClientEvent('lsv:ammoRefilled', player, weapon, nil) end
+end)
+
+
+RegisterNetEvent('lsv:refillSpecialAmmo')
+AddEventHandler('lsv:refillSpecialAmmo', function(weapon)
+	local player = source
+
+	local refillPrice = Settings.ammuNationSpecialAmmo[weapon].price
+
+	if Scoreboard.GetPlayerCash(player) >= refillPrice then
+		Db.UpdateCash(player, -refillPrice, function()
+			TriggerClientEvent('lsv:ammoRefilled', player, weapon, Settings.ammuNationSpecialAmmo[weapon].ammo)
 		end)
 	else TriggerClientEvent('lsv:ammoRefilled', player, weapon, nil) end
 end)

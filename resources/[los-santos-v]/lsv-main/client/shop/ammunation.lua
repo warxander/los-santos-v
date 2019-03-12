@@ -16,102 +16,9 @@ local ammunations = {
 }
 
 
-local weaponCategories = {
-	['Handguns'] = {
-		'WEAPON_COMBATPISTOL',
-		'WEAPON_APPISTOL',
-		'WEAPON_PISTOL50'
-	},
-	['Shotguns'] = {
-		'WEAPON_SAWNOFFSHOTGUN',
-		'WEAPON_PUMPSHOTGUN',
-		'WEAPON_BULLPUPSHOTGUN',
-		'WEAPON_ASSAULTSHOTGUN'
-	},
-	['Submachine & Lightmachine Guns'] = {
-		'WEAPON_MICROSMG',
-		'WEAPON_SMG',
-		'WEAPON_ASSAULTSMG',
-		'WEAPON_MG',
-		'WEAPON_GUSENBERG',
-		'WEAPON_COMBATMG'
-	},
-	['Assault Rifles'] = {
-		'WEAPON_ASSAULTRIFLE',
-		'WEAPON_CARBINERIFLE',
-		'WEAPON_ADVANCEDRIFLE'
-	},
-	['Thrown Weapons'] = {
-		'WEAPON_SMOKEGRENADE',
-		'WEAPON_GRENADE',
-		'WEAPON_MOLOTOV',
-		'WEAPON_STICKYBOMB'
-	}
-}
-
-local ammoByWeaponTypes = {
-	['Pistol Rounds'] = {
-		'WEAPON_PISTOL'
-	},
-	['Shotgun Shells'] = {
-		'WEAPON_SAWNOFFSHOTGUN',
-		'WEAPON_PUMPSHOTGUN',
-		'WEAPON_BULLPUPSHOTGUN',
-		'WEAPON_ASSAULTSHOTGUN'
-	},
-	['SMG Rounds'] = {
-		'WEAPON_MICROSMG',
-		'WEAPON_SMG',
-		'WEAPON_ASSAULTSMG',
-	},
-	['Gusenberg Rounds'] = { 'WEAPON_GUSENBERG' },
-	['MG Rounds'] = {
-		'WEAPON_MG',
-		'WEAPON_COMBATMG'
-	},
-	['Assault Rifle Rounds'] = {
-		'WEAPON_ASSAULTRIFLE',
-		'WEAPON_CARBINERIFLE',
-		'WEAPON_ADVANCEDRIFLE'
-	},
-	['Tear Gas Units'] = {
-		'WEAPON_SMOKEGRENADE'
-	},
-	['Grenade Units'] = {
-		'WEAPON_GRENADE',
-	},
-	['Molotov Cocktail Units'] = {
-		'WEAPON_MOLOTOV'
-	},
-	['Sticky Bomb Units'] = {
-		'WEAPON_STICKYBOMB'
-	}
-}
-
-
-local function weaponTintKills(weaponTintIndex, weaponHash)
-	if GetPedWeaponTintIndex(PlayerPedId(), weaponHash) == weaponTintIndex then return 'Used' end
-	if Player.Kills >= Settings.weaponTints[weaponTintIndex].kills then return '' end
-	return Settings.weaponTints[weaponTintIndex].kills..' Kills'
-end
-
-
-local function weaponComponentPrice(componentIndex, weapon, componentHash)
-	local weaponHash = GetHashKey(weapon)
-	if HasPedGotWeaponComponent(PlayerPedId(), weaponHash, componentHash) then return 'Owned' end
-	return '$'..Weapon.GetWeapon(weapon).components[componentIndex].cash
-end
-
-
-local function weaponPrice(weapon)
-	if HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) then return 'Owned' end
-	return '$'..Weapon.GetWeapon(weapon).cash
-end
-
-
-local function weaponAmmoPrice(ammoType, ammo, maxAmmo)
+local function specialWeaponAmmoPrice(weapon, ammo, maxAmmo)
 	if ammo == maxAmmo then return 'Maxed' end
-	return '$'..Settings.ammuNationRefillAmmo[ammoType].price
+	return '$'..Settings.ammuNationSpecialAmmo[weapon].price
 end
 
 
@@ -121,112 +28,35 @@ end
 
 
 AddEventHandler('lsv:init', function()
-	local selectedWeapon = nil
-	local selectedWeaponCategory = nil
-
 	table.foreach(ammunations, function(ammunation)
 		ammunation.blip = Map.CreatePlaceBlip(Blip.AmmuNation(), ammunation.x, ammunation.y, ammunation.z)
 	end)
 
-	WarMenu.CreateMenu('ammunation', '')
-	WarMenu.SetSubTitle('ammunation', '')
-	WarMenu.SetTitleBackgroundColor('ammunation', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
-	WarMenu.SetTitleBackgroundSprite('ammunation', 'shopui_title_gunclub', 'shopui_title_gunclub')
-
-	WarMenu.CreateSubMenu('ammunation_weaponCategories', 'ammunation', 'Weapons')
-
-	WarMenu.CreateSubMenu('ammunation_weapons', 'ammunation_weaponCategories', '')
-	WarMenu.SetMenuButtonPressedSound('ammunation_weapons', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
-
-	WarMenu.CreateSubMenu('ammunation_ammunition', 'ammunation', 'Ammunition')
-	WarMenu.SetMenuButtonPressedSound('ammunation_ammunition', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
-
-	WarMenu.CreateSubMenu('ammunation_upgradeWeapons', 'ammunation', 'Weapon Upgrades')
-
-	WarMenu.CreateSubMenu('ammunation_weaponUpgrades', 'ammunation_upgradeWeapons', '')
-	WarMenu.SetMenuButtonPressedSound('ammunation_weaponUpgrades', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+	WarMenu.CreateMenu('ammunation_specialammo', '')
+	WarMenu.SetMenuWidth('ammunation_specialammo', 0.25)
+	WarMenu.SetSubTitle('ammunation_specialammo', 'Ammunition')
+	WarMenu.SetTitleBackgroundColor('ammunation_specialammo', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
+	WarMenu.SetTitleBackgroundSprite('ammunation_specialammo', 'shopui_title_gunclub', 'shopui_title_gunclub')
+	WarMenu.SetMenuButtonPressedSound('ammunation_specialammo', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	while true do
-		if WarMenu.IsMenuOpened('ammunation') then
-			if WarMenu.MenuButton('Weapons', 'ammunation_weaponCategories') then
-			elseif WarMenu.MenuButton('Ammunition', 'ammunation_ammunition') then
-			elseif WarMenu.MenuButton('Weapon Upgrades', 'ammunation_upgradeWeapons') then
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_weaponCategories') then
-			table.foreach(weaponCategories, function(_, weaponCategory)
-				if WarMenu.MenuButton(weaponCategory, 'ammunation_weapons') then
-					WarMenu.SetSubTitle('ammunation_weapons', weaponCategory)
-					selectedWeaponCategory = weaponCategory
-				end
-			end)
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_weapons') then
-			table.foreach(weaponCategories[selectedWeaponCategory], function(weapon)
-				if WarMenu.Button(Weapon.GetWeapon(weapon).name, weaponPrice(weapon)) then
-					if HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) then
-						Gui.DisplayNotification('You already have this weapon.')
-					else
-						TriggerServerEvent('lsv:purchaseWeapon', weapon)
-					end
-				end
-			end)
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_ammunition') then
-			table.foreach(ammoByWeaponTypes, function(weapons, ammoType)
-				local playerWeaponByAmmoType = table.find_if(weapons, function(weapon) return HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) end)
-
-				if playerWeaponByAmmoType then
-					local weaponHash = GetHashKey(playerWeaponByAmmoType)
+		if WarMenu.IsMenuOpened('ammunation_specialammo') then
+			table.foreach(Settings.ammuNationSpecialAmmo, function(data, weapon)
+				local weaponHash = GetHashKey(weapon)
+				if HasPedGotWeapon(PlayerPedId(), weaponHash, false) then
 					local weaponAmmoType = GetPedAmmoTypeFromWeapon(PlayerPedId(), weaponHash)
 					local _, maxAmmo = GetMaxAmmo(PlayerPedId(), weaponHash)
 					local playerAmmo = GetPedAmmoByType(PlayerPedId(), weaponAmmoType)
 
-					if WarMenu.Button(ammoType..' '..playerAmmo..' | '..maxAmmo..' (+'..Settings.ammuNationRefillAmmo[ammoType].ammo..')',
-						weaponAmmoPrice(ammoType, playerAmmo, maxAmmo)) then
+					if WarMenu.Button(Weapon.GetWeapon(weapon).name..' '..data.type..' '..playerAmmo..' | '..maxAmmo..' (+'..data.ammo..')', specialWeaponAmmoPrice(weapon, playerAmmo, maxAmmo)) then
 						if playerAmmo == maxAmmo then
 							Gui.DisplayNotification('You already have max ammo.')
 						else
-							TriggerServerEvent('lsv:refillAmmo', ammoType, playerWeaponByAmmoType)
+							TriggerServerEvent('lsv:refillSpecialAmmo', weapon)
 						end
 					end
 				end
 			end)
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_upgradeWeapons') then
-			local playerWeapons = Player.GetPlayerWeapons()
-
-			table.foreach(playerWeapons, function(weapon)
-				local weaponName = Weapon.GetWeapon(weapon.id).name
-				if WarMenu.MenuButton(weaponName, 'ammunation_weaponUpgrades') then
-					WarMenu.SetSubTitle('ammunation_weaponUpgrades', weaponName..' UPGRADES')
-					SetCurrentPedWeapon(PlayerPedId(), GetHashKey(weapon.id), true)
-					selectedWeapon = weapon.id
-				end
-			end)
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_weaponUpgrades') then
-			local selectedWeaponHash = GetHashKey(selectedWeapon)
-
-			table.foreach(Weapon.GetWeapon(selectedWeapon).components, function(component, componentIndex)
-				if WarMenu.Button(component.name, weaponComponentPrice(componentIndex, selectedWeapon, component.hash)) and
-					not HasPedGotWeaponComponent(PlayerPedId(), selectedWeaponHash, component.hash) then
-						TriggerServerEvent('lsv:updateWeaponComponent', selectedWeapon, componentIndex)
-				end
-			end)
-
-			if GetWeaponTintCount(selectedWeaponHash) == table.length(Settings.weaponTints) then
-				table.foreach(Settings.weaponTints, function(weaponTint, weaponTintIndex)
-					if WarMenu.Button(weaponTint.name, weaponTintKills(weaponTintIndex, selectedWeaponHash)) and GetPedWeaponTintIndex(PlayerPedId(), selectedWeaponHash) ~= weaponTintIndex then
-						TriggerServerEvent('lsv:updateWeaponTint', selectedWeaponHash, weaponTintIndex)
-					end
-				end)
-			end
 
 			WarMenu.Display()
 		end
@@ -239,7 +69,6 @@ end)
 AddEventHandler('lsv:init', function()
 	local ammunationOpenedMenuIndex = nil
 	local ammunationColor = Color.GetHudFromBlipColor(Color.BlipRed())
-	local openedFromInteractionMenu = true -- It's hacky but seems to work
 
 	while true do
 		Citizen.Wait(0)
@@ -250,63 +79,19 @@ AddEventHandler('lsv:init', function()
 
 				if Player.DistanceTo(ammunation, true) < Settings.placeMarkerRadius then
 					if not WarMenu.IsAnyMenuOpened() then
-						Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to browse weapons.')
+						Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to browse ammo.')
 
 						if IsControlJustReleased(0, 38) then
 							ammunationOpenedMenuIndex = ammunationIndex
 							openedFromInteractionMenu = false
-							WarMenu.OpenMenu('ammunation')
+							WarMenu.OpenMenu('ammunation_specialammo')
 						end
 					end
-				else
-					local isAmmunationMenuOpened = not openedFromInteractionMenu and
-						(WarMenu.IsMenuOpened('ammunation') or
-						WarMenu.IsMenuOpened('ammunation_weapons') or
-						WarMenu.IsMenuOpened('ammunation_weaponCategories') or
-						WarMenu.IsMenuOpened('ammunation_ammunition') or
-						WarMenu.IsMenuOpened('ammunation_weaponUpgrades') or
-						WarMenu.IsMenuOpened('ammunation_upgradeWeapons'))
-
-					if isAmmunationMenuOpened and ammunationIndex == ammunationOpenedMenuIndex then
-						openedFromInteractionMenu = true
-						WarMenu.CloseMenu()
-					end
+				elseif WarMenu.IsMenuOpened('ammunation_specialammo') and ammunationIndex == ammunationOpenedMenuIndex then
+					WarMenu.CloseMenu()
+					Player.SaveWeapons()
 				end
 			end)
 		end
 	end
-end)
-
-
-RegisterNetEvent('lsv:weaponTintUpdated')
-AddEventHandler('lsv:weaponTintUpdated', function(weaponHash, weaponTintIndex)
-	if weaponHash then
-		SetPedWeaponTintIndex(PlayerPedId(), weaponHash, weaponTintIndex)
-		Player.SaveWeapons()
-	else Gui.DisplayNotification('~r~You don\'t have enough kills.') end
-end)
-
-
-RegisterNetEvent('lsv:weaponComponentUpdated')
-AddEventHandler('lsv:weaponComponentUpdated', function(weapon, componentIndex)
-	if weapon then
-		GiveWeaponComponentToPed(PlayerPedId(), GetHashKey(weapon), Weapon.GetWeapon(weapon).components[componentIndex].hash)
-		Player.SaveWeapons()
-	else Gui.DisplayNotification('~r~You don\'t have enough cash.') end
-end)
-
-
-RegisterNetEvent('lsv:weaponPurchased')
-AddEventHandler('lsv:weaponPurchased', function(weapon)
-	if weapon then
-		local weaponHash = GetHashKey(weapon)
-		GiveWeaponToPed(PlayerPedId(), weaponHash, Weapon.GetSpawningAmmo(weaponHash), false, true)
-		Player.SaveWeapons()
-	else Gui.DisplayNotification('~r~You don\'t have enough cash.') end
-end)
-
-RegisterNetEvent('lsv:ammoRefilled')
-AddEventHandler('lsv:ammoRefilled', function(weapon, amount)
-	if amount then AddAmmoToPed(PlayerPedId(), GetHashKey(weapon), amount)
-	else Gui.DisplayNotification('~r~You don\'t have enough cash.') end
 end)

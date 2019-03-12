@@ -35,6 +35,19 @@ function Map.CreateRadiusBlip(x, y, z, radius, color)
 end
 
 
+function Map.CreateEventBlip(blipSprite, x, y, z, customName, color)
+	local blip = AddBlipForCoord(x, y, z)
+	SetBlipSprite(blip, blipSprite)
+	SetBlipHighDetail(blip, true)
+	SetBlipScale(blip, 1.1)
+
+	if customName then Map.SetBlipText(blip, customName) end
+	if color then SetBlipColour(blip, color) end
+
+	return blip
+end
+
+
 function Map.CreatePickupBlip(pickup, itemId, color)
 	local blipSprite = Blip.GetPickupBlipSpriteId(itemId)
 	local blip = nil

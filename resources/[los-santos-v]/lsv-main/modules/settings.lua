@@ -8,6 +8,11 @@ Settings.autoSavingTimeout = 180000
 Settings.pingThreshold = 200
 
 
+-- Hud
+Settings.deathstreakMinCount = 3
+Settings.killstreakInterval = 5000
+
+
 -- Spawn settings
 Settings.spawn = {
 	points = {
@@ -31,11 +36,11 @@ Settings.spawn = {
 		{ x = -529.57513427734, y = 92.357269287109, z = 60.316272735596 },
 		{ x = -692.64880371094, y = -627.58905029297, z = 31.556943893433 },
 	},
-	deathTime = 6000,
+	deathTime = 8000,
 	timeout = 30000,
 	respawnFasterPerControlPressed = 250, -- holy
 	tryCount = 100,
-	radius = { min = 75., increment = 25. },
+	radius = { min = 95., increment = 25. },
 }
 
 
@@ -103,23 +108,70 @@ Settings.cashPerMission = 1000
 Settings.cashGainedNotificationTime = 5000
 
 
--- Stunt Jumps
-Settings.stuntJumpMinHeight = 18.
-Settings.stuntJumpCashPerMeter = 2
-Settings.stuntJumpMaxReward = 2000
-Settings.stuntMinInterval = 30000
-
-
--- Bounties
-Settings.bounty = {
-	timeout = 300000,
+-- Duel
+Settings.duel = {
+	targetScore = 5,
 	reward = 1500,
+	requestTimeout = 10000,
+}
+
+
+-- Request Vehicle
+Settings.requestVehicle = {
+	vehicles = {
+		['Free'] = {
+			['bmx'] = { name = 'BMX', cash = 0 },
+		},
+
+		['Super'] = {
+			['adder'] = { name = 'Truffade Adder', cash = 10000 },
+			['bullet'] = { name = 'Bullet GT', cash = 1550 },
+			['cheetah'] = { name = 'Grotti Cheetah', cash = 6500 },
+			['entityxf'] = { name = 'Overflod Entity XF', cash = 7950 },
+			['infernus'] = { name = 'Pegassi Infernus', cash = 4400 },
+			['vacca'] = { name = 'Pegassi Vacca', cash = 2400 },
+			['voltic'] = { name = 'Coil Voltic', cash = 1500 },
+		},
+
+		['Motocycles'] = {
+			['akuma'] = { name = 'Dinka Akuma', cash = 900 },
+			['bagger'] = { name = 'Bagger', cash = 1600 },
+			['bati'] = { name = 'Pegassi Bati 801', cash = 1500 },
+			['double'] = { name = 'Dinka Double T', cash = 1200 },
+			['daemon'] = { name = 'Daemon', cash = 1450 },
+			['hexer'] = { name = 'Hexer', cash = 1500 },
+			['nemesis'] = { name = 'Principe Nemesis', cash = 1200 },
+			['pcj'] = { name = 'PCJ-600', cash = 900 },
+			['ruffian'] = { name = 'Pegassi Ruffian', cash = 900 },
+			['sanchez'] = { name = 'Sanchez', cash = 800 },
+			['vader'] = { name = 'Shitzu Vader', cash = 900 },
+		},
+
+		['Sports'] = {
+			['ninef'] = { name = 'Obey 9F', cash = 1200 },
+			['banshee'] = { name = 'Banshee', cash = 900 },
+			['buffalo'] = { name = 'Buffalo', cash = 350 },
+			['comet2'] = { name = 'Comet', cash = 1000 },
+			['coquette'] = { name = 'Invetero Coquette', cash = 1380 },
+			['feltzer2'] = { name = 'Feltzer', cash = 1300 },
+			['futo'] = { name = 'Karin Futo', cash = 250 },
+			['penumbra'] = { name = 'Maibatsu Penumbra', cash = 240 },
+			['rapidgt'] = { name = 'Dewbauchee Rapid GT', cash = 1320 },
+			['schwarzer'] = { name = 'Benefactor Schwartzer', cash = 800 },
+			['sultan'] = { name = 'Sultan', cash = 120 },
+		},
+
+		['Special'] = {
+			['deluxo'] = { name = 'Deluxo', cash = 99999 },
+			['stromberg'] = { name = 'Stromberg', cash = 66666 },
+		},
+	}
 }
 
 
 -- Events
 Settings.event = {
-	timeout = 300000,
+	timeout = 600000,
 	minPlayers = 3,
 }
 
@@ -157,54 +209,207 @@ Settings.property = {
 }
 
 
+-- Executive Search
+Settings.executiveSearch = {
+	duration = 900000,
+	outOfAreaTimeout = 5000,
+	places = {
+		{ x = 979.19995117188, y = -3039.0483398438, z = 5.9006385803223 },
+		{ x = 914.90887451172, y = -2246.5708007813, z = 30.527393341064 },
+		{ x = 169.64849853516, y = -1768.7640380859, z = 29.112857818604 },
+		{ x = 1129.6751708984, y = -528.21081542969, z = 64.166290283203 },
+		{ x = -623.10504150391, y = -180.28044128418, z = 37.762023925781 },
+		{ x = -1643.4249267578, y = -328.91735839844, z = 50.673767089844 },
+		{ x = -1118.4345703125, y = -1473.1253662109, z = 4.8473377227783 },
+	},
+	radius = 175.0,
+	reward = 10000,
+}
+
+
 -- AmmuNation Refill Ammo
 Settings.ammuNationRefillAmmo = {
 	['Pistol Rounds'] = {
+		weapons = {
+			'WEAPON_PISTOL',
+		},
 		ammo = 24,
 		price = 0,
 	},
+
 	['Shotgun Shells'] = {
+		weapons = {
+			'WEAPON_SAWNOFFSHOTGUN',
+			'WEAPON_PUMPSHOTGUN',
+			'WEAPON_BULLPUPSHOTGUN',
+			'WEAPON_ASSAULTSHOTGUN',
+		},
 		ammo = 16,
 		price = 48,
 	},
+
 	['SMG Rounds'] = {
+		weapons = {
+			'WEAPON_MICROSMG',
+			'WEAPON_SMG',
+			'WEAPON_ASSAULTSMG',
+		},
 		ammo = 30,
 		price = 72,
 	},
+
 	['Gusenberg Rounds'] = {
+		weapons = {
+			'WEAPON_GUSENBERG',
+		},
 		ammo = 30,
 		price = 129,
 	},
+
 	['MG Rounds'] = {
+		weapons = {
+			'WEAPON_MG',
+			'WEAPON_COMBATMG',
+		},
 		ammo = 100,
 		price = 135,
 	},
+
 	['Assault Rifle Rounds'] = {
+		weapons = {
+			'WEAPON_ASSAULTRIFLE',
+			'WEAPON_CARBINERIFLE',
+			'WEAPON_ADVANCEDRIFLE',
+		},
 		ammo = 60,
 		price = 124,
 	},
+
 	['Tear Gas Units'] = {
+		weapons = {
+			'WEAPON_SMOKEGRENADE',
+		},
 		ammo = 3,
 		price = 14,
 	},
+
 	['Grenade Units'] = {
+		weapons = {
+			'WEAPON_GRENADE',
+		},
 		ammo = 3,
 		price = 31,
 	},
+
 	['Molotov Cocktail Units'] = {
+		weapons = {
+			'WEAPON_MOLOTOV',
+		},
 		ammo = 3,
 		price = 67,
 	},
+
 	['Sticky Bomb Units'] = {
+		weapons = {
+			'WEAPON_STICKYBOMB',
+		},
 		ammo = 3,
 		price = 94,
-	}
+	},
+
+	['Proximity Mine Units'] = {
+		weapons = {
+			'WEAPON_PROXMINE',
+		},
+		ammo = 3,
+		price = 119,
+	},
+
+	['Flare Gun Rounds'] = {
+		weapons = {
+			'WEAPON_FLAREGUN',
+		},
+		ammo = 2,
+		price = 29,
+	},
+}
+
+
+-- AmmuNation Special Weapons Ammo
+Settings.ammuNationSpecialAmmo = {
+	['WEAPON_COMPACTLAUNCHER'] = {
+		ammo = 1 * 3,
+		price = 584,
+		type = 'Grenades',
+	},
+	['WEAPON_GRENADELAUNCHER'] = {
+		ammo = 3, -- 20
+		price = 672,
+		type = 'Grenades',
+	},
+	['WEAPON_RPG'] = {
+		ammo = 1 * 3,
+		price = 843,
+		type = 'Rockets',
+	},
+	['WEAPON_HOMINGLAUNCHER'] = {
+		ammo = 1 * 3,
+		price = 1156,
+		type = 'Rockets',
+	},
+	['WEAPON_MINIGUN'] = {
+		ammo = 1 * 250,
+		price = 604,
+		type = 'Rounds',
+	},
+	['WEAPON_HEAVYSNIPER'] = {
+		ammo = 12 * 1,
+		price = 497,
+		type = 'Rounds',
+	},
+	['WEAPON_SNIPERRIFLE'] = {
+		ammo = 12 * 1,
+		price = 497, -- same as Heavy Sniper
+		type = 'Rounds',
+	},
+	['WEAPON_MARKSMANRIFLE'] = {
+		ammo = 8 * 2,
+		price = 471,
+		type = 'Rounds',
+	},
+	['WEAPON_DOUBLEACTION'] = {
+		ammo = 6 * 2,
+		price = 404,
+		type = 'Rounds',
+	},
+	['WEAPON_MUSKET'] = {
+		ammo = 2 * 6,
+		price = 445,
+		type = 'Rounds',
+	},
 }
 
 
 -- Missions
-Settings.missions = {
-	timeout = 300000,
+Settings.mission = {
+	resetTimeInterval = 10800000,
+	places = {
+		{ x = -57.338516235352, y = -2448.7080078125, z = 7.2357640266418 },
+		{ x = 1013.4348754883, y = -2150.8464355469, z = 31.533414840698 },
+		{ x = 1213.0318603516, y = -1251.0944824219, z = 36.325752258301 },
+		{ x = 707.24340820313, y = -966.26904296875, z = 30.412851333618 },
+		{ x = -29.890213012695, y = -1104.3305664063, z = 26.422355651855 },
+		{ x = 114.35282897949, y = -1961.0159912109, z = 21.334199905396 },
+		{ x = -429.37182617188, y = -1727.9987792969, z = 19.783857345581 },
+		{ x = -1320.5399169922, y = -1264.0423583984, z = 4.5883016586304 },
+		{ x = -1747.4803466797, y = -394.7268371582, z = 43.688488006592 },
+		{ x = -1274.0612792969, y = 315.11770629883, z = 65.511779785156 },
+		{ x = -564.36932373047, y = 278.0114440918, z = 83.13631439209 },
+		{ x = -288.54412841797, y = -710.89288330078, z = 33.493518829346 },
+		{ x = 81.447616577148, y = 274.64431762695, z = 110.21018981934 },
+		{ x = -1008.0339355469, y = -487.32397460938, z = 39.969467163086 },
+		{ x = -66.46614074707, y = 490.74649047852, z = 144.69189453125 },
+	},
 }
 
 
@@ -265,24 +470,6 @@ Settings.velocity = {
 Settings.mostWanted = {
 	time = 600000,
 	maxReward = 10000,
-	notification = {
-		timeout = 45000,
-		messages = {
-			'You, my friend have found your level in life... You\'ve joined a society of morons called the police force!',
-			'Nice name badge! ...But they misspelt \'dick\'.',
-			'Let\'s be clear. Only an idiot joins the cops! ...See? You don\'t even understand simple sentences!',
-			'Oh, you look so... tough, officer! ...I know you were bullied in school.',
-			'Aren\'t you just a great example to us all? ...Living proof that shit can talk!',
-			'Hey... Aren\'t you cool? ...I was being sarcastic. You look like a twat.',
-			'Does parking orders get you excited? ...Or do you prefer beating up suspects?',
-			'I bet you love giving orders... And arresting jaywalkers and tourists...',
-			'What exactly are you looking at? ...Because I\'m looking at a turd.',
-			'Nice uniform! ...But you should be working in Burger Shot!',
-			'The police force, now that\'s a bad joke! ...Police "farce" would be a better name.',
-			'You look ridiculous in that uniform. But I bet you\'re probably used to looking ridiculous.',
-			'How did you get in the police force? ...You look like you belong in a mental home.'
-		},
-	}
 }
 
 
@@ -291,31 +478,31 @@ Settings.assetRecovery = {
 	time = 1200000,
 	variants = {
 		{
-			vehicle = "pigalle",
+			vehicle = 'pigalle',
 			vehicleLocation = { x = -1041.6690673828, y = -850.52899169922, z = 4.7838535308838, heading = 135.58250427246 },
 			dropOffLocation = { x = 1537.0913085938, y = 6482.6098632813, z = 22.000032424927 },
 		},
 
 		{
-			vehicle = "dominator",
+			vehicle = 'dominator',
 			vehicleLocation = { x = 454.39685058594, y = -1024.5531005859, z = 28.112592697144, heading = 92.917694091797 },
 			dropOffLocation = { x = 715.486328125, y = 4175.56640625, z = 40.000110626221 },
 		},
 
 		{
-			vehicle = "comet2",
+			vehicle = 'comet2',
 			vehicleLocation = { x = 852.61529541016, y = -1280.2347412109, z = 26.133306503296, heading = 359.4150390625 },
 			dropOffLocation = { x = 1537.0913085938, y = 6482.6098632813, z = 22.000032424927 },
 		},
 
 		{
-			vehicle = "feltzer3",
+			vehicle = 'feltzer3',
 			vehicleLocation = { x = 468.05123901367, y = -65.828109741211, z = 77.158767700195, heading = 238.4743347168 },
 			dropOffLocation = { x = 715.486328125, y = 4175.56640625, z = 40.000110626221 },
 		},
 
 		{
-			vehicle = "blazer",
+			vehicle = 'blazer',
 			vehicleLocation = { x = 1866.5213623047, y = 3699.1994628906, z = 32.8317527771, heading = 210.75952148438 },
 			dropOffLocation = { x = 165.90403747559, y = -3081.7749023438, z = 5.5951142311096, heading = 270.91390991211 },
 		},
@@ -333,35 +520,35 @@ Settings.headhunter = {
 	targets = {
 		{
 			location = { x = -1813.0296630859, y = -1207.5499267578, z = 19.169616699219 },
-			pedModel = "a_m_y_beachvesp_01",
+			pedModel = 'a_m_y_beachvesp_01',
 		},
 
 		{
 			location = { x = -1191.2917480469, y = -508.70294189453, z = 35.566139221191 },
-			pedModel = "u_m_m_filmdirector",
+			pedModel = 'u_m_m_filmdirector',
 		},
 
 		{
 			location = { x = -175.79162597656, y = -604.76159667969, z = 48.222152709961 },
-			pedModel = "s_m_m_highsec_01",
+			pedModel = 's_m_m_highsec_01',
 		},
 
 		{
 			location = { x = 624.09893798828, y = -3021.7360839844, z = 6.2169780731201 },
-			pedModel = "s_m_y_dockwork_01",
+			pedModel = 's_m_y_dockwork_01',
 		},
 
 		{
 			location = { x = -619.80187988281, y = 323.91040039063, z = 82.263603210449 },
-			pedModel = "u_m_m_jesus_01",
+			pedModel = 'u_m_m_jesus_01',
 		},
 	},
 	weapons = {
-		"WEAPON_SPECIALCARBINE",
-		"WEAPON_ADVANCEDRIFLE",
-		"WEAPON_AUTOSHOTGUN",
-		"WEAPON_MINISMG",
-		"WEAPON_RPG",
+		'WEAPON_SPECIALCARBINE',
+		'WEAPON_ADVANCEDRIFLE',
+		'WEAPON_AUTOSHOTGUN',
+		'WEAPON_MINISMG',
+		'WEAPON_RPG',
 	},
 	wantedLevel = 3,
 	minReward = 5000,
@@ -369,61 +556,57 @@ Settings.headhunter = {
 }
 
 
--- Crate Drops
-Settings.crateDropSettings = {
+-- Crates
+Settings.crate = {
+	chance = 25,
+	timeout = 1200000,
 	cash = 2500,
-	weaponClipCount = 5,
+	radius = 200.,
 	weapons = {
-		{ id = 'WEAPON_COMPACTLAUNCHER', name = 'Compact Grenade Launcher' },
-		{ id = 'WEAPON_GRENADELAUNCHER', name = 'Grenade Launcher' },
-		{ id = 'WEAPON_RPG', name = 'Rocket Laucher' },
-		{ id = 'WEAPON_HOMINGLAUNCHER', name = 'Homing Laucher' },
-		{ id = 'WEAPON_MINIGUN', name = 'Minigun' },
-		{ id = 'WEAPON_HEAVYSNIPER', name = 'Heavy Sniper' },
-		{ id = 'WEAPON_SNIPERRIFLE', name = 'Sniper Rifle' },
-		{ id = 'WEAPON_MARKSMANRIFLE', name = 'Marksman Rifle' },
-		{ id = 'WEAPON_DOUBLEACTION', name = 'Double-Action Revolver' },
+		{ id = 'WEAPON_COMPACTLAUNCHER', name = 'Compact Grenade Launcher', ammo = 1 * 10 },
+		{ id = 'WEAPON_GRENADELAUNCHER', name = 'Grenade Launcher', ammo = 1 * 10 },
+		{ id = 'WEAPON_RPG', name = 'Rocket Launcher', ammo = 1 * 10 },
+		{ id = 'WEAPON_HOMINGLAUNCHER', name = 'Homing Launcher', ammo = 1 * 8 },
+		{ id = 'WEAPON_MINIGUN', name = 'Minigun', ammo = 1 * 500 },
+		{ id = 'WEAPON_HEAVYSNIPER', name = 'Heavy Sniper', ammo = 12 * 2 },
+		{ id = 'WEAPON_SNIPERRIFLE', name = 'Sniper Rifle', ammo = 12 * 2 },
+		{ id = 'WEAPON_MARKSMANRIFLE', name = 'Marksman Rifle', ammo = 8 * 3 },
+		{ id = 'WEAPON_DOUBLEACTION', name = 'Double-Action Revolver', ammo = 6 * 4 },
+		{ id = 'WEAPON_MUSKET', name = 'Musket', ammo = 1 * 20 },
 	},
-	timeout = 300000,
-	notifyBeforeTimeout = 60000,
-	positions = {
-		{ ['x'] = 699.15850830078, ['y'] = -1594.9453125, ['z'] = 9.6801643371582 },
-		{ ['x'] = 1436.9431152344, ['y'] = -2148.8503417969, ['z'] = 60.606800079346 },
-		{ ['x'] = 977.98474121094, ['y'] = -3007.1948242188, ['z'] = 5.9007620811462 },
-		{ ['x'] = 519.29821777344, ['y'] = -2980.8610839844, ['z'] = 6.0444560050964 },
-		{ ['x'] = -1594.0063476563, ['y'] = -1025.740234375, ['z'] = 13.018488883972 },
-		{ ['x'] = -3205.9792480469, ['y'] = 824.37823486328, ['z'] = 3.6351618766785 },
-		{ ['x'] = -987.26776123047, ['y'] = 925.21795654297, ['z'] = 188.12802124023 },
-		{ ['x'] = -323.3994140625, ['y'] = 1372.9141845703, ['z'] = 347.55932617188 },
-		{ ['x'] = 738.34020996094, ['y'] = 1289.2221679688, ['z'] = 360.29647827148 },
-		{ ['x'] = 1136.3858642578, ['y'] = 57.870365142822, ['z'] = 80.756072998047 },
-		{ ['x'] = 1376.275390625, ['y'] = -740.32513427734, ['z'] = 67.232810974121 },
-		{ ['x'] = 1975.4736328125, ['y'] = 501.99038696289, ['z'] = 161.87936401367 },
-		{ ['x'] = 1461.1328125, ['y'] = 1111.3707275391, ['z'] = 114.33401489258 },
-		{ ['x'] = 2282.044921875, ['y'] = 1530.5583496094, ['z'] = 65.374633789063 },
-		{ ['x'] = 972.55712890625, ['y'] = 2366.0798339844, ['z'] = 52.216976165771 },
-		{ ['x'] = 1456.7526855469, ['y'] = 2916.7160644531, ['z'] = 46.06986618042 },
-		{ ['x'] = 1313.4600830078, ['y'] = 4332.83984375, ['z'] = 38.35871887207 },
-		{ ['x'] = -1719.1187744141, ['y'] = 5044.27734375, ['z'] = 28.715219497681 },
-		{ ['x'] = -2458.7272949219, ['y'] = 4203.5561523438, ['z'] = 3.6592676639557 },
-		{ ['x'] = -2095.2294921875, ['y'] = 2519.5354003906, ['z'] = 0.95100903511047 },
-	},
-	guards = {
-		hash = 's_m_y_marine_03',
-		radius = 16.,
-		armor = 200,
-		weapons = {
-			'WEAPON_SNIPERRIFLE',
-			'WEAPON_SPECIALCARBINE',
-			'WEAPON_ADVANCEDRIFLE',
-			'WEAPON_BULLPUPSHOTGUN',
-			'WEAPON_RPG',
-			'WEAPON_CARBINERIFLE',
-			'WEAPON_ADVANCEDRIFLE',
-			'WEAPON_MINIGUN',
-
+	locations = {
+		{
+			blip = { x = 699.15850830078, y = -1594.9453125, z = 9.6801643371582 },
+			positions = {
+				{ x = 770.97814941406, y = -1636.8605957031, z = 32.921447753906 },
+				{ x = 692.00866699219, y = -1555.2824707031, z = 9.7086277008057 },
+				{ x = 563.47967529297, y = -1600.3996582031, z = 27.944440841675 },
+			},
 		},
-		count = 13,
+		{
+			blip = { x = 1436.9431152344, y = -2148.8503417969, z = 60.606800079346 },
+			positions = {
+				{ x = 1563.8139648438, y = -2166.4467773438, z = 77.514312744141 },
+				{ x = 1359.4295654297, y = -2096.6870117188, z = 51.998519897461 },
+				{ x = 1392.5572509766, y = -2226.4516601563, z = 61.233791351318 },
+			},
+		},
+		{
+			blip = { x = -1594.0063476563, y = -1025.740234375, z = 13.018488883972 },
+			positions = {
+				{ x = -1640.3818359375, y = -1041.4393310547, z = 13.151966094971 },
+				{ x = -1690.1785888672, y = -1115.8001708984, z = 13.152278900146 },
+				{ x = -1537.3674316406, y = -941.81457519531, z = 11.566101074219 },
+			},
+		},
+		{
+			blip = { x = 1136.3858642578, y = 57.870365142822, z = 80.756072998047 },
+			positions = {
+				{ x = 1104.6691894531, y = 78.141830444336, z = 80.890342712402 },
+				{ x = 988.00891113281, y = 97.073616027832, z = 80.991333007813 },
+				{ x = 1088.5246582031, y = 198.58590698242, z = 85.740844726563 },
+			}
+		},
 	},
 }
 

@@ -18,17 +18,18 @@ end
 
 
 RegisterNetEvent('lsv:startCastle')
-AddEventHandler('lsv:startCastle', function(placeIndex, passedTime, players)
+AddEventHandler('lsv:startCastle', function(data, passedTime)
+	if castleData then return end
+
 	-- Preparations
-	local place = Settings.castle.places[placeIndex]
+	local place = Settings.castle.places[data.placeIndex]
 
 	castleData = { }
-	castleData.place = place
 
+	castleData.place = place
 	castleData.startTime = GetGameTimer()
 	if passedTime then castleData.startTime = castleData.startTime - passedTime end
-	castleData.players = { }
-	if players then castleData.players = players end
+	castleData.players = data.players
 
 	-- GUI
 	Citizen.CreateThread(function()
@@ -48,13 +49,7 @@ AddEventHandler('lsv:startCastle', function(placeIndex, passedTime, players)
 		FlashMinimapDisplay()
 
 		castleData.zoneBlip = Map.CreateRadiusBlip(place.x, place.y, place.z, Settings.castle.radius, Color.BlipPurple())
-
-		castleData.blip = AddBlipForCoord(place.x, place.y, place.z)
-		SetBlipSprite(castleData.blip, Blip.Castle())
-		SetBlipScale(castleData.blip, 1.1)
-		SetBlipColour(castleData.blip, Color.BlipPurple())
-		SetBlipHighDetail(castleData.blip, true)
-
+		castleData.blip = Map.CreateEventBlip(Blip.Castle(), place.x, place.y, place.z, nil, Color.BlipPurple())
 		Map.SetBlipFlashes(castleData.blip)
 
 		while true do
@@ -95,10 +90,10 @@ AddEventHandler('lsv:startCastle', function(placeIndex, passedTime, players)
 
 			if Player.IsActive() then
 				if Player.DistanceTo(castleData.place, true) <= Settings.castle.radius then
-					if not lastPointTime then lastPointTime = GetGameTimer()
-					elseif GetTimeDifference(GetGameTimer(), lastPointTime) >= 1000 then
+					if not lastPointTime then lastPointTime = Timer.New()
+					elseif lastPointTime:Elapsed() >= 1000 then
 						TriggerServerEvent('lsv:castleAddPoint')
-						lastPointTime = GetGameTimer()
+						lastPointTime:Restart()
 					end
 				end
 			end

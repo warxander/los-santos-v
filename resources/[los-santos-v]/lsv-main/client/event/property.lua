@@ -30,22 +30,22 @@ end
 
 
 RegisterNetEvent('lsv:startHotProperty')
-AddEventHandler('lsv:startHotProperty', function(placeIndex, passedTime, players, currentPlayer)
+AddEventHandler('lsv:startHotProperty', function(data, passedTime)
+	if propertyData then return end
+
 	-- Preparations
-	local place = Settings.property.places[placeIndex]
+	local place = Settings.property.places[data.placeIndex]
 
 	propertyData = { }
 
 	propertyData.startTime = GetGameTimer()
 	if passedTime then propertyData.startTime = propertyData.startTime - passedTime end
+	propertyData.players = data.players
 
-	propertyData.players = { }
-	if players then propertyData.players = players end
-
-	World.HotPropertyPlayer = currentPlayer
+	World.HotPropertyPlayer = data.currentPlayer
 
 	-- This is shit. New players will not see briefcase. Should fix in 1s
-	if not currentPlayer and not passedTime then
+	if not data.currentPlayer and not passedTime then
 		createBriefcase(place.x, place.y, place.z)
 		SetBlipAlpha(propertyData.blip, 0)
 	end
@@ -120,10 +120,10 @@ AddEventHandler('lsv:startHotProperty', function(placeIndex, passedTime, players
 			end
 
 			if World.HotPropertyPlayer == Player.ServerId() then
-				if not lastTime then lastTime = GetGameTimer()
-				elseif GetTimeDifference(GetGameTimer(), lastTime) >= 1000 then
+				if not lastTime then lastTime = Timer.New()
+				elseif lastTime:Elapsed() >= 1000 then
 					TriggerServerEvent('lsv:hotPropertyTimeUpdated')
-					lastTime = GetGameTimer()
+					lastTime:Restart()
 				end
 			else lastTime = nil end
 		end

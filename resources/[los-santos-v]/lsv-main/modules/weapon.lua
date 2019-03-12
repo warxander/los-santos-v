@@ -13,7 +13,7 @@ local weapons = {
 	['WEAPON_STUNGUN'] = {
 		name = 'Stun Gun',
 		components = { },
-		cash = 100,
+		cash = 99999,
 	},
 
 	['WEAPON_FLASHLIGHT'] = {

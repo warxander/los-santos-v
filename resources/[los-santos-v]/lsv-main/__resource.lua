@@ -1,6 +1,7 @@
 -- Manifest
 resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
+resource_type 'gametype' { name = 'Los Santos V' }
 
 -- WarMenu resource
 client_script '@warmenu/warmenu.lua'
@@ -12,15 +13,23 @@ server_script '@mysql-async/lib/MySQL.lua'
 
 -- Server modules
 server_scripts {
+	'modules/utils/table.lua',
+	'modules/utils/math.lua',
+	'modules/utils/string.lua',
+	'modules/utils/timer.lua',
+
 	'modules/logger.lua',
-	'modules/utils.lua',
 	'modules/weapon.lua',
 	'modules/blip.lua',
 	'modules/settings.lua',
 
 	'modules/server/db.lua',
+	'modules/server/discord.lua',
+	'modules/server/crate.lua',
 	'modules/server/scoreboard.lua',
 	'modules/server/autosave.lua',
+	'modules/server/eventmanager.lua',
+	'modules/server/missionmanager.lua',
 }
 
 
@@ -31,19 +40,18 @@ server_scripts {
 	'server/session.lua',
 	'server/chat.lua',
 	'server/report.lua',
-	'server/cratedrop.lua',
-	'server/bounty.lua',
-	'server/guard.lua',
-	'server/castle.lua',
-	'server/property.lua',
-	'server/event.lua',
+	'server/moderator.lua',
 	'server/pingkick.lua',
-	'server/stunt.lua',
+	'server/vehicle.lua',
+	'server/duel.lua',
+
+	'server/event/castle.lua',
+	'server/event/property.lua',
+	'server/event/search.lua',
 
 	'server/shop/ammunation.lua',
 	'server/shop/skinshop.lua',
 
-	'server/mission/missionmanager.lua',
 	'server/mission/assetrecovery.lua',
 	'server/mission/headhunter.lua',
 	'server/mission/marketmanipulation.lua',
@@ -54,8 +62,12 @@ server_scripts {
 
 -- Client modules
 client_scripts {
+	'modules/utils/table.lua',
+	'modules/utils/math.lua',
+	'modules/utils/string.lua',
+	'modules/utils/timer.lua',
+
 	'modules/logger.lua',
-	'modules/utils.lua',
 	'modules/blip.lua',
 	'modules/settings.lua',
 	'modules/weapon.lua',
@@ -72,6 +84,7 @@ client_scripts {
 	'modules/client/player.lua',
 	'modules/client/map.lua',
 	'modules/client/scoreboard.lua',
+	'modules/client/missionmanager.lua',
 }
 
 
@@ -86,19 +99,21 @@ client_scripts {
 	'client/hud.lua',
 	'client/pickup.lua',
 	'client/playertags.lua',
-	'client/cratedrop.lua',
-	'client/interactionmenu.lua',
-	'client/bounty.lua',
-	'client/castle.lua',
-	'client/property.lua',
-	'client/guard.lua',
+	'client/crate.lua',
 	'client/pingkick.lua',
-	'client/stunt.lua',
+	'client/vehicle.lua',
+	'client/duel.lua',
+
+	'client/event/castle.lua',
+	'client/event/property.lua',
+	'client/event/search.lua',
+
+	'client/menu/interaction.lua',
+	'client/menu/moderator.lua',
 
 	'client/shop/skinshop.lua',
 	'client/shop/ammunation.lua',
 
-	'client/mission/missionmanager.lua',
 	'client/mission/assetrecovery.lua',
 	'client/mission/headhunter.lua',
 	'client/mission/marketmanipulation.lua',

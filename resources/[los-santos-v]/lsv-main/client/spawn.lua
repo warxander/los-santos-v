@@ -22,7 +22,7 @@ local function spawnPlayer()
 		local radius = Settings.spawn.radius.min
 		local z = 1500.
 		local tryCount = 0
-		local startSpawnTimer = GetGameTimer()
+		local startSpawnTimer = Timer.New()
 
 		while true do
 			Citizen.Wait(0)
@@ -51,7 +51,7 @@ local function spawnPlayer()
 				end
 			end
 
-			if GetTimeDifference(GetGameTimer(), startSpawnTimer) >= Settings.spawn.timeout then spawnPoint = table.random(Settings.spawn.points) end
+			if startSpawnTimer:Elapsed() >= Settings.spawn.timeout then spawnPoint = table.random(Settings.spawn.points) end
 			if spawnPoint then break end
 		end
 	end

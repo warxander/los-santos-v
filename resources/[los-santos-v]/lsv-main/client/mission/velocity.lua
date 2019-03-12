@@ -6,8 +6,6 @@ local detonationSound = nil
 AddEventHandler('lsv:startVelocity', function()
 	local location = table.random(Settings.velocity.locations)
 
-	MissionManager.StartMission('Velocity')
-
 	Streaming.RequestModel('voltic2', true)
 	local vehicleHash = GetHashKey('voltic2')
 	vehicle = CreateVehicle(vehicleHash, location.x, location.y, location.z, location.heading, false, true)
@@ -140,7 +138,7 @@ end)
 
 RegisterNetEvent('lsv:velocityFinished')
 AddEventHandler('lsv:velocityFinished', function(success, reason)
-	MissionManager.FinishMission('Velocity')
+	MissionManager.FinishMission(success)
 
 	if not HasSoundFinished(detonationSound) then StopSound(detonationSound) end
 	ReleaseSoundId(detonationSound)

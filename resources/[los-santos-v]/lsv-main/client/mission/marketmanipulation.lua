@@ -3,8 +3,6 @@ local storePickups = { }
 
 
 AddEventHandler('lsv:startMarketManipulation', function()
-	MissionManager.StartMission('Market Manipulation')
-
 	local pickupHash = GetHashKey('PICKUP_MONEY_CASE')
 	local placesCount = #Settings.marketManipulation.places
 
@@ -12,7 +10,7 @@ AddEventHandler('lsv:startMarketManipulation', function()
 		table.insert(storePickups, CreatePickupRotate(pickupHash, place.x, place.y, place.z, 0., 0., 0., 512))
 	end)
 
-	local eventStartTime = GetGameTimer()
+	local eventStartTime = Timer.New()
 	local totalRobberies = 0
 
 	Gui.StartMission('Market Manipulation', 'Rob stores and banks within the time limit.')
@@ -33,7 +31,7 @@ AddEventHandler('lsv:startMarketManipulation', function()
 
 			if Player.IsActive() then
 				Gui.DisplayObjectiveText('Rob stores and banks.')
-				Gui.DrawTimerBar('MISSION TIME', Settings.marketManipulation.time - GetGameTimer() + eventStartTime)
+				Gui.DrawTimerBar('MISSION TIME', Settings.marketManipulation.time - eventStartTime:Elapsed())
 				Gui.DrawBar('TOTAL ROBBERIES', totalRobberies, nil, 2)
 			end
 		end
@@ -47,7 +45,7 @@ AddEventHandler('lsv:startMarketManipulation', function()
 			return
 		end
 
-		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.marketManipulation.time then
+		if eventStartTime:Elapsed() < Settings.marketManipulation.time then
 			if #storePickups == 0 then
 				TriggerServerEvent('lsv:marketManipulationFinished')
 				return
@@ -76,7 +74,7 @@ end)
 
 RegisterNetEvent('lsv:marketManipulationFinished')
 AddEventHandler('lsv:marketManipulationFinished', function(success, reason)
-	MissionManager.FinishMission('Market Manipulation')
+	MissionManager.FinishMission(success)
 
 	World.SetWantedLevel(0)	
 

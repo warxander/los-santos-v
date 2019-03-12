@@ -9,8 +9,7 @@ function Gui.GetPlayerName(serverId, color, lowercase)
 			return 'You'
 		end
 	else
-		if not color then color = '~w~' end
-
+		if not color then color = World.DuelPlayer == serverId and '~r~' or '~w~' end
 		return color..'<C>'..GetPlayerName(GetPlayerFromServerId(serverId))..'</C>~w~'
 	end
 end
@@ -110,17 +109,20 @@ end
 
 
 function Gui.StartMission(name, message, tip)
-	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', name, message or "")
 	if tip then SetTimeout(11000, function() Gui.DisplayHelpText(tip) end) end
 	PlaySoundFrontend(-1, 'EVENT_START_TEXT', 'GTAO_FM_EVENTS_SOUNDSET', true)
+
+	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
+	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', name, message or '')
 	scaleform:RenderFullscreenTimed(10000)
 	scaleform:Delete()
+
+	FlashMinimapDisplay()
 end
 
 
 function Gui.FinishMission(name, success, reason)
-	StartScreenEffect('SuccessMichael', 0, false)
+	StartScreenEffect('SuccessNeutral', 0, false)
 
 	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
 	elseif Player.IsActive() then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
@@ -128,11 +130,8 @@ function Gui.FinishMission(name, success, reason)
 	if not reason then return end
 
 	local status = success and 'COMPLETED' or 'FAILED'
-
 	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-
 	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', string.upper(name)..' '..status, reason)
 	scaleform:RenderFullscreenTimed(7000)
-
 	scaleform:Delete()
 end

@@ -1,3 +1,3 @@
-resource_type 'map' { gameTypes = { fivem = true } }
+resource_type 'map' { gameTypes = { ['Los Santos V'] = true } }
 
 map 'map.lua'

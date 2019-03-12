@@ -4,6 +4,9 @@ local cashGained = 0
 local cashGainedTime = nil
 local cashGainedEffects = { }
 
+local playerStreakScaleform = nil
+local lastKillTime = nil
+
 
 Citizen.CreateThread(function()
 	AddTextEntry('MONEY_ENTRY', '$~1~')
@@ -61,12 +64,13 @@ AddEventHandler('lsv:cashUpdated', function(cash, victim)
 		return
 	end
 	cashGained = cashGained + cash
-	cashGainedTime = GetGameTimer()
+	cashGainedTime:Restart()
 end)
 
 
 AddEventHandler('lsv:init', function()
-	cashGainedTime = GetGameTimer()
+	cashGainedTime = Timer.New()
+	lastKillTime = Timer.New()
 
 	Streaming.RequestStreamedTextureDict('MPHud')
 
@@ -77,8 +81,9 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if GetTimeDifference(GetGameTimer(), cashGainedTime) < Settings.cashGainedNotificationTime then
-			if cashGained ~=0 and not IsPlayerDead(PlayerId()) then
+		if cashGained ~= 0 then
+			if IsPlayerDead(PlayerId()) then cashGainedTime:Restart()
+			elseif cashGainedTime:Elapsed() < Settings.cashGainedNotificationTime then
 				local playerPosition = Player.Position()
 				local z = playerPosition.z + 1.0
 				local color = cashGained > 0 and Color.GetHudFromBlipColor(Color.BlipWhite()) or Color.GetHudFromBlipColor(Color.BlipRed())
@@ -88,8 +93,10 @@ AddEventHandler('lsv:init', function()
 				Gui.SetTextParams(4, color, textScale, true, true)
 				Gui.DrawText(math.abs(cashGained), { x = spriteScale / 2 / screenWidth, y = -spriteScale / 2 / screenHeight - 0.004 })
 				ClearDrawOrigin()
+			else
+				cashGained = 0
 			end
-		else cashGained = 0 end
+		end
 	end
 end)
 
@@ -98,13 +105,13 @@ AddEventHandler('lsv:init', function()
 	--https://pastebin.com/amtjjcHb
 	local tips = {
 		'Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.',
-		"Performing Missions and taking out enemy players will give your cash.",
-		"Get extra cash for killing players who are doing a Mission.",
-		'Stunt Jumps will give you a small amount of cash.',
+		'Performing Missions and taking out enemy players will give your cash.',
+		'Get extra cash for killing players who are doing a Mission.',
 		'Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.',
-		'Use Interaction Menu or visit ~BLIP_GUN_SHOP~ to customize your loadout.',
+		'Use Interaction menu to customize your loadout.',
+		'Visit ~BLIP_GUN_SHOP~ to purchase Special Weapons ammo.',
 		'Press ~INPUT_ENTER_CHEAT_CODE~ to enlarge the Radar.',
-		'Press ~INPUT_DUCK~ to enter stealth mode.',
+		'Press ~INPUT_DUCK~ to enter stealth mode and hide from the Radar.',
 		'Visit ~BLIP_CLOTHES_STORE~ to change your character.',
 		'Use Report Player option from Interaction menu to improve your overall game experience.',
 	}
@@ -146,6 +153,11 @@ AddEventHandler('lsv:onPlayerDied', function(player, suicide)
 			Gui.DisplayNotification(Gui.GetPlayerName(player)..' died.')
 		end
 	end
+
+	if player ~= Player.ServerId() then return end
+
+	Player.Deathstreak = Player.Deathstreak + 1
+	Player.Killstreak = 0
 end)
 
 
@@ -154,6 +166,46 @@ AddEventHandler('lsv:onPlayerKilled', function(player, killer, message)
 	if NetworkIsPlayerActive(GetPlayerFromServerId(player)) and NetworkIsPlayerActive(GetPlayerFromServerId(killer)) then
 		Gui.DisplayNotification(Gui.GetPlayerName(killer)..' '..message..' '..Gui.GetPlayerName(player, nil, true))
 	end
+
+	if killer ~= Player.ServerId() then return end
+
+	Player.Deathstreak = 0
+
+	if lastKillTime:Elapsed() > Settings.killstreakInterval then
+		Player.Killstreak = 1
+		lastKillTime:Restart()
+		return
+	end
+
+	Player.Killstreak = Player.Killstreak + 1
+	if Player.Killstreak < 2 or not Player.IsInFreeroam() then return end
+
+	StartScreenEffect('SuccessTrevor', 0, false)
+
+	local killstreakMessage = 'DOUBLE KILL'
+	if Player.Killstreak == 3 then killstreakMessage = 'TRIPLE KILL'
+	elseif Player.Killstreak == 4 then killstreakMessage = 'MEGA KILL'
+	elseif Player.Killstreak == 5 then killstreakMessage = 'ULTRA KILL'
+	elseif Player.Killstreak == 6 then killstreakMessage = 'MONSTER KILL'
+	elseif Player.Killstreak == 7 then killstreakMessage = 'LUDICROUS KILL'
+	elseif Player.Killstreak == 8 then killstreakMessage = 'HOLY SHIT'
+	elseif Player.Killstreak == 9 then killstreakMessage = 'RAMPAGE'
+	elseif Player.Killstreak > 9 then killstreakMessage = 'GODLIKE' end
+
+	if playerStreakScaleform and playerStreakScaleform:IsValid() then playerStreakScaleform:Delete() end
+	playerStreakScaleform = Scaleform:Request('MIDSIZED_MESSAGE')
+	playerStreakScaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', killstreakMessage)
+	playerStreakScaleform:RenderFullscreenTimed(5000)
+end)
+
+
+AddEventHandler('playerSpawned', function()
+	if not Player.Loaded or Player.Deathstreak < Settings.deathstreakMinCount then return end
+
+	if playerStreakScaleform and playerStreakScaleform:IsValid() then playerStreakScaleform:Delete() end
+	playerStreakScaleform = Scaleform:Request('MIDSIZED_MESSAGE')
+	playerStreakScaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'LOOSING KILLSTREAK')
+	playerStreakScaleform:RenderFullscreenTimed(5000)
 end)
 
 
@@ -173,7 +225,10 @@ AddEventHandler('lsv:init', function()
 		if IsControlPressed(0, 20) then
 			Scoreboard.DisplayThisFrame()
 		elseif IsPlayerDead(PlayerId()) and DeathTimer then
-			if IsControlJustReleased(0, 24) then DeathTimer = DeathTimer - Settings.spawn.respawnFasterPerControlPressed end
+			if IsControlJustReleased(0, 24) then
+				DeathTimer = DeathTimer - Settings.spawn.respawnFasterPerControlPressed
+				PlaySoundFrontend(-1, DeathTimer > 0 and 'Faster_Click' or 'Faster_Bar_Full', 'RESPAWN_ONLINE_SOUNDSET', true)
+			end
 			Gui.DrawProgressBar('RESPAWNING', GetTimeDifference(GetGameTimer(), DeathTimer) / TimeToRespawn, Color.GetHudFromBlipColor(Color.BlipRed()))
 		end
 	end
@@ -198,11 +253,7 @@ AddEventHandler('lsv:init', function()
 			ShakeGameplayCam('DEATH_FAIL_IN_EFFECT_SHAKE', 1.0)
 			PlaySoundFrontend(-1, 'MP_Flash', 'WastedSounds', 1)
 
-			local scaleformTimer = GetGameTimer()
-			while GetTimeDifference(GetGameTimer(), scaleformTimer) <= 500 do
-				respawnFasterScaleform:RenderFullscreen()
-				Citizen.Wait(0)
-			end
+			respawnFasterScaleform:RenderFullscreenTimed(500)
 
 			while IsPlayerDead(PlayerId()) do
 				scaleform:RenderFullscreen()
@@ -252,33 +303,41 @@ AddEventHandler('lsv:init', function()
 					if not DoesBlipExist(blip) then
 						blip = AddBlipForEntity(ped)
 						SetBlipHighDetail(blip, true)
-						SetBlipCategory(blip, 7)
 					end
 
 					local isPlayerDead = IsPlayerDead(id)
 
 					local serverId = GetPlayerServerId(id)
-					local isPlayerBounty = serverId == World.BountyPlayer
+					local isPlayerExecutiveSearchTarget = serverId == World.ExecutiveSearchPlayer
 					local isPlayerHotProperty = serverId == World.HotPropertyPlayer
 					local isPlayerOnMission = MissionManager.IsPlayerOnMission(serverId)
+					local isPlayerDuelOpponent = World.DuelPlayer == serverId
 					local patreonTier = Scoreboard.GetPlayerPatreonTier(id) or 0
 
 					local blipSprite = Blip.Standard()
 					if isPlayerDead then blipSprite = Blip.Dead()
-					elseif isPlayerHotProperty then blipSprite = Blip.HotProperty()
-					elseif isPlayerBounty then blipSprite = Blip.BountyHit()
-					elseif isPlayerOnMission then blipSprite = Blip.PolicePlayer() end
+					elseif not isPlayerDuelOpponent then
+						if isPlayerExecutiveSearchTarget then blipSprite = Blip.Target()
+						elseif isPlayerHotProperty then blipSprite = Blip.HotProperty()
+						elseif isPlayerOnMission then blipSprite = Blip.PolicePlayer() end
+					end
 
 					local scale = 0.7
-					if isPlayerHotProperty or isPlayerBounty or isPlayerOnMission then scale = 0.95 end
+					if isPlayerDuelOpponent then scale = 0.8
+					elseif isPlayerHotProperty or isPlayerOnMission or isPlayerExecutiveSearchTarget then scale = 0.95 end
 					SetBlipScale(blip, scale)
 
 					local blipColor = Color.BlipWhite()
-					if isPlayerHotProperty or isPlayerBounty then blipColor = Color.BlipRed()
+					if isPlayerHotProperty or isPlayerExecutiveSearchTarget or isPlayerDuelOpponent then blipColor = Color.BlipRed()
 					elseif isPlayerOnMission then blipColor = Color.BlipPurple() end
 
-					local blipAlpha = GetPedStealthMovement(ped) and 0 or 255
-					if isPlayerBounty or isPlayerHotProperty or isPlayerDead or isPlayerOnMission then blipAlpha = 255 end
+					local blipAlpha = 255
+					local isPlayerExecutiveSearchInvisible = isPlayerExecutiveSearchTarget
+					if isPlayerExecutiveSearchInvisible then
+						if IsPedInAnyVehicle(ped, false) then isPlayerExecutiveSearchInvisible = IsPedDoingDriveby(ped)
+						else isPlayerExecutiveSearchInvisible = not IsPedStill(ped) or IsPedClimbing(ped) end
+					end
+					if not isPlayerHotProperty and (isPlayerExecutiveSearchInvisible or GetPedStealthMovement(ped)) then blipAlpha = 0 end
 
 					if GetBlipSprite(blip) ~= blipSprite then SetBlipSprite(blip, blipSprite) end
 					if GetBlipAlpha(blip) ~= blipAlpha then SetBlipAlpha(blip, blipAlpha) end

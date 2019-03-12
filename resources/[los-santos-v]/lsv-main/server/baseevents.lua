@@ -21,7 +21,7 @@ local function getKilledMessage()
 end
 
 
-RegisterServerEvent('baseevents:onPlayerDied')
+RegisterNetEvent('baseevents:onPlayerDied')
 AddEventHandler('baseevents:onPlayerDied', function()
 	local player = source
 	Db.UpdateDeaths(player, function()
@@ -33,7 +33,7 @@ AddEventHandler('baseevents:onPlayerDied', function()
 end)
 
 
-RegisterServerEvent('baseevents:onPlayerKilled')
+RegisterNetEvent('baseevents:onPlayerKilled')
 AddEventHandler('baseevents:onPlayerKilled', function(killer)
 	local victim = source
 

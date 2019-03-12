@@ -1,7 +1,7 @@
 local players = { }
 
 
-RegisterServerEvent('lsv:velocityFinished')
+RegisterNetEvent('lsv:velocityFinished')
 AddEventHandler('lsv:velocityFinished', function()
 	local player = source
 
@@ -9,14 +9,14 @@ AddEventHandler('lsv:velocityFinished', function()
 	if players[player] then reward = reward - math.min(Settings.velocity.maxReward - Settings.velocity.minReward, players[player] * Settings.velocity.cashPerAboutToDetonate) end
 
 	Db.UpdateCash(player, reward, function()
-		TriggerClientEvent('lsv:velocityFinished', player, true)
+		TriggerClientEvent('lsv:velocityFinished', player, true, '')
 	end)
 
 	players[player] = nil
 end)
 
 
-RegisterServerEvent('lsv:velocityAboutToDetonate')
+RegisterNetEvent('lsv:velocityAboutToDetonate')
 AddEventHandler('lsv:velocityAboutToDetonate', function()
 	local player = source
 

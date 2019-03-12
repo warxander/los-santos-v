@@ -15,9 +15,7 @@ end
 AddEventHandler('lsv:startHeadhunter', function()
 	local target = table.random(Settings.headhunter.targets)
 
-	MissionManager.StartMission('Headhunter')
-
-	local eventStartTime = GetGameTimer()
+	local eventStartTime = Timer.New()
 	local loseTheCopsStage = false
 	local loseTheCopsStageStartTime = nil
 	local isTargetBlipHided = false
@@ -59,7 +57,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 				removeTargetBlip()
 
 				if not loseTheCopsStage then
-					StartScreenEffect("SuccessTrevor", 0, false)
+					StartScreenEffect('SuccessTrevor', 0, false)
 					World.SetWantedLevel(Settings.headhunter.wantedLevel)
 					SetTimeout(1000, function() Gui.DisplayHelpText('Lose the cops faster to get extra cash.') end)
 					loseTheCopsStage = true
@@ -80,7 +78,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 				if isTargetDead then missionText = 'Lose the cops.' end
 				Gui.DisplayObjectiveText(missionText)
 
-				Gui.DrawTimerBar('MISSION TIME', Settings.headhunter.time - GetGameTimer() + eventStartTime)
+				Gui.DrawTimerBar('MISSION TIME', Settings.headhunter.time - eventStartTime:Elapsed())
 			end
 		end
 	end)
@@ -93,7 +91,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 			return
 		end
 
-		if GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.headhunter.time then
+		if eventStartTime:Elapsed() < Settings.headhunter.time then
 			isTargetDead = IsEntityDead(targetPed)
 			isInMissionArea = Player.DistanceTo(target.location) < Settings.headhunter.radius
 
@@ -120,7 +118,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 			end
 
 			if loseTheCopsStage and GetPlayerWantedLevel(PlayerId()) == 0 then
-				TriggerServerEvent('lsv:headhunterFinished', eventStartTime, loseTheCopsStageStartTime, GetGameTimer())
+				TriggerServerEvent('lsv:headhunterFinished', eventStartTime._startTime, loseTheCopsStageStartTime, GetGameTimer())
 				return
 			end
 		else
@@ -133,7 +131,7 @@ end)
 
 RegisterNetEvent('lsv:headhunterFinished')
 AddEventHandler('lsv:headhunterFinished', function(success, reason)
-	MissionManager.FinishMission('Headhunter')
+	MissionManager.FinishMission(success)
 
 	World.SetWantedLevel(0)
 	if DoesEntityExist(targetPed) then RemovePedElegantly(targetPed) end

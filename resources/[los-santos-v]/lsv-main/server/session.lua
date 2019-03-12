@@ -32,7 +32,7 @@ AddEventHandler('playerDropped', function(reason)
 end)
 
 
-RegisterServerEvent('lsv:loadPlayer')
+RegisterNetEvent('lsv:loadPlayer')
 AddEventHandler('lsv:loadPlayer', function()
 	local player = source
 	local playerName = GetPlayerName(player)
@@ -58,7 +58,7 @@ AddEventHandler('lsv:loadPlayer', function()
 end)
 
 
-RegisterServerEvent('lsv:savePlayerWeapons')
+RegisterNetEvent('lsv:savePlayerWeapons')
 AddEventHandler('lsv:savePlayerWeapons', function(weapons)
 	local player = source
 
@@ -68,7 +68,7 @@ AddEventHandler('lsv:savePlayerWeapons', function(weapons)
 end)
 
 
-RegisterServerEvent('lsv:kickAFKPlayer')
+RegisterNetEvent('lsv:kickAFKPlayer')
 AddEventHandler('lsv:kickAFKPlayer', function()
 	local player = source
 
@@ -78,7 +78,7 @@ AddEventHandler('lsv:kickAFKPlayer', function()
 end)
 
 
-RegisterServerEvent('lsv:playerSessionFailed')
+RegisterNetEvent('lsv:playerSessionFailed')
 AddEventHandler('lsv:playerSessionFailed', function()
 	local player = source
 

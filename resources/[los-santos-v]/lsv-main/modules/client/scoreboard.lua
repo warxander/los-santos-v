@@ -26,7 +26,8 @@ local tableKillsWidth = 0.075
 local tableDeathsWidth = 0.075
 local tableTextHorizontalMargin = 0.00225
 local tableTextVerticalMargin = 0.00245
-local onlineStatusWidth = 0.00225
+local playerStatusWidth = 0.00225
+local voiceIndicatorWidth = 0.01
 
 local tableWidth = tablePositionWidth + tableCashWidth + tableKdRatioWidth + tableKillsWidth + tableDeathsWidth
 
@@ -61,12 +62,19 @@ local tableKillsTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255
 local tableDeathsColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
 local tableDeathsTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 
+local activeVoiceIndicatorColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
+local inactiveVoiceIndicatorColor = { ['r'] = 10, ['g'] = 10, ['b'] = 10, ['a'] = 255 }
 
 AddEventHandler('lsv:updateScoreboard', function(serverScoreboard)
 	scoreboard = table.filter(serverScoreboard, function(player)
 		local id = GetPlayerFromServerId(player.id)
 		return id == PlayerId() or NetworkIsPlayerActive(id)
 	end)
+end)
+
+
+AddEventHandler('lsv:init', function()
+    Streaming.RequestStreamedTextureDict('mpleaderboard')
 end)
 
 
@@ -114,7 +122,9 @@ function Scoreboard.DisplayThisFrame()
 	table.foreach(scoreboard, function(player)
 		local avatarPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth / 2, ['y'] = tablePosition.y }
 		local playerPosition = { ['x'] = avatarPosition.x + tablePositionWidth / 2, ['y'] = tablePosition.y }
-		local onlineStatusPosition = { ['x'] = avatarPosition.x + tableAvatarPositionWidth / 2 + onlineStatusWidth / 2, ['y'] = tablePosition.y }
+		local playerNamePosition = { ['x'] = (avatarPosition.x + tablePositionWidth / 2) + 0.008, ['y'] = tablePosition.y }
+		local voiceIndicatorPosition = { ['x'] = (scoreboardPosition.x + tableAvatarPositionWidth / 2) + 0.015, ['y'] = tablePosition.y }
+		local playerStatusPosition = { ['x'] = avatarPosition.x + tableAvatarPositionWidth / 2 + playerStatusWidth / 2, ['y'] = tablePosition.y }
 		local cashPosition = { ['x'] = tableCashHeader.x, ['y'] = tablePosition.y }
 		local kdRatioPosition = { ['x'] = tableKdRatioHeader.x, ['y'] = tablePosition.y }
 		local killsPosition = { ['x'] = tableKillsHeader.x, ['y'] = tablePosition.y }
@@ -138,12 +148,20 @@ function Scoreboard.DisplayThisFrame()
 
 		Gui.DrawRect(playerPosition, tablePositionWidth - tableAvatarPositionWidth, tableHeight, tablePositionColor)
 		Gui.SetTextParams(4, tablePositionTextColor, positionScale, false, isPatron)
-		Gui.DrawText(player.name, { ['x'] = playerPosition.x - (tablePositionWidth - tableAvatarPositionWidth) / 2 + onlineStatusWidth + tableTextHorizontalMargin,
+		Gui.DrawText(player.name, { ['x'] = playerNamePosition.x - (tablePositionWidth - tableAvatarPositionWidth) / 2 + playerStatusWidth + tableTextHorizontalMargin,
 			['y'] = tableText.y })
 
-		-- Draw online status (make it real)
-		local onlineStatusColor = isPatron and Color.GetHudFromBlipColor(Color.BlipOrange()) or Color.GetHudFromBlipColor(Color.BlipWhite())
-		Gui.DrawRect(onlineStatusPosition, onlineStatusWidth, tableHeight, onlineStatusColor)
+		-- Draw voice chat indicator
+		local localPlayerId = GetPlayerFromServerId(player.id)
+		local isPlayerTalking = NetworkIsPlayerTalking(localPlayerId)
+		local voiceIndicatorColor = isPlayerTalking and activeVoiceIndicatorColor or inactiveVoiceIndicatorColor
+		DrawSprite('mpleaderboard', isPlayerTalking and 'leaderboard_audio_3' or 'leaderboard_audio_inactive', voiceIndicatorPosition.x, voiceIndicatorPosition.y, voiceIndicatorWidth, tableHeight, 0.0, voiceIndicatorColor.r, voiceIndicatorColor.g, voiceIndicatorColor.b, voiceIndicatorColor.a)
+
+		-- Draw player status
+		local playerStatusColor = Color.GetHudFromBlipColor(Color.BlipWhite())
+		if player.moderator then playerStatusColor = Color.GetHudFromBlipColor(Color.BlipPurple())
+		elseif isPatron then playerStatusColor = Color.GetHudFromBlipColor(Color.BlipOrange()) end
+		Gui.DrawRect(playerStatusPosition, playerStatusWidth, tableHeight, playerStatusColor)
 
 		-- Draw cash
 		Gui.DrawRect(cashPosition, tableCashWidth, tableHeight, tableCashColor)

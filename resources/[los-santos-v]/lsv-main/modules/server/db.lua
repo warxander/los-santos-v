@@ -2,19 +2,15 @@ Db = { }
 
 
 function Db.SetValue(player, field, value, callback)
-	MySQL.ready(function()
-		MySQL.Async.execute('UPDATE Players SET '..field..' = '..tostring(value)..' WHERE PlayerId=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
-			if callback then callback() end
-		end)
+	MySQL.Async.execute('UPDATE Players SET '..field..' = '..tostring(value)..' WHERE PlayerId=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
+		if callback then callback() end
 	end)
 end
 
 
 function Db.UpdateNumericValue(player, field, value, callback)
-	MySQL.ready(function()
-		MySQL.Async.execute('UPDATE Players SET '..field..' = '..field..' + '..value..' WHERE PlayerId=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
-			if callback then callback() end
-		end)
+	MySQL.Async.execute('UPDATE Players SET '..field..' = '..field..' + '..value..' WHERE PlayerId=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
+		if callback then callback() end
 	end)
 end
 
@@ -50,10 +46,8 @@ end
 
 
 function Db.FindPlayer(player, callback)
-	MySQL.ready(function()
-		MySQL.Async.fetchAll('SELECT * FROM Players WHERE PlayerID=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function(data)
-			if callback then callback(data) end
-		end)
+	MySQL.Async.fetchAll('SELECT * FROM Players WHERE PlayerID=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function(data)
+		if callback then callback(data) end
 	end)
 end
 
@@ -61,28 +55,22 @@ end
 function Db.RegisterPlayer(player, callback)
 	local playerId = GetPlayerIdentifiers(player)[1]
 
-	MySQL.ready(function()
-		MySQL.Async.transaction({ 'INSERT INTO Players (PlayerID) VALUES (@playerId)', 'INSERT INTO Reports (PlayerID) VALUES (@playerId)' }, { ['@playerId'] = playerId }, function()
-			Db.FindPlayer(player, callback)
-		end)
+	MySQL.Async.transaction({ 'INSERT INTO Players (PlayerID) VALUES (@playerId)', 'INSERT INTO Reports (PlayerID) VALUES (@playerId)' }, { ['@playerId'] = playerId }, function()
+		Db.FindPlayer(player, callback)
 	end)
 end
 
 
 function Db.BanPlayer(player, callback)
-	MySQL.ready(function()
-		MySQL.Async.execute('UPDATE Players SET Banned=1 WHERE PlayerID=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
-			if callback then callback() end
-		end)
+	MySQL.Async.execute('UPDATE Players SET Banned=1 WHERE PlayerID=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
+		if callback then callback() end
 	end)
 end
 
 
 function Db.UpdateReports(player, callback)
-	MySQL.ready(function()
-		MySQL.Async.execute('UPDATE Reports SET Total=Total+1 WHERE PlayerID=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
-			if callback then callback() end
-		end)
+	MySQL.Async.execute('UPDATE Reports SET Total=Total+1 WHERE PlayerID=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function()
+		if callback then callback() end
 	end)
 end
 

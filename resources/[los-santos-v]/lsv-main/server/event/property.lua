@@ -19,16 +19,18 @@ AddEventHandler('lsv:startHotProperty', function()
 	propertyData.players = { }
 	propertyData.currentPlayer = nil
 	propertyData.placeIndex = math.random(#Settings.castle.places)
-	propertyData.eventStartTime = GetGameTimer()
+	propertyData.eventStartTime = Timer.New()
 
 	logger:Info('Start { '..propertyData.placeIndex..' }')
 
-	TriggerClientEvent('lsv:startHotProperty', -1, propertyData.placeIndex)
+	TriggerClientEvent('lsv:startHotProperty', -1, propertyData)
 
 	while true do
 		Citizen.Wait(0)
 
-		if propertyData and GetGameTimer() - propertyData.eventStartTime >= Settings.property.duration then
+		if not propertyData then return end
+
+		if propertyData.eventStartTime:Elapsed() >= Settings.property.duration then
 			local winners = nil
 
 			if #propertyData.players ~= 0 then
@@ -45,20 +47,20 @@ AddEventHandler('lsv:startHotProperty', function()
 
 			propertyData = nil
 			TriggerClientEvent('lsv:finishHotProperty', -1, winners)
-			TriggerEvent('lsv:onEventStopped')
+			EventManager.StopEvent(winners)
+			return
 		end
 	end
 end)
 
 
 AddEventHandler('lsv:playerConnected', function(player)
-	if propertyData then
-		TriggerClientEvent('lsv:startHotProperty', player, propertyData.placeIndex, GetGameTimer() - propertyData.eventStartTime, propertyData.players, propertyData.currentPlayer)
-	end
+	if not propertyData then return end
+	TriggerClientEvent('lsv:startHotProperty', player, propertyData, propertyData.eventStartTime:Elapsed())
 end)
 
 
-RegisterServerEvent('lsv:hotPropertyCollected')
+RegisterNetEvent('lsv:hotPropertyCollected')
 AddEventHandler('lsv:hotPropertyCollected', function()
 	if not propertyData or propertyData.currentPlayer then return end
 	local player = source
@@ -72,7 +74,7 @@ AddEventHandler('lsv:hotPropertyCollected', function()
 end)
 
 
-RegisterServerEvent('lsv:hotPropertyTimeUpdated')
+RegisterNetEvent('lsv:hotPropertyTimeUpdated')
 AddEventHandler('lsv:hotPropertyTimeUpdated', function()
 	if not propertyData then return end
 	local player = source
@@ -108,7 +110,7 @@ AddEventHandler('lsv:playerDropped', function(player)
 
 	if Scoreboard.GetPlayersCount() == 0 then
 		propertyData = nil
-		TriggerEvent('lsv:onEventStopped')
+		EventManager.StopEvent()
 		return
 	end
 

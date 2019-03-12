@@ -32,13 +32,13 @@ end
 
 
 local function scaleform_render_timed(scaleform, time, renderFunc, ...)
-	if not scaleform_is_valid(scaleform.scaleform) then return end
-
 	local startTime = GetGameTimer()
 	local transOutTime = 500
 
 	while Player.IsActive() and GetTimeDifference(GetGameTimer(), startTime) < time + transOutTime do
 		Citizen.Wait(0)
+
+		if not scaleform:IsValid() then return end
 
 		if GetGameTimer() - startTime > time then
 			scaleform:Call('SHARD_ANIM_OUT', 1, 0.33)
@@ -71,6 +71,11 @@ function Scaleform:Request(id)
 	while not HasScaleformMovieLoaded(object.scaleform) do Citizen.Wait(0) end
 
 	return object
+end
+
+
+function Scaleform:IsValid()
+	return self.scaleform and self.scaleform ~= 0
 end
 
 

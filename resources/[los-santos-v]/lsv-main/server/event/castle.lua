@@ -21,16 +21,18 @@ AddEventHandler('lsv:startCastle', function()
 	castleData = { }
 	castleData.players = { }
 	castleData.placeIndex = math.random(#Settings.castle.places)
-	castleData.eventStartTime = GetGameTimer()
+	castleData.eventStartTime = Timer.New()
 
 	logger:Info('Start { '..castleData.placeIndex..' }')
 
-	TriggerClientEvent('lsv:startCastle', -1, castleData.placeIndex)
+	TriggerClientEvent('lsv:startCastle', -1, castleData)
 
 	while true do
 		Citizen.Wait(0)
 
-		if castleData and GetGameTimer() - castleData.eventStartTime >= Settings.castle.duration then
+		if not castleData then return end
+
+		if castleData.eventStartTime:Elapsed() >= Settings.castle.duration then
 			local winners = nil
 
 			if #castleData.players ~= 0 then
@@ -47,13 +49,14 @@ AddEventHandler('lsv:startCastle', function()
 
 			castleData = nil
 			TriggerClientEvent('lsv:finishCastle', -1, winners)
-			TriggerEvent('lsv:onEventStopped')
+			EventManager.StopEvent(winners)
+			return
 		end
 	end
 end)
 
 
-RegisterServerEvent('lsv:castleAddPoint')
+RegisterNetEvent('lsv:castleAddPoint')
 AddEventHandler('lsv:castleAddPoint', function()
 	if not castleData then return end
 
@@ -69,9 +72,8 @@ end)
 
 
 AddEventHandler('lsv:playerConnected', function(player)
-	if castleData then
-		TriggerClientEvent('lsv:startCastle', player, castleData.placeIndex, GetGameTimer() - castleData.eventStartTime, castleData.players)
-	end
+	if not castleData then return end
+	TriggerClientEvent('lsv:startCastle', player, castleData, castleData.eventStartTime:Elapsed())
 end)
 
 
@@ -80,7 +82,7 @@ AddEventHandler('lsv:playerDropped', function(player)
 
 	if Scoreboard.GetPlayersCount() == 0 then
 		castleData = nil
-		TriggerEvent('lsv:onEventStopped')
+		EventManager.StopEvent()
 		return
 	end
 

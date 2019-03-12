@@ -22,7 +22,7 @@ local function RegisterEmote(command, soloMessage, targetMessage)
 end
 
 
-RegisterServerEvent('_chat:messageEntered')
+RegisterNetEvent('_chat:messageEntered')
 AddEventHandler('_chat:messageEntered', function(author, color, message)
     if not message or not author or message == '' then return end
 
