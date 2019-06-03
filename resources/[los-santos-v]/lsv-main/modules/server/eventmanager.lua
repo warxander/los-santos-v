@@ -2,7 +2,7 @@ EventManager = { }
 
 local logger = Logger:CreateNamedLogger('Event')
 
-local events = { 'ExecutiveSearch', 'HotProperty', 'Castle' }
+local events = { 'SharpShooter', 'StockPiling', 'ExecutiveSearch', 'HotProperty', 'Castle' }
 local eventIndex = 0
 local isEventInProgress = false
 

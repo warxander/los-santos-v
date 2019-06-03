@@ -78,6 +78,16 @@ AddEventHandler('lsv:init', function()
 	RegisterEmoteSuggestion('/unmute') -- Not an emote at all
 
 	RegisterEmoteSuggestion('/ping') -- Not an emote at all
+
+	RegisterEmoteSuggestion('/help', true) -- Not an emote at all
+	RegisterEmoteSuggestion('/ammo', true) -- Not an emote at all
+	RegisterEmoteSuggestion('/report', true) -- Not an emote at all
+	RegisterEmoteSuggestion('/cash', true) -- Not an emote at all
+	RegisterEmoteSuggestion('/quit', true) -- Not an emote at all
+	RegisterEmoteSuggestion('/vehicle', true) -- Not an emote at all
+	RegisterEmoteSuggestion('/repair', true) -- Not an emote at all
+
+	RegisterEmoteSuggestion('/crew', true) -- Not an emote at all
 end)
 
 

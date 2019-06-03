@@ -1,6 +1,3 @@
-RegisterNetEvent('lsv:updateScoreboard')
-
-
 Scoreboard = { }
 
 
@@ -11,6 +8,12 @@ function Scoreboard.GetPlayerPatreonTier(playerId)
 	local serverId = GetPlayerServerId(playerId)
 	local player = table.find_if(scoreboard, function(player) return player.id == serverId end)
 	return player and player.patreonTier or nil
+end
+
+function Scoreboard.GetPlayerRank(playerId)
+	local serverId = GetPlayerServerId(playerId)
+	local player = table.find_if(scoreboard, function(player) return player.id == serverId end)
+	return player and player.rank or nil
 end
 
 
@@ -27,13 +30,21 @@ local tableDeathsWidth = 0.075
 local tableTextHorizontalMargin = 0.00225
 local tableTextVerticalMargin = 0.00245
 local playerStatusWidth = 0.00225
-local voiceIndicatorWidth = 0.01
+local rankWidth = 0.0165
+local rankHeight = 0.0295
+
+local voiceIndicatorWidth = 0.004
+local playerNameMargin = 0.006
+if Settings.enableVoiceChat then
+	voiceIndicatorWidth = 0.01
+	playerNameMargin = 0.0125
+end
 
 local tableWidth = tablePositionWidth + tableCashWidth + tableKdRatioWidth + tableKillsWidth + tableDeathsWidth
 
 local headerScale = 0.2625
 local positionScale = 0.375
-local rankScale = 0.3375
+local rankScale = 0.325
 local cashScale = 0.2625
 local kdRatioScale = 0.2625
 local killsScale = 0.2625
@@ -45,10 +56,6 @@ local tableHeaderColor = { ['r'] = 25, ['g'] = 118, ['b'] = 210, ['a'] = 255 }
 local tableHeaderTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 
 local tablePositionTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
-
-local tablePositionRankBackgroundColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 255 }
-local tablePositionRankColor = { ['r'] = 63, ['g'] = 81, ['b'] = 181, ['a'] = 255 }
-local tablePositionRankTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 
 local tableCashColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
 local tableCashTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
@@ -65,6 +72,11 @@ local tableDeathsTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 25
 local activeVoiceIndicatorColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 local inactiveVoiceIndicatorColor = { ['r'] = 10, ['g'] = 10, ['b'] = 10, ['a'] = 255 }
 
+local rankColor = { ['r'] = 10, ['g'] = 10, ['b'] = 10, ['a'] = 72 }
+local rankTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
+
+
+RegisterNetEvent('lsv:updateScoreboard')
 AddEventHandler('lsv:updateScoreboard', function(serverScoreboard)
 	scoreboard = table.filter(serverScoreboard, function(player)
 		local id = GetPlayerFromServerId(player.id)
@@ -75,6 +87,7 @@ end)
 
 AddEventHandler('lsv:init', function()
     Streaming.RequestStreamedTextureDict('mpleaderboard')
+    Streaming.RequestStreamedTextureDict('mprankbadge')
 end)
 
 
@@ -122,8 +135,9 @@ function Scoreboard.DisplayThisFrame()
 	table.foreach(scoreboard, function(player)
 		local avatarPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth / 2, ['y'] = tablePosition.y }
 		local playerPosition = { ['x'] = avatarPosition.x + tablePositionWidth / 2, ['y'] = tablePosition.y }
-		local playerNamePosition = { ['x'] = (avatarPosition.x + tablePositionWidth / 2) + 0.008, ['y'] = tablePosition.y }
 		local voiceIndicatorPosition = { ['x'] = (scoreboardPosition.x + tableAvatarPositionWidth / 2) + 0.015, ['y'] = tablePosition.y }
+		local rankPosition = { ['x'] = (scoreboardPosition.x + tableAvatarPositionWidth / 2 + voiceIndicatorWidth) + 0.015, ['y'] = tablePosition.y + 0.001 }
+		local playerNamePosition = { ['x'] = (avatarPosition.x + tablePositionWidth / 2 + rankWidth / 2) + playerNameMargin, ['y'] = tablePosition.y }
 		local playerStatusPosition = { ['x'] = avatarPosition.x + tableAvatarPositionWidth / 2 + playerStatusWidth / 2, ['y'] = tablePosition.y }
 		local cashPosition = { ['x'] = tableCashHeader.x, ['y'] = tablePosition.y }
 		local kdRatioPosition = { ['x'] = tableKdRatioHeader.x, ['y'] = tablePosition.y }
@@ -139,7 +153,9 @@ function Scoreboard.DisplayThisFrame()
 		-- Draw player name
 		local isPatron = player.patreonTier ~= 0
 		local playerColor = Color.GetHudFromBlipColor(Color.BlipDarkBlue())
-		if isPatron then
+		if Player.IsCrewMember(player.id) then
+			playerColor = Color.GetHudFromBlipColor(Color.BlipLightBlue())
+		elseif isPatron then
 			playerColor = Color.GetHudFromBlipColor(Color.BlipOrange())
 		elseif player.id == Player.ServerId() then
 			playerColor = Color.GetHudFromBlipColor(Color.BlipBlue())
@@ -152,10 +168,17 @@ function Scoreboard.DisplayThisFrame()
 			['y'] = tableText.y })
 
 		-- Draw voice chat indicator
-		local localPlayerId = GetPlayerFromServerId(player.id)
-		local isPlayerTalking = NetworkIsPlayerTalking(localPlayerId)
-		local voiceIndicatorColor = isPlayerTalking and activeVoiceIndicatorColor or inactiveVoiceIndicatorColor
-		DrawSprite('mpleaderboard', isPlayerTalking and 'leaderboard_audio_3' or 'leaderboard_audio_inactive', voiceIndicatorPosition.x, voiceIndicatorPosition.y, voiceIndicatorWidth, tableHeight, 0.0, voiceIndicatorColor.r, voiceIndicatorColor.g, voiceIndicatorColor.b, voiceIndicatorColor.a)
+		if Settings.enableVoiceChat then
+			local localPlayerId = GetPlayerFromServerId(player.id)
+			local isPlayerTalking = NetworkIsPlayerTalking(localPlayerId)
+			local voiceIndicatorColor = isPlayerTalking and activeVoiceIndicatorColor or inactiveVoiceIndicatorColor
+			DrawSprite('mpleaderboard', isPlayerTalking and 'leaderboard_audio_3' or 'leaderboard_audio_inactive', voiceIndicatorPosition.x, voiceIndicatorPosition.y, voiceIndicatorWidth, tableHeight, 0.0, voiceIndicatorColor.r, voiceIndicatorColor.g, voiceIndicatorColor.b, voiceIndicatorColor.a)
+		end
+
+		-- Draw rank
+		DrawSprite('mprankbadge', 'globe', rankPosition.x, rankPosition.y, rankWidth, rankHeight, 0.0, rankColor.r, rankColor.g, rankColor.b, rankColor.a)
+		Gui.SetTextParams(4, rankTextColor, rankScale, false, false, true)
+		Gui.DrawNumeric(player.rank, { ['x'] = rankPosition.x, ['y'] = tableText.y + tableTextVerticalMargin / 1.25 })
 
 		-- Draw player status
 		local playerStatusColor = Color.GetHudFromBlipColor(Color.BlipWhite())

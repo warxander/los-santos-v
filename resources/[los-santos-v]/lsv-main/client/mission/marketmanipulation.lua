@@ -1,27 +1,25 @@
-local storeBlips = { }
-local storePickups = { }
+local moneyPlaces = nil
 
 
 AddEventHandler('lsv:startMarketManipulation', function()
 	local pickupHash = GetHashKey('PICKUP_MONEY_CASE')
 	local placesCount = #Settings.marketManipulation.places
 
-	table.foreach(Settings.marketManipulation.places, function(place)
-		table.insert(storePickups, CreatePickupRotate(pickupHash, place.x, place.y, place.z, 0., 0., 0., 512))
-	end)
-
 	local eventStartTime = Timer.New()
 	local totalRobberies = 0
 
-	Gui.StartMission('Market Manipulation', 'Rob stores and banks within the time limit.')
+	moneyPlaces = { }
 
 	table.foreach(Settings.marketManipulation.places, function(place)
-		local blip = AddBlipForCoord(place.x, place.y, place.z)
-		SetBlipSprite(blip, Blip.Store())
-		SetBlipHighDetail(blip, true)
-		Map.SetBlipFlashes(blip)
-		table.insert(storeBlips, blip)
+		local moneyPlace = { }
+		moneyPlace.blip = Map.CreatePlaceBlip(Blip.CrateDrop(), place.x, place.y, place.z, 'Money Case', Color.BlipGreen())
+		moneyPlace.pickup = CreatePickupRotate(pickupHash, place.x, place.y, place.z, 0., 0., 0., 512)
+		SetBlipAsShortRange(moneyPlace.blip, false)
+		SetBlipScale(moneyPlace.blip, 1.25)
+		table.insert(moneyPlaces, moneyPlace)
 	end)
+
+	Gui.StartMission('Market Manipulation', 'Rob stores and banks within the time limit.')
 
 	Citizen.CreateThread(function()
 		while true do
@@ -32,7 +30,7 @@ AddEventHandler('lsv:startMarketManipulation', function()
 			if Player.IsActive() then
 				Gui.DisplayObjectiveText('Rob stores and banks.')
 				Gui.DrawTimerBar('MISSION TIME', Settings.marketManipulation.time - eventStartTime:Elapsed())
-				Gui.DrawBar('TOTAL ROBBERIES', totalRobberies, nil, 2)
+				Gui.DrawBar('TOTAL ROBBERIES', totalRobberies..'/'..placesCount)
 			end
 		end
 	end)
@@ -46,23 +44,22 @@ AddEventHandler('lsv:startMarketManipulation', function()
 		end
 
 		if eventStartTime:Elapsed() < Settings.marketManipulation.time then
-			if #storePickups == 0 then
+			if #moneyPlaces == 0 then
 				TriggerServerEvent('lsv:marketManipulationFinished')
 				return
 			end
 
-			for i = placesCount, 1, -1 do
-				if HasPickupBeenCollected(storePickups[i]) then
-					SetBlipSprite(storeBlips[i], Blip.Completed())
-					SetBlipAsShortRange(storeBlips[i], true)
+			local place, placeIndex = table.ifind_if(moneyPlaces, function(place) return place.pickup and HasPickupBeenCollected(place.pickup) end)
 
-					TriggerServerEvent('lsv:marketManipulationRobbed')
-					Gui.DisplayNotification('You grabbed a decent cash.')
-					totalRobberies = totalRobberies + 1
-					storePickups[i] = nil
-
-					World.SetWantedLevel(2)
-				end
+			if place then
+				TriggerServerEvent('lsv:marketManipulationRobbed')
+				Gui.DisplayPersonalNotification('You have collected a money case.')
+				RemovePickup(place.pickup)
+				place.pickup = nil
+				RemoveBlip(place.blip)
+				totalRobberies = totalRobberies + 1
+				World.SetWantedLevel(2)
+				table.remove(moneyPlaces, placeIndex)
 			end
 		else
 			TriggerServerEvent('lsv:marketManipulationFinished')
@@ -76,12 +73,13 @@ RegisterNetEvent('lsv:marketManipulationFinished')
 AddEventHandler('lsv:marketManipulationFinished', function(success, reason)
 	MissionManager.FinishMission(success)
 
-	World.SetWantedLevel(0)	
+	World.SetWantedLevel(0)
 
-	for i = #Settings.marketManipulation.places, 1, -1 do
-		RemoveBlip(storeBlips[i])
-		RemovePickup(storePickups[i])
-	end
+	table.foreach(moneyPlaces, function(place)
+		RemoveBlip(place.blip)
+		RemovePickup(place.pickup)
+	end)
+	moneyPlaces = nil
 
 	Gui.FinishMission('Market Manipulation', success, reason)
 end)

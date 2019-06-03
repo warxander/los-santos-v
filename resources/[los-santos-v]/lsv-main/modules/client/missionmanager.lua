@@ -38,15 +38,26 @@ end
 
 
 AddEventHandler('lsv:init', function()
+	local closestMissionBlip = nil
+
 	while true do
 		Citizen.Wait(0)
 
 		local isPlayerInFreeroam = Player.IsInFreeroam()
 		local playerPosition = GetEntityCoords(PlayerPedId())
+		local closestBlip = nil
+		local closestBlipDistance = nil
 
 		table.iforeach(missionPlaces, function(mission, id)
 			if mission.name and isPlayerInFreeroam and not mission.finished then
-				if GetDistanceBetweenCoords(mission.x, mission.y, mission.z, playerPosition.x, playerPosition.y, playerPosition.z, true) < Settings.placeMarkerRadius then
+				local missionDistance = GetDistanceBetweenCoords(mission.x, mission.y, mission.z, playerPosition.x, playerPosition.y, playerPosition.z, true)
+
+				if not closestBlipDistance or missionDistance < closestBlipDistance then
+					closestBlipDistance = missionDistance
+					closestBlip = mission.blip
+				end
+
+				if missionDistance < Settings.placeMarkerRadius then
 					Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to start '..mission.name..'.')
 					if IsControlJustReleased(0, 38) then
 						mission.finished = true
@@ -57,6 +68,14 @@ AddEventHandler('lsv:init', function()
 				end
 			end
 		end)
+
+		if closestBlip then
+			if closestMissionBlip ~= closestBlip then
+				if closestMissionBlip then SetBlipAsShortRange(closestMissionBlip, true) end
+				SetBlipAsShortRange(closestBlip, false)
+				closestMissionBlip = closestBlip
+			end
+		end
 	end
 end)
 
@@ -68,7 +87,7 @@ AddEventHandler('lsv:missionStarted', function(player, missionName)
 	players[player] = true
 
 	FlashMinimapDisplay()
-	Gui.DisplayNotification(Gui.GetPlayerName(player, '~p~')..' has started '..missionName..'. Kill him to earn extra cash.')
+	Gui.DisplayNotification(Gui.GetPlayerName(player)..' has started '..missionName..'. Kill him to earn reward.')
 	Map.SetBlipFlashes(GetBlipFromEntity(GetPlayerPed(GetPlayerFromServerId(player))))
 end)
 
@@ -77,10 +96,7 @@ RegisterNetEvent('lsv:missionFinished')
 AddEventHandler('lsv:missionFinished', function(player, missionName)
 	if Player.ServerId() == player then return end
 
-	if players[player] then
-		players[player] = nil
-		Gui.DisplayNotification(Gui.GetPlayerName(player, '~p~')..' has finished '..missionName..'.')
-	end
+	players[player] = nil
 end)
 
 

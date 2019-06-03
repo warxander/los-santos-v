@@ -40,8 +40,9 @@ AddEventHandler('lsv:startCastle', function()
 
 				for i = 1, #Settings.castle.rewards do
 					if castleData.players[i] then
-						logger:Info('Winner { '..i..', '..castleData.players[i].id..' }')
-						Db.UpdateCash(castleData.players[i].id, Settings.castle.rewards[i])
+						logger:Info('Winner { '..castleData.players[i].id..', '..castleData.players[i].points..' }')
+						Db.UpdateCash(castleData.players[i].id, Settings.castle.rewards[i].cash)
+						Db.UpdateExperience(castleData.players[i].id, Settings.castle.rewards[i].exp)
 						table.insert(winners, castleData.players[i].id)
 					else break end
 				end

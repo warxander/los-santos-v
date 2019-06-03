@@ -2,7 +2,7 @@ World = { }
 
 World.HotPropertyPlayer = nil
 World.ExecutiveSearchPlayer = nil
-World.DuelPlayer = nil
+World.ChallengingPlayer = nil
 
 
 function World.EnablePvp(enabled)

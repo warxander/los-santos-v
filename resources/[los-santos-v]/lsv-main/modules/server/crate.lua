@@ -15,7 +15,6 @@ function Crate.TrySpawn(player)
 		crate.location = location.blip
 		crate.position = table.random(location.positions)
 		crate.weapon = table.random(Settings.crate.weapons)
-		crate.cash = Settings.crate.cash
 
 		players[player].crate = crate
 		TriggerClientEvent('lsv:spawnCrate', player, crate)
@@ -29,7 +28,8 @@ RegisterNetEvent('lsv:cratePickedUp')
 AddEventHandler('lsv:cratePickedUp', function()
 	local player = source
 
-	Db.UpdateCash(player, Settings.crate.cash)
+	Db.UpdateCash(player, Settings.crate.reward.cash)
+	Db.UpdateExperience(player, Settings.crate.reward.exp)
 	TriggerClientEvent('lsv:cratePickedUp', player, players[player].crate)
 
 	players[player].crate = nil

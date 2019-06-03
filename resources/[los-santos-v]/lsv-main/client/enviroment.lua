@@ -1,4 +1,3 @@
-local time = { hours = 12, minutes = 0, seconds = 0 }
 local weather = 'CLEAR' --'CLEAR', 'EXTRASUNNY', 'CLOUDS', 'OVERCAST', 'RAIN', 'CLEARING', 'THUNDER', 'SMOG', 'FOGGY', 'SNOWLIGHT', 'BLIZZARD', 'XMAS', 'HALLOWEEN'
 local isSnowLoaded = false
 
@@ -27,6 +26,7 @@ Citizen.CreateThread(function()
 
 		for i = #vehiclesToDelete, 1, -1 do
 			if DoesEntityExist(vehiclesToDelete[i]) then
+				NetworkRequestControlOfEntity(vehiclesToDelete[i])
 				SetEntityAsMissionEntity(vehiclesToDelete[i], true, true)
 				DeleteVehicle(vehiclesToDelete[i])
 			end
@@ -38,12 +38,19 @@ end)
 
 
 Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(1000)
+
+		NetworkOverrideClockTime(NetworkGetServerTime())
+	end
+end)
+
+
+Citizen.CreateThread(function()
 	SetBlackout(blackout)
 
 	while true do
 		Citizen.Wait(0)
-
-		NetworkOverrideClockTime(time.hours, time.minutes, time.seconds)
 
 		-- https://forum.fivem.net/t/snowballs/55932
 		-- https://github.com/TomGrobbe/Snowballs

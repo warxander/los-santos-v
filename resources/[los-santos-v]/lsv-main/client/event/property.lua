@@ -1,7 +1,7 @@
 local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
 local playerColors = { Color.BlipYellow(), Color.BlipGrey(), Color.BlipBrown() }
 local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
-local instructionsText = 'Collect the briefcase and hold it for as long as possible for cash reward.'
+local instructionsText = 'Collect the briefcase and hold it for as long as possible for reward.'
 
 local propertyData = nil
 
@@ -25,7 +25,8 @@ end
 
 local function getPlayerTime()
 	local player = table.find_if(propertyData.players, function(player) return player.id == Player.ServerId() end)
-	return ms_to_string(player and player.totalTime or 0)
+	if not player then return nil end
+	return ms_to_string(player.totalTime)
 end
 
 
@@ -52,21 +53,9 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 
 	-- GUI
 	Citizen.CreateThread(function()
-		PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-
-		if Player.IsInFreeroam() and not passedTime then
-			local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-			scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'Hot Property started', instructionsText)
-			scaleform:RenderFullscreenTimed(10000)
-			scaleform:Delete()
-
-			if not propertyData then return end
-		else
-			Gui.DisplayNotification(instructionsText)
-		end
+		if Player.IsInFreeroam() and not passedTime then Gui.StartEvent('Hot Property', instructionsText) end
 
 		if propertyData.blip then
-			FlashMinimapDisplay()
 			SetBlipAlpha(propertyData.blip, 255)
 			Map.SetBlipFlashes(propertyData.blip)
 		end
@@ -91,13 +80,13 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 				end
 
 				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.property.duration - GetGameTimer() + propertyData.startTime))
-				Gui.DrawBar('TIME HELD', getPlayerTime(), Color.GetHudFromBlipColor(Color.BlipWhite()), 2)
+				Gui.DrawBar('TIME HELD', getPlayerTime() or 0, Color.GetHudFromBlipColor(Color.BlipWhite()))
 
 				local barPosition = 3
 				for i = barPosition, 1, -1 do
 					if propertyData.players[i] then
 						Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(propertyData.players[i].id)), ms_to_string(propertyData.players[i].totalTime),
-							Color.GetHudFromBlipColor(playerColors[i]), barPosition, true)
+							Color.GetHudFromBlipColor(playerColors[i]), true)
 						barPosition = barPosition + 1
 					end
 				end
@@ -120,10 +109,16 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 			end
 
 			if World.HotPropertyPlayer == Player.ServerId() then
-				if not lastTime then lastTime = Timer.New()
-				elseif lastTime:Elapsed() >= 1000 then
-					TriggerServerEvent('lsv:hotPropertyTimeUpdated')
-					lastTime:Restart()
+				if IsPedInAnyVehicle(PlayerPedId(), false) then
+					TriggerServerEvent('lsv:hotPropertyDropped')
+					World.HotPropertyPlayer = nil
+					Gui.DisplayHelpText('Keep walking on foot to hold the briefcase.')
+				else
+					if not lastTime then lastTime = Timer.New()
+					elseif lastTime:Elapsed() >= 1000 then
+						TriggerServerEvent('lsv:hotPropertyTimeUpdated')
+						lastTime:Restart()
+					end
 				end
 			else lastTime = nil end
 		end
@@ -167,7 +162,6 @@ AddEventHandler('lsv:finishHotProperty', function(winners)
 
 	if not winners then
 		propertyData = nil
-		Gui.DisplayNotification('Hot Property has ended.')
 		return
 	end
 
@@ -182,13 +176,13 @@ AddEventHandler('lsv:finishHotProperty', function(winners)
 		end
 	end
 
-	local messageText = Gui.GetPlayerName(winners[1])..' won Hot Property.'
-	if isPlayerWinner then messageText = 'You won Hot Property with a time of '..playerTime end
+	local messageText = Gui.GetPlayerName(winners[1], '~p~')..' has won Hot Property.'
+	if isPlayerWinner then messageText = 'You have won Hot Property with a time of '..playerTime end
 
-	if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
-	else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
+	if Player.IsInFreeroam() and playerTime then
+		if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
+		else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
 
-	if Player.IsInFreeroam() then
 		local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 		scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
 		scaleform:RenderFullscreenTimed(10000)

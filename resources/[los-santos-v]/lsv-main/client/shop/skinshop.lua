@@ -17,11 +17,16 @@ local skinshops = {
 	{ blip = nil, ['x'] = 11.053486824036, ['y'] = 6514.693359375, ['z'] = 31.877849578857 },
 }
 
+local transaction = RemoteTransaction.New()
+
 
 local function skinKills(id)
 	if id == Player.Skin then return 'Used' end
-	if Player.Kills >= Settings.skins[id].kills then return '' end
-	return Settings.skins[id].kills..' Kills'
+
+	local skin = Settings.skins[id]
+	if Player.Rank < skin.rank then return 'Rank '..skin.rank end
+	if Player.Kills < skin.kills then return 'Kill '..skin.kills..' players' end
+	return ''
 end
 
 
@@ -51,17 +56,24 @@ AddEventHandler('lsv:init', function()
 	end)
 
 	while true do
+		Citizen.Wait(0)
+
 		if WarMenu.IsMenuOpened('skinshop') then
 			table.foreach(orderedSkins, function(v)
 				if WarMenu.Button(v.value.name, skinKills(v.key)) and v.key ~= Player.Skin then
-					TriggerServerEvent('lsv:updatePlayerSkin', v.key)
+					if v.value.rank > Player.Rank then
+						Gui.DisplayPersonalNotification('Your rank is too low.')
+					elseif v.value.kills > Player.Kills then
+						Gui.DisplayPersonalNotification('You don\'t have enough player kills.')
+					else
+						TriggerServerEvent('lsv:updatePlayerSkin', v.key)
+						transaction:WaitForEnding()
+					end
 				end
 			end)
 
 			WarMenu.Display()
 		end
-
-		Citizen.Wait(0)
 	end
 end)
 
@@ -83,11 +95,12 @@ AddEventHandler('lsv:init', function()
 
 						if IsControlJustReleased(0, 38) then
 							skinshopOpenedMenuIndex = skinshopIndex
-							WarMenu.OpenMenu('skinshop')
+							Gui.OpenMenu('skinshop')
 						end
 					end
 				elseif WarMenu.IsMenuOpened('skinshop') and skinshopIndex == skinshopOpenedMenuIndex then
 					WarMenu.CloseMenu()
+					transaction:Finish()
 				end
 			end)
 		end
@@ -97,6 +110,7 @@ end)
 
 RegisterNetEvent('lsv:playerSkinUpdated')
 AddEventHandler('lsv:playerSkinUpdated', function(id)
-	if id then Skin.ChangePlayerSkin(id)
-	else Gui.DisplayNotification('~r~You don\'t have enough kills.') end
+	if not id then return end
+	Skin.ChangePlayerSkin(id)
+	transaction:Finish()
 end)

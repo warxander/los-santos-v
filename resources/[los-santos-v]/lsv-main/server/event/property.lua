@@ -38,8 +38,9 @@ AddEventHandler('lsv:startHotProperty', function()
 
 				for i = 1, #Settings.property.rewards do
 					if propertyData.players[i] then
-						logger:Info('Winner { '..i..', '..propertyData.players[i].id..' }')
-						Db.UpdateCash(propertyData.players[i].id, Settings.property.rewards[i])
+						logger:Info('Winner { '..propertyData.players[i].id..', '..propertyData.players[i].totalTime..' }')
+						Db.UpdateCash(propertyData.players[i].id, Settings.property.rewards[i].cash)
+						Db.UpdateExperience(propertyData.players[i].id, Settings.property.rewards[i].exp)
 						table.insert(winners, propertyData.players[i].id)
 					else break end
 				end
@@ -74,6 +75,16 @@ AddEventHandler('lsv:hotPropertyCollected', function()
 end)
 
 
+RegisterNetEvent('lsv:hotPropertyDropped')
+AddEventHandler('lsv:hotPropertyDropped', function(player)
+	if not player then player = source end
+	if not propertyData or not propertyData.currentPlayer or propertyData.currentPlayer ~= player then return end
+	logger:Info('Dropped { '..player..' }')
+	propertyData.currentPlayer = nil
+	TriggerClientEvent('lsv:hotPropertyDropped', -1, player)
+end)
+
+
 RegisterNetEvent('lsv:hotPropertyTimeUpdated')
 AddEventHandler('lsv:hotPropertyTimeUpdated', function()
 	if not propertyData then return end
@@ -89,10 +100,7 @@ end)
 
 AddEventHandler('baseevents:onPlayerDied', function()
 	local player = source
-	if not propertyData or not propertyData.currentPlayer or propertyData.currentPlayer ~= player then return end
-	logger:Info('Dropped { '..player..' }')
-	propertyData.currentPlayer = nil
-	TriggerClientEvent('lsv:hotPropertyDropped', -1, player)
+	TriggerEvent('lsv:hotPropertyDropped', player)
 end)
 
 

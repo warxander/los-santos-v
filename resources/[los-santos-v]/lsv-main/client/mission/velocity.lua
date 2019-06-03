@@ -2,6 +2,8 @@ local vehicle = nil
 local vehicleBlip = nil
 local detonationSound = nil
 
+local helpHandler = nil
+
 
 AddEventHandler('lsv:startVelocity', function()
 	local location = table.random(Settings.velocity.locations)
@@ -24,13 +26,15 @@ AddEventHandler('lsv:startVelocity', function()
 	local startPreparationStageTime = GetGameTimer()
 	local almostDetonated = 0
 
-	Gui.StartMission('Velocity', 'Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
-
 	vehicleBlip = AddBlipForEntity(vehicle)
 	SetBlipHighDetail(vehicleBlip, true)
 	SetBlipSprite(vehicleBlip, Blip.RocketVoltic())
 	SetBlipColour(vehicleBlip, Color.BlipGreen())
+	SetBlipRouteColour(vehicleBlip, Color.BlipGreen())
+	SetBlipRoute(vehicleBlip, true)
 	Map.SetBlipFlashes(vehicleBlip)
+
+	Gui.StartMission('Velocity', 'Enter the Rocket Voltic and stay at the top speed to avoid detonation.')
 
 	Citizen.CreateThread(function()
 		while true do
@@ -59,12 +63,6 @@ AddEventHandler('lsv:startVelocity', function()
 					Gui.DrawProgressBar(title, 1.0 - timeLeft / Settings.velocity.detonationTime, Color.GetHudFromBlipColor(Color.BlipRed()))
 				else
 					Gui.DrawTimerBar(title, timeLeft)
-				end
-
-				if isInVehicle then
-					local vehicleSpeedMph = math.floor(GetEntitySpeed(vehicle) * 2.236936)
-					Gui.DrawBar('SPEED', vehicleSpeedMph..' MPH', nil, 2)
-					Gui.DrawBar('ALMOST DETONATED', almostDetonated, nil, 3)
 				end
 
 				Gui.DisplayObjectiveText(isInVehicle and 'Stay above '..Settings.velocity.minSpeed..' mph to avoid detonation.' or 'Enter the ~g~Rocket Voltic~w~.')
@@ -96,7 +94,7 @@ AddEventHandler('lsv:startVelocity', function()
 				if GetTimeDifference(GetGameTimer(), startPreparationStageTime) >= Settings.velocity.preparationTime then
 					preparationStage = false
 					eventStartTime = GetGameTimer()
-					SetTimeout(3000, function() Gui.DisplayHelpText('Avoid almost detonated state to get extra cash.') end)
+					helpHandler = HelpQueue.PushFront('Avoid almost detonated state to get extra reward.')
 				end
 			elseif GetTimeDifference(GetGameTimer(), eventStartTime) < Settings.velocity.driveTime then
 				local vehicleSpeedMph = math.floor(GetEntitySpeed(vehicle) * 2.236936) -- https://runtime.fivem.net/doc/reference.html#_0xD5037BA82E12416F
@@ -138,6 +136,8 @@ end)
 
 RegisterNetEvent('lsv:velocityFinished')
 AddEventHandler('lsv:velocityFinished', function(success, reason)
+	if helpHandler then helpHandler:Cancel() end
+
 	MissionManager.FinishMission(success)
 
 	if not HasSoundFinished(detonationSound) then StopSound(detonationSound) end

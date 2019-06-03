@@ -3,6 +3,8 @@ local vehicleBlip = nil
 local dropOffBlip = nil
 local dropOffLocationBlip = nil
 
+local helpHandler = nil
+
 
 AddEventHandler('lsv:startAssetRecovery', function()
 	local variant = table.random(Settings.assetRecovery.variants)
@@ -18,23 +20,25 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	local isInVehicle = false
 	local routeBlip = nil
 
-	Gui.StartMission('Asset Recovery', 'Steal the vehicle and deliver it to the drop-off location.')
-
 	vehicleBlip = AddBlipForEntity(vehicle)
 	SetBlipHighDetail(vehicleBlip, true)
 	SetBlipSprite(vehicleBlip, Blip.PersonalVehicleCar())
 	SetBlipColour(vehicleBlip, Color.BlipGreen())
+	SetBlipRouteColour(vehicleBlip, Color.BlipGreen())
 	SetBlipAlpha(vehicleBlip, 0)
 	Map.SetBlipText(vehicleBlip, 'Vehicle')
 	Map.SetBlipFlashes(vehicleBlip)
 
 	dropOffBlip = AddBlipForCoord(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z)
 	SetBlipColour(dropOffBlip, Color.BlipYellow())
+	SetBlipRouteColour(dropOffBlip, Color.BlipYellow())
 	SetBlipHighDetail(dropOffBlip, true)
 	SetBlipAlpha(dropOffBlip, 0)
 
 	dropOffLocationBlip = Map.CreateRadiusBlip(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, Settings.assetRecovery.dropRadius, Color.BlipYellow())
 	SetBlipAlpha(dropOffLocationBlip, 0)
+
+	Gui.StartMission('Asset Recovery', 'Steal the vehicle and deliver it to the drop-off location.')
 
 	Citizen.CreateThread(function()
 		while true do
@@ -47,8 +51,8 @@ AddEventHandler('lsv:startAssetRecovery', function()
 			SetBlipAlpha(dropOffLocationBlip, isInVehicle and 128 or 0)
 
 			if Player.IsActive() then
+				Gui.DisplayObjectiveText(isInVehicle and 'Deliver the vehicle to the ~y~drop off~w~.' or 'Steal the ~g~vehicle~w~.')
 				Gui.DrawTimerBar('MISSION TIME', Settings.assetRecovery.time - eventStartTime:Elapsed())
-				Gui.DisplayObjectiveText(isInVehicle and 'Deliver the ~g~vehicle~w~ to the ~y~drop off~w~.' or 'Steal the ~g~vehicle~w~.')
 				if isInVehicle then
 					local healthProgress = GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle)
 					local color = Color.GetHudFromBlipColor(Color.BlipGreen())
@@ -79,10 +83,14 @@ AddEventHandler('lsv:startAssetRecovery', function()
 			if isInVehicle then
 				if not NetworkGetEntityIsNetworked(vehicle) then
 					NetworkRegisterEntityAsNetworked(vehicle)
-					SetTimeout(3000, function() Gui.DisplayHelpText('Minimize the vehicle damage to get extra cash.') end)
+					Gui.DisplayPersonalNotification('You have stolen a vehicle.')
+					helpHandler = HelpQueue.PushFront('Minimize the vehicle damage to get extra reward.')
 				end
 
-				if routeBlip ~= dropOffBlip then routeBlip = dropOffBlip end
+				if routeBlip ~= dropOffBlip then
+					SetBlipRoute(dropOffBlip, true)
+					routeBlip = dropOffBlip
+				end
 
 				World.SetWantedLevel(3)
 
@@ -90,7 +98,10 @@ AddEventHandler('lsv:startAssetRecovery', function()
 					TriggerServerEvent('lsv:assetRecoveryFinished', GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle))
 					return
 				end				
-			elseif routeBlip ~= vehicleBlip then routeBlip = vehicleBlip end
+			elseif routeBlip ~= vehicleBlip then
+				SetBlipRoute(vehicleBlip, true)
+				routeBlip = vehicleBlip
+			end
 		else
 			TriggerEvent('lsv:assetRecoveryFinished', false, 'Time is over.')
 			return
@@ -101,6 +112,8 @@ end)
 
 RegisterNetEvent('lsv:assetRecoveryFinished')
 AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
+	if helpHandler then helpHandler:Cancel() end
+
 	MissionManager.FinishMission(success)
 
 	World.SetWantedLevel(0)

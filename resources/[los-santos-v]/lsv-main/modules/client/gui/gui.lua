@@ -9,9 +9,19 @@ function Gui.GetPlayerName(serverId, color, lowercase)
 			return 'You'
 		end
 	else
-		if not color then color = World.DuelPlayer == serverId and '~r~' or '~w~' end
+		if not color then
+			if Player.IsCrewMember(serverId) then color = '~b~'
+			elseif serverId == World.ChallengingPlayer or serverId == World.ExecutiveSearchPlayer or serverId == World.HotPropertyPlayer or MissionManager.IsPlayerOnMission(serverId) then color = '~r~'
+			else color = '~w~' end
+		end
+
 		return color..'<C>'..GetPlayerName(GetPlayerFromServerId(serverId))..'</C>~w~'
 	end
+end
+
+
+function Gui.OpenMenu(id)
+	if not WarMenu.IsAnyMenuOpened() and Player.IsActive() then WarMenu.OpenMenu(id) end
 end
 
 
@@ -25,6 +35,19 @@ end
 function Gui.DisplayNotification(text, pic, title, subtitle, icon)
 	SetNotificationTextEntry('STRING')
 	AddTextComponentSubstringPlayerName(tostring(text))
+
+	if pic then
+		SetNotificationMessage(pic, pic, false, icon or 4, title or '', subtitle or '')
+	end
+
+	DrawNotification(false, true)
+end
+
+
+function Gui.DisplayPersonalNotification(text, pic, title, subtitle, icon)
+	SetNotificationTextEntry('STRING')
+	AddTextComponentSubstringPlayerName(tostring(text))
+	SetNotificationBackgroundColor(200)
 
 	if pic then
 		SetNotificationMessage(pic, pic, false, icon or 4, title or '', subtitle or '')
@@ -108,22 +131,49 @@ function Gui.DrawPlaceMarker(x, y, z, radius, r, g, b, a)
 end
 
 
-function Gui.StartMission(name, message, tip)
-	if tip then SetTimeout(11000, function() Gui.DisplayHelpText(tip) end) end
+function Gui.StartEvent(name, message)
+	PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
+
+	Citizen.CreateThread(function()
+		local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
+		scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', name..' has started', message)
+		scaleform:RenderFullscreenTimed(10000)
+		scaleform:Delete()
+	end)
+
+	FlashMinimapDisplay()
+end
+
+
+function Gui.StartChallenge(name)
 	PlaySoundFrontend(-1, 'EVENT_START_TEXT', 'GTAO_FM_EVENTS_SOUNDSET', true)
 
-	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', name, message or '')
-	scaleform:RenderFullscreenTimed(10000)
-	scaleform:Delete()
+	Citizen.CreateThread(function()
+		local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
+		scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', name, '')
+		scaleform:RenderFullscreenTimed(10000)
+		scaleform:Delete()
+	end)
+end
+
+
+function Gui.StartMission(name, message)
+	PlaySoundFrontend(-1, 'EVENT_START_TEXT', 'GTAO_FM_EVENTS_SOUNDSET', true)
+
+	Citizen.CreateThread(function()
+		local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
+		scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', name, message or '')
+		scaleform:RenderFullscreenTimed(10000)
+		scaleform:Delete()
+
+		Gui.DisplayHelpText('Other players have been alerted to your activity. They can come after you to earn reward.')
+	end)
 
 	FlashMinimapDisplay()
 end
 
 
 function Gui.FinishMission(name, success, reason)
-	StartScreenEffect('SuccessNeutral', 0, false)
-
 	if success then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
 	elseif Player.IsActive() then PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
 

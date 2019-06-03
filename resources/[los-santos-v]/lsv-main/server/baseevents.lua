@@ -9,7 +9,7 @@ local killedMessage = {
 	'erased',
 	'whacked',
 	'deaded',
-	'slain',
+	'slayed',
 	'atomized',
 	'raped',
 	'assassinated',
@@ -34,20 +34,35 @@ end)
 
 
 RegisterNetEvent('baseevents:onPlayerKilled')
-AddEventHandler('baseevents:onPlayerKilled', function(killer)
+AddEventHandler('baseevents:onPlayerKilled', function(killer, data)
 	local victim = source
 
 	if killer ~= -1 then
 		Db.UpdateKills(killer, function()
 			if Scoreboard.IsPlayerOnline(killer) then
-				local killerCash = Settings.cashPerKill + (Settings.cashPerKillstreak * Scoreboard.GetPlayerKillstreak(killer))
-				if MissionManager.IsPlayerOnMission(victim) then killerCash = killerCash + Settings.cashPerMission end
+				local killerCash = math.min(Settings.maxCashPerKillstreak, Settings.cashPerKill + (Settings.cashPerKillstreak * Scoreboard.GetPlayerKillstreak(killer)))
+				local killerExp = math.min(Settings.maxExpPerKillstreak, Settings.expPerKill + (Settings.expPerKillstreak * Scoreboard.GetPlayerKillstreak(killer)))
+
+				if data.killerheadshot then
+					killerCash = killerCash + Settings.cashPerHeadshot
+					killerExp = killerExp + Settings.expPerHeadshot
+				end
+
+				if MissionManager.IsPlayerOnMission(victim) then
+					killerCash = killerCash + Settings.cashPerMission
+					killerExp = killerExp + Settings.expPerMission
+				end
 
 				Scoreboard.UpdateKillstreak(killer)
 
 				Db.UpdateCash(killer, killerCash, function()
-					TriggerClientEvent('lsv:onPlayerKilled', -1, victim, killer, getKilledMessage())
+					local deathMessage = nil
+					if data.killerheadshot then deathMessage = 'headshot'
+					else deathMessage = getKilledMessage() end
+
+					TriggerClientEvent('lsv:onPlayerKilled', -1, victim, killer, deathMessage)
 				end, victim)
+				Db.UpdateExperience(killer, killerExp)
 			end
 		end)
 	end

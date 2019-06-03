@@ -18,6 +18,8 @@ end)
 
 
 Citizen.CreateThread(function()
+	NetworkSetVoiceActive(Settings.enableVoiceChat)
+
 	SetManualShutdownLoadingScreenNui(true)
 	StartAudioScene('MP_LEADERBOARD_SCENE')
 
@@ -79,10 +81,22 @@ AddEventHandler('lsv:init', function()
 end)
 
 
--- As I understood, events start triggering twice when player session is broken
--- So this is my attempt to fix those players (by kicking them, ha-ha-ha)
-local initialized = false
 AddEventHandler('lsv:init', function()
-	if not initialized then initialized = true
-	else TriggerServerEvent('lsv:playerSessionFailed') end
+	local lastVehicle = nil
+
+	while true do
+		Citizen.Wait(0)
+
+		local vehicle = GetVehiclePedIsTryingToEnter(PlayerPedId())
+		local vehicleClass = GetVehicleClass(vehicle)
+
+		if DoesEntityExist(vehicle) and (vehicleClass == 19 or vehicleClass == 15 or vehicleClass == 16) and GetSeatPedIsTryingToEnter(PlayerPedId()) == -1 then
+			local isPlayerAbleToUseIt = Player.Rank >= Settings.specialVehicleMinRank -- This is vunerable for cheaters
+			if not isPlayerAbleToUseIt and lastVehicle ~= vehicle then
+				Gui.DisplayHelpText('You need to have Rank '..Settings.specialVehicleMinRank..' or higher to use this vehicle.')
+			end
+			SetVehicleDoorsLockedForPlayer(vehicle, PlayerId(), not isPlayerAbleToUseIt)
+			lastVehicle = vehicle
+		end
+	end
 end)

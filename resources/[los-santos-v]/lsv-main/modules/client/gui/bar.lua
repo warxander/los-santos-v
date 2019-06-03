@@ -11,11 +11,21 @@ Bar.Texture = 'all_black_bg'
 Bar.TextureDict = 'timerbars'
 
 
-function Gui.DrawBar(title, text, color, index, isPlayerText)
+local barPosition = 0
+
+AddEventHandler('lsv:init', function()
+	while true do
+		Citizen.Wait(0)
+		barPosition = 0
+	end
+end)
+
+
+function Gui.DrawBar(title, text, color, isPlayerText)
 	RequestStreamedTextureDict(Bar.TextureDict)
 	if not HasStreamedTextureDictLoaded(Bar.TextureDict) then return end
 
-	local index = index or 1
+	local index = barPosition + 1
 	local x = SafeZone.Right() - Bar.Width / 2
 	local y = SafeZone.Bottom() - Bar.Height / 2 - (index - 1) * (Bar.Height + 0.0038) - 0.05
 	local color = color or Color.GetHudFromBlipColor(Color.BlipWhite())
@@ -29,20 +39,22 @@ function Gui.DrawBar(title, text, color, index, isPlayerText)
 	Gui.DrawText(title, { x = SafeZone.Right() - Bar.Width / 2, y = y - margin }, SafeZone.Size() - Bar.Width / 2)
 	Gui.SetTextParams(0, color, 0.5, false, false, false)
 	Gui.DrawText(text, { x = SafeZone.Right() - 0.00285, y = y - 0.0175 }, Bar.Width / 2)
+
+	barPosition = barPosition + 1
 end
 
 
-function Gui.DrawTimerBar(text, ms, isPlayerText, index)
+function Gui.DrawTimerBar(text, ms, isPlayerText)
 	local color = ms <= 10000 and Color.GetHudFromBlipColor(Color.BlipRed()) or Color.GetHudFromBlipColor(Color.BlipWhite())
-	Gui.DrawBar(text, ms_to_string(ms), color, index, isPlayerText)
+	Gui.DrawBar(text, ms_to_string(ms), color, isPlayerText)
 end
 
 
-function Gui.DrawProgressBar(title, progress, color, index)
+function Gui.DrawProgressBar(title, progress, color)
 	RequestStreamedTextureDict(Bar.TextureDict)
 	if not HasStreamedTextureDictLoaded(Bar.TextureDict) then return end
 
-	local index = index or 1
+	local index = barPosition + 1
 	local x = SafeZone.Right() - Bar.Width / 2
 	local y = SafeZone.Bottom() - Bar.Height / 2 - (index - 1) * (Bar.Height + 0.0038) - 0.05
 
@@ -58,4 +70,6 @@ function Gui.DrawProgressBar(title, progress, color, index)
 	local progress = math.max(0.0, math.min(1.0, progress))
 	local progressWidth = Bar.ProgressWidth * progress
 	DrawRect(progressX - (Bar.ProgressWidth - progressWidth) / 2, y, progressWidth, Bar.ProgressHeight, color.r, color.g, color.b, 255)
+
+	barPosition = barPosition + 1
 end

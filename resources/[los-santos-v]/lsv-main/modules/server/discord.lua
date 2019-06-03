@@ -10,19 +10,23 @@ end)
 
 
 local function buildReportMessage(reporter, target, reason)
-	return '**'..GetPlayerName(reporter)..'** ||('..GetPlayerIdentifiers(reporter)[1]..', '..GetPlayerPing(reporter)..' ms)|| reported'..
-		' **'..GetPlayerName(target)..'** ||('..GetPlayerIdentifiers(target)[1]..', '..GetPlayerPing(target)..' ms)|| for **'..reason..'**'
+	return '**'..GetPlayerName(reporter)..'** ||('..Scoreboard.GetPlayerIdentifier(reporter)..', '..GetPlayerPing(reporter)..' ms)|| reported'..
+		' **'..GetPlayerName(target)..'** ||('..Scoreboard.GetPlayerIdentifier(target)..', '..GetPlayerPing(target)..' ms)|| for **'..reason..'**'
 end
 
 local function buildKickMessage(target, moderator, reason)
-	local whoKickedName = moderator and 'moderator **'..GetPlayerName(moderator)..'** ||('..GetPlayerIdentifiers(moderator)[1]..')||' or 'other players.'
-	local message = '**'..GetPlayerName(target)..'** ||('..GetPlayerIdentifiers(target)[1]..', '..GetPlayerPing(target)..' ms)|| has been kicked from the session by '..whoKickedName
+	local whoKickedName = moderator and 'moderator **'..GetPlayerName(moderator)..'** ||('..Scoreboard.GetPlayerIdentifier(moderator)..')||' or 'other players.'
+	local message = '**'..GetPlayerName(target)..'** ||('..Scoreboard.GetPlayerIdentifier(target)..', '..GetPlayerPing(target)..' ms)|| has been kicked from the session by '..whoKickedName
 	if reason then message = message..' for **'..reason..'**' end
 	return message
 end
 
-local function buildTempBanMessage(target, moderator, reason)
-	return '**'..GetPlayerName(target)..'** ||('..GetPlayerIdentifiers(target)[1]..', '..GetPlayerPing(target)..' ms)|| has been banned from the server by moderator **'..GetPlayerName(moderator)..'** ||('..GetPlayerIdentifiers(moderator)[1]..')|| for **'..reason..'**'
+local function buildBanMessage(target, moderator, reason, duration)
+	if duration then
+		return '**'..GetPlayerName(target)..'** ||('..Scoreboard.GetPlayerIdentifier(target)..', '..GetPlayerPing(target)..' ms)|| has been temporarily banned from the server by moderator **'..GetPlayerName(moderator)..'** ||('..Scoreboard.GetPlayerIdentifier(moderator)..')|| for **'..reason..'** (Ban duration: **'..duration..' Day(s)**)'
+	else
+		return '**'..GetPlayerName(target)..'** ||('..Scoreboard.GetPlayerIdentifier(target)..', '..GetPlayerPing(target)..' ms)|| has been permanently banned from the server by moderator **'..GetPlayerName(moderator)..'** ||('..Scoreboard.GetPlayerIdentifier(moderator)..')|| for **'..reason..'**'
+	end
 end
 
 local function performDiscordRequest(content, callback)
@@ -48,6 +52,12 @@ function Discord.ReportKickedPlayer(target, moderator, reason)
 end
 
 
-function Discord.ReportTempBanPlayer(target, moderator, reason)
-	performDiscordRequest(buildTempBanMessage(target, moderator, reason))
+function Discord.ReportBanPlayer(target, moderator, reason, duration)
+	performDiscordRequest(buildBanMessage(target, moderator, reason, duration))
+end
+
+
+function Discord.ReportAutoBanPlayer(target, reason)
+	local message = '**'..GetPlayerName(target)..'** ||('..Scoreboard.GetPlayerIdentifier(target)..')|| has been permanently banned from the server for **'..reason..'**'
+	performDiscordRequest(message)
 end

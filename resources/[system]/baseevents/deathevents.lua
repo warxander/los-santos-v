@@ -23,6 +23,7 @@ Citizen.CreateThread(function()
 				local killerinvehicle = false
 				local killervehiclename = ''
                 local killervehicleseat = 0
+                local killedbyheadshot = false
 				if killerentitytype == 1 then
 					killertype = GetPedType(killer)
 					if IsPedInAnyVehicle(killer, false) == 1 then
@@ -34,7 +35,10 @@ Citizen.CreateThread(function()
 				end
 
 				local killerid = GetPlayerByEntityID(killer)
-				if killer ~= ped and killerid ~= nil and NetworkIsPlayerActive(killerid) then killerid = GetPlayerServerId(killerid)
+				if killer ~= ped and killerid ~= nil and NetworkIsPlayerActive(killerid) then
+                    killerid = GetPlayerServerId(killerid)
+                    local hasDamagedBone, damagedBone = GetPedLastDamageBone(ped)
+                    if hasDamagedBone and damagedBone == 31086 then killedbyheadshot = true end
 				else killerid = -1
 				end
 
@@ -43,8 +47,8 @@ Citizen.CreateThread(function()
                     TriggerServerEvent('baseevents:onPlayerDied', killertype, { table.unpack(GetEntityCoords(ped)) })
                     hasBeenDead = true
                 else
-                    TriggerEvent('baseevents:onPlayerKilled', killerid, {killertype=killertype, weaponhash = killerweapon, killerinveh=killerinvehicle, killervehseat=killervehicleseat, killervehname=killervehiclename, killerpos=table.unpack(GetEntityCoords(ped))})
-                    TriggerServerEvent('baseevents:onPlayerKilled', killerid, {killertype=killertype, weaponhash = killerweapon, killerinveh=killerinvehicle, killervehseat=killervehicleseat, killervehname=killervehiclename, killerpos=table.unpack(GetEntityCoords(ped))})
+                    TriggerEvent('baseevents:onPlayerKilled', killerid, {killertype=killertype, killerheadshot = killedbyheadshot, weaponhash = killerweapon, killerinveh=killerinvehicle, killervehseat=killervehicleseat, killervehname=killervehiclename, killerpos=table.unpack(GetEntityCoords(ped))})
+                    TriggerServerEvent('baseevents:onPlayerKilled', killerid, {killertype=killertype, killerheadshot = killedbyheadshot, weaponhash = killerweapon, killerinveh=killerinvehicle, killervehseat=killervehicleseat, killervehname=killervehiclename, killerpos=table.unpack(GetEntityCoords(ped))})
                     hasBeenDead = true
                 end
             elseif not IsPedFatallyInjured(ped) then

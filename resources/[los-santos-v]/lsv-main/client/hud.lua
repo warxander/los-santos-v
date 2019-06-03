@@ -13,6 +13,16 @@ Citizen.CreateThread(function()
 end)
 
 
+AddEventHandler('lsv:init', function()
+	if Settings.enableVoiceChat then return end
+
+	while true do
+		Citizen.Wait(0)
+		DisableControlAction(0, 249, true)
+	end
+end)
+
+
 -- Thanks Sheo for this stuff example
 AddEventHandler('lsv:init', function()
 	RequestStreamedTextureDict('MPHud')
@@ -68,6 +78,36 @@ AddEventHandler('lsv:cashUpdated', function(cash, victim)
 end)
 
 
+AddEventHandler('lsv:showExperience', function(exp)
+	if Player.Rank > #Settings.ranks then return end
+
+	local rank = Player.Rank
+	local playerExp = Player.Experience
+
+	while not HasHudScaleformLoaded(19) do
+		RequestHudScaleform(19)
+		Citizen.Wait(0)
+	end
+
+	BeginScaleformMovieMethodHudComponent(19, 'SET_RANK_SCORES')
+	PushScaleformMovieFunctionParameterInt(Settings.ranks[rank])
+	PushScaleformMovieFunctionParameterInt(Settings.ranks[rank + 1])
+	PushScaleformMovieFunctionParameterInt(playerExp - exp)
+	PushScaleformMovieFunctionParameterInt(playerExp)
+	PushScaleformMovieFunctionParameterInt(rank)
+	EndScaleformMovieMethodReturn()
+end)
+
+
+AddEventHandler('lsv:rankUp', function()
+	local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
+	PlaySoundFrontend(-1, 'MP_RANK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
+	scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'RANK UP', 'Rank '..Player.Rank, 21)
+	scaleform:RenderFullscreenTimed(10000)
+	scaleform:Delete()
+end)
+
+
 AddEventHandler('lsv:init', function()
 	cashGainedTime = Timer.New()
 	lastKillTime = Timer.New()
@@ -86,12 +126,14 @@ AddEventHandler('lsv:init', function()
 			elseif cashGainedTime:Elapsed() < Settings.cashGainedNotificationTime then
 				local playerPosition = Player.Position()
 				local z = playerPosition.z + 1.0
-				local color = cashGained > 0 and Color.GetHudFromBlipColor(Color.BlipWhite()) or Color.GetHudFromBlipColor(Color.BlipRed())
+
+				local cash = tostring(cashGained)
+				if cashGained > 0 then cash = '+'..cash end
 
 				SetDrawOrigin(playerPosition.x, playerPosition.y, z, 0)
 				DrawSprite('MPHud', 'mp_anim_cash', 0.0, 0.0, spriteScale / screenWidth, spriteScale / screenHeight, 0.0, 255, 255, 255, 255)
-				Gui.SetTextParams(4, color, textScale, true, true)
-				Gui.DrawText(math.abs(cashGained), { x = spriteScale / 2 / screenWidth, y = -spriteScale / 2 / screenHeight - 0.004 })
+				Gui.SetTextParams(4, Color.GetHudFromBlipColor(Color.BlipWhite()), textScale, true, true)
+				Gui.DrawText(cash, { x = spriteScale / 2 / screenWidth, y = -spriteScale / 2 / screenHeight - 0.004 })
 				ClearDrawOrigin()
 			else
 				cashGained = 0
@@ -105,25 +147,21 @@ AddEventHandler('lsv:init', function()
 	--https://pastebin.com/amtjjcHb
 	local tips = {
 		'Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.',
-		'Performing Missions and taking out enemy players will give your cash.',
-		'Get extra cash for killing players who are doing a Mission.',
+		'Performing Missions and taking out enemy players will give you cash and experience.',
+		'Get extra reward for killing players who are doing a Mission.',
+		'Challenges allows you to compete with another player to prove your skills.',
 		'Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.',
-		'Use Interaction menu to customize your loadout.',
 		'Visit ~BLIP_GUN_SHOP~ to purchase Special Weapons ammo.',
+		'Press ~INPUT_MP_TEXT_CHAT_TEAM~ to open Personal Vehicle menu.',
 		'Press ~INPUT_ENTER_CHEAT_CODE~ to enlarge the Radar.',
 		'Press ~INPUT_DUCK~ to enter stealth mode and hide from the Radar.',
-		'Visit ~BLIP_CLOTHES_STORE~ to change your character.',
+		'Visit ~BLIP_CLOTHES_STORE~ to change your character appearance.',
+		'Use Interaction Menu to manage your Crew.',
 		'Use Report Player option from Interaction menu to improve your overall game experience.',
 	}
-	local tipTime = 10000
-	local tipInterval = 30000
 
-	table.foreach(tips, function(tip)
-		SetTimeout(tipTime, function()
-			Gui.DisplayHelpText(tip)
-		end)
-
-		tipTime = tipTime + tipInterval
+	table.iforeach(tips, function(tip)
+		HelpQueue.PushBack(tip)
 	end)
 end)
 
@@ -177,10 +215,10 @@ AddEventHandler('lsv:onPlayerKilled', function(player, killer, message)
 		return
 	end
 
+	Player.Kills = Player.Kills + 1
+
 	Player.Killstreak = Player.Killstreak + 1
 	if Player.Killstreak < 2 or not Player.IsInFreeroam() then return end
-
-	StartScreenEffect('SuccessTrevor', 0, false)
 
 	local killstreakMessage = 'DOUBLE KILL'
 	if Player.Killstreak == 3 then killstreakMessage = 'TRIPLE KILL'
@@ -218,9 +256,17 @@ AddEventHandler('lsv:init', function()
 		RemoveMultiplayerHudCash()
 
 		if discordUrl and Player.PatreonTier == 0 then
-			Gui.SetTextParams(7, { r = 254, g = 254, b = 254, a = 196 }, 0.25, true, false, true)
-			Gui.DrawText(discordUrl, { x = 0.5, y = 0.9825 })
+			Gui.SetTextParams(4, { r = 254, g = 254, b = 254, a = 196 }, 0.35, true, false, true)
+			Gui.DrawText(discordUrl, { x = 0.5, y = 0.975 })
 		end
+
+		local playerStats = '$'..Player.Cash
+		if Player.Rank < #Settings.ranks then
+			playerStats = Player.Experience..' / '..Settings.ranks[Player.Rank + 1]..'         '..playerStats
+		end
+
+		Gui.SetTextParams(4, Color.GetHudFromBlipColor(Color.BlipWhite()), 0.3, true, true, true)
+		Gui.DrawText(playerStats, { x = SafeZone.Left() + 0.1025, y = SafeZone.Bottom() - 0.004 }, 0.25)
 
 		if IsControlPressed(0, 20) then
 			Scoreboard.DisplayThisFrame()
@@ -230,6 +276,24 @@ AddEventHandler('lsv:init', function()
 				PlaySoundFrontend(-1, DeathTimer > 0 and 'Faster_Click' or 'Faster_Bar_Full', 'RESPAWN_ONLINE_SOUNDSET', true)
 			end
 			Gui.DrawProgressBar('RESPAWNING', GetTimeDifference(GetGameTimer(), DeathTimer) / TimeToRespawn, Color.GetHudFromBlipColor(Color.BlipRed()))
+		else
+			if IsPedInAnyVehicle(PlayerPedId()) then
+				local vehicle = GetVehiclePedIsUsing(PlayerPedId(), false)
+				if DoesEntityExist(vehicle) then
+					local speed = math.floor(GetEntitySpeed(vehicle) * 2.236936) --mph
+					Gui.DrawBar('SPEED', speed..' MPH')
+				end
+			end
+
+			if HasHudScaleformLoaded(19) then
+				BeginScaleformMovieMethodHudComponent(19, 'OVERRIDE_ANIMATION_SPEED')
+				PushScaleformMovieFunctionParameterInt(2000)
+				EndScaleformMovieMethodReturn()
+
+				BeginScaleformMovieMethodHudComponent(19, 'SET_COLOUR')
+				PushScaleformMovieFunctionParameterInt(116)
+				EndScaleformMovieMethodReturn()
+			end
 		end
 	end
 end)
@@ -274,7 +338,21 @@ AddEventHandler('lsv:setupHud', function(hud)
 		AddTextEntry('FE_THDR_GTAO', hud.pauseMenuTitle)
 	end
 
-	if hud.discordUrl ~= '' then discordUrl = hud.discordUrl end
+	if hud.discordUrl ~= '' then
+		discordUrl = hud.discordUrl
+
+		while true do
+			Citizen.Wait(Settings.discordNotificationTimeout)
+			PlaySoundFrontend(-1, 'EVENT_START_TEXT', 'GTAO_FM_EVENTS_SOUNDSET', true)
+			FlashMinimapDisplay()
+			Gui.DisplayPersonalNotification('Join our Discord to read about latest changes and stay together with community.', 'CHAR_MP_STRIPCLUB_PR', 'VIP Invitation', discordUrl, 2)
+
+			Citizen.Wait(Settings.discordNotificationTimeout)
+			PlaySoundFrontend(-1, 'EVENT_START_TEXT', 'GTAO_FM_EVENTS_SOUNDSET', true)
+			FlashMinimapDisplay()
+			Gui.DisplayPersonalNotification('Earn more rewards and get exclusive in-game bonuses.\nRead more details in our Discord.', 'CHAR_MP_STRIPCLUB_PR', 'Become My Patron', discordUrl, 2)
+		end
+	end
 end)
 
 
@@ -311,38 +389,41 @@ AddEventHandler('lsv:init', function()
 					local isPlayerExecutiveSearchTarget = serverId == World.ExecutiveSearchPlayer
 					local isPlayerHotProperty = serverId == World.HotPropertyPlayer
 					local isPlayerOnMission = MissionManager.IsPlayerOnMission(serverId)
-					local isPlayerDuelOpponent = World.DuelPlayer == serverId
+					local isChallengingPlayer = World.ChallengingPlayer == serverId
+					local isPlayerCrewMember = Player.IsCrewMember(serverId)
 					local patreonTier = Scoreboard.GetPlayerPatreonTier(id) or 0
 
 					local blipSprite = Blip.Standard()
 					if isPlayerDead then blipSprite = Blip.Dead()
-					elseif not isPlayerDuelOpponent then
-						if isPlayerExecutiveSearchTarget then blipSprite = Blip.Target()
-						elseif isPlayerHotProperty then blipSprite = Blip.HotProperty()
-						elseif isPlayerOnMission then blipSprite = Blip.PolicePlayer() end
+					elseif not isChallengingPlayer then
+						if isPlayerHotProperty then blipSprite = Blip.HotProperty()
+						elseif isPlayerOnMission then blipSprite = Blip.PlayerOnMission() end
 					end
 
 					local scale = 0.7
-					if isPlayerDuelOpponent then scale = 0.8
-					elseif isPlayerHotProperty or isPlayerOnMission or isPlayerExecutiveSearchTarget then scale = 0.95 end
+					if isChallengingPlayer or isPlayerExecutiveSearchTarget then scale = 0.8
+					elseif isPlayerHotProperty or isPlayerOnMission then scale = 0.9 end
 					SetBlipScale(blip, scale)
 
 					local blipColor = Color.BlipWhite()
-					if isPlayerHotProperty or isPlayerExecutiveSearchTarget or isPlayerDuelOpponent then blipColor = Color.BlipRed()
-					elseif isPlayerOnMission then blipColor = Color.BlipPurple() end
+					if isPlayerCrewMember then blipColor = Color.BlipBlue()
+					elseif isPlayerHotProperty or isPlayerExecutiveSearchTarget or isChallengingPlayer or isPlayerOnMission then blipColor = Color.BlipRed() end
 
 					local blipAlpha = 255
-					local isPlayerExecutiveSearchInvisible = isPlayerExecutiveSearchTarget
-					if isPlayerExecutiveSearchInvisible then
-						if IsPedInAnyVehicle(ped, false) then isPlayerExecutiveSearchInvisible = IsPedDoingDriveby(ped)
-						else isPlayerExecutiveSearchInvisible = not IsPedStill(ped) or IsPedClimbing(ped) end
+					if not isPlayerCrewMember then
+						local isPlayerExecutiveSearchInvisible = isPlayerExecutiveSearchTarget
+						if isPlayerExecutiveSearchInvisible then
+							if IsPedInAnyVehicle(ped, false) then isPlayerExecutiveSearchInvisible = IsPedDoingDriveby(ped)
+							else isPlayerExecutiveSearchInvisible = not IsPedStill(ped) or IsPedClimbing(ped) end
+						end
+						if not isPlayerHotProperty and (isPlayerExecutiveSearchInvisible or GetPedStealthMovement(ped)) then blipAlpha = 0 end
 					end
-					if not isPlayerHotProperty and (isPlayerExecutiveSearchInvisible or GetPedStealthMovement(ped)) then blipAlpha = 0 end
 
 					if GetBlipSprite(blip) ~= blipSprite then SetBlipSprite(blip, blipSprite) end
 					if GetBlipAlpha(blip) ~= blipAlpha then SetBlipAlpha(blip, blipAlpha) end
 
 					ShowHeadingIndicatorOnBlip(blip, blipSprite == Blip.Standard())
+					ShowCrewIndicatorOnBlip(blip, isPlayerCrewMember)
 					SetBlipColour(blip, blipColor)
 					SetBlipNameToPlayerName(blip, id)
 				else
@@ -353,22 +434,4 @@ AddEventHandler('lsv:init', function()
 
 		Citizen.Wait(0)
 	end
-end)
-
-
-AddEventHandler('lsv:init', function()
-	local policeStations = {
-		{ x = 846.52661132813, y = -1295.9696044922, z = 38.743499755859 },
-		{ x = 446.75616455078, y = -984.17645263672, z = 30.68959236145 },
-		{ x = 367.18963623047, y = -1598.8682861328, z = 36.948822021484 },
-		{ x = -1089.6934814453, y = -830.94616699219, z = 37.675407409668 },
-		{ x = -561.96240234375, y = -131.09330749512, z = 38.431869506836 },
-		{ x = 611.2099609375, y = -2.3961148262024, z = 101.24975585938 },
-		{ x = -441.35147094727, y = 6004.3837890625, z = 40.493244171143 },
-		{ x = 1852.5891113281, y = 3691.5615234375, z = 38.9833984375 },
-	}
-
-	table.foreach(policeStations, function(place)
-		Map.CreatePlaceBlip(Blip.PoliceStation(), place.x, place.y, place.z)
-	end)
 end)

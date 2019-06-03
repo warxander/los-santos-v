@@ -22,6 +22,9 @@ local function specialWeaponAmmoPrice(weapon, ammo, maxAmmo)
 end
 
 
+local transaction = RemoteTransaction.New()
+
+
 function AmmuNation.GetPlaces()
 	return ammunations
 end
@@ -40,6 +43,8 @@ AddEventHandler('lsv:init', function()
 	WarMenu.SetMenuButtonPressedSound('ammunation_specialammo', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	while true do
+		Citizen.Wait(0)
+
 		if WarMenu.IsMenuOpened('ammunation_specialammo') then
 			table.foreach(Settings.ammuNationSpecialAmmo, function(data, weapon)
 				local weaponHash = GetHashKey(weapon)
@@ -50,9 +55,10 @@ AddEventHandler('lsv:init', function()
 
 					if WarMenu.Button(Weapon.GetWeapon(weapon).name..' '..data.type..' '..playerAmmo..' | '..maxAmmo..' (+'..data.ammo..')', specialWeaponAmmoPrice(weapon, playerAmmo, maxAmmo)) then
 						if playerAmmo == maxAmmo then
-							Gui.DisplayNotification('You already have max ammo.')
+							Gui.DisplayPersonalNotification('You already have max ammo.')
 						else
 							TriggerServerEvent('lsv:refillSpecialAmmo', weapon)
+							transaction:WaitForEnding()
 						end
 					end
 				end
@@ -60,8 +66,6 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		end
-
-		Citizen.Wait(0)
 	end
 end)
 
@@ -84,14 +88,23 @@ AddEventHandler('lsv:init', function()
 						if IsControlJustReleased(0, 38) then
 							ammunationOpenedMenuIndex = ammunationIndex
 							openedFromInteractionMenu = false
-							WarMenu.OpenMenu('ammunation_specialammo')
+							Gui.OpenMenu('ammunation_specialammo')
 						end
 					end
 				elseif WarMenu.IsMenuOpened('ammunation_specialammo') and ammunationIndex == ammunationOpenedMenuIndex then
 					WarMenu.CloseMenu()
 					Player.SaveWeapons()
+					transaction:Finish()
 				end
 			end)
 		end
 	end
+end)
+
+
+RegisterNetEvent('lsv:specialAmmoRefilled')
+AddEventHandler('lsv:specialAmmoRefilled', function(weapon, amount)
+	if amount then AddAmmoToPed(PlayerPedId(), GetHashKey(weapon), amount)
+	else Gui.DisplayPersonalNotification('You don\'t have enough cash.') end
+	transaction:Finish()
 end)

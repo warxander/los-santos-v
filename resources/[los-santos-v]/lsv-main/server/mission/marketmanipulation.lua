@@ -10,12 +10,15 @@ AddEventHandler('lsv:marketManipulationFinished', function()
 		return
 	end
 
-	local reward = Settings.marketManipulation.minReward +
-		math.min(Settings.marketManipulation.maxReward - Settings.marketManipulation.minReward, players[player] * Settings.marketManipulation.cashPerRobbery)
+	local cash = Settings.marketManipulation.rewards.cash.min +
+		math.min(Settings.marketManipulation.rewards.cash.max - Settings.marketManipulation.rewards.cash.min, players[player] * Settings.marketManipulation.rewards.cash.perRobbery)
+	local exp = Settings.marketManipulation.rewards.exp.min +
+		math.min(Settings.marketManipulation.rewards.exp.max - Settings.marketManipulation.rewards.exp.min, players[player] * Settings.marketManipulation.rewards.exp.perRobbery)		
 
-	Db.UpdateCash(player, reward, function()
-		TriggerClientEvent('lsv:marketManipulationFinished', player, true, '')
-	end)
+	Db.UpdateCash(player, cash)
+	Db.UpdateExperience(player, exp)
+
+	TriggerClientEvent('lsv:marketManipulationFinished', player, true, '')
 
 	players[player] = nil
 end)

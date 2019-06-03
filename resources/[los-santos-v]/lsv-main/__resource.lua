@@ -30,6 +30,7 @@ server_scripts {
 	'modules/server/autosave.lua',
 	'modules/server/eventmanager.lua',
 	'modules/server/missionmanager.lua',
+	'modules/server/challengemanager.lua',
 }
 
 
@@ -38,25 +39,31 @@ server_scripts {
 	'server/main.lua',
 	'server/baseevents.lua',
 	'server/session.lua',
+	'server/guard.lua',
 	'server/chat.lua',
 	'server/report.lua',
 	'server/moderator.lua',
 	'server/pingkick.lua',
-	'server/vehicle.lua',
-	'server/duel.lua',
+	'server/travel.lua',
+	'server/crew.lua',
 
 	'server/event/castle.lua',
 	'server/event/property.lua',
 	'server/event/search.lua',
+	'server/event/stockpiling.lua',
+	'server/event/sharpshooter.lua',
 
 	'server/shop/ammunation.lua',
 	'server/shop/skinshop.lua',
+	'server/shop/vehicle.lua',
 
 	'server/mission/assetrecovery.lua',
 	'server/mission/headhunter.lua',
 	'server/mission/marketmanipulation.lua',
 	'server/mission/mostwanted.lua',
 	'server/mission/velocity.lua',
+
+	'server/challenge/duel.lua',
 }
 
 
@@ -72,9 +79,12 @@ client_scripts {
 	'modules/settings.lua',
 	'modules/weapon.lua',
 
+	'modules/client/transaction.lua',
+
 	'modules/client/gui/safezone.lua',
 	'modules/client/gui/gui.lua',
 	'modules/client/gui/bar.lua',
+	'modules/client/gui/helpqueue.lua',
 
 	'modules/client/world.lua',
 	'modules/client/streaming.lua',
@@ -85,6 +95,7 @@ client_scripts {
 	'modules/client/map.lua',
 	'modules/client/scoreboard.lua',
 	'modules/client/missionmanager.lua',
+	'modules/client/challengemanager.lua',
 }
 
 
@@ -92,6 +103,7 @@ client_scripts {
 client_scripts {
 	'client/spawn.lua',
 	'client/enviroment.lua',
+	'client/guard.lua',
 	'client/afk.lua',
 	'client/session.lua',
 	'client/chat.lua',
@@ -101,15 +113,18 @@ client_scripts {
 	'client/playertags.lua',
 	'client/crate.lua',
 	'client/pingkick.lua',
-	'client/vehicle.lua',
-	'client/duel.lua',
+	'client/travel.lua',
+	'client/crew.lua',
 
 	'client/event/castle.lua',
 	'client/event/property.lua',
 	'client/event/search.lua',
+	'client/event/stockpiling.lua',
+	'client/event/sharpshooter.lua',
 
 	'client/menu/interaction.lua',
 	'client/menu/moderator.lua',
+	'client/menu/vehicle.lua',
 
 	'client/shop/skinshop.lua',
 	'client/shop/ammunation.lua',
@@ -119,4 +134,6 @@ client_scripts {
 	'client/mission/marketmanipulation.lua',
 	'client/mission/mostwanted.lua',
 	'client/mission/velocity.lua',
+
+	'client/challenge/duel.lua',
 }

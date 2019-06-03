@@ -2,9 +2,11 @@ RegisterNetEvent('lsv:assetRecoveryFinished')
 AddEventHandler('lsv:assetRecoveryFinished', function(vehicleHealthRatio)
 	local player = source
 
-	local reward = Settings.assetRecovery.minReward + math.floor(vehicleHealthRatio * (Settings.assetRecovery.maxReward - Settings.assetRecovery.minReward))
+	local cash = Settings.assetRecovery.rewards.cash.min + math.floor(vehicleHealthRatio * (Settings.assetRecovery.rewards.cash.max - Settings.assetRecovery.rewards.cash.min))
+	local exp = Settings.assetRecovery.rewards.exp.min + math.floor(vehicleHealthRatio * (Settings.assetRecovery.rewards.exp.max - Settings.assetRecovery.rewards.exp.min))
 
-	Db.UpdateCash(player, reward, function()
-		TriggerClientEvent('lsv:assetRecoveryFinished', player, true, '')
-	end)
+	Db.UpdateCash(player, cash)
+	Db.UpdateExperience(player, exp)
+
+	TriggerClientEvent('lsv:assetRecoveryFinished', player, true, '')
 end)

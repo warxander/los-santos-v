@@ -75,47 +75,13 @@ function Blip.Dead()
 end
 
 
-function Blip.BountyHit()
-	return 303
+function Blip.PlayerOnMission()
+	return 432
 end
 
-
-function Blip.PolicePlayer()
-	return 58
-end
-
-
-function Blip.Helicopter()
-	return 64
-end
-
-
-function Blip.Tank()
-	return 421
-end
-
-
-function Blip.GunCar()
-	return 426
-end
-
-
-function Blip.Plane()
-	return 423
-end
 
 function Blip.PersonalVehicleCar()
 	return 225
-end
-
-
-function Blip.PersonalBikeCar()
-	return 226
-end
-
-
-function Blip.Boat()
-	return 410
 end
 
 
@@ -129,25 +95,28 @@ function Blip.BigCircle()
 end
 
 
-function Blip.Waypoint()
-	return 8
+function Blip.Checkpoint()
+	return 431
 end
 
-
-function Blip.Store()
-	return 52
-end
 
 function Blip.Castle()
 	return 176
 end
 
+
 function Blip.CrateDrop()
 	return 306
 end
 
+
 function Blip.HotProperty()
 	return 436
+end
+
+
+function Blip.ExecutiveSearch()
+	return 459
 end
 
 
@@ -155,20 +124,19 @@ function Blip.AmmuNation()
 	return 110
 end
 
+
 function Blip.Clothes()
 	return 73
 end
 
-function Blip.PoliceStation()
-	return 60
+
+function Blip.FastTravel()
+	return 164
 end
+
 
 function Blip.LosSantosCustoms()
 	return 72
-end
-
-function Blip.CapturePoint()
-	return 164
 end
 
 
@@ -179,8 +147,4 @@ end
 
 function Blip.RocketVoltic()
 	return 533
-end
-
-function Blip.Target()
-	return 458
 end

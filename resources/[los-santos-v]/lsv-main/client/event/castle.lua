@@ -1,7 +1,7 @@
 local logger = Logger:CreateNamedLogger('Castle')
 
 local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
-local instructionsText = 'Hold the Castle area by yourself to become the King and earn cash.'
+local instructionsText = 'Hold the Castle area by yourself to become the King and earn reward.'
 local playerColors = { Color.BlipYellow(), Color.BlipGrey(), Color.BlipBrown() }
 local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
 
@@ -12,8 +12,8 @@ local function getPlayerPoints()
 	local player = table.find_if(castleData.players, function(player)
 		return player.id == Player.ServerId()
 	end)
-
-	return player and player.points or 0
+	if not player then return nil end
+	return player.points
 end
 
 
@@ -33,20 +33,7 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 
 	-- GUI
 	Citizen.CreateThread(function()
-		PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-
-		if Player.IsInFreeroam() and not passedTime then
-			local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-			scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'King of the Castle started', instructionsText)
-			scaleform:RenderFullscreenTimed(10000)
-			scaleform:Delete()
-
-			if not castleData then return end
-		else
-			Gui.DisplayNotification(instructionsText)
-		end
-
-		FlashMinimapDisplay()
+		if Player.IsInFreeroam() and not passedTime then Gui.StartEvent('King of the Castle', instructionsText) end
 
 		castleData.zoneBlip = Map.CreateRadiusBlip(place.x, place.y, place.z, Settings.castle.radius, Color.BlipPurple())
 		castleData.blip = Map.CreateEventBlip(Blip.Castle(), place.x, place.y, place.z, nil, Color.BlipPurple())
@@ -61,17 +48,17 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 			SetBlipAlpha(castleData.zoneBlip, MissionManager.Mission and 0 or 128)
 
 			if Player.IsInFreeroam() then
-				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.castle.duration - GetGameTimer() + castleData.startTime))
-				Gui.DrawBar('YOUR SCORE', getPlayerPoints(), nil , 2)
-
 				Gui.DisplayObjectiveText(Player.DistanceTo(castleData.place, true) <= Settings.castle.radius and
 					'Defend the ~p~Castle area~w~.' or 'Enter the ~p~Castle area~w~ to become the King.')
+
+				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.castle.duration - GetGameTimer() + castleData.startTime))
+				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0)
 
 				local barPosition = 3
 				for i = barPosition, 1, -1 do
 					if castleData.players[i] then
 						Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(castleData.players[i].id)), castleData.players[i].points,
-							Color.GetHudFromBlipColor(playerColors[i]), barPosition, true)
+							Color.GetHudFromBlipColor(playerColors[i]), true)
 						barPosition = barPosition + 1
 					end
 				end
@@ -117,7 +104,6 @@ AddEventHandler('lsv:finishCastle', function(winners)
 
 	if not winners then
 		castleData = nil
-		Gui.DisplayNotification('King of the Castle has ended.')
 		return
 	end
 
@@ -132,12 +118,12 @@ AddEventHandler('lsv:finishCastle', function(winners)
 		end
 	end
 
-	local messageText = isPlayerWinner and 'You won King of the Castle with a score of '..playerPoints or Gui.GetPlayerName(winners[1])..' became the King.'
+	local messageText = isPlayerWinner and 'You have won King of the Castle with a score of '..playerPoints or Gui.GetPlayerName(winners[1], '~p~')..' has become the King of the Castle.'
 
-	if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
-	else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
+	if Player.IsInFreeroam() and playerPoints then
+		if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
+		else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
 
-	if Player.IsInFreeroam() then
 		local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 		scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
 		scaleform:RenderFullscreenTimed(10000)

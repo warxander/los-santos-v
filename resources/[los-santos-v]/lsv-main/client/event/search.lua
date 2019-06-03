@@ -1,10 +1,13 @@
 local searchData = nil
 
-local instructionsText = 'Enter the area and survive or kill the target to earn cash.'
+local instructionsText = 'Enter the area and survive or kill the target to earn reward.'
 
 local isPlayerOutOfArea = false
 local outOfAreaTime = nil
 local outOfAreaSound = nil
+local wasPlayerInArea = false
+
+local helpHandler = nil
 
 
 RegisterNetEvent('lsv:startExecutiveSearch')
@@ -21,23 +24,10 @@ AddEventHandler('lsv:startExecutiveSearch', function(data, passedTime)
 
 	-- GUI
 	Citizen.CreateThread(function()
-		PlaySoundFrontend(-1, 'MP_5_SECOND_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-
-		if Player.IsInFreeroam() and not passedTime then
-			local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-			scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'Executive Search started', instructionsText)
-			scaleform:RenderFullscreenTimed(10000)
-			scaleform:Delete()
-
-			if not searchData then return end
-		else
-			Gui.DisplayNotification(instructionsText)
-		end
-
-		FlashMinimapDisplay()
+		if Player.IsInFreeroam() and not passedTime then Gui.StartEvent('Executive Search', instructionsText) end
 
 		searchData.zoneBlip = Map.CreateRadiusBlip(searchData.place.x, searchData.place.y, searchData.place.z, Settings.executiveSearch.radius, Color.BlipPurple())
-		searchData.blip = Map.CreateEventBlip(Blip.Target(), searchData.place.x, searchData.place.y, searchData.place.z, 'Executive Search', Color.BlipPurple())
+		searchData.blip = Map.CreateEventBlip(Blip.ExecutiveSearch(), searchData.place.x, searchData.place.y, searchData.place.z, 'Executive Search', Color.BlipPurple())
 		Map.SetBlipFlashes(searchData.blip)
 
 		while true do
@@ -48,16 +38,14 @@ AddEventHandler('lsv:startExecutiveSearch', function(data, passedTime)
 			if Player.IsInFreeroam() then
 				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.executiveSearch.duration - GetGameTimer() + searchData.startTime))
 
+				if isPlayerOutOfArea then Gui.DrawTimerBar('OUT OF AREA', outOfAreaTime:Elapsed()) end
+
 				local eventObjectiveText = 'Enter the ~p~area~w~.'
 				if World.ExecutiveSearchPlayer then
 					if World.ExecutiveSearchPlayer == Player.ServerId() then eventObjectiveText = isPlayerOutOfArea and 'Go back to the ~p~area~w~.' or 'Stay hidden and survive in the ~p~area~s~.'
-					else eventObjectiveText = 'Find and kill '..Gui.GetPlayerName(World.ExecutiveSearchPlayer, '~r~')..' in the ~p~area~w~.' end
+					else eventObjectiveText = 'Find and kill '..Gui.GetPlayerName(World.ExecutiveSearchPlayer)..' in the ~p~area~w~.' end
 				end
 				Gui.DisplayObjectiveText(eventObjectiveText)
-			end
-
-			if isPlayerOutOfArea then
-				Gui.DrawTimerBar('OUT OF AREA', outOfAreaTime:Elapsed(), false, 2)
 			end
 		end
 	end)
@@ -77,6 +65,21 @@ AddEventHandler('lsv:startExecutiveSearch', function(data, passedTime)
 			end
 		end)
 	end
+
+	Citizen.CreateThread(function()
+		wasPlayerInArea = false
+
+		while true do
+			Citizen.Wait(0)
+
+			if not searchData then return end
+
+			if Player.DistanceTo(searchData.place, true) <= Settings.executiveSearch.radius then
+				wasPlayerInArea = true
+				return
+			end
+		end
+	end)
 
 	Citizen.CreateThread(function()
 		outOfAreaSound = GetSoundId()
@@ -119,6 +122,8 @@ RegisterNetEvent('lsv:finishExecutiveSearch')
 AddEventHandler('lsv:finishExecutiveSearch', function(victim, killer)
 	World.ExecutiveSearchPlayer = nil
 
+	if helpHandler then helpHandler:Cancel() end
+
 	if searchData then
 		RemoveBlip(searchData.zoneBlip)
 		RemoveBlip(searchData.blip)
@@ -129,19 +134,16 @@ AddEventHandler('lsv:finishExecutiveSearch', function(victim, killer)
 
 	searchData = nil
 
-	if not victim or not killer then
-		Gui.DisplayNotification('Executive Search has ended.')
-		return
-	end
+	if not victim or not killer then return end
 
 	local isPlayerWinner = killer == Player.ServerId()
-	local messageText = Gui.GetPlayerName(killer)..' won Executive Search by killing the target '..Gui.GetPlayerName(victim, '~p~')..'.'
-	if killer == victim then messageText = Gui.GetPlayerName(killer, '~p~')..' won Executive Search by surviving the search.' end
+	local messageText = Gui.GetPlayerName(killer)..' has won Executive Search by killing '..Gui.GetPlayerName(victim, '~p~', true)..'.'
+	if killer == victim then messageText = Gui.GetPlayerName(killer, '~p~')..' has won Executive Search by surviving the search.' end
 
-	if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
-	else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
+	if Player.IsInFreeroam() and wasPlayerInArea then
+		if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
+		else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
 
-	if Player.IsInFreeroam() then
 		local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 		scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and 'WINNER' or 'YOU LOSE', messageText, 21)
 		scaleform:RenderFullscreenTimed(10000)
@@ -160,5 +162,5 @@ AddEventHandler('lsv:onExecutiveSearchAreaEntered', function(target)
 	RemoveBlip(searchData.blip)
 
 	if World.ExecutiveSearchPlayer ~= Player.ServerId() then return end
-	Gui.DisplayHelpText('Keep moving or you will become visible on the Radar to other players.')
+	helpHandler = HelpQueue.PushFront('Keep walking or you will become visible on the Radar to other players.')
 end)

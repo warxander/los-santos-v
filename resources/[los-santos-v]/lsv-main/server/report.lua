@@ -6,6 +6,8 @@ AddEventHandler('lsv:reportPlayer', function(target, reason)
 	local player = source
 	if player == target then return end
 
+	if not Scoreboard.IsPlayerOnline(target) then return end
+
 	local targetName = GetPlayerName(target)
 
 	Db.UpdateReports(target)
@@ -14,7 +16,7 @@ AddEventHandler('lsv:reportPlayer', function(target, reason)
 
 	Discord.ReportPlayer(player, target, reason)
 
-	if Scoreboard.GetPlayersCount() > 3 and reportedPlayers[target] > Scoreboard.GetPlayersCount() / 2 then
+	if Scoreboard.GetPlayersCount() > 3 and reportedPlayers[target] > Scoreboard.GetPlayersCount() / 2 and not Scoreboard.IsPlayerModerator(target) then
 		Discord.ReportKickedPlayer(target)
 		DropPlayer(target, 'You have been kicked from the session by other players.')
 		TriggerClientEvent('lsv:playerKicked', -1, targetName)

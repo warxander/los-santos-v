@@ -20,7 +20,9 @@ RegisterNetEvent('lsv:playerSaved')
 AddEventHandler('lsv:playerSaved', function()
 	local player = source
 
-	logger:Debug('Save { '..player..', '..GetPlayerIdentifiers(player)[1]..' }')
+	if not Scoreboard.IsPlayerOnline(player) then return end
+
+	logger:Debug('Save { '..player..', '..Scoreboard.GetPlayerIdentifier(player)..' }')
 
 	players[player]:Restart()
 end)

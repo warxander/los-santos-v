@@ -9,14 +9,30 @@ Player.Moderator = nil
 
 Player.Killstreak = 0
 Player.Deathstreak = 0
+
+Player.VehicleHandle = nil
 Player.Vehicle = nil
 
-local cash = 0
+Player.PatreonTier = nil
+
+Player.Cash = 0
+Player.Experience = 0
+Player.Rank = 1
+
+Player.CrewMembers = { }
+
 local serverId = nil
+
+local function setSkillStat(stat)
+	StatSetInt(GetHashKey('MP0_LUNG_CAPACITY'), stat, true)
+	StatSetInt(GetHashKey('MP0_STAMINA'), stat, true)
+	StatSetInt(GetHashKey('MP0_STRENGTH'), stat, true)
+	StatSetInt(GetHashKey('MP0_SHOOTING_ABILITY'), stat, true)
+end
 
 
 function Player.Init(playerData)
-	cash = playerData.Cash
+	Player.Cash = playerData.Cash
 
 	serverId = GetPlayerServerId(PlayerId())
 
@@ -24,16 +40,18 @@ function Player.Init(playerData)
 	Player.PatreonTier = playerData.PatreonTier
 	Player.Moderator = playerData.Moderator
 
-	SetPlayerMaxArmour(PlayerId(), Settings.maxArmour)
+	Player.Experience = playerData.Experience
+	Player.Rank = playerData.Rank
 
-	StatSetInt(GetHashKey('MP0_LUNG_CAPACITY'), playerData.SkillStat, true)
-	StatSetInt(GetHashKey('MP0_STAMINA'), playerData.SkillStat, true)
-	StatSetInt(GetHashKey('MP0_STRENGTH'), playerData.SkillStat, true)
-	StatSetInt(GetHashKey('MP0_SHOOTING_ABILITY'), playerData.SkillStat, true)
+	setSkillStat(playerData.SkillStat)
+
+	SetPlayerMaxArmour(PlayerId(), Settings.maxArmour)
 
 	Skin.ChangePlayerSkin(playerData.SkinModel, true)
 
 	Player.GiveWeapons(playerData.Weapons)
+
+	Player.Vehicle = playerData.Vehicle
 end
 
 
@@ -48,12 +66,17 @@ end
 
 
 function Player.IsInFreeroam()
-	return Player.IsActive() and not MissionManager.Mission and not World.DuelPlayer
+	return Player.IsActive() and not MissionManager.Mission and not World.ChallengingPlayer
 end
 
 
 function Player.ServerId()
 	return serverId
+end
+
+
+function Player.IsCrewMember(id)
+	return table.ifind(Player.CrewMembers, id)
 end
 
 
@@ -142,13 +165,15 @@ function Player.Teleport(position)
 	local playerPed = PlayerPedId()
 
 	ClearPedTasksImmediately(playerPed)
-	SetEntityCoords(playerPed, position.x, position.y, position.z)
+	SetEntityCoords(playerPed, position.x, position.y, position.z - 1.0)
 
 	RequestCollisionAtCoord(position.x, position.y, position.z)
 	while not HasCollisionLoadedAroundEntity(playerPed) do
 		Citizen.Wait(0)
 		RequestCollisionAtCoord(position.x, position.y, position.z)
 	end
+
+	PlaceObjectOnGroundProperly(playerPed)
 end
 
 
@@ -168,9 +193,35 @@ function Player.Kill()
 end
 
 
+function Player.ExplodePersonalVehicle()
+	if not Player.VehicleHandle then return end
+	if not NetworkRequestControlOfEntity(Player.VehicleHandle) then
+		Gui.DisplayPersonalNotification('Unable to get control of Personal Vehicle.')
+	else
+		NetworkExplodeVehicle(Player.VehicleHandle, true, true)
+		SetEntityAsNoLongerNeeded(Player.VehicleHandle)
+	end
+end
+
+
 RegisterNetEvent('lsv:cashUpdated')
 AddEventHandler('lsv:cashUpdated', function(cashDiff)
-	cash = cash + cashDiff
+	Player.Cash = Player.Cash + cashDiff
+end)
+
+
+RegisterNetEvent('lsv:experienceUpdated')
+AddEventHandler('lsv:experienceUpdated', function(exp)
+	Player.Experience = Player.Experience + exp
+	TriggerEvent('lsv:showExperience', exp)
+end)
+
+
+RegisterNetEvent('lsv:playerRankedUp')
+AddEventHandler('lsv:playerRankedUp', function(rank, skillStat)
+	Player.Rank = rank
+	setSkillStat(skillStat)
+	TriggerEvent('lsv:rankUp')
 end)
 
 

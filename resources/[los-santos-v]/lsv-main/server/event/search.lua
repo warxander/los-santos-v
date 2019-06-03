@@ -22,7 +22,8 @@ AddEventHandler('lsv:startExecutiveSearch', function()
 		if searchData.eventStartTime:Elapsed() >= Settings.executiveSearch.duration then
 			if searchData.target then
 				logger:Info('Target won')
-				Db.UpdateCash(searchData.target, Settings.executiveSearch.reward)
+				Db.UpdateCash(searchData.target, Settings.executiveSearch.reward.cash)
+				Db.UpdateExperience(searchData.target, Settings.executiveSearch.reward.exp)
 				TriggerClientEvent('lsv:finishExecutiveSearch', -1, searchData.target, searchData.target)
 				winner = searchData.target
 			else
@@ -94,7 +95,8 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer)
 	local victim = source
 	if not searchData or not searchData.target or searchData.target ~= victim then return end
 	logger:Info('Killed { '..killer..' }')
-	Db.UpdateCash(killer, Settings.executiveSearch.reward)
+	Db.UpdateCash(killer, Settings.executiveSearch.reward.cash)
+	Db.UpdateExperience(killer, Settings.executiveSearch.reward.exp)
 	searchData = nil
 	TriggerClientEvent('lsv:finishExecutiveSearch', -1, victim, killer)
 	EventManager.StopEvent(killer)

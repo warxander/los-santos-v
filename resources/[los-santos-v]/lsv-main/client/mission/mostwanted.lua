@@ -11,7 +11,7 @@ AddEventHandler('lsv:startMostWanted', function()
 
 			if Player.IsActive() then
 				Gui.DrawTimerBar('MISSION TIME', Settings.mostWanted.time - eventStartTime:Elapsed())
-				Gui.DrawTimerBar('TIME SURVIVED', eventStartTime:Elapsed(), nil, 2)
+				Gui.DrawTimerBar('TIME SURVIVED', eventStartTime:Elapsed())
 				Gui.DisplayObjectiveText('Survive the longest with a wanted level.')
 			end
 		end

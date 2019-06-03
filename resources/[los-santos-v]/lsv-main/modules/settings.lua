@@ -5,7 +5,28 @@ Settings = { }
 Settings.maxPlayerCount = 32 -- For internal usage only, do not touch it!
 Settings.afkTimeout = 300 --in seconds
 Settings.autoSavingTimeout = 180000
-Settings.pingThreshold = 200
+Settings.pingThreshold = 350
+Settings.maxPlayerNameLength = 24
+Settings.enableVoiceChat = false
+Settings.discordNotificationTimeout = 900000
+Settings.serverTimeZone = '(CET+1)'
+Settings.maxMenuOptionCount = 7
+
+
+-- Crew
+Settings.crewInvitationTimeout = 10000
+
+
+-- Vehicle restriction
+Settings.specialVehicleMinRank = 10
+
+
+-- Moderation
+Settings.moderatorLevel = {
+	['Moderator'] = 1,
+	['SuperModerator'] = 2,
+	['Administrator'] = 3
+}
 
 
 -- Hud
@@ -44,19 +65,142 @@ Settings.spawn = {
 }
 
 
+-- Ranking
+-- https://gta.fandom.com/wiki/Rank
+Settings.ranks = {
+	0,
+	800,
+	2100,
+	3800,
+	6100,
+	9500,
+	12500,
+	16000,
+	19800,
+	24000, -- 10
+	28500,
+	33400,
+	38700,
+	44200,
+	50200,
+	56400,
+	63000,
+	69900,
+	77100,
+	84700, -- 20
+	92500,
+	100700,
+	109200,
+	118000,
+	127100,
+	136500,
+	146200,
+	156200,
+	166500,
+	177100, -- 30
+	188000,
+	199200,
+	210700,
+	222400,
+	234500,
+	246800,
+	259400,
+	272300,
+	285500,
+	299000, -- 40
+	312700,
+	326800,
+	341000,
+	355600,
+	370500,
+	385600,
+	401000,
+	416600,
+	432600,
+	448800, -- 50
+	465200,
+	482000,
+	499000,
+	516300,
+	533800,
+	551600,
+	569600,
+	588000,
+	606500,
+	625400, -- 60
+	644500,
+	663800,
+	683400,
+	703300,
+	723400,
+	743800,
+	764500,
+	785400,
+	806500,
+	827900, -- 70
+	849600,
+	871500,
+	893600,
+	916000,
+	938700,
+	961600,
+	984700,
+	1008100,
+	1031800,
+	1055700, -- 80
+	1079800,
+	1104200,
+	1128800,
+	1153700,
+	1178800,
+	1204200,
+	1229800,
+	1255600,
+	1281700,
+	1308100, --90
+	1334600,
+	1361400,
+	1388500,
+	1415800,
+	1443300,
+	1471100,
+	1499100,
+	1527300,
+	1555800,
+	1584350, -- 100
+}
+
+Settings.calculateRank = function(experience)
+	if experience == 0 then return 1 end
+
+	for i = 2, #Settings.ranks do
+		if Settings.ranks[i] > experience then
+			return i - 1
+		end
+	end
+
+	-- Some algebra, I hope I didn't fuck up
+	-- f(x)=25x^2 + 23575x - 1023150
+
+	local a = 25
+	local b = 23575
+	local c = -1023150-experience
+
+	local d = b * b - 4 * a * c
+	if d == 0 then return math.floor(-b/ (2 * a)) end
+
+	if d > 0 then return math.floor(math.max((-b + math.sqrt(d)) / (2 * a), (-b - math.sqrt(d)) / (2 * a)))
+	else return #Settings.ranks end -- Fail
+end
+
+
 -- World
 Settings.world = { }
 Settings.world.blacklistVehicles = {
 	'rhino',
-	'hydra',
-	'lazer',
-	'buzzard',
-	'akula',
-	'annihilator',
-	'hunter',
-	'savage',
 	'khanjali',
-	'apc',
+	'hydra',
+	'hunter',
 }
 
 
@@ -97,73 +241,155 @@ Settings.defaultPlayerWeapons = {
 	{ id = 'WEAPON_KNIFE', ammo = 0, components = { } },
 	{ id = 'WEAPON_PISTOL', ammo = 80, components = { }, selected = true },
 }
-Settings.skillStat = 40
+Settings.calculateSkillStat = function(rank) return math.min(100, math.floor(20 + (rank / 25) * 20)) end
 Settings.maxArmour = 100
 
 
+-- Patreon
+Settings.patreonBonus = 1.1
+
+
 -- Cash
-Settings.cashPerKill = 150
+Settings.cashPerKill = 125
 Settings.cashPerKillstreak = 75
-Settings.cashPerMission = 1000
+Settings.maxCashPerKillstreak = 800
+Settings.cashPerHeadshot = 75
+Settings.cashPerMission = 250
 Settings.cashGainedNotificationTime = 5000
+
+
+-- Experience
+Settings.expPerKill = 75
+Settings.expPerKillstreak = 25
+Settings.maxExpPerKillstreak = 300
+Settings.expPerHeadshot = 50
+Settings.expPerMission = 100
+
+
+-- Fast Travel
+Settings.travel = {
+	cashPerRank = 50,
+	places = {
+		{
+			name = 'Davis Sheriff\'s Station',
+			inPosition = { x = 360.52108764648, y = -1584.2335205078, z = 29.29195022583 },
+			outPosition = { x = 374.51406860352, y = -1610.8005371094, z = 29.291940689087 },
+		},
+
+		{
+			name = 'Mission Row Police Station',
+			inPosition = { x = 440.98419189453, y = -981.23754882813, z = 30.689605712891 },
+			outPosition = { x = 457.59268188477, y = -1009.0366210938, z = 28.302804946899 },
+		},
+
+		{
+			name = 'Rockford Hills Police Station',
+			inPosition = { x = -560.86633300781, y = -133.30345153809, z = 38.072071075439 },
+			outPosition = { x = -590.10180664063, y = -134.81674194336, z = 39.610427856445 },
+		},
+
+		{
+			name = 'Vinewood Police Station',
+			inPosition = { x = 639.63989257813, y = 1.2733203172684, z = 82.786415100098 },
+			outPosition = { x = 535.12512207031, y = -22.661163330078, z = 70.629531860352 },
+		},
+
+		{
+			name = 'Sandy Shores Sheriff\'s Station',
+			inPosition = { x = 1854.0239257813, y = 3687.1411132813, z = 34.267082214355 },
+			outPosition = { x = 1827.2972412109, y = 3694.1489257813, z = 34.224239349365 },
+		},
+
+		{
+			name = 'Paleto Bay Sherrif\'s Station',
+			inPosition = { x = -446.99200439453, y = 6013.5122070313, z = 31.716371536255 },
+			outPosition = { x = -452.25775146484, y = 6006.0942382813, z = 31.840953826904 },
+		},
+
+		{
+			name = 'Del Perro Police Station',
+			inPosition = { x = -1632.0194091797, y = -1014.7529907227, z = 13.119782447815 },
+			outPosition = { x = -1613.0258789063, y = -1028.6661376953, z = 13.153079032898 },
+		},
+
+		{
+			name = 'Vespucci Police Station',
+			inPosition = { x = -1092.8321533203, y = -809.19091796875, z = 19.277364730835 },
+			outPosition = { x = -1056.9117431641, y = -842.10626220703, z = 5.0417881011963 },
+		},
+	}
+}
+
+
+-- Challenges
+Settings.challenge = {
+	requestTimeout = 10000,
+}
 
 
 -- Duel
 Settings.duel = {
 	targetScore = 5,
-	reward = 1500,
-	requestTimeout = 10000,
+	reward = {
+		exp = 1500,
+		cash = 3000,
+	},
 }
 
 
--- Request Vehicle
-Settings.requestVehicle = {
+-- Personal Vehicles
+Settings.personalVehicle = {
+	maxDistance = 50.0,
+	repairCashPerCent = 10,
+	sellRate = 0.5,
 	vehicles = {
 		['Free'] = {
 			['bmx'] = { name = 'BMX', cash = 0 },
+			['ruiner'] = { name = 'Imponte Ruiner', cash = 0 },
+			['sanchez'] = { name = 'Sanchez', cash = 0 },
 		},
 
 		['Super'] = {
-			['adder'] = { name = 'Truffade Adder', cash = 10000 },
-			['bullet'] = { name = 'Bullet GT', cash = 1550 },
-			['cheetah'] = { name = 'Grotti Cheetah', cash = 6500 },
-			['entityxf'] = { name = 'Overflod Entity XF', cash = 7950 },
-			['infernus'] = { name = 'Pegassi Infernus', cash = 4400 },
-			['vacca'] = { name = 'Pegassi Vacca', cash = 2400 },
-			['voltic'] = { name = 'Coil Voltic', cash = 1500 },
+			['adder'] = { name = 'Truffade Adder', cash = 1000000 },
+			['bullet'] = { name = 'Bullet GT', cash = 155000 },
+			['cheetah'] = { name = 'Grotti Cheetah', cash = 650000 },
+			['entityxf'] = { name = 'Overflod Entity XF', cash = 795000 },
+			['infernus'] = { name = 'Pegassi Infernus', cash = 440000 },
+			['vacca'] = { name = 'Pegassi Vacca', cash = 240000 },
+			['voltic'] = { name = 'Coil Voltic', cash = 150000 },
 		},
 
 		['Motocycles'] = {
-			['akuma'] = { name = 'Dinka Akuma', cash = 900 },
-			['bagger'] = { name = 'Bagger', cash = 1600 },
-			['bati'] = { name = 'Pegassi Bati 801', cash = 1500 },
-			['double'] = { name = 'Dinka Double T', cash = 1200 },
-			['daemon'] = { name = 'Daemon', cash = 1450 },
-			['hexer'] = { name = 'Hexer', cash = 1500 },
-			['nemesis'] = { name = 'Principe Nemesis', cash = 1200 },
-			['pcj'] = { name = 'PCJ-600', cash = 900 },
-			['ruffian'] = { name = 'Pegassi Ruffian', cash = 900 },
-			['sanchez'] = { name = 'Sanchez', cash = 800 },
-			['vader'] = { name = 'Shitzu Vader', cash = 900 },
+			['akuma'] = { name = 'Dinka Akuma', cash = 90000 },
+			['bagger'] = { name = 'Bagger', cash = 160000 },
+			['bati'] = { name = 'Pegassi Bati 801', cash = 150000 },
+			['double'] = { name = 'Dinka Double T', cash = 120000 },
+			['daemon'] = { name = 'Daemon', cash = 145000 },
+			['hexer'] = { name = 'Hexer', cash = 150000 },
+			['nemesis'] = { name = 'Principe Nemesis', cash = 120000 },
+			['pcj'] = { name = 'PCJ-600', cash = 90000 },
+			['ruffian'] = { name = 'Pegassi Ruffian', cash = 90000 },
+			['vader'] = { name = 'Shitzu Vader', cash = 90000 },
 		},
 
 		['Sports'] = {
-			['ninef'] = { name = 'Obey 9F', cash = 1200 },
-			['banshee'] = { name = 'Banshee', cash = 900 },
-			['buffalo'] = { name = 'Buffalo', cash = 350 },
-			['comet2'] = { name = 'Comet', cash = 1000 },
-			['coquette'] = { name = 'Invetero Coquette', cash = 1380 },
-			['feltzer2'] = { name = 'Feltzer', cash = 1300 },
-			['futo'] = { name = 'Karin Futo', cash = 250 },
-			['penumbra'] = { name = 'Maibatsu Penumbra', cash = 240 },
-			['rapidgt'] = { name = 'Dewbauchee Rapid GT', cash = 1320 },
-			['schwarzer'] = { name = 'Benefactor Schwartzer', cash = 800 },
-			['sultan'] = { name = 'Sultan', cash = 120 },
+			['ninef'] = { name = 'Obey 9F', cash = 120000 },
+			['banshee'] = { name = 'Banshee', cash = 90000 },
+			['buffalo'] = { name = 'Buffalo', cash = 35000 },
+			['comet2'] = { name = 'Comet', cash = 100000 },
+			['coquette'] = { name = 'Invetero Coquette', cash = 138000 },
+			['feltzer2'] = { name = 'Feltzer', cash = 130000 },
+			['futo'] = { name = 'Karin Futo', cash = 25000 },
+			['jester'] = { name = 'Dinka Jester', cash = 240000 },
+			['penumbra'] = { name = 'Maibatsu Penumbra', cash = 24000 },
+			['rapidgt'] = { name = 'Dewbauchee Rapid GT', cash = 132000 },
+			['schwarzer'] = { name = 'Benefactor Schwartzer', cash = 80000 },
+			['sultan'] = { name = 'Sultan', cash = 12000 },
 		},
 
 		['Special'] = {
-			['deluxo'] = { name = 'Deluxo', cash = 99999 },
-			['stromberg'] = { name = 'Stromberg', cash = 66666 },
+			['deluxo'] = { name = 'Deluxo', cash = 9999999 },
+			['stromberg'] = { name = 'Stromberg', cash = 6666666 },
 		},
 	}
 }
@@ -171,8 +397,99 @@ Settings.requestVehicle = {
 
 -- Events
 Settings.event = {
-	timeout = 600000,
+	timeout = 900000,
 	minPlayers = 3,
+}
+
+
+-- Stockpiling
+Settings.stockPiling = {
+	duration = 600000,
+	checkPoints = {
+		{ x = -1336.3083496094, y = -3043.9572753906, z = 13.944443702698 },
+		{ x = -1916.6357421875, y = -2883.4919433594, z = 2.2101058959961 },
+		{ x = -845.87677001953, y = -3376.2429199219, z = 13.944359779358 },
+		{ x = -508.96585083008, y = -2928.2375488281, z = 6.0003814697266 },
+		{ x = 186.83126831055, y = -3320.0522460938, z = 5.6273703575134 },
+		{ x = 219.7088470459, y = -2315.0947265625, z = 8.4016227722168 },
+		{ x = 370.65002441406, y = -2131.0170898438, z = 16.210426330566 },
+		{ x = -1486.0161132813, y = -1476.2647705078, z = 2.634242773056 },
+		{ x = -1847.56640625, y = -1229.1634521484, z = 13.017266273499 },
+		{ x = -888.43792724609, y = -1489.2298583984, z = 5.024055480957 },
+		{ x = -2994.1015625, y = 17.080907821655, z = 6.9866771697998 },
+		{ x = -3413.0749511719, y = 967.44000244141, z = 8.3466844558716 },
+		{ x = -2506.0861816406, y = 755.91625976563, z = 301.98696899414 },
+		{ x = -2319.9265136719, y = 384.73645019531, z = 174.46664428711 },
+		{ x = -2243.9494628906, y = 262.83520507813, z = 174.61549377441 },
+		{ x = -1932.0732421875, y = 170.71830749512, z = 84.65412902832 },
+		{ x = -1667.2713623047, y = 401.68734741211, z = 88.995323181152 },
+		{ x = -2752.3781738281, y = 1187.8350830078, z = 94.649917602539 },
+		{ x = -2270.90625, y = 1328.9090576172, z = 298.80294799805 },
+		{ x = -1533.560546875, y = 884.00518798828, z = 181.71989440918 },
+		{ x = -1024.2127685547, y = 1048.4678955078, z = 173.73756408691 },
+		{ x = -409.96801757813, y = 1180.30078125, z = 325.61047363281 },
+		{ x = -201.38606262207, y = 1309.6477050781, z = 304.49716186523 },
+		{ x = 202.76136779785, y = 1166.6563720703, z = 227.0048828125 },
+		{ x = -116.88822937012, y = 899.69128417969, z = 235.80456542969 },
+		{ x = 32.373760223389, y = 856.84271240234, z = 197.73667907715 },
+		{ x = 168.7543182373, y = 665.86444091797, z = 206.73274230957 },
+		{ x = -486.38897705078, y = 597.96118164063, z = 126.11904144287 },
+		{ x = -711.78002929688, y = 596.66107177734, z = 142.05392456055 },
+		{ x = -112.56798553467, y = 354.41998291016, z = 112.69616699219 },
+		{ x = -661.04150390625, y = 403.44506835938, z = 101.25228118896 },
+		{ x = -1073.6116943359, y = -23.468688964844, z = 50.175617218018 },
+		{ x = -1392.5510253906, y = 143.81143188477, z = 56.135433197021 },
+		{ x = -1281.3978271484, y = -1078.5212402344, z = 7.6106238365173 },
+		{ x = -1185.5891113281, y = -464.80328369141, z = 33.539070129395 },
+		{ x = -881.57922363281, y = -206.73352050781, z = 38.937652587891 },
+		{ x = -768.88208007813, y = -413.71401977539, z = 35.650127410889 },
+		{ x = 402.68658447266, y = -953.84881591797, z = 29.447750091553 },
+		{ x = 153.02626037598, y = -570.09240722656, z = 43.870571136475 },
+		{ x = -8.2442741394043, y = -685.27655029297, z = 32.338069915771 },
+		{ x = -251.3383026123, y = -229.70063781738, z = 49.101440429688 },
+		{ x = 147.59950256348, y = -124.38256835938, z = 54.826652526855 },
+		{ x = -186.20439147949, y = 24.747470855713, z = 64.556694030762 },
+		{ x = -569.11511230469, y = -157.98637390137, z = 38.060680389404 },
+		{ x = -1230.4274902344, y = -2730.3347167969, z = 13.953640937805 },
+		{ x = -1115.2401123047, y = -2426.0676269531, z = 13.945163726807 },
+		{ x = -1369.5837402344, y = -2334.8679199219, z = 13.944553375244 },
+		{ x = -1006.3687133789, y = -1756.9224853516, z = 6.5498008728027 },
+		{ x = -1173.6881103516, y = -1773.2373046875, z = 3.8475110530853 },
+		{ x = -237.16279602051, y = -2045.02734375, z = 27.755414962769 },
+		{ x = -697.82586669922, y = -2116.7375488281, z = 43.201431274414 },
+		{ x = -1018.7079467773, y = -940.74395751953, z = 3.9379351139069 },
+		{ x = -710.0576171875, y = -924.31732177734, z = 19.013902664185 },
+		{ x = -458.84182739258, y = -1029.787109375, z = 23.550479888916 },
+		{ x = -12.4260597229, y = -1085.4757080078, z = 26.686298370361 },
+		{ x = -112.37512207031, y = -952.02941894531, z = 27.780033111572 },
+		{ x = -693.76171875, y = -627.56378173828, z = 31.556966781616 },
+		{ x = 97.86841583252, y = -1933.7349853516, z = 20.803693771362 },
+		{ x = -44.686100006104, y = -1684.1784667969, z = 29.406301498413 },
+		{ x = -22.662431716919, y = -1462.4112548828, z = 30.792766571045 },
+		{ x = 264.77066040039, y = -1762.9516601563, z = 28.721403121948 },
+		{ x = 311.60852050781, y = -1203.5598144531, z = 38.892589569092 },
+		{ x = -224.61524963379, y = -1536.0466308594, z = 31.6276512146 },
+		{ x = -688.12017822266, y = -1421.1513671875, z = 5.0005016326904 },
+		{ x = 306.08633422852, y = 263.80908203125, z = 105.23339080811 },
+	},
+	radius = 2.0,
+	rewardPerCheckPoint = { cash = 500, exp = 100 },
+	rewards = {
+		{ cash = 15000, exp = 5000 },
+		{ cash = 10000, exp = 4000 },
+		{ cash = 5000, exp = 3000 },
+	},
+}
+
+
+-- Sharpshooter
+Settings.sharpShooter = {
+	duration = 900000,
+	rewards = {
+		{ cash = 15000, exp = 5000 },
+		{ cash = 10000, exp = 4000 },
+		{ cash = 5000, exp = 3000 },
+	},
 }
 
 
@@ -187,9 +504,16 @@ Settings.castle = {
 		{ x = 1459.8696289063, y = 1112.6547851563, z = 114.33392333984 },
 		{ x = 100.60562133789, y = -1937.0286865234, z = 20.803699493408 },
 		{ x = -1033.8146972656, y = -1072.1015625, z = 4.0820965766907 },
+		{ x = -1651.9538574219, y = -1099.3696289063, z = 13.078674316406 },
+		{ x = 1234.7498779297, y = -648.01989746094, z = 66.377662658691 },
+		{ x = 1364.8551025391, y = -579.05023193359, z = 74.380249023438 },
 	},
 	radius = 50.0,
-	rewards = { 10000, 7500, 5000 },
+	rewards = {
+		{ cash = 15000, exp = 5000 },
+		{ cash = 10000, exp = 4000 },
+		{ cash = 5000, exp = 3000 },
+	},
 }
 
 
@@ -204,8 +528,15 @@ Settings.property = {
 		{ x = -1181.9063720703, y = -2918.6696777344, z = 13.94495677948 },
 		{ x = -145.44644165039, y = -2046.9323730469, z = 22.956035614014 },
 		{ x = 1240.3864746094, y = -1927.2956542969, z = 38.531646728516 },
+		{ x = -1651.9538574219, y = -1099.3696289063, z = 13.078674316406 },
+		{ x = 1234.7498779297, y = -648.01989746094, z = 66.377662658691 },
+		{ x = 1364.8551025391, y = -579.05023193359, z = 74.380249023438 },
 	},
-	rewards = { 10000, 7500, 5000 },
+	rewards = {
+		{ cash = 15000, exp = 5000 },
+		{ cash = 10000, exp = 4000 },
+		{ cash = 5000, exp = 3000 },
+	},
 }
 
 
@@ -221,9 +552,15 @@ Settings.executiveSearch = {
 		{ x = -623.10504150391, y = -180.28044128418, z = 37.762023925781 },
 		{ x = -1643.4249267578, y = -328.91735839844, z = 50.673767089844 },
 		{ x = -1118.4345703125, y = -1473.1253662109, z = 4.8473377227783 },
+		{ x = -109.28057861328, y = 916.17199707031, z = 235.89839172363 },
+		{ x = 1669.0047607422, y = -1567.4741210938, z = 112.41025543213 },
+		{ x = -1034.8332519531, y = -1071.1206054688, z = 4.0847549438477 },
 	},
 	radius = 175.0,
-	reward = 10000,
+	reward = {
+		cash = 10000,
+		exp = 4000,
+	},
 }
 
 
@@ -239,10 +576,9 @@ Settings.ammuNationRefillAmmo = {
 
 	['Shotgun Shells'] = {
 		weapons = {
-			'WEAPON_SAWNOFFSHOTGUN',
-			'WEAPON_PUMPSHOTGUN',
-			'WEAPON_BULLPUPSHOTGUN',
 			'WEAPON_ASSAULTSHOTGUN',
+			'WEAPON_PUMPSHOTGUN',
+			'WEAPON_SAWNOFFSHOTGUN',
 		},
 		ammo = 16,
 		price = 48,
@@ -250,26 +586,17 @@ Settings.ammuNationRefillAmmo = {
 
 	['SMG Rounds'] = {
 		weapons = {
-			'WEAPON_MICROSMG',
 			'WEAPON_SMG',
-			'WEAPON_ASSAULTSMG',
+			'WEAPON_MICROSMG',
 		},
 		ammo = 30,
 		price = 72,
 	},
 
-	['Gusenberg Rounds'] = {
-		weapons = {
-			'WEAPON_GUSENBERG',
-		},
-		ammo = 30,
-		price = 129,
-	},
-
 	['MG Rounds'] = {
 		weapons = {
-			'WEAPON_MG',
 			'WEAPON_COMBATMG',
+			'WEAPON_MG',
 		},
 		ammo = 100,
 		price = 135,
@@ -337,11 +664,6 @@ Settings.ammuNationRefillAmmo = {
 
 -- AmmuNation Special Weapons Ammo
 Settings.ammuNationSpecialAmmo = {
-	['WEAPON_COMPACTLAUNCHER'] = {
-		ammo = 1 * 3,
-		price = 584,
-		type = 'Grenades',
-	},
 	['WEAPON_GRENADELAUNCHER'] = {
 		ammo = 3, -- 20
 		price = 672,
@@ -354,7 +676,7 @@ Settings.ammuNationSpecialAmmo = {
 	},
 	['WEAPON_HOMINGLAUNCHER'] = {
 		ammo = 1 * 3,
-		price = 1156,
+		price = 971,
 		type = 'Rockets',
 	},
 	['WEAPON_MINIGUN'] = {
@@ -363,28 +685,23 @@ Settings.ammuNationSpecialAmmo = {
 		type = 'Rounds',
 	},
 	['WEAPON_HEAVYSNIPER'] = {
-		ammo = 12 * 1,
+		ammo = 12 * 2,
 		price = 497,
 		type = 'Rounds',
 	},
 	['WEAPON_SNIPERRIFLE'] = {
-		ammo = 12 * 1,
+		ammo = 12 * 2,
 		price = 497, -- same as Heavy Sniper
 		type = 'Rounds',
 	},
-	['WEAPON_MARKSMANRIFLE'] = {
-		ammo = 8 * 2,
-		price = 471,
-		type = 'Rounds',
-	},
 	['WEAPON_DOUBLEACTION'] = {
-		ammo = 6 * 2,
+		ammo = 6 * 3,
 		price = 404,
 		type = 'Rounds',
 	},
-	['WEAPON_MUSKET'] = {
-		ammo = 2 * 6,
-		price = 445,
+	['WEAPON_PISTOL50'] = {
+		ammo = 9 * 2,
+		price = 427,
 		type = 'Rounds',
 	},
 }
@@ -427,22 +744,11 @@ Settings.marketManipulation = {
 		{ ['x'] = 1126.3829345703, ['y'] = -981.70190429688, ['z'] = 45.415824890137 },
 		{ ['x'] = -1828.1215820313, ['y'] = 799.11328125, ['z'] = 138.17001342773 },
 		{ ['x'] = -2958.9916992188, ['y'] = 388.09457397461, ['z'] = 14.04315662384 },
-		{ ['x'] = -3047.0500488281, ['y'] = 585.65979003906, ['z'] = 7.9089307785034 },
-		{ ['x'] = -3249.46875, ['y'] = 1003.5993652344, ['z'] = 12.830706596375 },
-		{ ['x'] = 1733.5750732422, ['y'] = 6420.5815429688, ['z'] = 35.037227630615 },
-		{ ['x'] = 1707.1936035156, ['y'] = 4919.4487304688, ['z'] = 42.063674926758 },
-		{ ['x'] = 547.52557373047, ['y'] = 2663.9638671875, ['z'] = 42.156494140625 },
-		{ ['x'] = 1959.1160888672, ['y'] = 3748.2690429688, ['z'] = 32.343738555908 },
-		{ ['x'] = 2672.8278808594, ['y'] = 3285.5939941406, ['z'] = 55.241142272949 },
-		{ ['x'] = 2549.9296875, ['y'] = 384.43780517578, ['z'] = 108.62294769287 },
-		{ ['x'] = 146.25691223145, ['y'] = -1044.6046142578, ['z'] = 29.377824783325 },
-		{ ['x'] = -354.23629760742, ['y'] = -53.998760223389, ['z'] = 49.046318054199 },
-		{ ['x'] = 1176.9967041016, ['y'] = 2711.8190917969, ['z'] = 38.097778320313 },
-		{ ['x'] = -104.46595001221, ['y'] = 6477.015625, ['z'] = 32.505443572998 },
 	},
-	minReward = 5000,
-	maxReward = 10000,
-	cashPerRobbery = 500,
+	rewards = {
+		cash = { min = 5000, max = 15000, perRobbery = 1000 },
+		exp = { min = 3000, max = 5000, perRobbery = 200 },
+	},
 }
 
 
@@ -460,16 +766,20 @@ Settings.velocity = {
 		{ x = -1215.8439941406, y = -1346.943359375, z = 3.6422889232635, heading = 293.01425170898 },
 	},
 	minSpeed = 60,
-	minReward = 5000,
-	maxReward = 10000,
-	cashPerAboutToDetonate = 500,
+	rewards = {
+		cash = { min = 5000, max = 15000, perAboutToDetonate = 1000 },
+		exp = { min = 3000, max = 5000, perAboutToDetonate = 200 },
+	},
 }
 
 
 -- Most Wanted Mission
 Settings.mostWanted = {
 	time = 600000,
-	maxReward = 10000,
+	rewards = {
+		maxCash = 15000,
+		maxExp = 5000,
+	},
 }
 
 
@@ -508,8 +818,10 @@ Settings.assetRecovery = {
 		},
 	},
 	dropRadius = 25.,
-	minReward = 5000,
-	maxReward = 10000,
+	rewards = {
+		cash = { min = 5000, max = 15000 },
+		exp = { min = 3000, max = 5000 },
+	},
 }
 
 
@@ -551,28 +863,31 @@ Settings.headhunter = {
 		'WEAPON_RPG',
 	},
 	wantedLevel = 3,
-	minReward = 5000,
-	maxReward = 10000,
+	rewards = {
+		cash = { min = 5000, max = 15000 },
+		exp = { min = 3000, max = 5000 },
+	},
 }
 
 
 -- Crates
 Settings.crate = {
-	chance = 25,
+	chance = 30,
 	timeout = 1200000,
-	cash = 2500,
+	reward = {
+		exp = 2500,
+		cash = 5000,
+	},
 	radius = 200.,
 	weapons = {
-		{ id = 'WEAPON_COMPACTLAUNCHER', name = 'Compact Grenade Launcher', ammo = 1 * 10 },
 		{ id = 'WEAPON_GRENADELAUNCHER', name = 'Grenade Launcher', ammo = 1 * 10 },
 		{ id = 'WEAPON_RPG', name = 'Rocket Launcher', ammo = 1 * 10 },
-		{ id = 'WEAPON_HOMINGLAUNCHER', name = 'Homing Launcher', ammo = 1 * 8 },
 		{ id = 'WEAPON_MINIGUN', name = 'Minigun', ammo = 1 * 500 },
 		{ id = 'WEAPON_HEAVYSNIPER', name = 'Heavy Sniper', ammo = 12 * 2 },
 		{ id = 'WEAPON_SNIPERRIFLE', name = 'Sniper Rifle', ammo = 12 * 2 },
-		{ id = 'WEAPON_MARKSMANRIFLE', name = 'Marksman Rifle', ammo = 8 * 3 },
+		{ id = 'WEAPON_PISTOL50', name = 'Pistol .50', ammo = 9 * 3 },
 		{ id = 'WEAPON_DOUBLEACTION', name = 'Double-Action Revolver', ammo = 6 * 4 },
-		{ id = 'WEAPON_MUSKET', name = 'Musket', ammo = 1 * 20 },
+		{ id = 'WEAPON_HOMINGLAUNCHER', name = 'Homing Launcher', ammo = 1 * 8 },
 	},
 	locations = {
 		{
@@ -616,98 +931,133 @@ Settings.skins = {
 	['u_m_y_baygor'] = {
 		name = 'Default',
 		kills = 0,
+		rank = 1,
 	},
 
 	['g_m_m_chemwork_01'] = {
 		name = 'Chemist',
 		kills = 500,
+		rank = 10,
 	},
 
 	['s_m_y_fireman_01'] = {
 		name = 'Fireman',
 		kills = 1000,
+		rank = 20,
 	},
 
 	['s_m_m_fibsec_01'] = {
 		name = 'FIB Security',
 		kills = 1500,
+		rank = 30,
 	},
 
 	['s_m_y_clown_01'] = {
 		name = 'Clown',
 		kills = 2000,
+		rank = 40,
 	},
 
 	['u_m_y_zombie_01'] = {
 		name = 'Zombie',
 		kills = 2500,
+		rank = 50,
 	},
 
 	['s_m_m_strperf_01'] = {
 		name = 'Street Performer',
 		kills = 3000,
+		rank = 60,
 	},
 
 	['u_m_y_pogo_01'] = {
 		name = 'Pogo',
 		kills = 3500,
+		rank = 70,
 	},
 
 	['s_m_m_movalien_01'] = {
 		name = 'Alien',
 		kills = 4000,
+		rank = 80,
 	},
 
 	['u_m_y_rsranger_01'] = {
 		name = 'RS Ranger',
 		kills = 4500,
+		rank = 90,
 	},
 
 	['u_m_y_imporage'] = {
 		name = 'Imporage',
 		kills = 5000,
+		rank = 100,
 	},
 }
 
 -- Weapon tints
 Settings.weaponTints = {
-	[0] = {
+	{
+		index = 0,
 		name = 'Normal',
 		kills = 0,
+		cash = 0,
+		rank = 1,
 	},
 
-	[1] = {
-		name = 'Green',
-		kills = 50,
-	},
-
-	[2] = {
-		name = 'Gold',
-		kills = 250,
-	},
-
-	[3] = {
-		name = 'Pink',
-		kills = 500,
-	},
-
-	[4] = {
+	{
+		index = 4,
 		name = 'Army',
-		kills = 1000,
+		kills = 100,
+		cash = 1000,
+		rank = 2,
 	},
 
-	[5] = {
-		name = 'LSPD',
-		kills = 1500,
+	{
+		index = 1,
+		name = 'Green',
+		kills = 500,
+		cash = 2500,
+		rank = 5,
 	},
 
-	[6] = {
+	{
+		index = 6,
 		name = 'Orange',
-		kills = 2000,
+		kills = 1000,
+		cash = 5000,
+		rank = 10,
 	},
 
-	[7] = {
+	{
+		index = 5,
+		name = 'LSPD',
+		kills = 2000,
+		cash = 10000,
+		rank = 25,
+	},
+
+	{
+		index = 3,
+		name = 'Pink',
+		kills = 4000,
+		cash = 15000,
+		rank = 50,
+	},
+
+	{
+		index = 2,
+		name = 'Gold',
+		kills = 6000,
+		cash = 20000,
+		rank = 75,
+	},
+
+	{
+		index = 7,
 		name = 'Platinum',
-		kills = 2500,
+		kills = 8000,
+		cash = 25000,
+		rank = 100,
 	},
 }

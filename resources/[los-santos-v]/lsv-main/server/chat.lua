@@ -117,6 +117,7 @@ RegisterCommand('money', function(source)
 	TriggerClientEvent('chat:addMessage', source, message)
 end)
 
+
 RegisterCommand('ping', function(source, args)
 	local player = source
 	if args[1] then player = tonumber(args[1]) end
@@ -148,6 +149,103 @@ RegisterCommand('ping', function(source, args)
 
 	TriggerClientEvent('chat:addMessage', source, message)
 end)
+
+
+RegisterCommand('help', function(source)
+	if not Scoreboard.IsPlayerOnline(source) then return end
+
+	local message = {
+		color = systemMessageColor,
+		args = { 'Looks like you missed all in-game and loading screen tips.\nJoin our Discord to read a full #wiki guide.' },
+	}
+
+	TriggerClientEvent('chat:addMessage', source, message)
+end)
+
+
+RegisterCommand('ammo', function(source)
+	if not Scoreboard.IsPlayerOnline(source) then return end
+
+	local message = {
+		color = systemMessageColor,
+		args = { 'Use Interaction menu (M by default) to buy ammo.' },
+	}
+
+	TriggerClientEvent('chat:addMessage', source, message)
+end)
+
+
+RegisterCommand('report', function(source)
+	if not Scoreboard.IsPlayerOnline(source) then return end
+
+	local message = {
+		color = systemMessageColor,
+		args = { 'Use Interaction menu (M by default) to report other players.' },
+	}
+
+	TriggerClientEvent('chat:addMessage', source, message)
+end)
+
+
+RegisterCommand('cash', function(source)
+	if not Scoreboard.IsPlayerOnline(source) then return end
+
+	local message = {
+		color = systemMessageColor,
+		args = { 'Hold Z (by default) to view the scoreboard.' },
+	}
+
+	TriggerClientEvent('chat:addMessage', source, message)
+end)
+
+
+RegisterCommand('quit', function(source)
+	if not Scoreboard.IsPlayerOnline(source) then return end
+
+	local message = {
+		color = systemMessageColor,
+		args = { 'Use Pause Menu to exit the server. Hope to see you soon!' },
+	}
+
+	TriggerClientEvent('chat:addMessage', source, message)
+end)
+
+
+RegisterCommand('vehicle', function(source)
+	if not Scoreboard.IsPlayerOnline(source) then return end
+
+	local message = {
+		color = systemMessageColor,
+		args = { 'Use Personal Vehicle menu (Y by default) to customize and control your Personal Vehicle.' },
+	}
+
+	TriggerClientEvent('chat:addMessage', source, message)
+end)
+
+
+RegisterCommand('repair', function(source)
+	if not Scoreboard.IsPlayerOnline(source) then return end
+
+	local message = {
+		color = systemMessageColor,
+		args = { 'Use Personal Vehicle menu (Y by default) to repair your Personal Vehicle.' },
+	}
+
+	TriggerClientEvent('chat:addMessage', source, message)
+end)
+
+
+RegisterCommand('crew', function(source)
+	if not Scoreboard.IsPlayerOnline(source) then return end
+
+	local message = {
+		color = systemMessageColor,
+		args = { 'Use Interaction menu (M by default) to manage your Crew.' },
+	}
+
+	TriggerClientEvent('chat:addMessage', source, message)
+end)
+
 
 RegisterEmote('agree', '%s agrees.', '%s agrees with %s.')
 RegisterEmote('amaze', '%s is amazed!', '%s is amazed by %s.')
