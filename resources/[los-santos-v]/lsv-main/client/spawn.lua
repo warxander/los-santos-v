@@ -11,7 +11,7 @@ local function spawnPlayer()
 
 	if not GetIsLoadingScreenActive() then
 		DoScreenFadeOut(500)
-		while IsScreenFadingOut() do Citizen.Wait(0) end
+		while not IsScreenFadedOut() do Citizen.Wait(0) end
 	end
 
 	local spawnPoint = nil
@@ -51,7 +51,11 @@ local function spawnPlayer()
 				end
 			end
 
-			if startSpawnTimer:Elapsed() >= Settings.spawn.timeout then spawnPoint = table.random(Settings.spawn.points) end
+			if startSpawnTimer:Elapsed() >= Settings.spawn.timeout then
+				spawnPoint = table.random(Settings.spawn.points)
+				Gui.DisplayPersonalNotification('Unable to find suitable place for spawning.')
+			end
+
 			if spawnPoint then break end
 		end
 	end
@@ -70,13 +74,17 @@ local function spawnPlayer()
 	ClearPedWetness(ped)
 
 	while not HasCollisionLoadedAroundEntity(ped) do Citizen.Wait(0) end
+	PlaceObjectOnGroundProperly(ped)
+
 	if GetIsLoadingScreenActive() then ShutdownLoadingScreen() end
 
-	DoScreenFadeIn(500)
-	while IsScreenFadingIn() do Citizen.Wait(0) end
+	if IsScreenFadedOut() then
+		DoScreenFadeIn(500)
+		while not IsScreenFadedIn() do Citizen.Wait(0) end
+	end
 
 	TriggerEvent('playerSpawned')
-	Player.SetFreeze(false)
+
 	isSpawnInProcess = false
 end
 

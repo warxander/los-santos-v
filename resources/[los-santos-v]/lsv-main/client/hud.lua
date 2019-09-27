@@ -4,6 +4,7 @@ local cashGained = 0
 local cashGainedTime = nil
 local cashGainedEffects = { }
 
+local killstreak = 0
 local playerStreakScaleform = nil
 local lastKillTime = nil
 
@@ -74,13 +75,11 @@ AddEventHandler('lsv:cashUpdated', function(cash, victim)
 		return
 	end
 	cashGained = cashGained + cash
-	cashGainedTime:Restart()
+	if cashGainedTime then cashGainedTime:Restart() end
 end)
 
 
 AddEventHandler('lsv:showExperience', function(exp)
-	if Player.Rank > #Settings.ranks then return end
-
 	local rank = Player.Rank
 	local playerExp = Player.Experience
 
@@ -90,8 +89,8 @@ AddEventHandler('lsv:showExperience', function(exp)
 	end
 
 	BeginScaleformMovieMethodHudComponent(19, 'SET_RANK_SCORES')
-	PushScaleformMovieFunctionParameterInt(Settings.ranks[rank])
-	PushScaleformMovieFunctionParameterInt(Settings.ranks[rank + 1])
+	PushScaleformMovieFunctionParameterInt(Settings.calculateExp(rank))
+	PushScaleformMovieFunctionParameterInt(Settings.calculateExp(rank + 1))
 	PushScaleformMovieFunctionParameterInt(playerExp - exp)
 	PushScaleformMovieFunctionParameterInt(playerExp)
 	PushScaleformMovieFunctionParameterInt(rank)
@@ -149,7 +148,7 @@ AddEventHandler('lsv:init', function()
 		'Hold ~INPUT_MULTIPLAYER_INFO~ to view the scoreboard.',
 		'Performing Missions and taking out enemy players will give you cash and experience.',
 		'Get extra reward for killing players who are doing a Mission.',
-		'Challenges allows you to compete with another player to prove your skills.',
+		'Challenges allows you to compete with another players to prove your skills.',
 		'Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.',
 		'Visit ~BLIP_GUN_SHOP~ to purchase Special Weapons ammo.',
 		'Press ~INPUT_MP_TEXT_CHAT_TEAM~ to open Personal Vehicle menu.',
@@ -158,11 +157,18 @@ AddEventHandler('lsv:init', function()
 		'Visit ~BLIP_CLOTHES_STORE~ to change your character appearance.',
 		'Use Interaction Menu to manage your Crew.',
 		'Use Report Player option from Interaction menu to improve your overall game experience.',
+		'Use Prestige option from Interaction menu to reset your progress and get Prestige badge.',
 	}
 
 	table.iforeach(tips, function(tip)
 		HelpQueue.PushBack(tip)
 	end)
+end)
+
+
+RegisterNetEvent('lsv:patreonDailyRewarded')
+AddEventHandler('lsv:patreonDailyRewarded', function()
+	Gui.DisplayPersonalNotification('Please accept this small gift as a token of my appreciation.', 'CHAR_MP_STRIPCLUB_PR', 'Welcome back', '', 2)
 end)
 
 
@@ -196,6 +202,7 @@ AddEventHandler('lsv:onPlayerDied', function(player, suicide)
 
 	Player.Deathstreak = Player.Deathstreak + 1
 	Player.Killstreak = 0
+	killstreak = 0
 end)
 
 
@@ -205,44 +212,42 @@ AddEventHandler('lsv:onPlayerKilled', function(player, killer, message)
 		Gui.DisplayNotification(Gui.GetPlayerName(killer)..' '..message..' '..Gui.GetPlayerName(player, nil, true))
 	end
 
-	if killer ~= Player.ServerId() then return end
+	if player == Player.ServerId() then
+		Player.Deathstreak = Player.Deathstreak + 1
+		Player.Killstreak = 0
+		killstreak = 0
+		return
+	elseif killer ~= Player.ServerId() then return end
 
 	Player.Deathstreak = 0
 
+	Player.Kills = Player.Kills + 1
+	Player.Killstreak = Player.Killstreak + 1
+
 	if lastKillTime:Elapsed() > Settings.killstreakInterval then
-		Player.Killstreak = 1
+		killstreak = 1
 		lastKillTime:Restart()
 		return
 	end
 
-	Player.Kills = Player.Kills + 1
+	killstreak = killstreak + 1
+	lastKillTime:Restart()
 
-	Player.Killstreak = Player.Killstreak + 1
-	if Player.Killstreak < 2 or not Player.IsInFreeroam() then return end
+	if killstreak < 2 or not Player.IsInFreeroam() then return end
 
 	local killstreakMessage = 'DOUBLE KILL'
-	if Player.Killstreak == 3 then killstreakMessage = 'TRIPLE KILL'
-	elseif Player.Killstreak == 4 then killstreakMessage = 'MEGA KILL'
-	elseif Player.Killstreak == 5 then killstreakMessage = 'ULTRA KILL'
-	elseif Player.Killstreak == 6 then killstreakMessage = 'MONSTER KILL'
-	elseif Player.Killstreak == 7 then killstreakMessage = 'LUDICROUS KILL'
-	elseif Player.Killstreak == 8 then killstreakMessage = 'HOLY SHIT'
-	elseif Player.Killstreak == 9 then killstreakMessage = 'RAMPAGE'
-	elseif Player.Killstreak > 9 then killstreakMessage = 'GODLIKE' end
+	if killstreak == 3 then killstreakMessage = 'TRIPLE KILL'
+	elseif killstreak == 4 then killstreakMessage = 'MEGA KILL'
+	elseif killstreak == 5 then killstreakMessage = 'ULTRA KILL'
+	elseif killstreak == 6 then killstreakMessage = 'MONSTER KILL'
+	elseif killstreak == 7 then killstreakMessage = 'LUDICROUS KILL'
+	elseif killstreak == 8 then killstreakMessage = 'HOLY SHIT'
+	elseif killstreak == 9 then killstreakMessage = 'RAMPAGE'
+	elseif killstreak > 9 then killstreakMessage = 'GODLIKE' end
 
 	if playerStreakScaleform and playerStreakScaleform:IsValid() then playerStreakScaleform:Delete() end
 	playerStreakScaleform = Scaleform:Request('MIDSIZED_MESSAGE')
 	playerStreakScaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', killstreakMessage)
-	playerStreakScaleform:RenderFullscreenTimed(5000)
-end)
-
-
-AddEventHandler('playerSpawned', function()
-	if not Player.Loaded or Player.Deathstreak < Settings.deathstreakMinCount then return end
-
-	if playerStreakScaleform and playerStreakScaleform:IsValid() then playerStreakScaleform:Delete() end
-	playerStreakScaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-	playerStreakScaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', 'LOOSING KILLSTREAK')
 	playerStreakScaleform:RenderFullscreenTimed(5000)
 end)
 
@@ -260,13 +265,9 @@ AddEventHandler('lsv:init', function()
 			Gui.DrawText(discordUrl, { x = 0.5, y = 0.975 })
 		end
 
-		local playerStats = '$'..Player.Cash
-		if Player.Rank < #Settings.ranks then
-			playerStats = Player.Experience..' / '..Settings.ranks[Player.Rank + 1]..'         '..playerStats
-		end
-
 		Gui.SetTextParams(4, Color.GetHudFromBlipColor(Color.BlipWhite()), 0.3, true, true, true)
-		Gui.DrawText(playerStats, { x = SafeZone.Left() + 0.1025, y = SafeZone.Bottom() - 0.004 }, 0.25)
+		Gui.DrawText(Player.Experience..' / '..Settings.calculateExp(Player.Rank + 1)..'         $'..Player.Cash,
+			{ x = SafeZone.Left() + 0.1025, y = SafeZone.Bottom() - 0.004 }, 0.25)
 
 		if IsControlPressed(0, 20) then
 			Scoreboard.DisplayThisFrame()
@@ -283,6 +284,10 @@ AddEventHandler('lsv:init', function()
 					local speed = math.floor(GetEntitySpeed(vehicle) * 2.236936) --mph
 					Gui.DrawBar('SPEED', speed..' MPH')
 				end
+			end
+
+			if Player.Killstreak ~= 0 then
+				Gui.DrawBar('KILLSTREAK', Player.Killstreak)
 			end
 
 			if HasHudScaleformLoaded(19) then
@@ -341,6 +346,8 @@ AddEventHandler('lsv:setupHud', function(hud)
 	if hud.discordUrl ~= '' then
 		discordUrl = hud.discordUrl
 
+		if Player.PatreonTier ~= 0 then return end
+
 		while true do
 			Citizen.Wait(Settings.discordNotificationTimeout)
 			PlaySoundFrontend(-1, 'EVENT_START_TEXT', 'GTAO_FM_EVENTS_SOUNDSET', true)
@@ -391,7 +398,6 @@ AddEventHandler('lsv:init', function()
 					local isPlayerOnMission = MissionManager.IsPlayerOnMission(serverId)
 					local isChallengingPlayer = World.ChallengingPlayer == serverId
 					local isPlayerCrewMember = Player.IsCrewMember(serverId)
-					local patreonTier = Scoreboard.GetPlayerPatreonTier(id) or 0
 
 					local blipSprite = Blip.Standard()
 					if isPlayerDead then blipSprite = Blip.Dead()

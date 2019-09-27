@@ -16,6 +16,12 @@ function Scoreboard.GetPlayerRank(playerId)
 	return player and player.rank or nil
 end
 
+function Scoreboard.GetPlayerPrestige(playerId)
+	local serverId = GetPlayerServerId(playerId)
+	local player = table.find_if(scoreboard, function(player) return player.id == serverId end)
+	return player and player.prestige or nil
+end
+
 
 -- Sizes
 local headerTableSpacing = 0.0075
@@ -30,8 +36,8 @@ local tableDeathsWidth = 0.075
 local tableTextHorizontalMargin = 0.00225
 local tableTextVerticalMargin = 0.00245
 local playerStatusWidth = 0.00225
-local rankWidth = 0.0165
-local rankHeight = 0.0295
+local rankWidth = 0.0175
+local rankHeight = 0.0325
 
 local voiceIndicatorWidth = 0.004
 local playerNameMargin = 0.006
@@ -72,7 +78,16 @@ local tableDeathsTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 25
 local activeVoiceIndicatorColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 local inactiveVoiceIndicatorColor = { ['r'] = 10, ['g'] = 10, ['b'] = 10, ['a'] = 255 }
 
-local rankColor = { ['r'] = 10, ['g'] = 10, ['b'] = 10, ['a'] = 72 }
+local prestigeColor = { ['r'] = 240, ['g'] = 200, ['b'] = 80, ['a'] = 255 }
+local maxPrestigeColor = { ['r'] = 224, ['g'] = 50, ['b'] = 50, ['a'] = 255 }
+local prestigeBlendColor = {
+	['r'] = math.floor((maxPrestigeColor.r - prestigeColor.r) / Settings.maxPrestige),
+	['g'] = math.floor((maxPrestigeColor.g - prestigeColor.g) / Settings.maxPrestige),
+	['b'] = math.floor((maxPrestigeColor.b - prestigeColor.b) / Settings.maxPrestige),
+	['a'] = 255,
+}
+
+local rankColor = { ['r'] = 44, ['g'] = 109, ['b'] = 184, ['a'] = 255 }
 local rankTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 
 
@@ -176,7 +191,14 @@ function Scoreboard.DisplayThisFrame()
 		end
 
 		-- Draw rank
-		DrawSprite('mprankbadge', 'globe', rankPosition.x, rankPosition.y, rankWidth, rankHeight, 0.0, rankColor.r, rankColor.g, rankColor.b, rankColor.a)
+		local playerRankColor = rankColor
+		if player.prestige ~= 0 then playerRankColor = {
+			r = prestigeColor.r + prestigeBlendColor.r * player.prestige,
+			g = prestigeColor.g + prestigeBlendColor.g * player.prestige,
+			b = prestigeColor.b + prestigeBlendColor.b * player.prestige,
+			a = prestigeBlendColor.a }
+		end
+		DrawSprite('mprankbadge', 'rankglobe_21x21_colour', rankPosition.x, rankPosition.y, rankWidth, rankHeight, 0.0, playerRankColor.r, playerRankColor.g, playerRankColor.b, playerRankColor.a)
 		Gui.SetTextParams(4, rankTextColor, rankScale, false, false, true)
 		Gui.DrawNumeric(player.rank, { ['x'] = rankPosition.x, ['y'] = tableText.y + tableTextVerticalMargin / 1.25 })
 

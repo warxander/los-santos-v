@@ -12,11 +12,11 @@ function RemoteTransaction.New()
 end
 
 
-function RemoteTransaction:WaitForEnding()
+function RemoteTransaction:WaitForEnding(message)
 	if self._inProgress then return end
 	self._inProgress = true
 	BeginTextCommandBusyString('STRING')
-	AddTextComponentSubstringPlayerName('Transaction pending')
+	AddTextComponentSubstringPlayerName(message or 'Transaction pending')
 	EndTextCommandBusyString(4)
 	while self._inProgress do Citizen.Wait(0) end
 end

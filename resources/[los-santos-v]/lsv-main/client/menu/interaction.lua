@@ -31,7 +31,12 @@ local weaponCategories = {
 		'WEAPON_MOLOTOV',
 		'WEAPON_STICKYBOMB',
 		'WEAPON_PROXMINE',
-	}
+	},
+	['Prestige Weapons'] = {
+		'WEAPON_RAYPISTOL',
+		'WEAPON_RAYCARBINE',
+		'WEAPON_RAYMINIGUN',
+	},
 }
 
 local transaction = RemoteTransaction.New()
@@ -57,6 +62,7 @@ local function weaponPrice(weapon)
 	if HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) then return '' end
 	local weapon = Weapon.GetWeapon(weapon)
 	if weapon.rank and Player.Rank < weapon.rank then return 'Rank '..weapon.rank end
+	if weapon.prestige and Player.Prestige < weapon.prestige then return 'Prestige '..weapon.prestige end
 	return '$'..weapon.cash
 end
 
@@ -75,7 +81,9 @@ end
 
 AddEventHandler('lsv:init', function()
 	local selectedWeapon = nil
+	local selectedWeaponHash = nil
 	local selectedWeaponCategory = nil
+	local selectedWeaponComponent = nil
 	local selectedAmmoType = nil
 
 	local challengeTarget = nil
@@ -85,6 +93,8 @@ AddEventHandler('lsv:init', function()
 	WarMenu.SetTitleColor('interaction', 255, 255, 255)
 	WarMenu.SetTitleBackgroundColor('interaction', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
 	WarMenu.SetTitleBackgroundSprite('interaction', 'commonmenu', 'interaction_bgd')
+
+	WarMenu.CreateSubMenu('interaction_confirm', 'interaction', 'Are you sure?')
 
 	WarMenu.CreateSubMenu('inviteToCrew', 'interaction', 'Invite to Crew')
 
@@ -110,6 +120,9 @@ AddEventHandler('lsv:init', function()
 	WarMenu.CreateSubMenu('ammunation_weaponUpgrades', 'ammunation_upgradeWeapons', '')
 	WarMenu.SetMenuButtonPressedSound('ammunation_weaponUpgrades', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
+	WarMenu.CreateSubMenu('ammunation_removeUpgradeConfirm', 'ammunation_weaponUpgrades', '')
+	WarMenu.SetMenuButtonPressedSound('ammunation_weaponUpgrades', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+
 	WarMenu.CreateSubMenu('challenges', 'interaction', 'Select player to compete')
 	WarMenu.CreateSubMenu('challenges_list', 'challenges', 'Select challenge')
 
@@ -129,10 +142,24 @@ AddEventHandler('lsv:init', function()
 
 				WarMenu.CloseMenu()
 			elseif WarMenu.MenuButton('Report Player', 'reportPlayer') then
+			elseif Player.Prestige < Settings.maxPrestige and WarMenu.MenuButton('~y~Up Prestige To Level '..(Player.Prestige + 1), 'interaction_confirm') then
 			elseif MissionManager.Mission and WarMenu.Button('~r~Cancel Mission') then
 				MissionManager.FinishMission()
 				WarMenu.CloseMenu()
 			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('interaction_confirm') then
+			if WarMenu.Button('Yes') then
+				if Player.Rank < Settings.minPrestigeRank then
+					Gui.DisplayPersonalNotification('You need to be at least Rank '..Settings.minPrestigeRank..'.')
+				elseif Player.Prestige >= Settings.maxPrestige then
+					Gui.DisplayPersonalNotification('You already have maximum Prestige level. Wow.')
+				else
+					TriggerServerEvent('lsv:getPrestige')
+					transaction:WaitForEnding()
+				end
+			elseif WarMenu.MenuButton('No', 'interaction') then end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation') then
@@ -157,7 +184,9 @@ AddEventHandler('lsv:init', function()
 					if HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) then
 						Gui.DisplayPersonalNotification('You already have this weapon.')
 					elseif Weapon.GetWeapon(weapon).rank and Weapon.GetWeapon(weapon).rank > Player.Rank then
-						Gui.DisplayPersonalNotification('Your rank is too low.')
+						Gui.DisplayPersonalNotification('Your Rank is too low.')
+					elseif Weapon.GetWeapon(weapon).prestige and Weapon.GetWeapon(weapon).prestige > Player.Prestige then
+						Gui.DisplayPersonalNotification('Your Prestige is too low.')
 					else
 						TriggerServerEvent('lsv:purchaseWeapon', weapon)
 						transaction:WaitForEnding()
@@ -222,14 +251,17 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_weaponUpgrades') then
-			local selectedWeaponHash = GetHashKey(selectedWeapon)
+			selectedWeaponHash = GetHashKey(selectedWeapon)
 
 			table.foreach(Weapon.GetWeapon(selectedWeapon).components, function(component, componentIndex)
-				if WarMenu.Button(component.name, weaponComponentPrice(componentIndex, selectedWeapon, component.hash)) then
-					if HasPedGotWeaponComponent(PlayerPedId(), selectedWeaponHash, component.hash) then
-						Gui.DisplayPersonalNotification('You already have this upgrade.')
-					elseif component.rank and component.rank > Player.Rank then
-						Gui.DisplayPersonalNotification('Your rank is too low.')
+				if HasPedGotWeaponComponent(PlayerPedId(), selectedWeaponHash, component.hash) then
+					if WarMenu.MenuButton(component.name, 'ammunation_removeUpgradeConfirm') then
+						selectedWeaponComponent = component.hash
+						WarMenu.SetSubTitle('ammunation_removeUpgradeConfirm', 'Remove '..component.name..'?')
+					end
+				elseif WarMenu.Button(component.name, weaponComponentPrice(componentIndex, selectedWeapon, component.hash)) then
+					if component.rank and component.rank > Player.Rank then
+						Gui.DisplayPersonalNotification('Your Rank is too low.')
 					else
 						TriggerServerEvent('lsv:updateWeaponComponent', selectedWeapon, componentIndex)
 						transaction:WaitForEnding()
@@ -243,7 +275,7 @@ AddEventHandler('lsv:init', function()
 						if GetPedWeaponTintIndex(PlayerPedId(), selectedWeaponHash) == tint.index then
 							Gui.DisplayPersonalNotification('You already use this tint.')
 						elseif tint.rank > Player.Rank then
-							Gui.DisplayPersonalNotification('Your rank is too low.')
+							Gui.DisplayPersonalNotification('Your Rank is too low.')
 						elseif tint.kills > Player.Kills then
 							Gui.DisplayPersonalNotification('You don\'t have enough player kills.')
 						else
@@ -253,6 +285,13 @@ AddEventHandler('lsv:init', function()
 					end
 				end)
 			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('ammunation_removeUpgradeConfirm') then
+			if WarMenu.MenuButton('Yes', 'ammunation_weaponUpgrades') then
+				RemoveWeaponComponentFromPed(PlayerPedId(), selectedWeaponHash, selectedWeaponComponent)
+				Player.SaveWeapons()
+			elseif WarMenu.MenuButton('No', 'ammunation_weaponUpgrades') then end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('challenges') then

@@ -6,8 +6,9 @@ AddEventHandler('lsv:updatePlayerSkin', function(id)
 
 	local skin = Settings.skins[id]
 
-	if Scoreboard.GetPlayerRank(player) < skin.rank then return end
-	if Scoreboard.GetPlayerKills(player) < skin.kills then return end
+	if skin.rank and Scoreboard.GetPlayerRank(player) < skin.rank then return end
+	if skin.kills and Scoreboard.GetPlayerKills(player) < skin.kills then return end
+	if skin.prestige and Scoreboard.GetPlayerPrestige(player) < skin.prestige then return end
 
 	Db.SetValue(player, 'SkinModel', Db.ToString(id), function()
 		TriggerClientEvent('lsv:playerSkinUpdated', player, id)

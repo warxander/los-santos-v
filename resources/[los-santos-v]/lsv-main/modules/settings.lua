@@ -13,12 +13,18 @@ Settings.serverTimeZone = '(CET+1)'
 Settings.maxMenuOptionCount = 7
 
 
+-- Prestige
+Settings.minPrestigeRank = 100
+Settings.maxPrestige = 10
+Settings.prestigeBonus = 0.1
+
+
 -- Crew
 Settings.crewInvitationTimeout = 10000
 
 
 -- Vehicle restriction
-Settings.specialVehicleMinRank = 10
+Settings.specialVehicleMinRank = 5
 
 
 -- Moderation
@@ -30,7 +36,6 @@ Settings.moderatorLevel = {
 
 
 -- Hud
-Settings.deathstreakMinCount = 3
 Settings.killstreakInterval = 5000
 
 
@@ -61,7 +66,7 @@ Settings.spawn = {
 	timeout = 30000,
 	respawnFasterPerControlPressed = 250, -- holy
 	tryCount = 100,
-	radius = { min = 95., increment = 25. },
+	radius = { min = 100., increment = 25. },
 }
 
 
@@ -194,6 +199,13 @@ Settings.calculateRank = function(experience)
 end
 
 
+Settings.calculateExp = function(rank)
+	-- f(x)=25x^2 + 23575x - 1023150
+	if rank <= #Settings.ranks then return Settings.ranks[rank]
+	else return 25 * rank * rank + 23575 * rank - 1023150 end
+end
+
+
 -- World
 Settings.world = { }
 Settings.world.blacklistVehicles = {
@@ -201,6 +213,7 @@ Settings.world.blacklistVehicles = {
 	'khanjali',
 	'hydra',
 	'hunter',
+	'cargoplane',
 }
 
 
@@ -246,7 +259,8 @@ Settings.maxArmour = 100
 
 
 -- Patreon
-Settings.patreonBonus = 1.1
+Settings.patreonBonus = 1.25
+Settings.patreonDailyReward = { time = 86400, cash = 5000 , exp = 2500 }
 
 
 -- Cash
@@ -259,11 +273,11 @@ Settings.cashGainedNotificationTime = 5000
 
 
 -- Experience
-Settings.expPerKill = 75
-Settings.expPerKillstreak = 25
-Settings.maxExpPerKillstreak = 300
-Settings.expPerHeadshot = 50
-Settings.expPerMission = 100
+Settings.expPerKill = 100
+Settings.expPerKillstreak = 50
+Settings.maxExpPerKillstreak = 500
+Settings.expPerHeadshot = 75
+Settings.expPerMission = 125
 
 
 -- Fast Travel
@@ -331,7 +345,7 @@ Settings.challenge = {
 Settings.duel = {
 	targetScore = 5,
 	reward = {
-		exp = 1500,
+		exp = 2000,
 		cash = 3000,
 	},
 }
@@ -340,8 +354,6 @@ Settings.duel = {
 -- Personal Vehicles
 Settings.personalVehicle = {
 	maxDistance = 50.0,
-	repairCashPerCent = 10,
-	sellRate = 0.5,
 	vehicles = {
 		['Free'] = {
 			['bmx'] = { name = 'BMX', cash = 0 },
@@ -349,47 +361,63 @@ Settings.personalVehicle = {
 			['sanchez'] = { name = 'Sanchez', cash = 0 },
 		},
 
-		['Super'] = {
-			['adder'] = { name = 'Truffade Adder', cash = 1000000 },
-			['bullet'] = { name = 'Bullet GT', cash = 155000 },
-			['cheetah'] = { name = 'Grotti Cheetah', cash = 650000 },
-			['entityxf'] = { name = 'Overflod Entity XF', cash = 795000 },
-			['infernus'] = { name = 'Pegassi Infernus', cash = 440000 },
-			['vacca'] = { name = 'Pegassi Vacca', cash = 240000 },
-			['voltic'] = { name = 'Coil Voltic', cash = 150000 },
-		},
-
-		['Motocycles'] = {
-			['akuma'] = { name = 'Dinka Akuma', cash = 90000 },
-			['bagger'] = { name = 'Bagger', cash = 160000 },
-			['bati'] = { name = 'Pegassi Bati 801', cash = 150000 },
-			['double'] = { name = 'Dinka Double T', cash = 120000 },
-			['daemon'] = { name = 'Daemon', cash = 145000 },
-			['hexer'] = { name = 'Hexer', cash = 150000 },
-			['nemesis'] = { name = 'Principe Nemesis', cash = 120000 },
-			['pcj'] = { name = 'PCJ-600', cash = 90000 },
-			['ruffian'] = { name = 'Pegassi Ruffian', cash = 90000 },
-			['vader'] = { name = 'Shitzu Vader', cash = 90000 },
-		},
-
 		['Sports'] = {
-			['ninef'] = { name = 'Obey 9F', cash = 120000 },
-			['banshee'] = { name = 'Banshee', cash = 90000 },
-			['buffalo'] = { name = 'Buffalo', cash = 35000 },
-			['comet2'] = { name = 'Comet', cash = 100000 },
-			['coquette'] = { name = 'Invetero Coquette', cash = 138000 },
-			['feltzer2'] = { name = 'Feltzer', cash = 130000 },
-			['futo'] = { name = 'Karin Futo', cash = 25000 },
-			['jester'] = { name = 'Dinka Jester', cash = 240000 },
-			['penumbra'] = { name = 'Maibatsu Penumbra', cash = 24000 },
-			['rapidgt'] = { name = 'Dewbauchee Rapid GT', cash = 132000 },
-			['schwarzer'] = { name = 'Benefactor Schwartzer', cash = 80000 },
-			['sultan'] = { name = 'Sultan', cash = 12000 },
+			['sultan'] = { name = 'Sultan', cash = 12, rank = 5 },
+			['penumbra'] = { name = 'Maibatsu Penumbra', cash = 24, rank = 8 },
+			['futo'] = { name = 'Karin Futo', cash = 25, rank = 11 },
+			['buffalo'] = { name = 'Buffalo', cash = 35, rank = 14 },
+			['schwarzer'] = { name = 'Benefactor Schwartzer', cash = 80, rank = 17 },
+			['banshee'] = { name = 'Banshee', cash = 90, rank = 20 },
+			['comet2'] = { name = 'Comet', cash = 100, rank = 23 },
+			['ninef'] = { name = 'Obey 9F', cash = 120, rank = 26 },
+			['feltzer2'] = { name = 'Feltzer', cash = 130, rank = 29 },
+			['rapidgt'] = { name = 'Dewbauchee Rapid GT', cash = 132, rank = 32 },
+			['coquette'] = { name = 'Invetero Coquette', cash = 138, rank = 35 },
+			['italigto'] = { name = 'Itali GTO', cash = 196, rank = 38 },
+			['jester'] = { name = 'Dinka Jester', cash = 240, rank = 41 },
 		},
 
-		['Special'] = {
-			['deluxo'] = { name = 'Deluxo', cash = 9999999 },
-			['stromberg'] = { name = 'Stromberg', cash = 6666666 },
+		['Motorcycles'] = {
+			['akuma'] = { name = 'Dinka Akuma', cash = 90, rank = 4 },
+			['pcj'] = { name = 'PCJ-600', cash = 90, rank = 7 },
+			['ruffian'] = { name = 'Pegassi Ruffian', cash = 90, rank = 10 },
+			['vader'] = { name = 'Shitzu Vader', cash = 90, rank = 13 },
+			['nemesis'] = { name = 'Principe Nemesis', cash = 120, rank = 16 },
+			['double'] = { name = 'Dinka Double T', cash = 120, rank = 19 },
+			['daemon'] = { name = 'Daemon', cash = 145, rank = 22 },
+			['bati'] = { name = 'Pegassi Bati 801', cash = 150, rank = 25 },
+			['hexer'] = { name = 'Hexer', cash = 150, rank = 28 },
+			['bagger'] = { name = 'Bagger', cash = 160, rank = 31 },
+		},
+
+		['Super'] = {
+			['voltic'] = { name = 'Coil Voltic', cash = 150, rank = 9 },
+			['bullet'] = { name = 'Bullet GT', cash = 155, rank = 12 },
+			['vacca'] = { name = 'Pegassi Vacca', cash = 240, rank = 15 },
+			['infernus'] = { name = 'Pegassi Infernus', cash = 440, rank = 18 },
+			['cheetah'] = { name = 'Grotti Cheetah', cash = 650, rank = 21 },
+			['entityxf'] = { name = 'Overflod Entity XF', cash = 795, rank = 24 },
+			['adder'] = { name = 'Truffade Adder', cash = 1000, rank = 27 },
+		},
+
+		['Military'] = {
+			['dune3'] = { name = 'Dune FAV', cash = 1130, rank = 5 },
+			['technical'] = { name = 'Karin Technical', cash = 1263, rank = 10 },
+			['caracara'] = { name = 'Vapid Caracara', cash = 1775, rank = 15 },
+			['barrage'] = { name = 'HVY Barrage', cash = 2121, rank = 20 },
+			['boxville5'] = { name = 'Armored Boxville', cash = 2926, rank = 25 },
+		},
+
+		['Premium'] = {
+			['t20'] = { name = 'Progen T20', cash = 2200, rank = 30 },
+			['xa21'] = { name = 'Ocelot XA-21', cash = 2375, rank = 40 },
+			['voltic2'] = { name = 'Rocket Voltic', cash = 2880, rank = 50 },
+		},
+
+		['Prestige'] = {
+			['deluxo'] = { name = 'Deluxo', cash = 4721, prestige = 1, rank = 20 },
+			['phantom2'] = { name = 'Phantom Wedge', cash = 2553, prestige = 2, rank = 40 },
+			['thruster'] = { name = 'Thruster', cash = 3657, prestige = 3, rank = 60 },
 		},
 	}
 }
@@ -473,11 +501,11 @@ Settings.stockPiling = {
 		{ x = 306.08633422852, y = 263.80908203125, z = 105.23339080811 },
 	},
 	radius = 2.0,
-	rewardPerCheckPoint = { cash = 500, exp = 100 },
+	rewardPerCheckPoint = { cash = 500, exp = 200 },
 	rewards = {
-		{ cash = 15000, exp = 5000 },
-		{ cash = 10000, exp = 4000 },
-		{ cash = 5000, exp = 3000 },
+		{ cash = 15000, exp = 7000 },
+		{ cash = 10000, exp = 6000 },
+		{ cash = 5000, exp = 5000 },
 	},
 }
 
@@ -486,9 +514,9 @@ Settings.stockPiling = {
 Settings.sharpShooter = {
 	duration = 900000,
 	rewards = {
-		{ cash = 15000, exp = 5000 },
-		{ cash = 10000, exp = 4000 },
-		{ cash = 5000, exp = 3000 },
+		{ cash = 15000, exp = 7000 },
+		{ cash = 10000, exp = 6000 },
+		{ cash = 5000, exp = 5000 },
 	},
 }
 
@@ -510,9 +538,9 @@ Settings.castle = {
 	},
 	radius = 50.0,
 	rewards = {
-		{ cash = 15000, exp = 5000 },
-		{ cash = 10000, exp = 4000 },
-		{ cash = 5000, exp = 3000 },
+		{ cash = 15000, exp = 7000 },
+		{ cash = 10000, exp = 6000 },
+		{ cash = 5000, exp = 5000 },
 	},
 }
 
@@ -533,9 +561,9 @@ Settings.property = {
 		{ x = 1364.8551025391, y = -579.05023193359, z = 74.380249023438 },
 	},
 	rewards = {
-		{ cash = 15000, exp = 5000 },
-		{ cash = 10000, exp = 4000 },
-		{ cash = 5000, exp = 3000 },
+		{ cash = 15000, exp = 7000 },
+		{ cash = 10000, exp = 6000 },
+		{ cash = 5000, exp = 5000 },
 	},
 }
 
@@ -559,7 +587,7 @@ Settings.executiveSearch = {
 	radius = 175.0,
 	reward = {
 		cash = 10000,
-		exp = 4000,
+		exp = 6000,
 	},
 }
 
@@ -597,6 +625,7 @@ Settings.ammuNationRefillAmmo = {
 		weapons = {
 			'WEAPON_COMBATMG',
 			'WEAPON_MG',
+			'WEAPON_RAYCARBINE',
 		},
 		ammo = 100,
 		price = 135,
@@ -684,6 +713,11 @@ Settings.ammuNationSpecialAmmo = {
 		price = 604,
 		type = 'Rounds',
 	},
+	['WEAPON_RAYMINIGUN'] = {
+		ammo = 1 * 250,
+		price = 604, -- same as Minigun
+		type = 'Rounds',
+	},
 	['WEAPON_HEAVYSNIPER'] = {
 		ammo = 12 * 2,
 		price = 497,
@@ -727,6 +761,7 @@ Settings.mission = {
 		{ x = -1008.0339355469, y = -487.32397460938, z = 39.969467163086 },
 		{ x = -66.46614074707, y = 490.74649047852, z = 144.69189453125 },
 	},
+	failedRewards = { cash = 2500, exp = 1000 },
 }
 
 
@@ -747,7 +782,7 @@ Settings.marketManipulation = {
 	},
 	rewards = {
 		cash = { min = 5000, max = 15000, perRobbery = 1000 },
-		exp = { min = 3000, max = 5000, perRobbery = 200 },
+		exp = { min = 5000, max = 7000, perRobbery = 200 },
 	},
 }
 
@@ -768,7 +803,7 @@ Settings.velocity = {
 	minSpeed = 60,
 	rewards = {
 		cash = { min = 5000, max = 15000, perAboutToDetonate = 1000 },
-		exp = { min = 3000, max = 5000, perAboutToDetonate = 200 },
+		exp = { min = 5000, max = 7000, perAboutToDetonate = 200 },
 	},
 }
 
@@ -778,7 +813,7 @@ Settings.mostWanted = {
 	time = 600000,
 	rewards = {
 		maxCash = 15000,
-		maxExp = 5000,
+		maxExp = 7000,
 	},
 }
 
@@ -820,7 +855,7 @@ Settings.assetRecovery = {
 	dropRadius = 25.,
 	rewards = {
 		cash = { min = 5000, max = 15000 },
-		exp = { min = 3000, max = 5000 },
+		exp = { min = 5000, max = 7000 },
 	},
 }
 
@@ -865,7 +900,7 @@ Settings.headhunter = {
 	wantedLevel = 3,
 	rewards = {
 		cash = { min = 5000, max = 15000 },
-		exp = { min = 3000, max = 5000 },
+		exp = { min = 5000, max = 7000 },
 	},
 }
 
@@ -876,7 +911,7 @@ Settings.crate = {
 	timeout = 1200000,
 	reward = {
 		exp = 2500,
-		cash = 5000,
+		cash = 7500,
 	},
 	radius = 200.,
 	weapons = {
@@ -991,7 +1026,32 @@ Settings.skins = {
 	['u_m_y_imporage'] = {
 		name = 'Imporage',
 		kills = 5000,
-		rank = 100,
+		rank = 95,
+	},
+
+	['s_m_m_doctor_01'] = {
+		name = 'Doctor',
+		prestige = 1,
+	},
+
+	['s_m_y_mime'] = {
+		name = 'Mime',
+		prestige = 2,
+	},
+
+	['u_m_y_mani'] = {
+		name = 'Mani',
+		prestige = 3,
+	},
+
+	['s_m_m_movspace_01'] = {
+		name = 'Spaceman',
+		prestige = 4,
+	},
+
+	['u_m_y_juggernaut_01'] = {
+		name = 'Juggernaut',
+		prestige = 5,
 	},
 }
 
@@ -1058,6 +1118,6 @@ Settings.weaponTints = {
 		name = 'Platinum',
 		kills = 8000,
 		cash = 25000,
-		rank = 100,
+		rank = 90,
 	},
 }

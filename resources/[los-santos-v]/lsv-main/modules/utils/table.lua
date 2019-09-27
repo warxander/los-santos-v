@@ -19,6 +19,7 @@ function table.random(t)
 	local keys = { }
 	table.foreach(t, function(_, k) table.insert(keys, k) end)
 
+	math.random(); math.random(); math.random()
 	local i = keys[math.random(#keys)]
 	return t[i], i
 end

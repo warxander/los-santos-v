@@ -53,6 +53,9 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer, data)
 					killerExp = killerExp + Settings.expPerMission
 				end
 
+				killerCash = killerCash + math.min(Settings.maxCashPerKillstreak, Settings.cashPerKill + (Settings.cashPerKillstreak * Scoreboard.GetPlayerKillstreak(victim)))
+				killerExp = killerExp + math.min(Settings.maxExpPerKillstreak, Settings.expPerKill + (Settings.expPerKillstreak * Scoreboard.GetPlayerKillstreak(victim)))
+
 				Scoreboard.UpdateKillstreak(killer)
 
 				Db.UpdateCash(killer, killerCash, function()

@@ -1,3 +1,6 @@
+local loadingTransaction = RemoteTransaction.New()
+
+
 AddEventHandler('playerSpawned', function()
 	local playerPed = PlayerPedId()
 
@@ -9,11 +12,11 @@ AddEventHandler('playerSpawned', function()
 		GiveWeaponToPed(playerPed, GetHashKey('GADGET_PARACHUTE'), 1, false, false)
 	end
 
-	if not Player.Loaded then
-		Player.Loaded = true
-		Player.SetFreeze(true)
+	if not Player.Loaded and not Player.Loading then
+		Player.Loading = true
 		TriggerServerEvent('lsv:loadPlayer')
-	end
+		loadingTransaction:WaitForEnding('Loading profile')
+	else Player.SetFreeze(false) end
 end)
 
 
@@ -36,6 +39,7 @@ end)
 
 RegisterNetEvent('lsv:playerLoaded')
 AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
+	math.randomseed(GetNetworkTime())
 	SetRandomSeed(GetNetworkTime())
 
 	while GetPlayerSwitchState() ~= 5 do
@@ -43,19 +47,31 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 		SetCloudHatOpacity(0.01)
 		Citizen.Wait(0)
 	end
+
+	if not GetIsLoadingScreenActive() then
+		DoScreenFadeOut(0)
+		while not IsScreenFadedOut() do Citizen.Wait(0) end
+	end
+
 	ShutdownLoadingScreen()
-	DoScreenFadeOut(0)
 	ShutdownLoadingScreenNui()
+
 	DoScreenFadeIn(500)
+	while not IsScreenFadedIn() do Citizen.Wait(0) end
+
 	StopAudioScene('MP_LEADERBOARD_SCENE')
+
 	Player.Init(playerData)
+	loadingTransaction:Finish()
+
 	SwitchInPlayer(PlayerPedId())
-	while GetPlayerSwitchState() ~= 12 and not HasCollisionLoadedAroundEntity(PlayerPedId()) do
+	while GetPlayerSwitchState() ~= 12 do
 		HideHudAndRadarThisFrame()
 		SetCloudHatOpacity(0.01)
 		Citizen.Wait(0)
 	end
-	PlaceObjectOnGroundProperly(PlayerPedId())
+
+	Player.Loaded = true
 	Player.SetFreeze(false)
 
 	TriggerEvent('lsv:init')

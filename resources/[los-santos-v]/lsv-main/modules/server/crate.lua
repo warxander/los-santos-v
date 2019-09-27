@@ -27,6 +27,7 @@ end
 RegisterNetEvent('lsv:cratePickedUp')
 AddEventHandler('lsv:cratePickedUp', function()
 	local player = source
+	if not players[player] or not players[player].crate then return end
 
 	Db.UpdateCash(player, Settings.crate.reward.cash)
 	Db.UpdateExperience(player, Settings.crate.reward.exp)

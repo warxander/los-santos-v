@@ -1,6 +1,15 @@
 local gamerTags = { }
 
 
+local function isCrewMemberAimingAt(ped)
+	for _, member in ipairs(Player.CrewMembers) do
+		if IsPlayerFreeAimingAtEntity(GetPlayerFromServerId(member), ped) then return true end
+	end
+
+	return false
+end
+
+
 AddEventHandler('lsv:init', function()
 	while true do
 		for id = 0, Settings.maxPlayerCount do
@@ -9,7 +18,7 @@ AddEventHandler('lsv:init', function()
 				
 				local isCrewMember = Player.IsCrewMember(GetPlayerServerId(id))
 
-				local healthBarVisible = IsPlayerFreeAimingAtEntity(PlayerId(), playerPed) or isCrewMember
+				local healthBarVisible = IsPlayerFreeAimingAtEntity(PlayerId(), playerPed) or isCrewMember or isCrewMemberAimingAt(playerPed)
 				local isPlayerTalking = NetworkIsPlayerTalking(id)
 				local visible = healthBarVisible or isPlayerTalking
 

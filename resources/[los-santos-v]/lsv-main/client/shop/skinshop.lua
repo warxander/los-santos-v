@@ -24,8 +24,9 @@ local function skinKills(id)
 	if id == Player.Skin then return 'Used' end
 
 	local skin = Settings.skins[id]
-	if Player.Rank < skin.rank then return 'Rank '..skin.rank end
-	if Player.Kills < skin.kills then return 'Kill '..skin.kills..' players' end
+	if skin.rank and Player.Rank < skin.rank then return 'Rank '..skin.rank end
+	if skin.kills and Player.Kills < skin.kills then return 'Kill '..skin.kills..' players' end
+	if skin.prestige and Player.Prestige < skin.prestige then return 'Prestige '..skin.prestige end
 	return ''
 end
 
@@ -52,7 +53,12 @@ AddEventHandler('lsv:init', function()
 	end)
 
 	table.sort(orderedSkins, function(l, r)
-		return l.value.kills < r.value.kills
+		local lv = l.value
+		local rv = r.value
+		if lv.prestige and rv.prestige then return lv.prestige < rv.prestige
+		elseif not lv.prestige and rv.prestige then return true
+		elseif lv.prestige and not rv.prestige then return false
+		else return lv.kills < rv.kills end
 	end)
 
 	while true do
@@ -61,9 +67,11 @@ AddEventHandler('lsv:init', function()
 		if WarMenu.IsMenuOpened('skinshop') then
 			table.foreach(orderedSkins, function(v)
 				if WarMenu.Button(v.value.name, skinKills(v.key)) and v.key ~= Player.Skin then
-					if v.value.rank > Player.Rank then
-						Gui.DisplayPersonalNotification('Your rank is too low.')
-					elseif v.value.kills > Player.Kills then
+					if v.value.rank and v.value.rank > Player.Rank then
+						Gui.DisplayPersonalNotification('Your Rank is too low.')
+					elseif v.value.prestige and v.value.prestige > Player.Prestige then
+						Gui.DisplayPersonalNotification('Your Prestige is too low.')
+					elseif v.value.kills and v.value.kills > Player.Kills then
 						Gui.DisplayPersonalNotification('You don\'t have enough player kills.')
 					else
 						TriggerServerEvent('lsv:updatePlayerSkin', v.key)

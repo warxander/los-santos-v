@@ -35,6 +35,21 @@ AddEventHandler('_chat:messageEntered', function(author, color, message)
 end)
 
 
+RegisterNetEvent('lsv:addCrewMessage')
+AddEventHandler('lsv:addCrewMessage', function(members, message)
+	local player = source
+	if not Scoreboard.IsPlayerOnline(player) then return end
+
+	local message = {
+		color = { 123, 196, 255 },
+		args = { '['..GetPlayerName(player)..']: '..message }
+	}
+
+	table.insert(members, player)
+	table.foreach(members, function(member) TriggerEvent('lsv:addMessage', player, member, message) end)
+end)
+
+
 AddEventHandler('lsv:addMessage', function(from, to, message)
 	local players = { }
 	if to ~= -1 then table.insert(players, tonumber(to))
@@ -54,7 +69,7 @@ AddEventHandler('lsv:playerDropped', function(player)
 end)
 
 
-RegisterCommand('tell', function(source, args)
+RegisterCommand('t', function(source, args)
 	if not args[1] or not args[2] then return end
 
 	local text = ''
@@ -67,6 +82,36 @@ RegisterCommand('tell', function(source, args)
 
 	TriggerClientEvent('chat:addMessage', source, message)
 	TriggerEvent('lsv:addMessage', source, args[1], message)
+end)
+
+
+RegisterCommand('c', function(source, args)
+	if not args[1] then return end
+
+	local player = source
+	if not Scoreboard.IsPlayerOnline(player) then return end
+
+	local text = ''
+	for i = 1, #args do text = text..args[i]..' ' end
+
+	TriggerClientEvent('lsv:addCrewMessage', player, text)
+end)
+
+
+RegisterCommand('unban', function(source, args)
+	if not args[1] then return end
+
+	if not Scoreboard.IsPlayerOnline(source) or not Scoreboard.IsPlayerModerator(source) or Scoreboard.GetPlayerModeratorLevel(source) ~= Settings.moderatorLevel.Administrator then return end
+
+	local playerId = args[1]
+	Db.UnbanPlayerById(playerId, function()
+		local message = {
+			color = systemMessageColor,
+			args = { playerId..' was unbanned.' },
+		}
+
+		TriggerClientEvent('chat:addMessage', source, message)
+	end)
 end)
 
 
@@ -223,24 +268,14 @@ RegisterCommand('vehicle', function(source)
 end)
 
 
-RegisterCommand('repair', function(source)
+RegisterCommand('id', function(source)
 	if not Scoreboard.IsPlayerOnline(source) then return end
+
+	local identifier = Scoreboard.GetPlayerIdentifier(source)
 
 	local message = {
 		color = systemMessageColor,
-		args = { 'Use Personal Vehicle menu (Y by default) to repair your Personal Vehicle.' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
-
-RegisterCommand('crew', function(source)
-	if not Scoreboard.IsPlayerOnline(source) then return end
-
-	local message = {
-		color = systemMessageColor,
-		args = { 'Use Interaction menu (M by default) to manage your Crew.' },
+		args = { 'Your id is '..identifier },
 	}
 
 	TriggerClientEvent('chat:addMessage', source, message)

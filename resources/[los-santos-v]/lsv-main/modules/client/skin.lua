@@ -26,6 +26,7 @@ function Skin.ChangePlayerSkin(id)
 	end
 
 	Player.GiveWeapons(weapons)
+	SetPedDropsWeaponsWhenDead(PlayerPedId(), false)
 
 	SetModelAsNoLongerNeeded(model)
 end

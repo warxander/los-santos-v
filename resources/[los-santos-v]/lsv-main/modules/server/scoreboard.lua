@@ -10,6 +10,9 @@ local function sortScoreboard(l, r)
 	if l.patreonTier > r.patreonTier then return true end
 	if l.patreonTier < r.patreonTier then return false end
 
+	if l.prestige > r.prestige then return true end
+	if l.prestige < r.prestige then return false end
+
 	if l.rank > r.rank then return true end
 	if l.rank < r.rank then return false end
 
@@ -66,6 +69,7 @@ function Scoreboard.AddPlayer(player, playerStats)
 			killstreak = 0,
 			experience = playerStats.Experience,
 			rank = playerStats.Rank,
+			prestige = playerStats.Prestige,
 		}
 
 		updateScoreboard()
@@ -123,6 +127,10 @@ end
 
 function Scoreboard.GetPlayerRank(player)
 	return scoreboard[player].rank
+end
+
+function Scoreboard.GetPlayerPrestige(player)
+	return scoreboard[player].prestige
 end
 
 

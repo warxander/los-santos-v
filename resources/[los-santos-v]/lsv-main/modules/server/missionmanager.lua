@@ -44,7 +44,11 @@ AddEventHandler('lsv:missionFinished', function(success)
 	if not players[player] then return end
 	TriggerClientEvent('lsv:missionFinished', -1, player, players[player])
 	players[player] = nil
-	if success then Crate.TrySpawn(player) end
+	if success then Crate.TrySpawn(player)
+	elseif success ~= nil then
+		Db.UpdateCash(player, Settings.mission.failedRewards.cash)
+		Db.UpdateExperience(player, Settings.mission.failedRewards.exp)
+	end
 end)
 
 

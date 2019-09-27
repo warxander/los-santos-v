@@ -6,7 +6,7 @@ local banDurations = { 1, 3, 7 }
 local banReason = nil
 
 local function setSpectatorModeEnabled(enabled)
-	local targetPed = GetPlayerPed(GetPlayerFromServerId(target))
+	local targetPed = enabled and GetPlayerPed(GetPlayerFromServerId(target)) or PlayerPedId()
 	local x, y, z = table.unpack(GetEntityCoords(targetPed, false))
 
 	RequestCollisionAtCoord(x, y, z)

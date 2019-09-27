@@ -7,7 +7,8 @@ local transaction = RemoteTransaction.New()
 
 AddEventHandler('lsv:init', function()
 	table.iforeach(Settings.travel.places, function(place)
-		Map.CreatePlaceBlip(Blip.FastTravel(), place.inPosition.x, place.inPosition.y, place.inPosition.z, 'Fast Travel', Color.BlipYellow())
+		local blip = Map.CreatePlaceBlip(Blip.FastTravel(), place.inPosition.x, place.inPosition.y, place.inPosition.z, 'Fast Travel')
+		SetBlipScale(blip, 1.2)
 	end)
 
 	WarMenu.CreateMenu('travel', 'Fast Travel')

@@ -1,8 +1,9 @@
 Player = { }
 
+Player.Loaded = false
+Player.Loading = false
 
 Player.Frozen = false
-Player.Loaded = false
 Player.Kills = 0
 Player.Skin = nil
 Player.Moderator = nil
@@ -18,6 +19,7 @@ Player.PatreonTier = nil
 Player.Cash = 0
 Player.Experience = 0
 Player.Rank = 1
+Player.Prestige = 0
 
 Player.CrewMembers = { }
 
@@ -42,6 +44,7 @@ function Player.Init(playerData)
 
 	Player.Experience = playerData.Experience
 	Player.Rank = playerData.Rank
+	Player.Prestige = playerData.Prestige
 
 	setSkillStat(playerData.SkillStat)
 
@@ -50,8 +53,6 @@ function Player.Init(playerData)
 	Skin.ChangePlayerSkin(playerData.SkinModel, true)
 
 	Player.GiveWeapons(playerData.Weapons)
-
-	Player.Vehicle = playerData.Vehicle
 end
 
 
@@ -195,12 +196,20 @@ end
 
 function Player.ExplodePersonalVehicle()
 	if not Player.VehicleHandle then return end
-	if not NetworkRequestControlOfEntity(Player.VehicleHandle) then
-		Gui.DisplayPersonalNotification('Unable to get control of Personal Vehicle.')
-	else
-		NetworkExplodeVehicle(Player.VehicleHandle, true, true)
-		SetEntityAsNoLongerNeeded(Player.VehicleHandle)
+
+	local explodeTimer = Timer.New()
+
+	while not NetworkRequestControlOfEntity(Player.VehicleHandle) do
+		Citizen.Wait(0)
+		if explodeTimer:Elapsed() >= 1000 then
+			Gui.DisplayPersonalNotification('Unable to get control of Personal Vehicle.')
+			return
+		end
 	end
+
+	NetworkExplodeVehicle(Player.VehicleHandle, true, true)
+	SetEntityAsMissionEntity(Player.VehicleHandle, true, true)
+	SetEntityAsNoLongerNeeded(Player.VehicleHandle)
 end
 
 

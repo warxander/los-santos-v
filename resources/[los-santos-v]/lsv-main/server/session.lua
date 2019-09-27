@@ -4,12 +4,21 @@ local function initPlayer(player, playerStats, isRegistered)
 	if not playerStats.Weapons then playerStats.Weapons = Settings.defaultPlayerWeapons
 	else playerStats.Weapons = json.decode(playerStats.Weapons) end
 
-	if playerStats.Vehicle then playerStats.Vehicle = json.decode(playerStats.Vehicle) end
-
 	playerStats.Rank = Settings.calculateRank(playerStats.Experience)
 	playerStats.SkillStat = Settings.calculateSkillStat(playerStats.Rank)
 
 	if not playerStats.PatreonTier then playerStats.PatreonTier = 0 end
+
+	local time = os.time()
+	Db.UpdateLoginTime(player, time, function()
+		if playerStats.PatreonTier ~= 0 then
+			if playerStats.LoginTime and time - playerStats.LoginTime >= Settings.patreonDailyReward.time then
+				Db.UpdateCash(player, Settings.patreonDailyReward.cash)
+				Db.UpdateExperience(player, Settings.patreonDailyReward.exp)
+				TriggerClientEvent('lsv:patreonDailyRewarded', player)
+			end
+		end
+	end)
 
 	Scoreboard.AddPlayer(player, playerStats)
 
@@ -47,12 +56,13 @@ RegisterNetEvent('lsv:loadPlayer')
 AddEventHandler('lsv:loadPlayer', function()
 	local player = source
 	local playerName = GetPlayerName(player)
+	local identifier = Scoreboard.GetPlayerIdentifier(player)
 
 	Db.FindPlayer(player, function(data)
 		if #data == 0 then
 			Db.RegisterPlayer(player, function(data)
 				initPlayer(player, data[1], true)
-				logger:Info('Register { '..playerName..', '..player..' }')
+				logger:Info('Register { '..playerName..', '..player..', '..identifier..' }')
 			end)
 		else
 			if data[1].Banned then
@@ -70,7 +80,7 @@ AddEventHandler('lsv:loadPlayer', function()
 			end
 
 			initPlayer(player, data[1], false)
-			logger:Info('Loaded { '..playerName..', '..player..' }')
+			logger:Info('Loaded { '..playerName..', '..player..', '..identifier..' }')
 		end
 	end)
 end)
@@ -100,4 +110,20 @@ AddEventHandler('lsv:kickAFKPlayer', function()
 	logger:Info('Drop AFK player { '..player..' }')
 
 	DropPlayer(player, 'You were AFK for more than '..math.ceil(Settings.afkTimeout / 60)..' minutes.')
+end)
+
+
+RegisterNetEvent('lsv:getPrestige')
+AddEventHandler('lsv:getPrestige', function()
+	local player = source
+	if not Scoreboard.IsPlayerOnline(player) or Scoreboard.GetPlayerRank(player) < Settings.minPrestigeRank then return end
+
+	local prestige = Scoreboard.GetPlayerPrestige(player)
+	if prestige >= Settings.maxPrestige then return end
+
+	prestige = prestige + 1
+	Db.UpdatePrestige(player, function()
+		logger:Info('Prestige { '..player..', '..prestige..' }')
+		DropPlayer(player, 'Congratulations, you have earned Prestige '..prestige..'!\nPlease, re-login to the server and sorry for inconvenience.')
+	end)
 end)

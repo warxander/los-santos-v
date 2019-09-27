@@ -7,14 +7,20 @@ end
 
 
 AddEventHandler('lsv:init', function()
-	TriggerEvent('chat:addSuggestion', '/say', 'Send message to General channel', {
-		{ name = 'message' },
-	})
-
-	TriggerEvent('chat:addSuggestion', '/tell', 'Send private message to player', {
+	TriggerEvent('chat:addSuggestion', '/t', 'Send private message to player', {
 		{ name = 'playerid' },
 		{ name = 'message' },
 	})
+
+	TriggerEvent('chat:addSuggestion', '/c', 'Send message to your Crew', {
+		{ name = 'message' },
+	})
+
+	if Player.Moderator and Player.Moderator == Settings.moderatorLevel.Administrator then
+		TriggerEvent('chat:addSuggestion', '/unban', 'Unban player', {
+			{ name = 'playerid' },
+		})
+	end
 
 	RegisterEmoteSuggestion('/agree')
 	RegisterEmoteSuggestion('/amaze')
@@ -85,9 +91,15 @@ AddEventHandler('lsv:init', function()
 	RegisterEmoteSuggestion('/cash', true) -- Not an emote at all
 	RegisterEmoteSuggestion('/quit', true) -- Not an emote at all
 	RegisterEmoteSuggestion('/vehicle', true) -- Not an emote at all
-	RegisterEmoteSuggestion('/repair', true) -- Not an emote at all
 
-	RegisterEmoteSuggestion('/crew', true) -- Not an emote at all
+	RegisterEmoteSuggestion('/id', true) -- Not an emote at all
+end)
+
+
+RegisterNetEvent('lsv:addCrewMessage')
+AddEventHandler('lsv:addCrewMessage', function(message)
+	if #Player.CrewMembers == 0 then return end
+	TriggerServerEvent('lsv:addCrewMessage', Player.CrewMembers, message)
 end)
 
 

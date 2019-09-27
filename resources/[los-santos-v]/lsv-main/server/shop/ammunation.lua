@@ -39,6 +39,7 @@ AddEventHandler('lsv:purchaseWeapon', function(id)
 
 	local weapon = Weapon.GetWeapon(id)
 	if weapon.rank and weapon.rank > Scoreboard.GetPlayerRank(player) then return end
+	if weapon.prestige and weapon.prestige > Scoreboard.GetPlayerPrestige(player) then return end
 
 	if Scoreboard.GetPlayerCash(player) >= weapon.cash then
 		Db.UpdateCash(player, -weapon.cash, function()
