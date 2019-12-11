@@ -3,7 +3,7 @@ Stat.__index = Stat
 
 
 local function calculateStat(rank, range)
-	return math.min(100, range.min + math.floor(rank * (range.max - range.min) / 100))
+	return math.min(100, range.min + math.floor(math.min(100, rank) * (range.max - range.min) / 100))
 end
 
 
