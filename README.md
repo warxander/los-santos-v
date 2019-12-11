@@ -10,5 +10,5 @@ FiveM Freeroam Deathmatch game mode
 5. Configure `server.cfg`
 
 ## Links
-* [Discord](https://discord.gg/VY2hJa9)
+* [Discord](https://discord.gg/32NhU6B)
 * [FiveM Forum Thread](https://forum.fivem.net/t/release-los-santos-v-deathmatch-now-fully-open-source)
