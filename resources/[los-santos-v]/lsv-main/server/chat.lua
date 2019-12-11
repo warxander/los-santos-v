@@ -28,10 +28,10 @@ AddEventHandler('_chat:messageEntered', function(author, color, message)
 
 	local message = {
 		color = { 255, 255, 255 },
-		args = { '['..GetPlayerName(author)..']: '..message }
+		args = { '['..author..']: '..message }
 	}
 
-	TriggerEvent('lsv:addMessage', author, -1, message)
+	TriggerEvent('lsv:addMessage', source, -1, message)
 end)
 
 
