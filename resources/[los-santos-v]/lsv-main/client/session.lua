@@ -1,6 +1,3 @@
-local loadingTransaction = RemoteTransaction.New()
-
-
 AddEventHandler('playerSpawned', function()
 	local playerPed = PlayerPedId()
 
@@ -12,62 +9,64 @@ AddEventHandler('playerSpawned', function()
 		GiveWeaponToPed(playerPed, GetHashKey('GADGET_PARACHUTE'), 1, false, false)
 	end
 
-	if not Player.Loaded and not Player.Loading then
-		Player.Loading = true
-		TriggerServerEvent('lsv:loadPlayer')
-		loadingTransaction:WaitForEnding('Loading profile')
-	else Player.SetFreeze(false) end
+	while not HasCollisionLoadedAroundEntity(playerPed) do
+		Citizen.Wait(0)
+	end
+	PlaceObjectOnGroundProperly(playerPed)
+
+	if Player.Loaded then
+		Player.SetFreeze(false)
+	end
 end)
 
 
 Citizen.CreateThread(function()
+	while not NetworkIsPlayerActive(PlayerId()) do
+		Citizen.Wait(0)
+	end
+
 	NetworkSetVoiceActive(Settings.enableVoiceChat)
 
 	SetManualShutdownLoadingScreenNui(true)
 	StartAudioScene('MP_LEADERBOARD_SCENE')
 
-	while true do
+	SwitchOutPlayer(PlayerPedId(), 32, 1)
+	while GetPlayerSwitchState() ~= 5 do
+		HideHudAndRadarThisFrame()
 		Citizen.Wait(0)
-
-		if PlayerPedId() ~= -1 then
-			SwitchOutPlayer(PlayerPedId(), 0, 1)
-			return
-		end
 	end
+
+	DoScreenFadeOut(0)
+	while not IsScreenFadedOut() do
+		Citizen.Wait(0)
+	end
+
+	TriggerServerEvent('lsv:loadPlayer')
+	Prompt.ShowAsync('Loading profile')
 end)
 
 
 RegisterNetEvent('lsv:playerLoaded')
 AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
-	math.randomseed(GetNetworkTime())
-	SetRandomSeed(GetNetworkTime())
+	local seed = tonumber(string.match(playerData.Identifier, '[0-9]+'))
 
-	while GetPlayerSwitchState() ~= 5 do
-		HideHudAndRadarThisFrame()
-		SetCloudHatOpacity(0.01)
-		Citizen.Wait(0)
-	end
+	math.randomseed(seed)
+	math.random(); math.random(); math.random();
 
-	if not GetIsLoadingScreenActive() then
-		DoScreenFadeOut(0)
-		while not IsScreenFadedOut() do Citizen.Wait(0) end
-	end
+	SetRandomSeed(math.floor(math.random()))
 
 	ShutdownLoadingScreen()
-	ShutdownLoadingScreenNui()
-
-	DoScreenFadeIn(500)
-	while not IsScreenFadedIn() do Citizen.Wait(0) end
 
 	StopAudioScene('MP_LEADERBOARD_SCENE')
 
 	Player.Init(playerData)
-	loadingTransaction:Finish()
+	Prompt.Hide()
+
+	spawnPlayer(playerData.SpawnPoint) -- TODO Module ?
 
 	SwitchInPlayer(PlayerPedId())
 	while GetPlayerSwitchState() ~= 12 do
 		HideHudAndRadarThisFrame()
-		SetCloudHatOpacity(0.01)
 		Citizen.Wait(0)
 	end
 

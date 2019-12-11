@@ -7,8 +7,8 @@ resource_type 'gametype' { name = 'Los Santos V' }
 client_script '@warmenu/warmenu.lua'
 
 
--- MySQL Async library
-server_script '@mysql-async/lib/MySQL.lua'
+-- vSql library
+server_script '@vSql/vSql.lua'
 
 
 -- Server modules
@@ -21,9 +21,11 @@ server_scripts {
 	'modules/logger.lua',
 	'modules/weapon.lua',
 	'modules/blip.lua',
+	'modules/rank.lua',
 	'modules/settings.lua',
 
 	'modules/server/db.lua',
+	'modules/server/stat.lua',
 	'modules/server/discord.lua',
 	'modules/server/crate.lua',
 	'modules/server/scoreboard.lua',
@@ -37,6 +39,8 @@ server_scripts {
 -- Server scripts
 server_scripts {
 	'server/main.lua',
+	'server/hud.lua',
+	'server/weather.lua',
 	'server/baseevents.lua',
 	'server/session.lua',
 	'server/guard.lua',
@@ -49,7 +53,7 @@ server_scripts {
 
 	'server/event/castle.lua',
 	'server/event/property.lua',
-	'server/event/search.lua',
+	'server/event/beast.lua',
 	'server/event/stockpiling.lua',
 	'server/event/sharpshooter.lua',
 
@@ -75,11 +79,12 @@ client_scripts {
 	'modules/utils/timer.lua',
 
 	'modules/logger.lua',
-	'modules/blip.lua',
-	'modules/settings.lua',
 	'modules/weapon.lua',
+	'modules/blip.lua',
+	'modules/rank.lua',
+	'modules/settings.lua',
 
-	'modules/client/transaction.lua',
+	'modules/client/prompt.lua',
 
 	'modules/client/gui/safezone.lua',
 	'modules/client/gui/gui.lua',
@@ -118,7 +123,7 @@ client_scripts {
 
 	'client/event/castle.lua',
 	'client/event/property.lua',
-	'client/event/search.lua',
+	'client/event/beast.lua',
 	'client/event/stockpiling.lua',
 	'client/event/sharpshooter.lua',
 

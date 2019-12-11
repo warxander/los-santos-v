@@ -152,10 +152,10 @@ end
 
 function Scoreboard.UpdateExperience(player, experience)
 	scoreboard[player].experience = scoreboard[player].experience + experience
-	if Settings.calculateRank(scoreboard[player].experience) > scoreboard[player].rank then
+	if Rank.CalculateRank(scoreboard[player].experience) > scoreboard[player].rank then
 		local rank = scoreboard[player].rank + 1
 		scoreboard[player].rank = rank
-		TriggerClientEvent('lsv:playerRankedUp', player, rank, Settings.calculateSkillStat(rank))
+		TriggerClientEvent('lsv:playerRankedUp', player, rank, Stat.CalculateStats(rank))
 		Crate.TrySpawn(player)
 		updateScoreboard()
 	end
@@ -166,6 +166,7 @@ function Scoreboard.UpdateKills(player)
 	if scoreboard[player] then
 		scoreboard[player].kills = scoreboard[player].kills + 1
 		scoreboard[player].kdRatio = calculateKdRatio(scoreboard[player].kills, scoreboard[player].deaths)
+		scoreboard[player].killstreak = scoreboard[player].killstreak + 1
 
 		updateScoreboard()
 	end
@@ -176,21 +177,8 @@ function Scoreboard.UpdateDeaths(player)
 	if scoreboard[player] then
 		scoreboard[player].deaths = scoreboard[player].deaths + 1
 		scoreboard[player].kdRatio = calculateKdRatio(scoreboard[player].kills, scoreboard[player].deaths)
+		scoreboard[player].killstreak = 0
 
 		updateScoreboard()
-	end
-end
-
-
-function Scoreboard.UpdateKillstreak(player)
-	if scoreboard[player] then
-		scoreboard[player].killstreak = scoreboard[player].killstreak + 1
-	end
-end
-
-
-function Scoreboard.ResetKillstreak(player)
-	if scoreboard[player] then
-		scoreboard[player].killstreak = 0
 	end
 end

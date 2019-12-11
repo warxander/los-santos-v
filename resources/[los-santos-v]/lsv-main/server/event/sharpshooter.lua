@@ -1,4 +1,4 @@
-local logger = Logger:CreateNamedLogger('SharpShooter')
+local logger = Logger.New('SharpShooter')
 
 local sharpShooterData = nil
 

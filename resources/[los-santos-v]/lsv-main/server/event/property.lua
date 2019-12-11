@@ -1,4 +1,4 @@
-local logger = Logger:CreateNamedLogger('HotProperty')
+local logger = Logger.New('HotProperty')
 
 local propertyData = nil
 
@@ -18,8 +18,12 @@ AddEventHandler('lsv:startHotProperty', function()
 	propertyData = { }
 	propertyData.players = { }
 	propertyData.currentPlayer = nil
-	propertyData.placeIndex = math.random(#Settings.castle.places)
+	propertyData.placeIndex = math.random(#Settings.property.places)
 	propertyData.eventStartTime = Timer.New()
+
+	local place = Settings.property.places[propertyData.placeIndex]
+	propertyData.initialPosition = { place.x, place.y, place.z }
+	propertyData.position = propertyData.initialPosition
 
 	logger:Info('Start { '..propertyData.placeIndex..' }')
 
@@ -68,6 +72,7 @@ AddEventHandler('lsv:hotPropertyCollected', function()
 	local playerIndex = getPlayerIndexById(player)
 	if not playerIndex then table.insert(propertyData.players, { id = player, totalTime = 0 }) end
 	propertyData.currentPlayer = player
+	propertyData.position = nil
 	logger:Info('Collected { '..player..' }')
 	table.sort(propertyData.players, sortPlayersByTotalTime)
 	TriggerClientEvent('lsv:updateHotPropertyPlayers', -1, propertyData.players)
@@ -76,12 +81,13 @@ end)
 
 
 RegisterNetEvent('lsv:hotPropertyDropped')
-AddEventHandler('lsv:hotPropertyDropped', function(player)
-	if not player then player = source end
+AddEventHandler('lsv:hotPropertyDropped', function(position)
+	local player = source
 	if not propertyData or not propertyData.currentPlayer or propertyData.currentPlayer ~= player then return end
 	logger:Info('Dropped { '..player..' }')
 	propertyData.currentPlayer = nil
-	TriggerClientEvent('lsv:hotPropertyDropped', -1, player)
+	propertyData.position = position
+	TriggerClientEvent('lsv:hotPropertyDropped', -1, player, position)
 end)
 
 
@@ -98,18 +104,23 @@ AddEventHandler('lsv:hotPropertyTimeUpdated', function()
 end)
 
 
-AddEventHandler('baseevents:onPlayerDied', function()
-	local player = source
-	TriggerEvent('lsv:hotPropertyDropped', player)
-end)
-
-
-AddEventHandler('baseevents:onPlayerKilled', function()
+AddEventHandler('baseevents:onPlayerDied', function(_, position)
 	local player = source
 	if not propertyData or not propertyData.currentPlayer or propertyData.currentPlayer ~= player then return end
 	logger:Info('Dropped { '..player..' }')
 	propertyData.currentPlayer = nil
-	TriggerClientEvent('lsv:hotPropertyDropped', -1, player)
+	propertyData.position = position
+	TriggerClientEvent('lsv:hotPropertyDropped', -1, player, position)
+end)
+
+
+AddEventHandler('baseevents:onPlayerKilled', function(_, data)
+	local player = source
+	if not propertyData or not propertyData.currentPlayer or propertyData.currentPlayer ~= player then return end
+	logger:Info('Dropped { '..player..' }')
+	propertyData.currentPlayer = nil
+	propertyData.position = data.killerpos
+	TriggerClientEvent('lsv:hotPropertyDropped', -1, player, data.killerpos)
 end)
 
 
@@ -132,6 +143,7 @@ AddEventHandler('lsv:playerDropped', function(player)
 	if propertyData.currentPlayer == player then
 		logger:Info('Dropped { '..player..' }')
 		propertyData.currentPlayer = nil
-		TriggerClientEvent('lsv:hotPropertyDropped', -1, player)
+		propertyData.position = propertyData.initialPosition
+		TriggerClientEvent('lsv:hotPropertyDropped', -1, player, propertyData.position)
 	end
 end)

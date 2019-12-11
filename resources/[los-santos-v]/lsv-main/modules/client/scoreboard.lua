@@ -10,16 +10,25 @@ function Scoreboard.GetPlayerPatreonTier(playerId)
 	return player and player.patreonTier or nil
 end
 
+
 function Scoreboard.GetPlayerRank(playerId)
 	local serverId = GetPlayerServerId(playerId)
 	local player = table.find_if(scoreboard, function(player) return player.id == serverId end)
 	return player and player.rank or nil
 end
 
+
 function Scoreboard.GetPlayerPrestige(playerId)
 	local serverId = GetPlayerServerId(playerId)
 	local player = table.find_if(scoreboard, function(player) return player.id == serverId end)
 	return player and player.prestige or nil
+end
+
+
+function Scoreboard.GetPlayerKillstreak(playerId)
+	local serverId = GetPlayerServerId(playerId)
+	local player = table.find_if(scoreboard, function(player) return player.id == serverId end)
+	return player and player.killstreak or nil
 end
 
 
@@ -101,8 +110,10 @@ end)
 
 
 AddEventHandler('lsv:init', function()
-    Streaming.RequestStreamedTextureDict('mpleaderboard')
-    Streaming.RequestStreamedTextureDict('mprankbadge')
+	AddTextEntry('MONEY_ENTRY', '$~1~')
+
+	Streaming.RequestStreamedTextureDict('mpleaderboard')
+	Streaming.RequestStreamedTextureDict('mprankbadge')
 end)
 
 
@@ -167,13 +178,13 @@ function Scoreboard.DisplayThisFrame()
 
 		-- Draw player name
 		local isPatron = player.patreonTier ~= 0
-		local playerColor = Color.GetHudFromBlipColor(Color.BlipDarkBlue())
+		local playerColor = Color.GetHudFromBlipColor(Color.BLIP_DARK_BLUE)
 		if Player.IsCrewMember(player.id) then
-			playerColor = Color.GetHudFromBlipColor(Color.BlipLightBlue())
+			playerColor = Color.GetHudFromBlipColor(Color.BLIP_LIGHT_BLUE)
 		elseif isPatron then
-			playerColor = Color.GetHudFromBlipColor(Color.BlipOrange())
+			playerColor = Color.GetHudFromBlipColor(Color.BLIP_ORANGE)
 		elseif player.id == Player.ServerId() then
-			playerColor = Color.GetHudFromBlipColor(Color.BlipBlue())
+			playerColor = Color.GetHudFromBlipColor(Color.BLIP_BLUE)
 		end
 		local tablePositionColor = { ['r'] = playerColor.r, ['g'] = playerColor.g, ['b'] = playerColor.b, ['a'] = isPatron and 228 or 160 }
 
@@ -203,15 +214,15 @@ function Scoreboard.DisplayThisFrame()
 		Gui.DrawNumeric(player.rank, { ['x'] = rankPosition.x, ['y'] = tableText.y + tableTextVerticalMargin / 1.25 })
 
 		-- Draw player status
-		local playerStatusColor = Color.GetHudFromBlipColor(Color.BlipWhite())
-		if player.moderator then playerStatusColor = Color.GetHudFromBlipColor(Color.BlipPurple())
-		elseif isPatron then playerStatusColor = Color.GetHudFromBlipColor(Color.BlipOrange()) end
+		local playerStatusColor = Color.GetHudFromBlipColor(Color.BLIP_WHITE)
+		if player.moderator then playerStatusColor = Color.GetHudFromBlipColor(Color.BLIP_PURPLE)
+		elseif isPatron then playerStatusColor = Color.GetHudFromBlipColor(Color.BLIP_ORANGE) end
 		Gui.DrawRect(playerStatusPosition, playerStatusWidth, tableHeight, playerStatusColor)
 
 		-- Draw cash
 		Gui.DrawRect(cashPosition, tableCashWidth, tableHeight, tableCashColor)
 		Gui.SetTextParams(0, tableCashTextColor, cashScale, false, false, true)
-		Gui.DrawNumericTextEntry('MONEY_ENTRY', { ['x'] = tableCashHeader.x, ['y'] = tableText.y + tableTextVerticalMargin }, player.cash)
+		Gui.DrawTextEntry('MONEY_ENTRY', { ['x'] = tableCashHeader.x, ['y'] = tableText.y + tableTextVerticalMargin }, player.cash)
 
 		-- Draw kdRatio
 		Gui.DrawRect(kdRatioPosition, tableKdRatioWidth, tableHeight, tableKdRatioColor)

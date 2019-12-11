@@ -1,7 +1,7 @@
 Discord = { }
 
 
-local logger = Logger:CreateNamedLogger('Discord')
+local logger = Logger.New('Discord')
 
 local discordUrl = nil
 Citizen.CreateThread(function()

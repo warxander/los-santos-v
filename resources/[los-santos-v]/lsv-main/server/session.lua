@@ -1,13 +1,27 @@
-local logger = Logger:CreateNamedLogger('Session')
+local logger = Logger.New('Session')
+
+local lastSpawnPointIndex = nil
 
 local function initPlayer(player, playerStats, isRegistered)
 	if not playerStats.Weapons then playerStats.Weapons = Settings.defaultPlayerWeapons
 	else playerStats.Weapons = json.decode(playerStats.Weapons) end
 
-	playerStats.Rank = Settings.calculateRank(playerStats.Experience)
-	playerStats.SkillStat = Settings.calculateSkillStat(playerStats.Rank)
+	playerStats.Rank = Rank.CalculateRank(playerStats.Experience)
+	playerStats.SkillStats = Stat.CalculateStats(playerStats.Rank)
 
 	if not playerStats.PatreonTier then playerStats.PatreonTier = 0 end
+
+	playerStats.Identifier = Scoreboard.GetPlayerIdentifier(player)
+
+	local spawnPoints = Settings.spawn.points
+	if lastSpawnPointIndex then
+		spawnPoints = table.filter(spawnPoints, function(_, i) return i ~= lastSpawnPointIndex end)
+	end
+
+	lastSpawnPointIndex = math.random(#spawnPoints)
+	playerStats.SpawnPoint = spawnPoints[lastSpawnPointIndex]
+
+	Scoreboard.AddPlayer(player, playerStats)
 
 	local time = os.time()
 	Db.UpdateLoginTime(player, time, function()
@@ -20,8 +34,6 @@ local function initPlayer(player, playerStats, isRegistered)
 		end
 	end)
 
-	Scoreboard.AddPlayer(player, playerStats)
-
 	TriggerClientEvent('lsv:playerLoaded', player, playerStats, isRegistered)
 	TriggerClientEvent('lsv:playerConnected', -1, player)
 
@@ -29,12 +41,46 @@ local function initPlayer(player, playerStats, isRegistered)
 end
 
 
-AddEventHandler('playerConnecting', function(playerName, setKickReason)
+AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
+	deferrals.defer()
+
 	if string.len(playerName) > Settings.maxPlayerNameLength then
-		setKickReason('Your name is too long (limit of '..Settings.maxPlayerNameLength..' characters)')
-		CancelEvent()
+		deferrals.done('Your name is too long (limit of '..Settings.maxPlayerNameLength..' characters)')
 		return
 	end
+
+	local player = source
+	local license = '\n\nCopy and provide your identifier for ban appeal in Discord:\n'..Scoreboard.GetPlayerIdentifier(player)
+
+	if Scoreboard.IsPlayerOnline(player) then
+		Db.BanPlayer(player, function()
+			local reason = 'Abusing Multiple Accounts'
+			Discord.ReportAutoBanPlayer(player, reason)
+			deferrals.done('You\'re permanently banned from this server for '..reason..'.'..license)
+		end)
+		return
+	end
+
+	deferrals.update('Checking player profile...')
+
+	Db.GetBanStatus(player, function(data)
+		if #data == 0 or not data[1].Banned then
+			deferrals.done()
+			return
+		end
+
+		if data[1].BanExpiresDate then
+			if os.time() <= data[1].BanExpiresDate then
+				deferrals.done('You\'re temporarily banned from this server.\nBan expires in '..os.date('%Y-%m-%d %X '..Settings.serverTimeZone, data[1].BanExpiresDate)..license)
+			else
+				Db.UnbanPlayer(player, function()
+					deferrals.done()
+				end)
+			end
+		else
+			deferrals.done('You\'re permanently banned from this server.'..license)
+		end
+	end)
 end)
 
 
@@ -65,20 +111,6 @@ AddEventHandler('lsv:loadPlayer', function()
 				logger:Info('Register { '..playerName..', '..player..', '..identifier..' }')
 			end)
 		else
-			if data[1].Banned then
-				if data[1].BanExpiresDate then
-					if os.time() <= data[1].BanExpiresDate then
-						DropPlayer(player, 'You\'re temporarily banned from this server.\nBan expires in '..os.date('%Y-%m-%d %X '..Settings.serverTimeZone, data[1].BanExpiresDate))
-						return
-					else
-						Db.UnbanPlayer(player)
-					end
-				else
-					DropPlayer(player, 'You\'re permanently banned from this server.')
-					return
-				end
-			end
-
 			initPlayer(player, data[1], false)
 			logger:Info('Loaded { '..playerName..', '..player..', '..identifier..' }')
 		end

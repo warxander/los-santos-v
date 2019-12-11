@@ -26,7 +26,6 @@ AddEventHandler('baseevents:onPlayerDied', function()
 	local player = source
 	Db.UpdateDeaths(player, function()
 		if Scoreboard.IsPlayerOnline(player) then
-			Scoreboard.ResetKillstreak(player)
 			TriggerClientEvent('lsv:onPlayerDied', -1, player, true)
 		end
 	end)
@@ -56,8 +55,6 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer, data)
 				killerCash = killerCash + math.min(Settings.maxCashPerKillstreak, Settings.cashPerKill + (Settings.cashPerKillstreak * Scoreboard.GetPlayerKillstreak(victim)))
 				killerExp = killerExp + math.min(Settings.maxExpPerKillstreak, Settings.expPerKill + (Settings.expPerKillstreak * Scoreboard.GetPlayerKillstreak(victim)))
 
-				Scoreboard.UpdateKillstreak(killer)
-
 				Db.UpdateCash(killer, killerCash, function()
 					local deathMessage = nil
 					if data.killerheadshot then deathMessage = 'headshot'
@@ -71,12 +68,7 @@ AddEventHandler('baseevents:onPlayerKilled', function(killer, data)
 	end
 
 	Db.UpdateDeaths(victim, function()
-		if Scoreboard.IsPlayerOnline(victim) then
-			Scoreboard.ResetKillstreak(victim)
-		end
-
 		if killer ~= -1 then return end
-
 		TriggerClientEvent('lsv:onPlayerDied', -1, victim)
 	end)
 end)

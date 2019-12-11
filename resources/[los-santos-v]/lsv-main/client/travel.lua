@@ -2,18 +2,17 @@ local function getTravelPrice()
 	return '$'..tostring(Player.Rank * Settings.travel.cashPerRank)
 end
 
-local transaction = RemoteTransaction.New()
-
 
 AddEventHandler('lsv:init', function()
 	table.iforeach(Settings.travel.places, function(place)
-		local blip = Map.CreatePlaceBlip(Blip.FastTravel(), place.inPosition.x, place.inPosition.y, place.inPosition.z, 'Fast Travel')
+		local blip = Map.CreatePlaceBlip(Blip.FAST_TRAVEL, place.inPosition.x, place.inPosition.y, place.inPosition.z, place.name)
 		SetBlipScale(blip, 1.2)
+		SetBlipCategory(blip, 1)
 	end)
 
 	WarMenu.CreateMenu('travel', 'Fast Travel')
 	WarMenu.SetSubTitle('travel', 'Select destination')
-	WarMenu.SetTitleBackgroundColor('travel', Color.GetHudFromBlipColor(Color.BlipYellow()).r, Color.GetHudFromBlipColor(Color.BlipYellow()).g, Color.GetHudFromBlipColor(Color.BlipYellow()).b, Color.GetHudFromBlipColor(Color.BlipYellow()).a)
+	WarMenu.SetTitleBackgroundColor('travel', Color.GetHudFromBlipColor(Color.BLIP_YELLOW).r, Color.GetHudFromBlipColor(Color.BLIP_YELLOW).g, Color.GetHudFromBlipColor(Color.BLIP_YELLOW).b, Color.GetHudFromBlipColor(Color.BLIP_YELLOW).a)
 	WarMenu.SetMenuButtonPressedSound('travel', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	local currentTravelIndex = nil
@@ -29,7 +28,7 @@ AddEventHandler('lsv:init', function()
 						Gui.DisplayPersonalNotification('You are already here.')
 					else
 						TriggerServerEvent('lsv:useFastTravel', travelIndex)
-						transaction:WaitForEnding()
+						Prompt.ShowAsync()
 					end
 				end
 			end)
@@ -53,7 +52,7 @@ AddEventHandler('lsv:init', function()
 					end
 				elseif WarMenu.IsMenuOpened('travel') and travelIndex == currentTravelIndex then
 					WarMenu.CloseMenu()
-					transaction:Finish()
+					Prompt.Hide()
 				end
 			end)
 		end
@@ -75,5 +74,5 @@ AddEventHandler('lsv:useFastTravel', function(travelIndex, success)
 		Player.SetFreeze(false)
 	else Gui.DisplayPersonalNotification('You don\'t have enough cash.') end
 
-	transaction:Finish()
+	Prompt.Hide()
 end)

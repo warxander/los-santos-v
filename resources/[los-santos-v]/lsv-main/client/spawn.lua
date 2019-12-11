@@ -2,10 +2,8 @@ DeathTimer = nil
 TimeToRespawn = Settings.spawn.deathTime
 
 local isSpawnInProcess = false
-local isFirstSpawn = true
 
-
-local function spawnPlayer()
+function spawnPlayer(spawnPoint)
 	if isSpawnInProcess then return end
 	isSpawnInProcess = true
 
@@ -14,9 +12,8 @@ local function spawnPlayer()
 		while not IsScreenFadedOut() do Citizen.Wait(0) end
 	end
 
-	local spawnPoint = nil
-	if isFirstSpawn then
-		spawnPoint = table.random(Settings.spawn.points)
+	if spawnPoint then
+		spawnPoint.z = spawnPoint.z - 1.0
 	else
 		local playerPosition = Player.Position()
 		local radius = Settings.spawn.radius.min
@@ -41,6 +38,21 @@ local function spawnPlayer()
 			local validCoords, coords = GetSafeCoordForPed(x, y, groundZ + 1., false, 16)
 
 			if validCoords then
+				for _, i in ipairs(GetActivePlayers()) do
+					if i ~= PlayerId() then
+						local ped = GetPlayerPed(i)
+						if DoesEntityExist(ped) then
+							local pedCoords = GetEntityCoords(ped)
+							if Vdist(coords.x, coords.y, coords.z, pedCoords.x, pedCoords.y, pedCoords.z) < Settings.spawn.radius.minDistanceToPlayer then
+								validCoords = false
+								break
+							end
+						end
+					end
+				end
+			end
+
+			if validCoords then
 				spawnPoint = { }
 				spawnPoint.x, spawnPoint.y, spawnPoint.z = coords.x, coords.y, coords.z
 			else
@@ -51,17 +63,16 @@ local function spawnPlayer()
 				end
 			end
 
+			if spawnPoint then break end
+
 			if startSpawnTimer:Elapsed() >= Settings.spawn.timeout then
 				spawnPoint = table.random(Settings.spawn.points)
 				Gui.DisplayPersonalNotification('Unable to find suitable place for spawning.')
 			end
-
-			if spawnPoint then break end
 		end
 	end
 
 	Player.SetFreeze(true)
-
 	local ped = PlayerPedId()
 
 	RequestCollisionAtCoord(spawnPoint.x, spawnPoint.y, spawnPoint.z)
@@ -72,9 +83,6 @@ local function spawnPlayer()
 	StopEntityFire(ped)
 	ClearPedBloodDamage(ped)
 	ClearPedWetness(ped)
-
-	while not HasCollisionLoadedAroundEntity(ped) do Citizen.Wait(0) end
-	PlaceObjectOnGroundProperly(ped)
 
 	if GetIsLoadingScreenActive() then ShutdownLoadingScreen() end
 
@@ -89,17 +97,14 @@ local function spawnPlayer()
 end
 
 
-Citizen.CreateThread(function()
+AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
 		if DoesEntityExist(PlayerPedId()) then
 			if NetworkIsPlayerActive(PlayerId()) then
-				if isFirstSpawn then
-					spawnPlayer()
-					isFirstSpawn = false
-				elseif not isSpawnInProcess then
-					if DeathTimer and GetTimeDifference(GetGameTimer(), DeathTimer) > TimeToRespawn or isFirstSpawn then
+				if not isSpawnInProcess then
+					if DeathTimer and GetTimeDifference(GetGameTimer(), DeathTimer) > TimeToRespawn then
 						spawnPlayer()
 					end
 				end

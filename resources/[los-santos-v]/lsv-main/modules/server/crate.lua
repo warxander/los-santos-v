@@ -2,7 +2,7 @@ Crate = { }
 Crate.__index = Crate
 
 
-local logger = Logger:CreateNamedLogger('Crate')
+local logger = Logger.New('Crate')
 
 local players = { }
 

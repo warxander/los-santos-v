@@ -12,7 +12,7 @@ AddEventHandler('lsv:startMarketManipulation', function()
 
 	table.foreach(Settings.marketManipulation.places, function(place)
 		local moneyPlace = { }
-		moneyPlace.blip = Map.CreatePlaceBlip(Blip.CrateDrop(), place.x, place.y, place.z, 'Money Case', Color.BlipGreen())
+		moneyPlace.blip = Map.CreatePlaceBlip(Blip.CRATE_DROP, place.x, place.y, place.z, 'Money Case', Color.BLIP_GREEN)
 		moneyPlace.pickup = CreatePickupRotate(pickupHash, place.x, place.y, place.z, 0., 0., 0., 512)
 		SetBlipAsShortRange(moneyPlace.blip, false)
 		SetBlipScale(moneyPlace.blip, 1.25)
@@ -29,8 +29,8 @@ AddEventHandler('lsv:startMarketManipulation', function()
 
 			if Player.IsActive() then
 				Gui.DisplayObjectiveText('Rob stores and banks.')
-				Gui.DrawTimerBar('MISSION TIME', Settings.marketManipulation.time - eventStartTime:Elapsed())
-				Gui.DrawBar('TOTAL ROBBERIES', totalRobberies..'/'..placesCount)
+				Gui.DrawTimerBar('MISSION TIME', Settings.marketManipulation.time - eventStartTime:Elapsed(), 1)
+				Gui.DrawBar('TOTAL ROBBERIES', totalRobberies..'/'..placesCount, 2)
 			end
 		end
 	end)

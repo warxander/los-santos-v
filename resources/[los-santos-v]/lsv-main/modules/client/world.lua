@@ -1,7 +1,7 @@
 World = { }
 
 World.HotPropertyPlayer = nil
-World.ExecutiveSearchPlayer = nil
+World.BeastPlayer = nil
 World.ChallengingPlayer = nil
 
 

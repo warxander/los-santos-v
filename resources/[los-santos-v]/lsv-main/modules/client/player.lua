@@ -1,7 +1,6 @@
 Player = { }
 
 Player.Loaded = false
-Player.Loading = false
 
 Player.Frozen = false
 Player.Kills = 0
@@ -25,11 +24,14 @@ Player.CrewMembers = { }
 
 local serverId = nil
 
-local function setSkillStat(stat)
-	StatSetInt(GetHashKey('MP0_LUNG_CAPACITY'), stat, true)
-	StatSetInt(GetHashKey('MP0_STAMINA'), stat, true)
-	StatSetInt(GetHashKey('MP0_STRENGTH'), stat, true)
-	StatSetInt(GetHashKey('MP0_SHOOTING_ABILITY'), stat, true)
+local function setSkillStats(stats)
+	StatSetInt(GetHashKey('MP0_STRENGTH'), stats.strength, true)
+	StatSetInt(GetHashKey('MP0_SHOOTING_ABILITY'), stats.shooting, true)
+	StatSetInt(GetHashKey('MP0_FLYING_ABILITY'), stats.flying, true)
+	StatSetInt(GetHashKey('MP0_WHEELIE_ABILITY'), stats.driving, true)
+	StatSetInt(GetHashKey('MP0_LUNG_CAPACITY'), stats.lung, true)
+	StatSetInt(GetHashKey('MP0_STEALTH_ABILITY'), stats.stealth, true)
+	StatSetInt(GetHashKey('MP0_STAMINA'), stats.stamina, true)
 end
 
 
@@ -46,7 +48,7 @@ function Player.Init(playerData)
 	Player.Rank = playerData.Rank
 	Player.Prestige = playerData.Prestige
 
-	setSkillStat(playerData.SkillStat)
+	setSkillStats(playerData.SkillStats)
 
 	SetPlayerMaxArmour(PlayerId(), Settings.maxArmour)
 
@@ -86,9 +88,8 @@ function Player.GetPlayerWeapons()
 	local ammoTypes = { }
 	local result = { }
 
-	table.foreach(Weapon.GetWeapons(), function(weapon, id)
+	table.foreach(Weapon, function(weapon, id)
 		local weaponHash = GetHashKey(id)
-
 		if HasPedGotWeapon(player, weaponHash, false) then
 			local playerWeapon = { }
 
@@ -195,21 +196,23 @@ end
 
 
 function Player.ExplodePersonalVehicle()
-	if not Player.VehicleHandle then return end
+	if not Player.VehicleHandle then return false end
 
 	local explodeTimer = Timer.New()
 
-	while not NetworkRequestControlOfEntity(Player.VehicleHandle) do
+	NetworkRequestControlOfEntity(Player.VehicleHandle)
+	while not NetworkHasControlOfEntity(Player.VehicleHandle) do
 		Citizen.Wait(0)
 		if explodeTimer:Elapsed() >= 1000 then
 			Gui.DisplayPersonalNotification('Unable to get control of Personal Vehicle.')
-			return
+			return false
 		end
 	end
 
-	NetworkExplodeVehicle(Player.VehicleHandle, true, true)
-	SetEntityAsMissionEntity(Player.VehicleHandle, true, true)
+	NetworkExplodeVehicle(Player.VehicleHandle, true, false, false)
 	SetEntityAsNoLongerNeeded(Player.VehicleHandle)
+
+	return true
 end
 
 
@@ -227,9 +230,9 @@ end)
 
 
 RegisterNetEvent('lsv:playerRankedUp')
-AddEventHandler('lsv:playerRankedUp', function(rank, skillStat)
+AddEventHandler('lsv:playerRankedUp', function(rank, skillStats)
 	Player.Rank = rank
-	setSkillStat(skillStat)
+	setSkillStats(skillStats)
 	TriggerEvent('lsv:rankUp')
 end)
 

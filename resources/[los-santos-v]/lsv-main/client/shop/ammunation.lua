@@ -21,8 +21,14 @@ local function specialWeaponAmmoPrice(weapon, ammo, maxAmmo)
 	return '$'..Settings.ammuNationSpecialAmmo[weapon].price
 end
 
+local function fullSpecialWeaponAmmoPrice(weapon, ammoClipCount)
+	if ammoClipCount == 0 then return 'Maxed' end
+	return '$'..tostring(ammoClipCount * Settings.ammuNationSpecialAmmo[weapon].price)
+end
 
-local transaction = RemoteTransaction.New()
+
+local selectedWeapon = nil
+local selectedAmmoType = nil
 
 
 function AmmuNation.GetPlaces()
@@ -32,37 +38,59 @@ end
 
 AddEventHandler('lsv:init', function()
 	table.foreach(ammunations, function(ammunation)
-		ammunation.blip = Map.CreatePlaceBlip(Blip.AmmuNation(), ammunation.x, ammunation.y, ammunation.z)
+		ammunation.blip = Map.CreatePlaceBlip(Blip.AMMU_NATION, ammunation.x, ammunation.y, ammunation.z)
 	end)
 
-	WarMenu.CreateMenu('ammunation_specialammo', '')
-	WarMenu.SetMenuWidth('ammunation_specialammo', 0.25)
-	WarMenu.SetSubTitle('ammunation_specialammo', 'Ammunition')
-	WarMenu.SetTitleBackgroundColor('ammunation_specialammo', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
-	WarMenu.SetTitleBackgroundSprite('ammunation_specialammo', 'shopui_title_gunclub', 'shopui_title_gunclub')
+	WarMenu.CreateMenu('ammunation_special', '')
+	WarMenu.SetSubTitle('ammunation_special', 'Ammunition')
+	WarMenu.SetTitleBackgroundColor('ammunation_special', Color.GetHudFromBlipColor(Color.BLIP_WHITE).r, Color.GetHudFromBlipColor(Color.BLIP_WHITE).g, Color.GetHudFromBlipColor(Color.BLIP_WHITE).b, Color.GetHudFromBlipColor(Color.BLIP_WHITE).a)
+	WarMenu.SetTitleBackgroundSprite('ammunation_special', 'shopui_title_gunclub', 'shopui_title_gunclub')
+
+	WarMenu.CreateSubMenu('ammunation_specialammo', 'ammunation_special', '')
 	WarMenu.SetMenuButtonPressedSound('ammunation_specialammo', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	while true do
 		Citizen.Wait(0)
 
-		if WarMenu.IsMenuOpened('ammunation_specialammo') then
+		if WarMenu.IsMenuOpened('ammunation_special') then
 			table.foreach(Settings.ammuNationSpecialAmmo, function(data, weapon)
 				local weaponHash = GetHashKey(weapon)
 				if HasPedGotWeapon(PlayerPedId(), weaponHash, false) then
-					local weaponAmmoType = GetPedAmmoTypeFromWeapon(PlayerPedId(), weaponHash)
-					local _, maxAmmo = GetMaxAmmo(PlayerPedId(), weaponHash)
-					local playerAmmo = GetPedAmmoByType(PlayerPedId(), weaponAmmoType)
-
-					if WarMenu.Button(Weapon.GetWeapon(weapon).name..' '..data.type..' '..playerAmmo..' | '..maxAmmo..' (+'..data.ammo..')', specialWeaponAmmoPrice(weapon, playerAmmo, maxAmmo)) then
-						if playerAmmo == maxAmmo then
-							Gui.DisplayPersonalNotification('You already have max ammo.')
-						else
-							TriggerServerEvent('lsv:refillSpecialAmmo', weapon)
-							transaction:WaitForEnding()
-						end
+					if WarMenu.MenuButton(Weapon[weapon].name..' '..data.type, 'ammunation_specialammo') then
+						selectedWeapon = weapon
+						selectedAmmoType = data.type
+						WarMenu.SetSubTitle('ammunation_specialammo', Weapon[weapon].name..' '..data.type)
 					end
 				end
 			end)
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('ammunation_specialammo')	then
+			local weaponHash = GetHashKey(selectedWeapon)
+			local _, maxAmmo = GetMaxAmmo(PlayerPedId(), weaponHash)
+			local weaponAmmoType = GetPedAmmoTypeFromWeapon(PlayerPedId(), weaponHash)
+			local playerAmmo = GetPedAmmoByType(PlayerPedId(), weaponAmmoType)
+
+			local ammoClipCount = 0
+			if playerAmmo ~= maxAmmo then
+				ammoClipCount = math.max(1, math.floor((maxAmmo - playerAmmo) / Settings.ammuNationSpecialAmmo[selectedWeapon].ammo))
+			end
+
+			if WarMenu.Button('Full Ammo', fullSpecialWeaponAmmoPrice(selectedWeapon, ammoClipCount)) then
+				if playerAmmo == maxAmmo then
+					Gui.DisplayPersonalNotification('You already have max ammo.')
+				else
+					TriggerServerEvent('lsv:refillSpecialAmmo', selectedWeapon, ammoClipCount)
+					Prompt.ShowAsync()
+				end
+			elseif WarMenu.Button(selectedAmmoType..' x'..Settings.ammuNationSpecialAmmo[selectedWeapon].ammo, specialWeaponAmmoPrice(selectedWeapon, playerAmmo, maxAmmo)) then
+				if playerAmmo == maxAmmo then
+					Gui.DisplayPersonalNotification('You already have max ammo.')
+				else
+					TriggerServerEvent('lsv:refillSpecialAmmo', selectedWeapon)
+					Prompt.ShowAsync()
+				end
+			end
 
 			WarMenu.Display()
 		end
@@ -72,7 +100,7 @@ end)
 
 AddEventHandler('lsv:init', function()
 	local ammunationOpenedMenuIndex = nil
-	local ammunationColor = Color.GetHudFromBlipColor(Color.BlipRed())
+	local ammunationColor = Color.GetHudFromBlipColor(Color.BLIP_RED)
 
 	while true do
 		Citizen.Wait(0)
@@ -88,13 +116,13 @@ AddEventHandler('lsv:init', function()
 						if IsControlJustReleased(0, 38) then
 							ammunationOpenedMenuIndex = ammunationIndex
 							openedFromInteractionMenu = false
-							Gui.OpenMenu('ammunation_specialammo')
+							Gui.OpenMenu('ammunation_special')
 						end
 					end
-				elseif WarMenu.IsMenuOpened('ammunation_specialammo') and ammunationIndex == ammunationOpenedMenuIndex then
+				elseif WarMenu.IsMenuOpened('ammunation_special') and ammunationIndex == ammunationOpenedMenuIndex then
 					WarMenu.CloseMenu()
 					Player.SaveWeapons()
-					transaction:Finish()
+					Prompt.Hide()
 				end
 			end)
 		end
@@ -103,8 +131,18 @@ end)
 
 
 RegisterNetEvent('lsv:specialAmmoRefilled')
-AddEventHandler('lsv:specialAmmoRefilled', function(weapon, amount)
-	if amount then AddAmmoToPed(PlayerPedId(), GetHashKey(weapon), amount)
-	else Gui.DisplayPersonalNotification('You don\'t have enough cash.') end
-	transaction:Finish()
+AddEventHandler('lsv:specialAmmoRefilled', function(weapon, amount, fullAmmo)
+	if amount then
+		if not fullAmmo then
+			AddAmmoToPed(PlayerPedId(), GetHashKey(weapon), amount)
+		else
+			local weaponHash = GetHashKey(weapon)
+			local _, maxAmmo = GetMaxAmmo(PlayerPedId(), weaponHash)
+			SetPedAmmo(PlayerPedId(), weaponHash, maxAmmo)
+		end
+	else
+		Gui.DisplayPersonalNotification('You don\'t have enough cash.')
+	end
+
+	Prompt.Hide()
 end)

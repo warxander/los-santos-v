@@ -1,17 +1,13 @@
 AddEventHandler('lsv:init', function()
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(250)
 
-		-- Player invincibility
-		if Player.IsActive() and GetPlayerInvincible(PlayerId()) then
-			TriggerServerEvent('lsv:autoBanPlayer', 'God Mode')
-			return
-		end
-
-		-- Max health and armour
-		if GetEntityHealth(PlayerPedId()) > 200 or GetPedArmour(PlayerId()) > Settings.maxArmour then
-			TriggerServerEvent('lsv:autoBanPlayer', 'God Mode')
-			return
+		-- Player invincibility, health/armour modifications
+		if Player.IsActive() then
+			if GetPlayerInvincible(PlayerId()) or GetEntityHealth(PlayerPedId()) > 200 or GetPedArmour(PlayerId()) > Settings.maxArmour then
+				TriggerServerEvent('lsv:autoBanPlayer', 'God Mode')
+				return
+			end
 		end
 
 		-- Explosive ammo
@@ -37,14 +33,14 @@ AddEventHandler('lsv:init', function()
 		SetPedInfiniteAmmoClip(PlayerPedId(), false)
 
 		-- Damage modifiers
-		SetPlayerWeaponDamageModifier(PlayerId(), 1.)
-		SetPlayerVehicleDamageModifier(PlayerId(), 1.)
-		SetPlayerMeleeWeaponDamageModifier(PlayerId(), 1.)
+		SetPlayerWeaponDamageModifier(PlayerId(), Settings.weaponDamageModifier)
+		SetPlayerVehicleDamageModifier(PlayerId(), Settings.weaponDamageModifier)
+		SetPlayerMeleeWeaponDamageModifier(PlayerId(), Settings.weaponDamageModifier)
 
 		-- Defense modifiers
-		SetPlayerWeaponDefenseModifier(PlayerId(), 1.)
-		SetPlayerVehicleDefenseModifier(PlayerId(), 1.)
-		SetPlayerMeleeWeaponDefenseModifier(PlayerId(), 1.)
+		SetPlayerWeaponDefenseModifier(PlayerId(), Settings.defenseModifier)
+		SetPlayerVehicleDefenseModifier(PlayerId(), Settings.defenseModifier)
+		SetPlayerMeleeWeaponDefenseModifier(PlayerId(), Settings.defenseModifier)
 
 		-- Max speed
 		if IsPedInAnyVehicle(PlayerPedId(), false) then

@@ -1,6 +1,6 @@
 local instructionsText = 'Compete to the most headshots in the given time.'
 local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
-local playerColors = { Color.BlipYellow(), Color.BlipGrey(), Color.BlipBrown() }
+local playerColors = { Color.BLIP_YELLOW, Color.BLIP_GREY, Color.BLIP_BROWN }
 local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
 
 local sharpShooterData = nil
@@ -37,14 +37,14 @@ AddEventHandler('lsv:startSharpShooter', function(data, passedTime)
 			if Player.IsInFreeroam() then
 				Gui.DisplayObjectiveText('Compete to the most headshots.')
 
-				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.sharpShooter.duration - GetGameTimer() + sharpShooterData.startTime))
-				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0)
+				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.sharpShooter.duration - GetGameTimer() + sharpShooterData.startTime), 1)
+				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0, 2)
 
 				local barPosition = 3
 				for i = barPosition, 1, -1 do
 					if sharpShooterData.players[i] then
 						Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(sharpShooterData.players[i].id)), sharpShooterData.players[i].points,
-							Color.GetHudFromBlipColor(playerColors[i]), true)
+							barPosition, Color.GetHudFromBlipColor(playerColors[i]), true)
 						barPosition = barPosition + 1
 					end
 				end

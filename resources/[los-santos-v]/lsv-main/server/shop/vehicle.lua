@@ -1,4 +1,4 @@
-local logger = Logger:CreateNamedLogger('VehicleShop')
+local logger = Logger.New('VehicleShop')
 
 
 RegisterNetEvent('lsv:rentVehicle')

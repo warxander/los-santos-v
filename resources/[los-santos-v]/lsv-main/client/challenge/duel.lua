@@ -24,9 +24,9 @@ AddEventHandler('lsv:duelUpdated', function(data)
 				if not duelData then return end
 
 				if Player.IsActive() then
-					Gui.DrawBar('CHALLENGE SCORE', Settings.duel.targetScore)
-					Gui.DrawBar(GetPlayerName(GetPlayerFromServerId(duelData.opponent)), duelData.opponentScore, Color.GetHudFromBlipColor(Color.BlipRed()), true)
-					Gui.DrawBar(GetPlayerName(PlayerId()), duelData.score, Color.GetHudFromBlipColor(Color.BlipBlue()), true)
+					Gui.DrawBar('TARGET SCORE', Settings.duel.targetScore, 1)
+					Gui.DrawBar(GetPlayerName(GetPlayerFromServerId(duelData.opponent)), duelData.opponentScore, 2, Color.GetHudFromBlipColor(Color.BLIP_RED), true)
+					Gui.DrawBar(GetPlayerName(PlayerId()), duelData.score, 3, Color.GetHudFromBlipColor(Color.BLIP_BLUE), true)
 				end
 			end
 		end)

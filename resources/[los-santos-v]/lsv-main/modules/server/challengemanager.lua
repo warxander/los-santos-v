@@ -1,6 +1,6 @@
 ChallengeManager = { }
 
-local logger = Logger:CreateNamedLogger('ChallengeManager')
+local logger = Logger.New('ChallengeManager')
 
 local players = { }
 

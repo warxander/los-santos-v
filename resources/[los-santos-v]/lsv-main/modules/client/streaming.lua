@@ -1,7 +1,7 @@
 Streaming = { }
 
 
-local logger = Logger:CreateNamedLogger('Streaming')
+local logger = Logger.New('Streaming')
 
 local function is_valid_hash(value, hash, funcName)
 	if hash ~= 0 then return true end

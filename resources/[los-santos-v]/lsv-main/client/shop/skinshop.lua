@@ -17,8 +17,6 @@ local skinshops = {
 	{ blip = nil, ['x'] = 11.053486824036, ['y'] = 6514.693359375, ['z'] = 31.877849578857 },
 }
 
-local transaction = RemoteTransaction.New()
-
 
 local function skinKills(id)
 	if id == Player.Skin then return 'Used' end
@@ -38,12 +36,12 @@ end
 
 AddEventHandler('lsv:init', function()
 	table.foreach(skinshops, function(skinshop)
-		skinshop.blip = Map.CreatePlaceBlip(Blip.Clothes(), skinshop.x, skinshop.y, skinshop.z)
+		skinshop.blip = Map.CreatePlaceBlip(Blip.CLOTHING_STORE, skinshop.x, skinshop.y, skinshop.z)
 	end)
 
 	WarMenu.CreateMenu('skinshop', '')
 	WarMenu.SetSubTitle('skinshop', 'Select Your Character')
-	WarMenu.SetTitleBackgroundColor('skinshop', Color.GetHudFromBlipColor(Color.BlipWhite()).r, Color.GetHudFromBlipColor(Color.BlipWhite()).g, Color.GetHudFromBlipColor(Color.BlipWhite()).b, Color.GetHudFromBlipColor(Color.BlipWhite()).a)
+	WarMenu.SetTitleBackgroundColor('skinshop', Color.GetHudFromBlipColor(Color.BLIP_WHITE).r, Color.GetHudFromBlipColor(Color.BLIP_WHITE).g, Color.GetHudFromBlipColor(Color.BLIP_WHITE).b, Color.GetHudFromBlipColor(Color.BLIP_WHITE).a)
 	WarMenu.SetTitleBackgroundSprite('skinshop', 'shopui_title_lowendfashion', 'shopui_title_lowendfashion')
 	WarMenu.SetMenuButtonPressedSound('skinshop', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
@@ -75,7 +73,7 @@ AddEventHandler('lsv:init', function()
 						Gui.DisplayPersonalNotification('You don\'t have enough player kills.')
 					else
 						TriggerServerEvent('lsv:updatePlayerSkin', v.key)
-						transaction:WaitForEnding()
+						Prompt.ShowAsync()
 					end
 				end
 			end)
@@ -88,7 +86,7 @@ end)
 
 AddEventHandler('lsv:init', function()
 	local skinshopOpenedMenuIndex = nil
-	local skinshopColor = Color.GetHudFromBlipColor(Color.BlipGreen())
+	local skinshopColor = Color.GetHudFromBlipColor(Color.BLIP_GREEN)
 
 	while true do
 		Citizen.Wait(0)
@@ -108,7 +106,7 @@ AddEventHandler('lsv:init', function()
 					end
 				elseif WarMenu.IsMenuOpened('skinshop') and skinshopIndex == skinshopOpenedMenuIndex then
 					WarMenu.CloseMenu()
-					transaction:Finish()
+					Prompt.Hide()
 				end
 			end)
 		end
@@ -120,5 +118,5 @@ RegisterNetEvent('lsv:playerSkinUpdated')
 AddEventHandler('lsv:playerSkinUpdated', function(id)
 	if not id then return end
 	Skin.ChangePlayerSkin(id)
-	transaction:Finish()
+	Prompt.Hide()
 end)

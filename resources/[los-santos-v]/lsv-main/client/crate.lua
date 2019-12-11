@@ -14,8 +14,8 @@ AddEventHandler('lsv:spawnCrate', function(crate)
 	crateData.pickup = CreatePickupRotate(GetHashKey('PICKUP_PORTABLE_CRATE_UNFIXED'), crate.position.x, crate.position.y, crate.position.z, 0.0, 0.0, 0.0, 512)
 	crateData.position = crate.position
 	crateData.location = crate.location
-	crateData.areaBlip = Map.CreateRadiusBlip(crate.location.x, crate.location.y, crate.location.z, Settings.crate.radius, Color.BlipYellow())
-	crateData.blip = Map.CreatePlaceBlip(Blip.CrateDrop(), crate.location.x, crate.location.y, crate.location.z, nil, Color.BlipYellow())
+	crateData.areaBlip = Map.CreateRadiusBlip(crate.location.x, crate.location.y, crate.location.z, Settings.crate.radius, Color.BLIP_YELLOW)
+	crateData.blip = Map.CreatePlaceBlip(Blip.CRATE_DROP, crate.location.x, crate.location.y, crate.location.z, nil, Color.BLIP_YELLOW)
 	SetBlipAsShortRange(crateData.blip, false)
 	SetBlipScale(crateData.blip, 1.5)
 	Map.SetBlipFlashes(crateData.blip)
@@ -32,7 +32,7 @@ AddEventHandler('lsv:spawnCrate', function(crate)
 
 		if Player.IsInFreeroam() then
 			if Player.DistanceTo(crateData.location) < Settings.crate.radius then
-				Gui.DrawProgressBar('CRATE DISTANCE', 1.0 - Player.DistanceTo(crateData.position) / Settings.crate.radius, Color.GetHudFromBlipColor(Color.BlipYellow()))
+				Gui.DrawProgressBar('CRATE DISTANCE', 1.0 - Player.DistanceTo(crateData.position) / Settings.crate.radius, 2, Color.GetHudFromBlipColor(Color.BLIP_YELLOW))
 			end
 		end
 	end

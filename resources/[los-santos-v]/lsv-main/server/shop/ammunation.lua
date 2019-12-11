@@ -21,7 +21,7 @@ AddEventHandler('lsv:updateWeaponComponent', function(weapon, componentIndex)
 	local player = source
 	if not Scoreboard.IsPlayerOnline(player) then return end
 
-	local component = Weapon.GetWeapon(weapon).components[componentIndex]
+	local component = Weapon[weapon].components[componentIndex]
 	if component.rank and component.rank > Scoreboard.GetPlayerRank(player) then return end
 
 	if Scoreboard.GetPlayerCash(player) >= component.cash then
@@ -37,7 +37,7 @@ AddEventHandler('lsv:purchaseWeapon', function(id)
 	local player = source
 	if not Scoreboard.IsPlayerOnline(player) then return end
 
-	local weapon = Weapon.GetWeapon(id)
+	local weapon = Weapon[id]
 	if weapon.rank and weapon.rank > Scoreboard.GetPlayerRank(player) then return end
 	if weapon.prestige and weapon.prestige > Scoreboard.GetPlayerPrestige(player) then return end
 
@@ -50,44 +50,32 @@ end)
 
 
 RegisterNetEvent('lsv:refillAmmo')
-AddEventHandler('lsv:refillAmmo', function(ammoType, weapon)
+AddEventHandler('lsv:refillAmmo', function(ammoType, weapon, ammoClipCount)
 	local player = source
+	local fullAmmo = ammoClipCount
+	if not ammoClipCount then ammoClipCount = 1 end
 
-	local refillPrice = Settings.ammuNationRefillAmmo[ammoType].price
+	local refillPrice = ammoClipCount * Settings.ammuNationRefillAmmo[ammoType].price
 
 	if Scoreboard.GetPlayerCash(player) >= refillPrice then
 		Db.UpdateCash(player, -refillPrice, function()
-			TriggerClientEvent('lsv:ammoRefilled', player, weapon, Settings.ammuNationRefillAmmo[ammoType].ammo)
+			TriggerClientEvent('lsv:ammoRefilled', player, weapon, Settings.ammuNationRefillAmmo[ammoType].ammo * ammoClipCount, fullAmmo)
 		end)
 	else TriggerClientEvent('lsv:ammoRefilled', player, weapon, nil) end
 end)
 
 
 RegisterNetEvent('lsv:refillSpecialAmmo')
-AddEventHandler('lsv:refillSpecialAmmo', function(weapon)
+AddEventHandler('lsv:refillSpecialAmmo', function(weapon, ammoClipCount)
 	local player = source
+	local fullAmmo = ammoClipCount
+	if not ammoClipCount then ammoClipCount = 1 end
 
-	local refillPrice = Settings.ammuNationSpecialAmmo[weapon].price
+	local refillPrice = ammoClipCount * Settings.ammuNationSpecialAmmo[weapon].price
 
 	if Scoreboard.GetPlayerCash(player) >= refillPrice then
 		Db.UpdateCash(player, -refillPrice, function()
-			TriggerClientEvent('lsv:specialAmmoRefilled', player, weapon, Settings.ammuNationSpecialAmmo[weapon].ammo)
+			TriggerClientEvent('lsv:specialAmmoRefilled', player, weapon, Settings.ammuNationSpecialAmmo[weapon].ammo * ammoClipCount, fullAmmo)
 		end)
 	else TriggerClientEvent('lsv:specialAmmoRefilled', player, weapon, nil) end
-end)
-
-
-RegisterNetEvent('lsv:refillFullAmmo')
-AddEventHandler('lsv:refillFullAmmo', function(ammoType, weapon, ammoClipCount)
-	if ammoClipCount == 0 then return end
-
-	local player = source
-
-	local refillPrice = ammoClipCount * Settings.ammuNationRefillAmmo[ammoType].price
-
-	if Scoreboard.GetPlayerCash(player) >= refillPrice then
-		Db.UpdateCash(player, -refillPrice, function()
-			TriggerClientEvent('lsv:fullAmmoRefilled', player, weapon, ammoClipCount)
-		end)
-	else TriggerClientEvent('lsv:fullAmmoRefilled', player, weapon, nil) end
 end)

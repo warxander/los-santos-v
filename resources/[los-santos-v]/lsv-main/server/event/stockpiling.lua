@@ -1,4 +1,4 @@
-local logger = Logger:CreateNamedLogger('StockPiling')
+local logger = Logger.New('StockPiling')
 
 local stockData = nil
 

@@ -2,14 +2,14 @@ Db = { }
 
 
 function Db.SetValue(player, field, value, callback)
-	MySQL.Async.execute('UPDATE Players SET '..field..' = '..tostring(value)..' WHERE PlayerId=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function()
+	vSql.Async.execute('UPDATE Players SET '..field..' = '..tostring(value)..' WHERE PlayerId=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function()
 		if callback then callback() end
 	end)
 end
 
 
 function Db.UpdateNumericValue(player, field, value, callback)
-	MySQL.Async.execute('UPDATE Players SET '..field..' = '..field..' + '..value..' WHERE PlayerId=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function()
+	vSql.Async.execute('UPDATE Players SET '..field..' = '..field..' + '..value..' WHERE PlayerId=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function()
 		if callback then callback() end
 	end)
 end
@@ -62,7 +62,7 @@ end
 
 
 function Db.UpdatePrestige(player, callback)
-	MySQL.Async.execute('UPDATE Players SET SkinModel=DEFAULT, Weapons=DEFAULT, Vehicle=DEFAULT, Cash=DEFAULT, Experience=DEFAULT, Prestige=Prestige + 1 WHERE PlayerID=@playerId',
+	vSql.Async.execute('UPDATE Players SET SkinModel=DEFAULT, Weapons=DEFAULT, Cash=DEFAULT, Experience=DEFAULT, Prestige=Prestige + 1 WHERE PlayerID=@playerId',
 			{ ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function()
 				if callback then callback() end
 	end)
@@ -92,7 +92,14 @@ end
 
 
 function Db.FindPlayer(player, callback)
-	MySQL.Async.fetchAll('SELECT * FROM Players WHERE PlayerID=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function(data)
+	vSql.Async.fetchAll('SELECT * FROM Players WHERE PlayerID=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function(data)
+		if callback then callback(data) end
+	end)
+end
+
+
+function Db.GetBanStatus(player, callback)
+	vSql.Async.fetchAll('SELECT Banned, BanExpiresDate FROM Players WHERE PlayerID=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function(data)
 		if callback then callback(data) end
 	end)
 end
@@ -101,21 +108,21 @@ end
 function Db.RegisterPlayer(player, callback)
 	local playerId = Scoreboard.GetPlayerIdentifier(player)
 
-	MySQL.Async.transaction({ 'INSERT INTO Players (PlayerID) VALUES (@playerId)', 'INSERT INTO Reports (PlayerID) VALUES (@playerId)' }, { ['@playerId'] = playerId }, function()
+	vSql.Async.transaction({ 'INSERT INTO Players (PlayerID) VALUES (@playerId)', 'INSERT INTO Reports (PlayerID) VALUES (@playerId)' }, { ['@playerId'] = playerId }, function()
 		Db.FindPlayer(player, callback)
 	end)
 end
 
 
 function Db.BanPlayer(player, callback)
-	MySQL.Async.execute('UPDATE Players SET Banned=1 WHERE PlayerID=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function()
+	vSql.Async.execute('UPDATE Players SET Banned=1 WHERE PlayerID=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function()
 		if callback then callback() end
 	end)
 end
 
 
 function Db.UnbanPlayerById(playerId, callback)
-	MySQL.Async.execute('UPDATE Players SET Banned=0, BanExpiresDate=NULL WHERE PlayerID=@playerId', { ['@playerId'] = playerId }, function()
+	vSql.Async.execute('UPDATE Players SET Banned=0, BanExpiresDate=NULL WHERE PlayerID=@playerId', { ['@playerId'] = playerId }, function()
 		if callback then callback() end
 	end)
 end
@@ -127,14 +134,14 @@ end
 
 
 function Db.TempBanPlayer(player, expiresDate, callback)
-	MySQL.Async.execute('UPDATE Players SET Banned=1, BanExpiresDate=@banExpiresDate WHERE PlayerID=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player), ['@banExpiresDate'] = expiresDate }, function()
+	vSql.Async.execute('UPDATE Players SET Banned=1, BanExpiresDate=@banExpiresDate WHERE PlayerID=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player), ['@banExpiresDate'] = expiresDate }, function()
 		if callback then callback() end
 	end)
 end
 
 
 function Db.UpdateReports(player, callback)
-	MySQL.Async.execute('UPDATE Reports SET Total=Total+1 WHERE PlayerID=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function()
+	vSql.Async.execute('UPDATE Reports SET Total=Total+1 WHERE PlayerID=@playerId', { ['@playerId'] = Scoreboard.GetPlayerIdentifier(player) }, function()
 		if callback then callback() end
 	end)
 end

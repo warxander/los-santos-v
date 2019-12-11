@@ -39,14 +39,14 @@ AddEventHandler('lsv:startHeadhunter', function()
 
 	targetBlip = AddBlipForCoord(target.location.x, target.location.y, target.location.z)
 	SetBlipScale(targetBlip, 0.85)
-	SetBlipColour(targetBlip, Color.BlipRed())
+	SetBlipColour(targetBlip, Color.BLIP_RED)
 	SetBlipHighDetail(targetBlip, true)
-	SetBlipColour(targetBlip, Color.BlipRed())
-	SetBlipRouteColour(targetBlip, Color.BlipRed())
+	SetBlipColour(targetBlip, Color.BLIP_RED)
+	SetBlipRouteColour(targetBlip, Color.BLIP_RED)
 	SetBlipRoute(targetBlip, true)
 	Map.SetBlipFlashes(targetBlip)
 
-	targetAreaBlip = Map.CreateRadiusBlip(target.location.x, target.location.y, target.location.z, Settings.headhunter.radius, Color.BlipRed())
+	targetAreaBlip = Map.CreateRadiusBlip(target.location.x, target.location.y, target.location.z, Settings.headhunter.radius, Color.BLIP_RED)
 
 	Gui.StartMission('Headhunter', 'Find and assassinate the target.')
 
@@ -64,7 +64,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 					Gui.DisplayPersonalNotification('You have assassinated a target.')
 					helpHandler = HelpQueue.PushFront('Lose the cops faster to get extra reward.')
 					loseTheCopsStage = true
-					loseTheCopsStageStartTime = GetGameTimer()					
+					loseTheCopsStageStartTime = GetGameTimer()
 				end
 			else
 				SetBlipAlpha(targetAreaBlip, isInMissionArea and 96 or 0)
@@ -75,7 +75,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 				SetBlipRoute(targetBlip, false)
 				isTargetBlipHided = true
 				helpHandler = HelpQueue.PushFront('Use distance meter at the bottom right corner to locate the target.')
-			end	
+			end
 
 			if Player.IsActive() then
 				local missionText = isInMissionArea and 'Find and assassinate the ~r~target~w~.' or 'Go to the ~r~marked area~w~.'
@@ -94,7 +94,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 		end
 
 		if eventStartTime:Elapsed() < Settings.headhunter.time then
-			Gui.DrawTimerBar('MISSION TIME', Settings.headhunter.time - eventStartTime:Elapsed())
+			Gui.DrawTimerBar('MISSION TIME', Settings.headhunter.time - eventStartTime:Elapsed(), 1)
 
 			isTargetDead = IsEntityDead(targetPed)
 			isInMissionArea = Player.DistanceTo(target.location) < Settings.headhunter.radius
@@ -112,7 +112,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 					TriggerEvent('lsv:headhunterFinished', false, 'Target has left the area.')
 					return
 				elseif isInMissionArea and Player.IsActive() then
-					Gui.DrawProgressBar('TARGET DISTANCE', 1.0 - Player.DistanceTo(targetPosition) / Settings.headhunter.radius, Color.GetHudFromBlipColor(Color.BlipRed()))
+					Gui.DrawProgressBar('TARGET DISTANCE', 1.0 - Player.DistanceTo(targetPosition) / Settings.headhunter.radius, 2, Color.GetHudFromBlipColor(Color.BLIP_RED))
 				end
 			end
 

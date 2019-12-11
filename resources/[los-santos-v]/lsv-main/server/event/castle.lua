@@ -1,4 +1,4 @@
-local logger = Logger:CreateNamedLogger('Castle')
+local logger = Logger.New('Castle')
 
 local castleData = nil
 

@@ -1,4 +1,4 @@
-local logger = Logger:CreateNamedLogger('AutoSave')
+local logger = Logger.New('AutoSave')
 
 local players = { }
 
@@ -19,10 +19,7 @@ end)
 RegisterNetEvent('lsv:playerSaved')
 AddEventHandler('lsv:playerSaved', function()
 	local player = source
-
 	if not Scoreboard.IsPlayerOnline(player) then return end
-
-	logger:Debug('Save { '..player..', '..Scoreboard.GetPlayerIdentifier(player)..' }')
 
 	players[player]:Restart()
 end)

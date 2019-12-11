@@ -1,4 +1,4 @@
-local logger = Logger:CreateNamedLogger('Travel')
+local logger = Logger.New('Travel')
 
 
 RegisterNetEvent('lsv:useFastTravel')

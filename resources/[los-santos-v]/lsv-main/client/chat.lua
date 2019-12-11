@@ -16,6 +16,10 @@ AddEventHandler('lsv:init', function()
 		{ name = 'message' },
 	})
 
+	TriggerEvent('chat:addSuggestion', '/eventvote', 'Vote for the next Event', {
+		{ name = 'eventid', help = 'Use without arguments to see list of Events' },
+	})
+
 	if Player.Moderator and Player.Moderator == Settings.moderatorLevel.Administrator then
 		TriggerEvent('chat:addSuggestion', '/unban', 'Unban player', {
 			{ name = 'playerid' },

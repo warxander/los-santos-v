@@ -1,7 +1,7 @@
 MissionManager = { }
 
 
-local logger = Logger:CreateNamedLogger('MissionManager')
+local logger = Logger.New('MissionManager')
 
 local players = { }
 

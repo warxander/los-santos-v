@@ -11,7 +11,7 @@ local players = { }
 local function finishMission(success)
 	if not success then
 		missionPlaces[MissionManager.Mission].finished = false
-		SetBlipColour(missionPlaces[MissionManager.Mission].blip, Color.BlipBlue())
+		SetBlipColour(missionPlaces[MissionManager.Mission].blip, Color.BLIP_BLUE)
 	end
 
 	MissionManager.Mission = nil
@@ -61,7 +61,7 @@ AddEventHandler('lsv:init', function()
 					Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to start '..mission.name..'.')
 					if IsControlJustReleased(0, 38) then
 						mission.finished = true
-						SetBlipColour(mission.blip, Color.BlipGrey())
+						SetBlipColour(mission.blip, Color.BLIP_GREY)
 						MissionManager.StartMission(id)
 						TriggerEvent('lsv:start'..string.gsub(mission.name, '%s+', ''))
 					end
@@ -107,10 +107,10 @@ AddEventHandler('lsv:resetMissions', function(missions)
 		mission.finished = false
 
 		if not mission.blip then
-			mission.blip = Map.CreatePlaceBlip(Blip.Mission(), mission.x, mission.y, mission.z, mission.name, Color.BlipBlue())
+			mission.blip = Map.CreatePlaceBlip(Blip.MISSION, mission.x, mission.y, mission.z, mission.name, Color.BLIP_BLUE)
 		else
 			Map.SetBlipText(mission.blip, mission.name)
-			SetBlipColour(Color.BlipBlue())
+			SetBlipColour(Color.BLIP_BLUE)
 		end
 	end)
 end)

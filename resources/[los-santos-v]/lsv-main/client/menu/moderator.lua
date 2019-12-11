@@ -2,7 +2,7 @@ local target = nil
 
 local moderationEventName = nil
 local moderationReasons = { 'Inappropriate Player Name', 'Harassment', 'Cheating', 'Spam', 'Abusing Game Mechanics' }
-local banDurations = { 1, 3, 7 }
+local banDurations = { 1, 3, 7, 30 }
 local banReason = nil
 
 local function setSpectatorModeEnabled(enabled)
@@ -43,8 +43,8 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if WarMenu.IsMenuOpened('moderator') then
-			for id = 0, Settings.maxPlayerCount do
-				if id ~= PlayerId() and NetworkIsPlayerActive(id) then
+			for _, id in ipairs(GetActivePlayers()) do
+				if id ~= PlayerId() then
 					if WarMenu.MenuButton(GetPlayerName(id), 'playermoderation') then
 						target = GetPlayerServerId(id)
 						WarMenu.SetSubTitle('playermoderation', 'Select Action for '..GetPlayerName(id))

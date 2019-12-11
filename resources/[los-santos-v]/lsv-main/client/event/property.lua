@@ -1,5 +1,5 @@
 local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
-local playerColors = { Color.BlipYellow(), Color.BlipGrey(), Color.BlipBrown() }
+local playerColors = { Color.BLIP_YELLOW, Color.BLIP_GREY, Color.BLIP_BROWN }
 local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
 local instructionsText = 'Collect the briefcase and hold it for as long as possible for reward.'
 
@@ -8,7 +8,7 @@ local propertyData = nil
 
 local function createBriefcase(x, y, z)
 	propertyData.pickup = CreatePickupRotate(GetHashKey('PICKUP_MONEY_CASE'), x, y, z, 0.0, 0.0, 0.0, 8, 1)
-	propertyData.blip = Map.CreatePickupBlip(propertyData.pickup, 'PICKUP_MONEY_CASE', Color.BlipGreen())
+	propertyData.blip = Map.CreatePickupBlip(propertyData.pickup, 'PICKUP_MONEY_CASE', Color.BLIP_GREEN)
 	SetBlipAsShortRange(propertyData.blip, false)
 	SetBlipScale(propertyData.blip, 1.1)
 end
@@ -26,7 +26,7 @@ end
 local function getPlayerTime()
 	local player = table.find_if(propertyData.players, function(player) return player.id == Player.ServerId() end)
 	if not player then return nil end
-	return ms_to_string(player.totalTime)
+	return string.from_ms(player.totalTime)
 end
 
 
@@ -35,8 +35,6 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 	if propertyData then return end
 
 	-- Preparations
-	local place = Settings.property.places[data.placeIndex]
-
 	propertyData = { }
 
 	propertyData.startTime = GetGameTimer()
@@ -45,9 +43,8 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 
 	World.HotPropertyPlayer = data.currentPlayer
 
-	-- This is shit. New players will not see briefcase. Should fix in 1s
-	if not data.currentPlayer and not passedTime then
-		createBriefcase(place.x, place.y, place.z)
+	if not data.currentPlayer then
+		createBriefcase(data.position[1], data.position[2], data.position[3])
 		SetBlipAlpha(propertyData.blip, 0)
 	end
 
@@ -79,14 +76,14 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 					DrawMarker(20, pickupPosition.x, pickupPosition.y, pickupPosition.z + 0.25, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 0.85, 0.85, 0.85, 114, 204, 114, 96, true, true)
 				end
 
-				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.property.duration - GetGameTimer() + propertyData.startTime))
-				Gui.DrawBar('TIME HELD', getPlayerTime() or 0, Color.GetHudFromBlipColor(Color.BlipWhite()))
+				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.property.duration - GetGameTimer() + propertyData.startTime), 1)
+				Gui.DrawBar('TIME HELD', getPlayerTime() or 0, 2)
 
 				local barPosition = 3
 				for i = barPosition, 1, -1 do
 					if propertyData.players[i] then
-						Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(propertyData.players[i].id)), ms_to_string(propertyData.players[i].totalTime),
-							Color.GetHudFromBlipColor(playerColors[i]), true)
+						Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(propertyData.players[i].id)), string.from_ms(propertyData.players[i].totalTime),
+							barPosition, Color.GetHudFromBlipColor(playerColors[i]), true)
 						barPosition = barPosition + 1
 					end
 				end
@@ -110,7 +107,7 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 
 			if World.HotPropertyPlayer == Player.ServerId() then
 				if IsPedInAnyVehicle(PlayerPedId(), false) then
-					TriggerServerEvent('lsv:hotPropertyDropped')
+					TriggerServerEvent('lsv:hotPropertyDropped', { table.unpack(Player.Position()) })
 					World.HotPropertyPlayer = nil
 					Gui.DisplayHelpText('Keep walking on foot to hold the briefcase.')
 				else
@@ -143,12 +140,12 @@ end)
 
 
 RegisterNetEvent('lsv:hotPropertyDropped')
-AddEventHandler('lsv:hotPropertyDropped', function(player)
+AddEventHandler('lsv:hotPropertyDropped', function(player, position)
 	if not propertyData then return end
+	if not position then position = { table.unpack(GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(player)))) } end
 
-	local x, y, z = table.unpack(GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(player))))
 	removeBriefcase()
-	createBriefcase(x, y, z)
+	createBriefcase(position[1], position[2], position[3])
 
 	World.HotPropertyPlayer = nil
 end)

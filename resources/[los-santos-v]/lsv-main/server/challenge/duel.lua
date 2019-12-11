@@ -1,4 +1,4 @@
-local logger = Logger:CreateNamedLogger('Duel')
+local logger = Logger.New('Duel')
 
 
 RegisterNetEvent('lsv:requestDuel')

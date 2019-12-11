@@ -8,10 +8,7 @@ local killstreak = 0
 local playerStreakScaleform = nil
 local lastKillTime = nil
 
-
-Citizen.CreateThread(function()
-	AddTextEntry('MONEY_ENTRY', '$~1~')
-end)
+local eventFinishedTime = nil
 
 
 AddEventHandler('lsv:init', function()
@@ -20,6 +17,43 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 		DisableControlAction(0, 249, true)
+	end
+end)
+
+
+RegisterNetEvent('lsv:eventFinishedTimeUpdated')
+AddEventHandler('lsv:eventFinishedTimeUpdated', function(time)
+	eventFinishedTime = time
+end)
+
+
+AddEventHandler('lsv:init', function()
+	while true do
+		Citizen.Wait(0)
+
+		if eventFinishedTime then
+			if Player.IsInFreeroam() then
+				local timePassed = Settings.event.timeout - eventFinishedTime
+				if timePassed > 0 then
+					Gui.DrawTimerBar('NEXT EVENT IN', timePassed, 1)
+				end
+			end
+		end
+	end
+end)
+
+
+Citizen.CreateThread(function()
+	local timePassed = Timer.New()
+
+	while true do
+		Citizen.Wait(500)
+
+		if eventFinishedTime then
+			eventFinishedTime = eventFinishedTime + timePassed:Elapsed()
+		end
+
+		timePassed:Restart()
 	end
 end)
 
@@ -89,8 +123,8 @@ AddEventHandler('lsv:showExperience', function(exp)
 	end
 
 	BeginScaleformMovieMethodHudComponent(19, 'SET_RANK_SCORES')
-	PushScaleformMovieFunctionParameterInt(Settings.calculateExp(rank))
-	PushScaleformMovieFunctionParameterInt(Settings.calculateExp(rank + 1))
+	PushScaleformMovieFunctionParameterInt(Rank.GetRequiredExperience(rank))
+	PushScaleformMovieFunctionParameterInt(Rank.GetRequiredExperience(rank + 1))
 	PushScaleformMovieFunctionParameterInt(playerExp - exp)
 	PushScaleformMovieFunctionParameterInt(playerExp)
 	PushScaleformMovieFunctionParameterInt(rank)
@@ -131,7 +165,7 @@ AddEventHandler('lsv:init', function()
 
 				SetDrawOrigin(playerPosition.x, playerPosition.y, z, 0)
 				DrawSprite('MPHud', 'mp_anim_cash', 0.0, 0.0, spriteScale / screenWidth, spriteScale / screenHeight, 0.0, 255, 255, 255, 255)
-				Gui.SetTextParams(4, Color.GetHudFromBlipColor(Color.BlipWhite()), textScale, true, true)
+				Gui.SetTextParams(4, Color.GetHudFromBlipColor(Color.BLIP_WHITE), textScale, true, true)
 				Gui.DrawText(cash, { x = spriteScale / 2 / screenWidth, y = -spriteScale / 2 / screenHeight - 0.004 })
 				ClearDrawOrigin()
 			else
@@ -260,13 +294,18 @@ AddEventHandler('lsv:init', function()
 		RemoveMultiplayerBankCash()
 		RemoveMultiplayerHudCash()
 
-		if discordUrl and Player.PatreonTier == 0 then
-			Gui.SetTextParams(4, { r = 254, g = 254, b = 254, a = 196 }, 0.35, true, false, true)
-			Gui.DrawText(discordUrl, { x = 0.5, y = 0.975 })
+		if Player.PatreonTier == 0 then
+			if discordUrl then
+				Gui.SetTextParams(4, { r = 255, g = 255, b = 255, a = 255 }, 0.45, true, false, true)
+				Gui.DrawText(discordUrl, { x = SafeZone.Left() + 0.785, y = SafeZone.Top() })
+			end
+
+			Gui.SetTextParams(4, { r = 255, g = 255, b = 255, a = 255 }, 0.45, true, false, true)
+			Gui.DrawText('~c~Press ~w~M ~c~or ~w~Y~c~ to open Menu', { x =SafeZone.Left() + 0.785, y = SafeZone.Top() + 0.025 })
 		end
 
-		Gui.SetTextParams(4, Color.GetHudFromBlipColor(Color.BlipWhite()), 0.3, true, true, true)
-		Gui.DrawText(Player.Experience..' / '..Settings.calculateExp(Player.Rank + 1)..'         $'..Player.Cash,
+		Gui.SetTextParams(4, Color.GetHudFromBlipColor(Color.BLIP_WHITE), 0.3, true, true, true)
+		Gui.DrawText(Player.Experience..' / '..Rank.GetRequiredExperience(Player.Rank + 1)..'         $'..Player.Cash,
 			{ x = SafeZone.Left() + 0.1025, y = SafeZone.Bottom() - 0.004 }, 0.25)
 
 		if IsControlPressed(0, 20) then
@@ -276,20 +315,8 @@ AddEventHandler('lsv:init', function()
 				DeathTimer = DeathTimer - Settings.spawn.respawnFasterPerControlPressed
 				PlaySoundFrontend(-1, DeathTimer > 0 and 'Faster_Click' or 'Faster_Bar_Full', 'RESPAWN_ONLINE_SOUNDSET', true)
 			end
-			Gui.DrawProgressBar('RESPAWNING', GetTimeDifference(GetGameTimer(), DeathTimer) / TimeToRespawn, Color.GetHudFromBlipColor(Color.BlipRed()))
+			Gui.DrawProgressBar('RESPAWNING', GetTimeDifference(GetGameTimer(), DeathTimer) / TimeToRespawn, 0, Color.GetHudFromBlipColor(Color.BLIP_RED))
 		else
-			if IsPedInAnyVehicle(PlayerPedId()) then
-				local vehicle = GetVehiclePedIsUsing(PlayerPedId(), false)
-				if DoesEntityExist(vehicle) then
-					local speed = math.floor(GetEntitySpeed(vehicle) * 2.236936) --mph
-					Gui.DrawBar('SPEED', speed..' MPH')
-				end
-			end
-
-			if Player.Killstreak ~= 0 then
-				Gui.DrawBar('KILLSTREAK', Player.Killstreak)
-			end
-
 			if HasHudScaleformLoaded(19) then
 				BeginScaleformMovieMethodHudComponent(19, 'OVERRIDE_ANIMATION_SPEED')
 				PushScaleformMovieFunctionParameterInt(2000)
@@ -306,7 +333,6 @@ end)
 
 AddEventHandler('lsv:init', function()
 	local scaleform = Scaleform:Request('MP_BIG_MESSAGE_FREEMODE')
-	scaleform:Call('SHOW_SHARD_WASTED_MP_MESSAGE', '~r~WASTED')
 
 	local respawnFasterScaleform = Scaleform:Request('INSTRUCTIONAL_BUTTONS')
 	respawnFasterScaleform:Call('SET_DATA_SLOT', 0, '~INPUT_ATTACK~', 'Respawn Faster')
@@ -321,6 +347,20 @@ AddEventHandler('lsv:init', function()
 			StartScreenEffect('DeathFailOut', 0, true)
 			ShakeGameplayCam('DEATH_FAIL_IN_EFFECT_SHAKE', 1.0)
 			PlaySoundFrontend(-1, 'MP_Flash', 'WastedSounds', 1)
+
+			local deathDetails = ''
+			local killer, weaponHash = NetworkGetEntityKillerOfPlayer(PlayerId())
+			if killer > 0 and killer ~= PlayerPedId() then
+				deathDetails = string.format('Distance: %d m', math.floor(Player.DistanceTo(GetEntityCoords(killer))))
+				if weaponHash and weaponHash ~= 0 then
+					local weaponName = WeaponUtility.GetNameByHash(weaponHash)
+					if weaponName then
+						deathDetails = 'Killed with '..weaponName..'\n'..deathDetails
+					end
+				end
+			end
+
+			scaleform:Call('SHOW_SHARD_WASTED_MP_MESSAGE', '~r~WASTED', deathDetails)
 
 			respawnFasterScaleform:RenderFullscreenTimed(500)
 
@@ -379,11 +419,11 @@ end)
 
 AddEventHandler('lsv:init', function()
 	while true do
-		for id = 0, Settings.maxPlayerCount do
+		for _, id in ipairs(GetActivePlayers()) do
 			if id ~= PlayerId() then
 				local ped = GetPlayerPed(id)
 
-				if NetworkIsPlayerActive(id) and ped ~= nil then
+				if ped and ped ~= 0 then
 					local blip = GetBlipFromEntity(ped)
 					if not DoesBlipExist(blip) then
 						blip = AddBlipForEntity(ped)
@@ -393,42 +433,47 @@ AddEventHandler('lsv:init', function()
 					local isPlayerDead = IsPlayerDead(id)
 
 					local serverId = GetPlayerServerId(id)
-					local isPlayerExecutiveSearchTarget = serverId == World.ExecutiveSearchPlayer
+					local isPlayerBeast = serverId == World.BeastPlayer
 					local isPlayerHotProperty = serverId == World.HotPropertyPlayer
 					local isPlayerOnMission = MissionManager.IsPlayerOnMission(serverId)
 					local isChallengingPlayer = World.ChallengingPlayer == serverId
 					local isPlayerCrewMember = Player.IsCrewMember(serverId)
 
-					local blipSprite = Blip.Standard()
-					if isPlayerDead then blipSprite = Blip.Dead()
+					local blipSprite = Blip.STANDARD
+					if isPlayerDead then blipSprite = Blip.PLAYER_DEAD
 					elseif not isChallengingPlayer then
-						if isPlayerHotProperty then blipSprite = Blip.HotProperty()
-						elseif isPlayerOnMission then blipSprite = Blip.PlayerOnMission() end
+						if isPlayerHotProperty then blipSprite = Blip.HOT_PROPERTY
+						elseif isPlayerBeast then blipSprite = Blip.BEAST
+						elseif isPlayerOnMission then blipSprite = Blip.PLAYER_ON_MISSION end
 					end
 
-					local scale = 0.7
-					if isChallengingPlayer or isPlayerExecutiveSearchTarget then scale = 0.8
-					elseif isPlayerHotProperty or isPlayerOnMission then scale = 0.9 end
+					local scale = nil
+					if isChallengingPlayer then scale = 0.8
+					elseif isPlayerHotProperty or isPlayerOnMission or isPlayerBeast then scale = 0.9
+					else
+						scale = 0.7
+						local killstreak = Scoreboard.GetPlayerKillstreak(id)
+						if killstreak then
+							scale = scale + math.min(0.3, killstreak * 0.03)
+						end
+					end
 					SetBlipScale(blip, scale)
 
-					local blipColor = Color.BlipWhite()
-					if isPlayerCrewMember then blipColor = Color.BlipBlue()
-					elseif isPlayerHotProperty or isPlayerExecutiveSearchTarget or isChallengingPlayer or isPlayerOnMission then blipColor = Color.BlipRed() end
+					local blipColor = Color.BLIP_WHITE
+					if isPlayerCrewMember then blipColor = Color.BLIP_BLUE
+					elseif isPlayerHotProperty or isPlayerBeast or isChallengingPlayer or isPlayerOnMission then blipColor = Color.BLIP_RED end
 
 					local blipAlpha = 255
 					if not isPlayerCrewMember then
-						local isPlayerExecutiveSearchInvisible = isPlayerExecutiveSearchTarget
-						if isPlayerExecutiveSearchInvisible then
-							if IsPedInAnyVehicle(ped, false) then isPlayerExecutiveSearchInvisible = IsPedDoingDriveby(ped)
-							else isPlayerExecutiveSearchInvisible = not IsPedStill(ped) or IsPedClimbing(ped) end
+						if not isPlayerHotProperty and not isPlayerBeast then
+							if GetPedStealthMovement(ped) or GetPlayerInvincible(id) then blipAlpha = 25 end
 						end
-						if not isPlayerHotProperty and (isPlayerExecutiveSearchInvisible or GetPedStealthMovement(ped)) then blipAlpha = 0 end
 					end
 
 					if GetBlipSprite(blip) ~= blipSprite then SetBlipSprite(blip, blipSprite) end
 					if GetBlipAlpha(blip) ~= blipAlpha then SetBlipAlpha(blip, blipAlpha) end
 
-					ShowHeadingIndicatorOnBlip(blip, blipSprite == Blip.Standard())
+					ShowHeadingIndicatorOnBlip(blip, blipSprite == Blip.STANDARD)
 					ShowCrewIndicatorOnBlip(blip, isPlayerCrewMember)
 					SetBlipColour(blip, blipColor)
 					SetBlipNameToPlayerName(blip, id)

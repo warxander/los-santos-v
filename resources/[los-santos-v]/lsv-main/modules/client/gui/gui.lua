@@ -11,7 +11,7 @@ function Gui.GetPlayerName(serverId, color, lowercase)
 	else
 		if not color then
 			if Player.IsCrewMember(serverId) then color = '~b~'
-			elseif serverId == World.ChallengingPlayer or serverId == World.ExecutiveSearchPlayer or serverId == World.HotPropertyPlayer or MissionManager.IsPlayerOnMission(serverId) then color = '~r~'
+			elseif serverId == World.ChallengingPlayer or serverId == World.BeastPlayer or serverId == World.HotPropertyPlayer or MissionManager.IsPlayerOnMission(serverId) then color = '~r~'
 			else color = '~w~' end
 		end
 
@@ -25,35 +25,50 @@ function Gui.OpenMenu(id)
 end
 
 
+function Gui.AddText(text)
+	local str = tostring(text)
+	local strLen = string.len(str)
+	local maxStrLength = 99
+
+	for i = 1, strLen, maxStrLength + 1 do
+		if i > strLen then
+			return
+		end
+
+		AddTextComponentString(string.sub(str, i, i + maxStrLength))
+	end
+end
+
+
 function Gui.DisplayHelpText(text)
 	BeginTextCommandDisplayHelp('STRING')
-	AddTextComponentScaleform(tostring(text))
+	Gui.AddText(text)
 	EndTextCommandDisplayHelp(0, 0, 1, -1)
 end
 
 
 function Gui.DisplayNotification(text, pic, title, subtitle, icon)
-	SetNotificationTextEntry('STRING')
-	AddTextComponentSubstringPlayerName(tostring(text))
+	BeginTextCommandThefeedPost('STRING')
+	Gui.AddText(text)
 
 	if pic then
-		SetNotificationMessage(pic, pic, false, icon or 4, title or '', subtitle or '')
+		EndTextCommandThefeedPostMessagetext(pic, pic, false, icon or 4, title or '', subtitle or '')
+	else
+		EndTextCommandThefeedPostTicker(true, true)
 	end
-
-	DrawNotification(false, true)
 end
 
 
 function Gui.DisplayPersonalNotification(text, pic, title, subtitle, icon)
-	SetNotificationTextEntry('STRING')
-	AddTextComponentSubstringPlayerName(tostring(text))
-	SetNotificationBackgroundColor(200)
+	BeginTextCommandThefeedPost('STRING')
+	Gui.AddText(text)
+	ThefeedNextPostBackgroundColor(200)
 
 	if pic then
-		SetNotificationMessage(pic, pic, false, icon or 4, title or '', subtitle or '')
+		EndTextCommandThefeedPostMessagetext(pic, pic, false, icon or 4, title or '', subtitle or '')
+	else
+		EndTextCommandThefeedPostTicker(true, true)
 	end
-
-	DrawNotification(false, true)
 end
 
 
@@ -68,12 +83,10 @@ function Gui.SetTextParams(font, color, scale, shadow, outline, center)
 	SetTextScale(scale, scale)
 
 	if shadow then
-		SetTextDropshadow(8, 0, 0, 0, 255)
 		SetTextDropShadow()
 	end
 
 	if outline then
-		SetTextEdge(4, 0, 0, 0, 255)
 		SetTextOutline()
 	end
 
@@ -85,43 +98,46 @@ end
 
 function Gui.DrawText(text, position, width)
 	BeginTextCommandDisplayText('STRING')
-	AddTextComponentSubstringPlayerName(tostring(text))
+	Gui.AddText(text)
+
 	if width then
 		SetTextRightJustify(true)
 		SetTextWrap(position.x - width, position.x)
 	end
+
+	EndTextCommandDisplayText(position.x, position.y)
+end
+
+
+function Gui.DrawTextEntry(entry, position, ...)
+	BeginTextCommandDisplayText(entry)
+
+	local params = { ... }
+	table.iforeach(params, function(param)
+		local paramType = type(param)
+		if paramType == 'string' then
+			AddTextComponentString(param)
+		elseif paramType == 'number' then
+			if math.is_integer(param) then
+				AddTextComponentInteger(param)
+			else
+				AddTextComponentFloat(param, 2)
+			end
+		end
+	end)
+
 	EndTextCommandDisplayText(position.x, position.y)
 end
 
 
 function Gui.DrawNumeric(number, position)
-	BeginTextCommandDisplayText('NUMBER')
-	if type(number) == 'number' and not string.find(number, '%.') then
-		AddTextComponentInteger(number)
-	else
-		AddTextComponentFloat(number, 2)
-	end
-	EndTextCommandDisplayText(position.x, position.y)
-end
-
-
-function Gui.DrawNumericTextEntry(entry, position, ...) -- Generalize it more?
-	local params = { ... }
-	BeginTextCommandDisplayText(entry)
-	table.foreach(params, function(v)
-		if type(v) == 'number' and not string.find(v, '%.') then -- Move it to Utils?
-			AddTextComponentInteger(v)
-		else
-			AddTextComponentFloat(v, 2) -- Configure it?
-		end
-	end)
-	EndTextCommandDisplayText(position.x, position.y)
+	Gui.DrawTextEntry('NUMBER', position, number)
 end
 
 
 function Gui.DisplayObjectiveText(text)
 	BeginTextCommandPrint('STRING')
-	AddTextComponentString(tostring(text))
+	Gui.AddText(text)
 	EndTextCommandPrint(1, true)
 end
 

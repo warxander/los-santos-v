@@ -4,7 +4,7 @@ Scaleform = { }
 Scaleform.__index = Scaleform
 
 
-local logger = Logger:CreateNamedLogger('Scaleform')
+local logger = Logger.New('Scaleform')
 
 local function scaleform_is_valid(scaleform)
 	if not scaleform or scaleform == 0 then
@@ -23,11 +23,6 @@ local function scaleform_has_loaded(scaleform)
 	end
 
 	return true
-end
-
-
-local function scaleform_is_int(number)
-	return type(number) == 'number' and not string.find(number, '%.')
 end
 
 
@@ -99,12 +94,12 @@ function Scaleform:Call(func, ...)
 	PushScaleformMovieFunction(self.scaleform, func)
 
 	local params = { ... }
-	table.foreach(params, function(param)
+	table.iforeach(params, function(param)
 		local paramType = type(param)
 		if paramType == 'string' then
 			PushScaleformMovieFunctionParameterString(param)
 		elseif paramType == 'number' then
-			if scaleform_is_int(param) then
+			if math.is_integer(param) then
 				PushScaleformMovieFunctionParameterInt(param)
 			else
 				PushScaleformMovieFunctionParameterFloat(param)

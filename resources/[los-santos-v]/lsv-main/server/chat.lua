@@ -24,14 +24,14 @@ end
 
 RegisterNetEvent('_chat:messageEntered')
 AddEventHandler('_chat:messageEntered', function(author, color, message)
-    if not message or not author or message == '' then return end
+	if not message or not author or message == '' then return end
 
-    local message = {
-        color = { 255, 255, 255 },
-        args = { '['..GetPlayerName(source)..']: '..message }
-    }
+	local message = {
+		color = { 255, 255, 255 },
+		args = { '['..GetPlayerName(author)..']: '..message }
+	}
 
-    TriggerEvent('lsv:addMessage', source, -1, message)
+	TriggerEvent('lsv:addMessage', author, -1, message)
 end)
 
 

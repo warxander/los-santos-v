@@ -12,10 +12,10 @@ end
 
 AddEventHandler('lsv:init', function()
 	while true do
-		for id = 0, Settings.maxPlayerCount do
-			if id ~= PlayerId() and NetworkIsPlayerActive(id) then
+		for _, id in ipairs(GetActivePlayers()) do
+			if id ~= PlayerId() then
 				local playerPed = GetPlayerPed(id)
-				
+
 				local isCrewMember = Player.IsCrewMember(GetPlayerServerId(id))
 
 				local healthBarVisible = IsPlayerFreeAimingAtEntity(PlayerId(), playerPed) or isCrewMember or isCrewMemberAimingAt(playerPed)

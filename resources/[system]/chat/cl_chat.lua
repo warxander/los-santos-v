@@ -44,9 +44,10 @@ AddEventHandler('__cfx_internal:serverPrint', function(msg)
 end)
 
 AddEventHandler('chat:addMessage', function(message)
+  if message.multiline == nil then message.multiline = true end
   SendNUIMessage({
     type = 'ON_MESSAGE',
-    message = message
+    message = message,
   })
 end)
 

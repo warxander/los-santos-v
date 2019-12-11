@@ -1,5 +1,12 @@
-local weather = 'CLEAR' --'CLEAR', 'EXTRASUNNY', 'CLOUDS', 'OVERCAST', 'RAIN', 'CLEARING', 'THUNDER', 'SMOG', 'FOGGY', 'SNOWLIGHT', 'BLIZZARD', 'XMAS', 'HALLOWEEN'
-local isSnowLoaded = false
+RegisterNetEvent('lsv:weatherUpdated')
+AddEventHandler('lsv:weatherUpdated', function(weather)
+	ClearOverrideWeather()
+	SetOverrideWeather(weather)
+
+	local isSnow = weather == 'XMAS'
+	SetForceVehicleTrails(isSnow)
+	SetForcePedFootstepsTracks(isSnow)
+end)
 
 
 Citizen.CreateThread(function()
@@ -42,38 +49,6 @@ Citizen.CreateThread(function()
 		Citizen.Wait(1000)
 
 		NetworkOverrideClockTime(NetworkGetServerTime())
-	end
-end)
-
-
-Citizen.CreateThread(function()
-	SetBlackout(blackout)
-
-	while true do
-		Citizen.Wait(0)
-
-		-- https://forum.fivem.net/t/snowballs/55932
-		-- https://github.com/TomGrobbe/Snowballs
-		if IsNextWeatherType('XMAS') then
-			SetForceVehicleTrails(true)
-			SetForcePedFootstepsTracks(true)
-
-			if not isSnowLoaded then
-				RequestScriptAudioBank('ICE_FOOTSTEPS', false)
-				RequestScriptAudioBank('SNOW_FOOTSTEPS', false)
-
-				Streaming.RequestNamedPtfxAsset('core_snow')
-
-				UseParticleFxAssetNextCall('core_snow')
-
-				isSnowLoaded = true
-			end
-		end
-
-		SetWeatherTypePersist(weather)
-		SetWeatherTypeNowPersist(weather)
-		SetWeatherTypeNow(weather)
-		SetOverrideWeather(weather)
 	end
 end)
 

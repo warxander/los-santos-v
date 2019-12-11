@@ -13,6 +13,7 @@ AddEventHandler('lsv:startVelocity', function()
 	vehicle = CreateVehicle(vehicleHash, location.x, location.y, location.z, location.heading, false, true)
 	SetVehicleModKit(vehicle, 0)
 	SetVehicleMod(vehicle, 16, 4)
+	SetVehicleTyresCanBurst(vehicle, false)
 	SetModelAsNoLongerNeeded(vehicleHash)
 
 	detonationSound = GetSoundId()
@@ -28,9 +29,9 @@ AddEventHandler('lsv:startVelocity', function()
 
 	vehicleBlip = AddBlipForEntity(vehicle)
 	SetBlipHighDetail(vehicleBlip, true)
-	SetBlipSprite(vehicleBlip, Blip.RocketVoltic())
-	SetBlipColour(vehicleBlip, Color.BlipGreen())
-	SetBlipRouteColour(vehicleBlip, Color.BlipGreen())
+	SetBlipSprite(vehicleBlip, Blip.ROCKET_VOLTIC)
+	SetBlipColour(vehicleBlip, Color.BLIP_GREEN)
+	SetBlipRouteColour(vehicleBlip, Color.BLIP_GREEN)
 	SetBlipRoute(vehicleBlip, true)
 	Map.SetBlipFlashes(vehicleBlip)
 
@@ -58,11 +59,16 @@ AddEventHandler('lsv:startVelocity', function()
 				if detonationStage then startTime = startTimeToDetonate
 				elseif preparationStage then startTime = startPreparationStageTime end
 
+				if isInVehicle then
+					local speed = math.floor(GetEntitySpeed(vehicle) * 2.236936) --mph
+					Gui.DrawBar('SPEED', string.format('%d MPH', speed), 1)
+				end
+
 				local timeLeft = totalTime - GetGameTimer() + startTime
 				if detonationStage then
-					Gui.DrawProgressBar(title, 1.0 - timeLeft / Settings.velocity.detonationTime, Color.GetHudFromBlipColor(Color.BlipRed()))
+					Gui.DrawProgressBar(title, 1.0 - timeLeft / Settings.velocity.detonationTime, 2, Color.GetHudFromBlipColor(Color.BLIP_RED))
 				else
-					Gui.DrawTimerBar(title, timeLeft)
+					Gui.DrawTimerBar(title, timeLeft, 2)
 				end
 
 				Gui.DisplayObjectiveText(isInVehicle and 'Stay above '..Settings.velocity.minSpeed..' mph to avoid detonation.' or 'Enter the ~g~Rocket Voltic~w~.')
@@ -142,7 +148,7 @@ AddEventHandler('lsv:velocityFinished', function(success, reason)
 
 	if not HasSoundFinished(detonationSound) then StopSound(detonationSound) end
 	ReleaseSoundId(detonationSound)
-	detonationSound = nil	
+	detonationSound = nil
 
 	if not success and not IsPedInVehicle(PlayerPedId(), vehicle, false) then
 		SetEntityAsMissionEntity(vehicle, true, true)

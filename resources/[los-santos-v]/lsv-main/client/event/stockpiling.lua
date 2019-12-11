@@ -1,8 +1,8 @@
 local instructionsText = 'Compete to collect the most checkpoints in the given time.'
 local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
-local playerColors = { Color.BlipYellow(), Color.BlipGrey(), Color.BlipBrown() }
+local playerColors = { Color.BLIP_YELLOW, Color.BLIP_GREY, Color.BLIP_BROWN }
 local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
-local markerColor = Color.GetHudFromBlipColor(Color.BlipYellow())
+local markerColor = Color.GetHudFromBlipColor(Color.BLIP_YELLOW)
 
 local stockData = nil
 
@@ -29,7 +29,7 @@ AddEventHandler('lsv:startStockPiling', function(data, passedTime)
 	stockData.checkPoints = data.checkPoints
 	table.iforeach(stockData.checkPoints, function(checkPoint)
 		if checkPoint.picked then return end
-		checkPoint.blip = Map.CreateEventBlip(Blip.Checkpoint(), checkPoint.position.x, checkPoint.position.y, checkPoint.position.z, 'Checkpoint', Color.BlipYellow())
+		checkPoint.blip = Map.CreateEventBlip(Blip.CHECKPOINT, checkPoint.position.x, checkPoint.position.y, checkPoint.position.z, 'Checkpoint', Color.BLIP_YELLOW)
 		Map.SetBlipFlashes(checkPoint.blip)
 	end)
 	stockData.totalCheckPoints = data.totalCheckPoints
@@ -47,15 +47,15 @@ AddEventHandler('lsv:startStockPiling', function(data, passedTime)
 			if Player.IsInFreeroam() then
 				Gui.DisplayObjectiveText('Collect the most ~y~checkpoints~w~.')
 
-				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.stockPiling.duration - GetGameTimer() + stockData.startTime))
-				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0)
-				Gui.DrawBar('REMAINING', (stockData.totalCheckPoints - stockData.checkPointsCollected)..'/'..stockData.totalCheckPoints)
+				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.stockPiling.duration - GetGameTimer() + stockData.startTime), 1)
+				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0, 2)
+				Gui.DrawBar('REMAINING', (stockData.totalCheckPoints - stockData.checkPointsCollected)..'/'..stockData.totalCheckPoints, 3)
 
-				local barPosition = 3
-				for i = barPosition, 1, -1 do
+				local barPosition = 4
+				for i = barPosition - 1, 1, -1 do
 					if stockData.players[i] then
 						Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(stockData.players[i].id)), stockData.players[i].points,
-							Color.GetHudFromBlipColor(playerColors[i]), true)
+							barPosition, Color.GetHudFromBlipColor(playerColors[i]), true)
 						barPosition = barPosition + 1
 					end
 				end

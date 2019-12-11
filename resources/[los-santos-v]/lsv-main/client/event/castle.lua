@@ -1,8 +1,8 @@
-local logger = Logger:CreateNamedLogger('Castle')
+local logger = Logger.New('Castle')
 
 local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
 local instructionsText = 'Hold the Castle area by yourself to become the King and earn reward.'
-local playerColors = { Color.BlipYellow(), Color.BlipGrey(), Color.BlipBrown() }
+local playerColors = { Color.BLIP_YELLOW, Color.BLIP_GREY, Color.BLIP_BROWN }
 local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
 
 local castleData = nil
@@ -35,8 +35,8 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 	Citizen.CreateThread(function()
 		if Player.IsInFreeroam() and not passedTime then Gui.StartEvent('King of the Castle', instructionsText) end
 
-		castleData.zoneBlip = Map.CreateRadiusBlip(place.x, place.y, place.z, Settings.castle.radius, Color.BlipPurple())
-		castleData.blip = Map.CreateEventBlip(Blip.Castle(), place.x, place.y, place.z, nil, Color.BlipPurple())
+		castleData.zoneBlip = Map.CreateRadiusBlip(place.x, place.y, place.z, Settings.castle.radius, Color.BLIP_PURPLE)
+		castleData.blip = Map.CreateEventBlip(Blip.CASTLE, place.x, place.y, place.z, nil, Color.BLIP_PURPLE)
 		Map.SetBlipFlashes(castleData.blip)
 
 		while true do
@@ -51,14 +51,14 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 				Gui.DisplayObjectiveText(Player.DistanceTo(castleData.place, true) <= Settings.castle.radius and
 					'Defend the ~p~Castle area~w~.' or 'Enter the ~p~Castle area~w~ to become the King.')
 
-				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.castle.duration - GetGameTimer() + castleData.startTime))
-				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0)
+				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.castle.duration - GetGameTimer() + castleData.startTime), 1)
+				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0, 2)
 
 				local barPosition = 3
 				for i = barPosition, 1, -1 do
 					if castleData.players[i] then
 						Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(castleData.players[i].id)), castleData.players[i].points,
-							Color.GetHudFromBlipColor(playerColors[i]), true)
+							barPosition, Color.GetHudFromBlipColor(playerColors[i]), true)
 						barPosition = barPosition + 1
 					end
 				end

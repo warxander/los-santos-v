@@ -1,6 +1,22 @@
 Color = { }
+Color.__index = Color
 
-local colors = {
+
+Color.BLIP_WHITE = 0
+Color.BLIP_RED = 1
+Color.BLIP_GREEN = 2
+Color.BLIP_BLUE = 3
+Color.BLIP_YELLOW = 5
+Color.BLIP_ORANGE = 17
+Color.BLIP_PURPLE = 19
+Color.BLIP_GREY = 20
+Color.BLIP_BROWN = 21
+Color.BLIP_PINK = 23
+Color.BLIP_LIGHT_BLUE = 26
+Color.BLIP_DARK_BLUE = 38
+
+
+local blipColors = {
 	{ r = 254, g = 254, b = 254, a = 255 },
 	{ r = 224, g = 50, b = 50, a = 255 },
 	{ r = 114, g = 204, b = 114, a = 255 },
@@ -40,64 +56,5 @@ local colors = {
 
 
 function Color.GetHudFromBlipColor(blipColor)
-	return colors[blipColor + 1]
-end
-
-
-function Color.BlipWhite()
-	return 0
-end
-
-function Color.BlipRed()
-	return 1
-end
-
-
-function Color.BlipGreen()
-	return 2
-end
-
-
-function Color.BlipBlue()
-	return 3
-end
-
-
-function Color.BlipYellow()
-	return 5
-end
-
-
-function Color.BlipOrange()
-	return 17
-end
-
-
-function Color.BlipPurple()
-	return 19
-end
-
-
-function Color.BlipGrey()
-	return 20
-end
-
-
-function Color.BlipBrown()
-	return 21
-end
-
-
-function Color.BlipPink()
-	return 23
-end
-
-
-function Color.BlipLightBlue()
-	return 26
-end
-
-
-function Color.BlipDarkBlue()
-	return 38
+	return blipColors[blipColor + 1]
 end

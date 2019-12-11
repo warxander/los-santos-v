@@ -1,11 +1,11 @@
 Map = { }
 
-local logger = Logger:CreateNamedLogger('Map')
+local logger = Logger.New('Map')
 
 
 function Map.SetBlipText(blip, text)
 	BeginTextCommandSetBlipName('STRING')
-	AddTextComponentSubstringPlayerName(text)
+	Gui.AddText(text)
 	EndTextCommandSetBlipName(blip)
 end
 
@@ -27,7 +27,7 @@ function Map.CreateRadiusBlip(x, y, z, radius, color)
 	local blip = AddBlipForRadius(x, y, z, radius)
 
 	SetBlipHighDetail(blip, true)
-	SetBlipSprite(blip, Blip.BigCircle())
+	SetBlipSprite(blip, Blip.BIG_CIRCLE)
 	SetBlipColour(blip, color)
 	SetBlipAlpha(blip, 128)
 
@@ -48,8 +48,8 @@ function Map.CreateEventBlip(blipSprite, x, y, z, customName, color)
 end
 
 
-function Map.CreatePickupBlip(pickup, itemId, color)
-	local blipSprite = Blip.GetPickupBlipSpriteId(itemId)
+function Map.CreatePickupBlip(pickup, itemId, color, name)
+	local blipSprite = Blip[itemId]
 	local blip = nil
 
 	if blipSprite then
@@ -62,6 +62,8 @@ function Map.CreatePickupBlip(pickup, itemId, color)
 			SetBlipColour(blip, color)
 		end
 	end
+
+	if name then Map.SetBlipText(blip, name) end
 
 	return blip
 end
