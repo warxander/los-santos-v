@@ -1,5 +1,5 @@
 local function isPlayerModerator(player)
-	if not Scoreboard.IsPlayerModerator(player) then
+	if not PlayerData.IsModerator(player) then
 		TriggerEvent('lsv:banPlayer', player, 'Fake moderator permission')
 		return false
 	end
@@ -7,26 +7,29 @@ local function isPlayerModerator(player)
 	return true
 end
 
-
 RegisterNetEvent('lsv:kickPlayer')
 AddEventHandler('lsv:kickPlayer', function(target, reason)
 	local player = source
 
-	if not Scoreboard.IsPlayerOnline(player) or not Scoreboard.IsPlayerOnline(target) then return end
-	if not isPlayerModerator(player) then return end
+	if not PlayerData.IsExists(player) or not PlayerData.IsExists(target) or not isPlayerModerator(player) then
+		return
+	end
 
 	Discord.ReportKickedPlayer(target, player, reason)
-
 	DropPlayer(target, 'You were kicked from the session by moderator for '..reason..'.')
 end)
-
 
 RegisterNetEvent('lsv:banPlayer')
 AddEventHandler('lsv:banPlayer', function(target, reason)
 	local player = source
 
-	if not Scoreboard.IsPlayerOnline(player) or not Scoreboard.IsPlayerOnline(target) then return end
-	if not isPlayerModerator(player) or Scoreboard.GetPlayerModeratorLevel(player) < Settings.moderatorLevel.Administrator then return end
+	if not PlayerData.IsExists(player) or not PlayerData.IsExists(target) or not isPlayerModerator(player) then
+		return
+	end
+
+	if PlayerData.GetModeratorLevel(player) ~= Settings.moderator.levels.Administrator then
+		return
+	end
 
 	local targetName = GetPlayerName(target)
 
@@ -41,8 +44,9 @@ RegisterNetEvent('lsv:tempBanPlayer')
 AddEventHandler('lsv:tempBanPlayer', function(target, reason, duration)
 	local player = source
 
-	if not Scoreboard.IsPlayerOnline(player) or not Scoreboard.IsPlayerOnline(target) then return end
-	if not isPlayerModerator(player) or Scoreboard.GetPlayerModeratorLevel(player) < Settings.moderatorLevel.SuperModerator then return end
+	if not PlayerData.IsExists(player) or not PlayerData.IsExists(target) or not isPlayerModerator(player) then
+		return
+	end
 
 	local targetName = GetPlayerName(target)
 	local expiresDate = os.time() + duration * 24 * 3600

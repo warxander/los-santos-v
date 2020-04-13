@@ -1,45 +1,47 @@
-local challengeName = 'One on One Deathmatch'
+local _challengeName = 'One on One Deathmatch'
 
-local duelData = nil
-
+local _duelData = nil
 
 RegisterNetEvent('lsv:duelRequested')
 AddEventHandler('lsv:duelRequested', function(opponent)
-	ChallengeManager.Request(opponent, challengeName, 'lsv:duelAccepted')
+	ChallengeManager.Request(opponent, _challengeName, 'lsv:duelAccepted')
 end)
-
 
 RegisterNetEvent('lsv:duelUpdated')
 AddEventHandler('lsv:duelUpdated', function(data)
-	if not duelData then
+	if not _duelData then
 		World.ChallengingPlayer = data.opponent
-		duelData = data
+		_duelData = data
 
-		Gui.StartChallenge(challengeName)
+		Gui.StartChallenge(_challengeName)
 
 		Citizen.CreateThread(function()
 			while true do
 				Citizen.Wait(0)
 
-				if not duelData then return end
+				if not _duelData then
+					return
+				end
 
 				if Player.IsActive() then
 					Gui.DrawBar('TARGET SCORE', Settings.duel.targetScore, 1)
-					Gui.DrawBar(GetPlayerName(GetPlayerFromServerId(duelData.opponent)), duelData.opponentScore, 2, Color.GetHudFromBlipColor(Color.BLIP_RED), true)
-					Gui.DrawBar(GetPlayerName(PlayerId()), duelData.score, 3, Color.GetHudFromBlipColor(Color.BLIP_BLUE), true)
+					Gui.DrawBar(GetPlayerName(GetPlayerFromServerId(_duelData.opponent)), _duelData.opponentScore, 2, Color.RED, true)
+					Gui.DrawBar(GetPlayerName(PlayerId()), _duelData.score, 3, Color.BLUE, true)
 				end
 			end
 		end)
 	else
-		duelData.score = data.score
-		duelData.opponentScore = data.opponentScore
+		_duelData.score = data.score
+		_duelData.opponentScore = data.opponentScore
 	end
 end)
 
-
 RegisterNetEvent('lsv:duelEnded')
 AddEventHandler('lsv:duelEnded', function(winner, looser)
-	if not ChallengeManager.Finish(winner, looser, challengeName) then return end
+	if not winner or winner == Player.ServerId() or looser == Player.ServerId() then
+		_duelData = nil
+		World.ChallengingPlayer = nil
+	end
 
-	duelData = nil
+	Gui.FinishChallenge(winner, looser, _challengeName)
 end)

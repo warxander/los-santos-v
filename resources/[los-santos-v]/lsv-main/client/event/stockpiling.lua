@@ -1,61 +1,77 @@
-local instructionsText = 'Compete to collect the most checkpoints in the given time.'
-local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
-local playerColors = { Color.BLIP_YELLOW, Color.BLIP_GREY, Color.BLIP_BROWN }
-local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
-local markerColor = Color.GetHudFromBlipColor(Color.BLIP_YELLOW)
+local _instructionsText = 'Compete to collect the most checkpoints in the given time.'
+local _titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
+local _playerColors = { Color.YELLOW, Color.GREY, Color.BROWN }
+local _playerPositions = { '1st: ', '2nd: ', '3rd: ' }
+local _markerColor = Color.YELLOW
 
-local stockData = nil
+local _stockData = nil
 
 local function getPlayerPoints()
-	local player = table.find_if(stockData.players, function(player)
+	local player = table.find_if(_stockData.players, function(player)
 		return player.id == Player.ServerId()
 	end)
-	if not player then return nil end
+
+	if not player then
+		return nil
+	end
+
 	return player.points
 end
 
-
 RegisterNetEvent('lsv:startStockPiling')
 AddEventHandler('lsv:startStockPiling', function(data, passedTime)
-	if stockData then return end
+	if _stockData then
+		return
+	end
 
 	-- Preparations
-	stockData = { }
+	_stockData = { }
 
-	stockData.startTime = GetGameTimer()
-	if passedTime then stockData.startTime = stockData.startTime - passedTime end
-	stockData.players = data.players
+	_stockData.startTime = GetGameTimer()
+	if passedTime then
+		_stockData.startTime = _stockData.startTime - passedTime
+	end
 
-	stockData.checkPoints = data.checkPoints
-	table.iforeach(stockData.checkPoints, function(checkPoint)
-		if checkPoint.picked then return end
+	_stockData.players = data.players
+
+	_stockData.checkPoints = data.checkPoints
+	table.iforeach(_stockData.checkPoints, function(checkPoint)
+		if checkPoint.picked then
+			return
+		end
+
 		checkPoint.blip = Map.CreateEventBlip(Blip.CHECKPOINT, checkPoint.position.x, checkPoint.position.y, checkPoint.position.z, 'Checkpoint', Color.BLIP_YELLOW)
 		Map.SetBlipFlashes(checkPoint.blip)
 	end)
-	stockData.totalCheckPoints = data.totalCheckPoints
-	stockData.checkPointsCollected = data.checkPointsCollected
+
+	_stockData.totalCheckPoints = data.totalCheckPoints
+	_stockData.checkPointsCollected = data.checkPointsCollected
 
 	-- GUI
 	Citizen.CreateThread(function()
-		if Player.IsInFreeroam() and not passedTime then Gui.StartEvent('Stockpiling', instructionsText) end
+		if Player.IsInFreeroam() and not passedTime then
+			Gui.StartEvent('Stockpiling', _instructionsText)
+		end
 
 		while true do
 			Citizen.Wait(0)
 
-			if not stockData then return end
+			if not _stockData then
+				return
+			end
 
 			if Player.IsInFreeroam() then
 				Gui.DisplayObjectiveText('Collect the most ~y~checkpoints~w~.')
 
-				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.stockPiling.duration - GetGameTimer() + stockData.startTime), 1)
+				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.stockPiling.duration - GetGameTimer() + _stockData.startTime), 1)
 				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0, 2)
-				Gui.DrawBar('REMAINING', (stockData.totalCheckPoints - stockData.checkPointsCollected)..'/'..stockData.totalCheckPoints, 3)
+				Gui.DrawBar('REMAINING', (_stockData.totalCheckPoints - _stockData.checkPointsCollected)..'/'.._stockData.totalCheckPoints, 3)
 
 				local barPosition = 4
 				for i = barPosition - 1, 1, -1 do
-					if stockData.players[i] then
-						Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(stockData.players[i].id)), stockData.players[i].points,
-							barPosition, Color.GetHudFromBlipColor(playerColors[i]), true)
+					if _stockData.players[i] then
+						Gui.DrawBar(_playerPositions[i]..GetPlayerName(GetPlayerFromServerId(_stockData.players[i].id)), _stockData.players[i].points,
+							barPosition, _playerColors[i], true)
 						barPosition = barPosition + 1
 					end
 				end
@@ -68,20 +84,27 @@ AddEventHandler('lsv:startStockPiling', function(data, passedTime)
 		while true do
 			Citizen.Wait(0)
 
-			if not stockData then return end
+			if not _stockData then
+				return
+			end
 
 			local playerPosition = Player.Position(true)
-			local checkPoint, index = table.ifind_if(stockData.checkPoints, function(checkPoint) return not checkPoint.picked and Vdist(playerPosition.x, playerPosition.y, playerPosition.z, checkPoint.position.x, checkPoint.position.y, checkPoint.position.z) <= Settings.stockPiling.radius end)
+			local checkPoint, index = table.ifind_if(_stockData.checkPoints, function(checkPoint)
+				return not checkPoint.picked and Vdist(playerPosition.x, playerPosition.y, playerPosition.z, checkPoint.position.x, checkPoint.position.y, checkPoint.position.z) <= Settings.stockPiling.radius
+			end)
 			if checkPoint then
 				checkPoint.picked = true
 				TriggerServerEvent('lsv:stockPilingCheckPointCollected', index)
 			else
-				table.iforeach(stockData.checkPoints, function(checkPoint)
-					if checkPoint.picked then return end
+				table.iforeach(_stockData.checkPoints, function(checkPoint)
+					if checkPoint.picked then
+						return
+					end
+
+					Gui.DrawPlaceMarker(checkPoint.position, _markerColor, Settings.stockPiling.radius)
 
 					if IsSphereVisible(checkPoint.position.x, checkPoint.position.y, checkPoint.position.z, Settings.stockPiling.radius) then
-						Gui.DrawPlaceMarker(checkPoint.position.x, checkPoint.position.y, checkPoint.position.z - 1, Settings.stockPiling.radius, markerColor.r, markerColor.g, markerColor.b, Settings.placeMarkerOpacity)
-						DrawMarker(29, checkPoint.position.x, checkPoint.position.y, checkPoint.position.z + 1, 0., 0., 0., 0., 0.,0., 2.5, 2.5, 2.5, markerColor.r, markerColor.g, markerColor.b, Settings.placeMarkerOpacity, false, true)
+						DrawMarker(29, checkPoint.position.x, checkPoint.position.y, checkPoint.position.z + 1, 0., 0., 0., 0., 0.,0., 2.5, 2.5, 2.5, _markerColor.r, _markerColor.g, _markerColor.b, Settings.placeMarker.opacity, false, true)
 					end
 				end)
 			end
@@ -89,20 +112,21 @@ AddEventHandler('lsv:startStockPiling', function(data, passedTime)
 	end)
 end)
 
-
 RegisterNetEvent('lsv:updateStockPilingPlayers')
 AddEventHandler('lsv:updateStockPilingPlayers', function(players, index, player)
-	if not stockData then return end
+	if not _stockData then
+		return
+	end
 
-	stockData.players = players
+	_stockData.players = players
 
 	if index then
-		stockData.checkPoints[index].picked = true
+		_stockData.checkPoints[index].picked = true
 
-		RemoveBlip(stockData.checkPoints[index].blip)
-		stockData.checkPoints[index].blip = nil
+		RemoveBlip(_stockData.checkPoints[index].blip)
+		_stockData.checkPoints[index].blip = nil
 
-		stockData.checkPointsCollected = stockData.checkPointsCollected + 1
+		_stockData.checkPointsCollected = _stockData.checkPointsCollected + 1
 
 		if player == Player.ServerId() then
 			PlaySoundFrontend(-1, 'CHECKPOINT_AHEAD', 'HUD_MINI_GAME_SOUNDSET', false)
@@ -111,22 +135,25 @@ AddEventHandler('lsv:updateStockPilingPlayers', function(players, index, player)
 	end
 end)
 
-
 RegisterNetEvent('lsv:finishStockPiling')
 AddEventHandler('lsv:finishStockPiling', function(winners)
-	if stockData then
-		table.iforeach(stockData.checkPoints, function(checkPoint)
-			if checkPoint.blip then RemoveBlip(checkPoint.blip) end
-		end)
+	if not _stockData then
+		return
 	end
 
+	table.iforeach(_stockData.checkPoints, function(checkPoint)
+		if checkPoint.blip then
+			RemoveBlip(checkPoint.blip)
+		end
+	end)
+
 	if not winners then
-		stockData = nil
+		_stockData = nil
 		return
 	end
 
 	local playerPoints = getPlayerPoints()
-	stockData = nil
+	_stockData = nil
 
 	local isPlayerWinner = false
 	for i = 1, math.min(3, #winners) do
@@ -139,13 +166,15 @@ AddEventHandler('lsv:finishStockPiling', function(winners)
 	local messageText = isPlayerWinner and 'You have won Stockpiling with a score of '..playerPoints or Gui.GetPlayerName(winners[1], '~p~')..' has won Stockpiling.'
 
 	if Player.IsInFreeroam() and playerPoints then
-		if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
-		else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
+		if isPlayerWinner then
+			PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
+		else
+			PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true)
+		end
 
-		local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-		scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
-		scaleform:RenderFullscreenTimed(10000)
-		scaleform:Delete()
+		local scaleform = Scaleform.NewAsync('MIDSIZED_MESSAGE')
+		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and _titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
+		scaleform:renderFullscreenTimed(10000)
 	else
 		Gui.DisplayNotification(messageText)
 	end

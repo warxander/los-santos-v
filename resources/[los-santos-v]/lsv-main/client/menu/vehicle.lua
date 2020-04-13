@@ -1,4 +1,4 @@
-local vehicleColors = {
+local _vehicleColors = {
 	['Classic'] = {
 		{ name = 'Black', id = 0 },
 		{ name = 'Carbon Black', id = 147 },
@@ -109,18 +109,16 @@ local vehicleColors = {
 	},
 }
 
+local _vehicleAccessItems = { 'No-one', 'Crew', 'Everyone' }
+local _vehicleAccessCurrentIndex = 1
+local _vehiclePosition = { }
+local _vehicleColor = { primary = 0, secondary = 0 }
 
-local vehicleAccessItems = { 'No-one', 'Crew', 'Everyone' }
-local vehicleAccessCurrentIndex = 1
-local vehiclePosition = { }
-local vehicleColor = { primary = 0, secondary = 0 }
-
-local lastVehicle = nil
-
+local _lastVehicle = nil
 
 local function updateDoorsLock()
-	SetVehicleDoorsLockedForAllPlayers(Player.VehicleHandle, vehicleAccessCurrentIndex ~= 3)
-	if vehicleAccessCurrentIndex == 2 then
+	SetVehicleDoorsLockedForAllPlayers(Player.VehicleHandle, _vehicleAccessCurrentIndex ~= 3)
+	if _vehicleAccessCurrentIndex == 2 then
 		table.iforeach(Player.CrewMembers, function(member)
 			SetVehicleDoorsLockedForPlayer(Player.VehicleHandle, GetPlayerFromServerId(member), false)
 		end)
@@ -130,7 +128,7 @@ local function updateDoorsLock()
 end
 
 local function updateColor()
-	SetVehicleColours(Player.VehicleHandle, vehicleColor.primary, vehicleColor.secondary)
+	SetVehicleColours(Player.VehicleHandle, _vehicleColor.primary, _vehicleColor.secondary)
 end
 
 local function updateVehicle()
@@ -146,22 +144,32 @@ local function tryFindVehicleLocation()
 		return false
 	end
 
-	vehiclePosition.position = position
-	vehiclePosition.heading = heading
+	_vehiclePosition.position = position
+	_vehiclePosition.heading = heading
 
 	return true
 end
 
 local function getVehiclePrice(vehicle)
-	if vehicle.prestige and Player.Prestige < vehicle.prestige then return 'Prestige '..vehicle.prestige end
-	if vehicle.rank and Player.Rank < vehicle.rank then return 'Rank '..vehicle.rank end
-	return '$'..vehicle.cash
+	if vehicle.prestige and Player.Prestige < vehicle.prestige then
+		return 'Prestige '..vehicle.prestige
+	end
+
+	if vehicle.rank and Player.Rank < vehicle.rank then
+		return 'Rank '..vehicle.rank
+	end
+
+	local price = vehicle.cash
+	if Player.PatreonTier ~= 0 then
+		price = math.floor(price * Settings.patreon.rent[Player.PatreonTier])
+	end
+
+	return '$'..price
 end
 
-
 local function requestVehicle(model)
-	Streaming.RequestModel(model)
-	Player.VehicleHandle = CreateVehicle(GetHashKey(model), vehiclePosition.position.x, vehiclePosition.position.y, vehiclePosition.position.z, vehiclePosition.heading, true, false)
+	Streaming.RequestModelAsync(model)
+	Player.VehicleHandle = CreateVehicle(GetHashKey(model), _vehiclePosition.position.x, _vehiclePosition.position.y, _vehiclePosition.position.z, _vehiclePosition.heading, true, false)
 	updateVehicle()
 	SetVehicleNumberPlateText(Player.VehicleHandle, GetPlayerName(PlayerId()))
 	SetVehicleModKit(Player.VehicleHandle, 0) -- Make SetVehicleMod actually works
@@ -198,13 +206,27 @@ local function requestVehicle(model)
 	end)
 end
 
+RegisterNetEvent('lsv:vehicleRented')
+AddEventHandler('lsv:vehicleRented', function(model, name)
+	if not model then
+		Gui.DisplayPersonalNotification('You can\'t rent this vehicle.')
+		Prompt.Hide()
+		return
+	end
+
+	requestVehicle(model)
+	Gui.DisplayPersonalNotification('You have rented '..name..'.')
+	Prompt.Hide()
+end)
 
 AddEventHandler('lsv:init', function()
 	Citizen.CreateThread(function()
 		while true do
 			Citizen.Wait(0)
 
-			if IsControlJustReleased(0, 246) then Gui.OpenMenu('vehicle') end
+			if IsControlJustReleased(0, 246) then
+				Gui.OpenMenu('vehicle')
+			end
 		end
 	end)
 
@@ -248,7 +270,7 @@ AddEventHandler('lsv:init', function()
 					if Player.ExplodePersonalVehicle() then
 						if tryFindVehicleLocation() then
 							WarMenu.CloseMenu()
-							TriggerServerEvent('lsv:rentVehicle', lastVehicle.id, lastVehicle.category)
+							TriggerServerEvent('lsv:rentVehicle', _lastVehicle.id, _lastVehicle.category)
 							Prompt.ShowAsync()
 						end
 					end
@@ -256,20 +278,21 @@ AddEventHandler('lsv:init', function()
 					WarMenu.CloseMenu()
 					Player.ExplodePersonalVehicle()
 				else
-					if WarMenu.ComboBox('Vehicle Access', vehicleAccessItems, vehicleAccessCurrentIndex, vehicleAccessCurrentIndex, function(currentIndex)
-						if currentIndex ~= vehicleAccessCurrentIndex then
-							vehicleAccessCurrentIndex = currentIndex
+					if WarMenu.ComboBox('Vehicle Access', _vehicleAccessItems, _vehicleAccessCurrentIndex, _vehicleAccessCurrentIndex, function(currentIndex)
+						if currentIndex ~= _vehicleAccessCurrentIndex then
+							_vehicleAccessCurrentIndex = currentIndex
 							updateDoorsLock()
 						end
 					end) then
-					elseif WarMenu.MenuButton('Color', 'vehicle_colorCategory') then end
+					elseif WarMenu.MenuButton('Color', 'vehicle_colorCategory') then
+					end
 				end
 			else
 				if WarMenu.MenuButton('Rent', 'vehicle_categories') then
-				elseif lastVehicle and WarMenu.Button(lastVehicle.name, getVehiclePrice(lastVehicle)) then
+				elseif _lastVehicle and WarMenu.Button(_lastVehicle.name, getVehiclePrice(_lastVehicle)) then
 					if tryFindVehicleLocation() then
 						WarMenu.CloseMenu()
-						TriggerServerEvent('lsv:rentVehicle', lastVehicle.id, lastVehicle.category)
+						TriggerServerEvent('lsv:rentVehicle', _lastVehicle.id, _lastVehicle.category)
 						Prompt.ShowAsync()
 					end
 				end
@@ -277,7 +300,7 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('vehicle_colorCategory') then
-			table.foreach(vehicleColors, function(_, colorCategory)
+			table.foreach(_vehicleColors, function(_, colorCategory)
 				if WarMenu.MenuButton(colorCategory, 'vehicle_color') then
 					selectedVehicleColorCategory = colorCategory
 					WarMenu.SetSubTitle('vehicle_color', colorCategory..' Colors')
@@ -286,7 +309,7 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('vehicle_color') then
-			table.iforeach(vehicleColors[selectedVehicleColorCategory], function(colorData)
+			table.iforeach(_vehicleColors[selectedVehicleColorCategory], function(colorData)
 				if WarMenu.MenuButton(colorData.name, 'vehicle_colorType') then
 					selectedVehicleColor = colorData.id
 					WarMenu.SetSubTitle('vehicle_colorType', colorData.name..' '..selectedVehicleColorCategory..' Color')
@@ -296,11 +319,11 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('vehicle_colorType') then
 			if WarMenu.Button('Primary') then
-				vehicleColor.primary = selectedVehicleColor
+				_vehicleColor.primary = selectedVehicleColor
 				updateColor()
 				WarMenu.OpenMenu('vehicle_color')
 			elseif WarMenu.Button('Secondary') then
-				vehicleColor.secondary = selectedVehicleColor
+				_vehicleColor.secondary = selectedVehicleColor
 				updateColor()
 				WarMenu.OpenMenu('vehicle_color')
 			end
@@ -308,6 +331,14 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('vehicle_categories') then
 			table.foreach(vehicles, function(_, vehicleCategory)
+				if Player.Rank >= Settings.personalVehicle.freeMaxRank and vehicleCategory == 'Free' then
+					return
+				end
+
+				if Player.Faction ~= Settings.faction.Enforcer and vehicleCategory == 'Enforcer' then
+					return
+				end
+
 				if WarMenu.MenuButton(vehicleCategory, 'vehicle_vehicles') then
 					WarMenu.SetSubTitle('vehicle_vehicles', vehicleCategory)
 					selectedVehicleCategory = vehicleCategory
@@ -323,8 +354,8 @@ AddEventHandler('lsv:init', function()
 					elseif vehicle.rank and vehicle.rank > Player.Rank then
 						Gui.DisplayPersonalNotification('Your Rank is too low.')
 					elseif tryFindVehicleLocation() then
-						lastVehicle = vehicle
-						lastVehicle.category = selectedVehicleCategory
+						_lastVehicle = vehicle
+						_lastVehicle.category = selectedVehicleCategory
 						WarMenu.CloseMenu()
 						TriggerServerEvent('lsv:rentVehicle', vehicle.id, selectedVehicleCategory)
 						Prompt.ShowAsync()
@@ -337,18 +368,4 @@ AddEventHandler('lsv:init', function()
 
 		Citizen.Wait(0)
 	end
-end)
-
-
-RegisterNetEvent('lsv:vehicleRented')
-AddEventHandler('lsv:vehicleRented', function(model, name)
-	if not model then
-		Gui.DisplayPersonalNotification('You don\'t have enough cash.')
-		Prompt.Hide()
-		return
-	end
-
-	requestVehicle(model)
-	Gui.DisplayPersonalNotification('You have rented '..name..'.')
-	Prompt.Hide()
 end)

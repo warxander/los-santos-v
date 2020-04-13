@@ -1,29 +1,30 @@
-local players = { }
-
+local _players = { }
 
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(60000)
 
-		table.foreach(players, function(warned, player)
+		table.foreach(_players, function(warned, player)
 			local ping = GetPlayerPing(player)
+
 			if ping >= Settings.pingThreshold then
-				if warned then DropPlayer(player, 'Your ping is too high ('..ping..' ms)')
+				if warned then
+					DropPlayer(player, 'Your ping is too high ('..ping..' ms)')
 				else
 					TriggerClientEvent('lsv:playerHighPingWarned', player, ping)
-					players[player] = true
+					_players[player] = true
 				end
-			elseif warned then players[player] = false end
+			elseif warned then
+				_players[player] = false
+			end
 		end)
 	end
 end)
 
-
-AddEventHandler('lsv:playerConnected', function(player)
-	players[player] = false
+AddSignalHandler('lsv:playerConnected', function(player)
+	_players[player] = false
 end)
 
-
-AddEventHandler('lsv:playerDropped', function(player)
-	players[player] = nil
+AddSignalHandler('lsv:playerDropped', function(player)
+	_players[player] = nil
 end)

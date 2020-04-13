@@ -1,5 +1,4 @@
-local alreadyInvited = false
-
+local _alreadyInvited = false
 
 RegisterNetEvent('lsv:crewLeaved')
 AddEventHandler('lsv:crewLeaved', function(player)
@@ -14,19 +13,20 @@ AddEventHandler('lsv:crewLeaved', function(player)
 	end
 end)
 
-
 RegisterNetEvent('lsv:invitedToCrew')
 AddEventHandler('lsv:invitedToCrew', function(player)
-	if #Player.CrewMembers ~= 0 or alreadyInvited then
+	if #Player.CrewMembers ~= 0 or _alreadyInvited then
 		TriggerServerEvent('lsv:alreadyInCrew', player)
 		return
 	end
 
-	alreadyInvited = true
+	_alreadyInvited = true
 
 	local playerId = GetPlayerFromServerId(player)
 	local handle = RegisterPedheadshot(GetPlayerPed(playerId))
-	while not IsPedheadshotReady(handle) or not IsPedheadshotValid(handle) do Citizen.Wait(0) end
+	while not IsPedheadshotReady(handle) or not IsPedheadshotValid(handle) do
+		Citizen.Wait(0)
+	end
 	local txd = GetPedheadshotTxdString(handle)
 
 	FlashMinimapDisplay()
@@ -37,10 +37,10 @@ AddEventHandler('lsv:invitedToCrew', function(player)
 	while true do
 		Citizen.Wait(0)
 
-		if invitationTimer:Elapsed() >= Settings.crewInvitationTimeout then
+		if invitationTimer:elapsed() >= Settings.crewInvitationTimeout then
 			Gui.DisplayPersonalNotification('You have declined Crew invitation from '..Gui.GetPlayerName(player)..'.')
 			TriggerServerEvent('lsv:declineInvitation', player)
-			alreadyInvited = false
+			_alreadyInvited = false
 			return
 		end
 
@@ -50,15 +50,14 @@ AddEventHandler('lsv:invitedToCrew', function(player)
 			table.insert(Player.CrewMembers, player)
 			TriggerServerEvent('lsv:acceptInvitation', player)
 			Gui.DisplayPersonalNotification('You have accepted Crew Invitation from '..Gui.GetPlayerName(player)..'.')
-			alreadyInvited = false
+			_alreadyInvited = false
 			return
 		end
 	end
 end)
 
-
-RegisterNetEvent('lsv:invitationAccepted')
-AddEventHandler('lsv:invitationAccepted', function(player)
+RegisterNetEvent('lsv:crewInvitationAccepted')
+AddEventHandler('lsv:crewInvitationAccepted', function(player)
 	TriggerServerEvent('lsv:updateCrewMembers', player, Player.CrewMembers)
 	TriggerServerEvent('lsv:addCrewMember', player)
 
@@ -69,14 +68,12 @@ AddEventHandler('lsv:invitationAccepted', function(player)
 	Gui.DisplayPersonalNotification(Gui.GetPlayerName(player)..' has accepted your Crew Invitation.')
 end)
 
-
 RegisterNetEvent('lsv:crewMembersUpdated')
 AddEventHandler('lsv:crewMembersUpdated', function(members)
 	table.iforeach(members, function(member)
 		table.insert(Player.CrewMembers, member)
 	end)
 end)
-
 
 RegisterNetEvent('lsv:addedCrewMember')
 AddEventHandler('lsv:addedCrewMember', function(player, member)
@@ -89,20 +86,17 @@ AddEventHandler('lsv:addedCrewMember', function(player, member)
 	end
 end)
 
-
-RegisterNetEvent('lsv:invitationDeclined')
-AddEventHandler('lsv:invitationDeclined', function(player)
+RegisterNetEvent('lsv:crewInvitationDeclined')
+AddEventHandler('lsv:crewInvitationDeclined', function(player)
 	PlaySoundFrontend(-1, 'MP_IDLE_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
 	Gui.DisplayPersonalNotification(Gui.GetPlayerName(player)..' has declined your Crew Invitation.')
 end)
-
 
 RegisterNetEvent('lsv:alreadyInCrew')
 AddEventHandler('lsv:alreadyInCrew', function(player)
 	PlaySoundFrontend(-1, 'MP_IDLE_TIMER', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
 	Gui.DisplayNotification(Gui.GetPlayerName(player)..' is already in Crew.')
 end)
-
 
 AddEventHandler('lsv:playerDisconnected', function(_, player)
 	table.try_remove(Player.CrewMembers, player)

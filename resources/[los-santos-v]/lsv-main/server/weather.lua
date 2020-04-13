@@ -1,33 +1,32 @@
 local logger = Logger.New('Weather')
 
-local weatherIndex = nil
-local timer = Timer.New()
-
+local _weather = nil
 
 Citizen.CreateThread(function()
-	local weatherCount = #Settings.weatherTypes
-	weatherIndex = math.random(weatherCount)
+	local weatherCount = #Settings.weather.types
+
+	_weather = Settings.weather.types[math.random(weatherCount)]
 
 	if weatherCount == 1 then
 		return
 	end
 
-	timer:Restart()
-
 	while true do
-		Citizen.Wait(1000)
+		Citizen.Wait(math.random(Settings.weather.interval.min, Settings.weather.interval.max) * 60000)
 
-		if timer:Elapsed() >= Settings.weatherOverTime then
-			weatherIndex = math.random(weatherCount)
-			timer:Restart()
-
-			TriggerClientEvent('lsv:weatherUpdated', -1, Settings.weatherTypes[weatherIndex])
-			logger:Info('Setting weather to '..Settings.weatherTypes[weatherIndex])
+		if _weather == 'THUNDER' then
+			_weather = 'RAIN'
+		elseif _weather == 'RAIN' then
+			_weather = 'CLEARING'
+		else
+			_weather = Settings.weather.types[math.random(weatherCount)]
 		end
+
+		TriggerClientEvent('lsv:updateWeather', -1, _weather)
+		logger:info('Setting weather to '.._weather)
 	end
 end)
 
-
-AddEventHandler('lsv:playerConnected', function(player)
-	TriggerClientEvent('lsv:weatherUpdated', player, Settings.weatherTypes[weatherIndex])
+AddSignalHandler('lsv:playerConnected', function(player)
+	TriggerClientEvent('lsv:updateWeather', player, _weather)
 end)

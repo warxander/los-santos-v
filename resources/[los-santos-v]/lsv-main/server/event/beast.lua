@@ -1,106 +1,139 @@
 local logger = Logger.New('HuntTheBeast')
 
-local beastData = nil
+local _beastData = nil
 
+RegisterNetEvent('lsv:huntTheBeastLandmarkCollected')
+AddEventHandler('lsv:huntTheBeastLandmarkCollected', function(index)
+	local player = source
+
+	if not _beastData then
+		return
+	end
+
+	if player ~= _beastData.beast or _beastData.landmarksPicked == _beastData.totalLandmarks then
+		return
+	end
+
+	logger:info('Collected { '..index..' }')
+
+	_beastData.landmarksPicked = _beastData.landmarksPicked + 1
+	_beastData.landmarks[index].picked = true
+
+	TriggerClientEvent('lsv:huntTheBeastLandmarkCollected', -1, index)
+end)
 
 AddEventHandler('lsv:startHuntTheBeast', function()
-	beastData = { }
-	beastData.beast = Scoreboard.GetRandomPlayer()
+	_beastData = { }
 
-	beastData.landmarks = { }
+	_beastData.beast = PlayerData.GetRandom()
+	_beastData.landmarks = { }
 	table.iforeach(Settings.huntTheBeast.landmarks, function(position)
-		table.insert(beastData.landmarks, { position = position, picked = false })
+		table.insert(_beastData.landmarks, { position = position, picked = false })
 	end)
 
-	beastData.landmarksPicked = 0
-	beastData.totalLandmarks = Settings.huntTheBeast.targetLandmarks
-	beastData.livesLeft = Settings.huntTheBeast.lives
+	_beastData.landmarksPicked = 0
+	_beastData.totalLandmarks = Settings.huntTheBeast.targetLandmarks
+	_beastData.livesLeft = Settings.huntTheBeast.lives
 
-	beastData.eventStartTime = Timer.New()
+	_beastData.eventStartTimer = Timer.New()
 
-	logger:Info('Start { '..beastData.beast..' }')
+	logger:info('Start { '.._beastData.beast..' }')
 
-	TriggerClientEvent('lsv:startHuntTheBeast', -1, beastData)
+	TriggerClientEvent('lsv:startHuntTheBeast', -1, _beastData)
 
 	while true do
 		Citizen.Wait(0)
 
-		if not beastData then return end
-
-		if beastData.livesLeft == 0 then
-			beastData = nil
-			TriggerClientEvent('lsv:finishHuntTheBeast', -1)
-			EventManager.StopEvent()
+		if not _beastData then
 			return
 		end
 
-		if beastData.eventStartTime:Elapsed() < Settings.huntTheBeast.duration then
-			if beastData.landmarksPicked == beastData.totalLandmarks then
-				logger:Info('Beast won { '..beastData.beast..' }')
-				Db.UpdateCash(beastData.beast, Settings.huntTheBeast.rewards.beast.min.cash)
-				Db.UpdateExperience(beastData.beast, Settings.huntTheBeast.rewards.beast.min.exp)
-				TriggerClientEvent('lsv:finishHuntTheBeast', -1, beastData.beast)
-				EventManager.StopEvent(beastData.beast)
-				beastData = nil
+		if _beastData.livesLeft == 0 then
+			_beastData = nil
+			TriggerClientEvent('lsv:finishHuntTheBeast', -1)
+
+			EventScheduler.StopEvent()
+
+			return
+		end
+
+		if _beastData.eventStartTimer:elapsed() < Settings.huntTheBeast.duration then
+			if _beastData.landmarksPicked == _beastData.totalLandmarks then
+				logger:info('Beast won { '.._beastData.beast..' }')
+
+				PlayerData.UpdateCash(_beastData.beast, Settings.huntTheBeast.rewards.beast.landmark.cash * _beastData.landmarksPicked)
+				PlayerData.UpdateExperience(_beastData.beast, Settings.huntTheBeast.rewards.beast.landmark.exp * _beastData.landmarksPicked)
+				PlayerData.UpdateEventsWon(_beastData.beast)
+
+				TriggerClientEvent('lsv:finishHuntTheBeast', -1, _beastData.beast)
+
+				EventScheduler.StopEvent()
+				_beastData = nil
+
 				return
 			end
 		else
-			logger:Info('Beast lost { '..beastData.beast..' }')
-			Db.UpdateCash(beastData.beast, Settings.huntTheBeast.rewards.beast.min.cash)
-			Db.UpdateExperience(beastData.beast, Settings.huntTheBeast.rewards.beast.min.exp)
+			logger:info('Beast lost { '.._beastData.beast..' }')
+
+			PlayerData.UpdateCash(_beastData.beast, Settings.huntTheBeast.rewards.beast.landmark.cash * _beastData.landmarksPicked)
+			PlayerData.UpdateExperience(_beastData.beast, Settings.huntTheBeast.rewards.beast.landmark.exp * _beastData.landmarksPicked)
+
 			TriggerClientEvent('lsv:finishHuntTheBeast', -1)
-			beastData = nil
-			EventManager.StopEvent()
+			_beastData = nil
+
+			EventScheduler.StopEvent()
+
 			return
 		end
 	end
 end)
 
-
-RegisterNetEvent('lsv:huntTheBeastLandmarkCollected')
-AddEventHandler('lsv:huntTheBeastLandmarkCollected', function(index)
+AddEventHandler('lsv:onPlayerDied', function()
 	local player = source
-	if not beastData then return end
-	if player ~= beastData.beast or beastData.landmarksPicked == beastData.totalLandmarks then return end
-	logger:Info('Collected { '..index..' }')
-	Db.UpdateCash(beastData.beast, Settings.huntTheBeast.rewards.beast.landmark.cash)
-	Db.UpdateExperience(beastData.beast, Settings.huntTheBeast.rewards.beast.landmark.exp)
-	beastData.landmarksPicked = beastData.landmarksPicked + 1
-	beastData.landmarks[index].picked = true
-	TriggerClientEvent('lsv:huntTheBeastLandmarkCollected', -1, index)
-end)
 
+	if not _beastData or _beastData.beast ~= player or _beastData.livesLeft == 0 then
+		return
+	end
 
-AddEventHandler('lsv:playerConnected', function(player)
-	if not beastData then return end
-	TriggerClientEvent('lsv:startHuntTheBeast', player, beastData, beastData.eventStartTime:Elapsed())
-end)
+	logger:info('Died { '..player..' }')
 
-
-AddEventHandler('lsv:playerDropped', function(player)
-	if not beastData or beastData.beast ~= player then return end
-	logger:Info('Beast left { '..player..' }')
-	beastData = nil
-	TriggerClientEvent('lsv:finishHuntTheBeast', -1)
-	EventManager.StopEvent()
-end)
-
-
-AddEventHandler('baseevents:onPlayerDied', function()
-	local player = source
-	if not beastData or beastData.beast ~= player or beastData.livesLeft == 0 then return end
-	logger:Info('Died { '..player..' }')
-	beastData.livesLeft = beastData.livesLeft - 1
+	_beastData.livesLeft = _beastData.livesLeft - 1
 	TriggerClientEvent('lsv:huntTheBeastKilled', -1)
 end)
 
-
-AddEventHandler('baseevents:onPlayerKilled', function(killer)
+AddEventHandler('lsv:onPlayerKilled', function(killer)
 	local victim = source
-	if not beastData or beastData.beast ~= victim or beastData.livesLeft == 0 then return end
-	logger:Info('Killed { '..killer..' }')
-	Db.UpdateCash(killer, Settings.huntTheBeast.rewards.killer.cash)
-	Db.UpdateExperience(killer, Settings.huntTheBeast.rewards.killer.exp)
-	beastData.livesLeft = beastData.livesLeft - 1
+
+	if not _beastData or _beastData.beast ~= victim or _beastData.livesLeft == 0 then
+		return
+	end
+
+	logger:info('Killed { '..killer..' }')
+
+	PlayerData.UpdateCash(killer, Settings.huntTheBeast.rewards.killer.cash)
+	PlayerData.UpdateExperience(killer, Settings.huntTheBeast.rewards.killer.exp)
+
+	_beastData.livesLeft = _beastData.livesLeft - 1
 	TriggerClientEvent('lsv:huntTheBeastKilled', -1)
+end)
+
+AddSignalHandler('lsv:playerConnected', function(player)
+	if not _beastData then
+		return
+	end
+
+	TriggerClientEvent('lsv:startHuntTheBeast', player, _beastData, _beastData.eventStartTimer:elapsed())
+end)
+
+AddSignalHandler('lsv:playerDropped', function(player)
+	if not _beastData or _beastData.beast ~= player then
+		return
+	end
+
+	logger:info('Beast left { '..player..' }')
+
+	_beastData = nil
+	TriggerClientEvent('lsv:finishHuntTheBeast', -1)
+
+	EventScheduler.StopEvent()
 end)

@@ -1,5 +1,7 @@
 AddEventHandler('lsv:init', function()
-	if Player.Moderator then return end
+	if Player.Moderator then
+		return
+	end
 
 	local timeLeft = nil
 	local currentPosition = nil

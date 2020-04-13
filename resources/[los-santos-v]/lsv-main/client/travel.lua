@@ -1,7 +1,31 @@
-local function getTravelPrice()
-	return '$'..tostring(Player.Rank * Settings.travel.cashPerRank)
-end
+local _currentTravelIndex = nil
 
+RegisterNetEvent('lsv:useFastTravel')
+AddEventHandler('lsv:useFastTravel', function(travelIndex)
+	if travelIndex then
+		if WarMenu.IsMenuOpened('fastTravel') then
+			WarMenu.CloseMenu()
+		end
+
+		Player.SetPassiveMode(true)
+
+		DoScreenFadeOut(1000)
+		Citizen.Wait(1500)
+
+		Player.Teleport(Settings.travel.places[travelIndex].outPosition)
+
+		Citizen.Wait(1000)
+		DoScreenFadeIn(1000)
+
+		Player.SetPassiveMode(true, true)
+		Citizen.Wait(Settings.spawnProtectionTime)
+		Player.SetPassiveMode(false)
+	else
+		Gui.DisplayPersonalNotification('You don\'t have enough cash.')
+	end
+
+	Prompt.Hide()
+end)
 
 AddEventHandler('lsv:init', function()
 	table.iforeach(Settings.travel.places, function(place)
@@ -10,20 +34,19 @@ AddEventHandler('lsv:init', function()
 		SetBlipCategory(blip, 1)
 	end)
 
-	WarMenu.CreateMenu('travel', 'Fast Travel')
-	WarMenu.SetSubTitle('travel', 'Select destination')
-	WarMenu.SetTitleBackgroundColor('travel', Color.GetHudFromBlipColor(Color.BLIP_YELLOW).r, Color.GetHudFromBlipColor(Color.BLIP_YELLOW).g, Color.GetHudFromBlipColor(Color.BLIP_YELLOW).b, Color.GetHudFromBlipColor(Color.BLIP_YELLOW).a)
-	WarMenu.SetMenuButtonPressedSound('travel', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
-
-	local currentTravelIndex = nil
+	WarMenu.CreateMenu('fastTravel', 'Fast Travel')
+	WarMenu.SetTitleColor('fastTravel', Color.WHITE.r, Color.WHITE.g, Color.WHITE.b)
+	WarMenu.SetTitleBackgroundColor('fastTravel', Color.DARK_BLUE.r, Color.DARK_BLUE.g, Color.DARK_BLUE.b)
+	WarMenu.SetSubTitle('fastTravel', 'Select Your Destination')
+	WarMenu.SetMenuButtonPressedSound('fastTravel', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	while true do
 		Citizen.Wait(0)
 
-		if WarMenu.IsMenuOpened('travel') then
+		if WarMenu.IsMenuOpened('fastTravel') then
 			table.iforeach(Settings.travel.places, function(place, travelIndex)
-				local isHere = currentTravelIndex == travelIndex
-				if WarMenu.Button(place.name, isHere and 'Here' or getTravelPrice()) then
+				local isHere = _currentTravelIndex == travelIndex
+				if WarMenu.Button(place.name, isHere and 'Here' or '$'..Settings.travel.cash) then
 					if isHere then
 						Gui.DisplayPersonalNotification('You are already here.')
 					else
@@ -34,10 +57,23 @@ AddEventHandler('lsv:init', function()
 			end)
 
 			WarMenu.Display()
-		elseif not IsPlayerDead(PlayerId()) then
+		end
+	end
+end)
+
+AddEventHandler('lsv:init', function()
+	local fastTravelColor = Color.DARK_BLUE
+
+	while true do
+		Citizen.Wait(0)
+
+		if not IsPlayerDead(PlayerId()) then
 			local isFastTravelAvailable = Player.IsInFreeroam()
+
 			table.iforeach(Settings.travel.places, function(place, travelIndex)
-				if Player.DistanceTo(place.inPosition, true) < Settings.placeMarkerRadius then
+				Gui.DrawPlaceMarker(place.inPosition, fastTravelColor)
+
+				if Player.DistanceTo(place.inPosition, true) < Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
 						if not isFastTravelAvailable then
 							Gui.DisplayHelpText('Fast Travel is not available right now.')
@@ -45,34 +81,16 @@ AddEventHandler('lsv:init', function()
 							Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to open Fast Travel menu.')
 
 							if IsControlJustReleased(0, 38) then
-								currentTravelIndex = travelIndex
-								Gui.OpenMenu('travel')
+								_currentTravelIndex = travelIndex
+								Gui.OpenMenu('fastTravel')
 							end
 						end
 					end
-				elseif WarMenu.IsMenuOpened('travel') and travelIndex == currentTravelIndex then
+				elseif WarMenu.IsMenuOpened('fastTravel') and travelIndex == _currentTravelIndex then
 					WarMenu.CloseMenu()
 					Prompt.Hide()
 				end
 			end)
 		end
 	end
-end)
-
-
-RegisterNetEvent('lsv:useFastTravel')
-AddEventHandler('lsv:useFastTravel', function(travelIndex, success)
-	if success then
-		if WarMenu.IsMenuOpened('travel') then WarMenu.CloseMenu() end
-
-		Player.SetFreeze(true)
-		DoScreenFadeOut(1000)
-		Citizen.Wait(1500)
-		Player.Teleport(Settings.travel.places[travelIndex].outPosition)
-		Citizen.Wait(1000)
-		DoScreenFadeIn(1000)
-		Player.SetFreeze(false)
-	else Gui.DisplayPersonalNotification('You don\'t have enough cash.') end
-
-	Prompt.Hide()
 end)

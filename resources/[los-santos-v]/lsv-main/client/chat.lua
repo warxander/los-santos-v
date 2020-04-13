@@ -1,10 +1,20 @@
-local function RegisterEmoteSuggestion(command, withoutParam)
+local function registerEmoteSuggestion(command, withoutParam)
 	local param = nil
-	if not withoutParam then param = { { name = 'playerid', help = 'Optional' } } end
+	if not withoutParam then
+		param = { { name = 'playerid', help = 'Optional' } }
+	end
 
 	TriggerEvent('chat:addSuggestion', command, '', param)
 end
 
+RegisterNetEvent('lsv:addCrewMessage')
+AddEventHandler('lsv:addCrewMessage', function(message)
+	if #Player.CrewMembers == 0 then
+		return
+	end
+
+	TriggerServerEvent('lsv:addCrewMessage', Player.CrewMembers, message)
+end)
 
 AddEventHandler('lsv:init', function()
 	TriggerEvent('chat:addSuggestion', '/t', 'Send private message to player', {
@@ -16,96 +26,86 @@ AddEventHandler('lsv:init', function()
 		{ name = 'message' },
 	})
 
-	TriggerEvent('chat:addSuggestion', '/eventvote', 'Vote for the next Event', {
-		{ name = 'eventid', help = 'Use without arguments to see list of Events' },
-	})
-
-	if Player.Moderator and Player.Moderator == Settings.moderatorLevel.Administrator then
+	if Player.Moderator and Player.Moderator == Settings.moderator.levels.Administrator then
 		TriggerEvent('chat:addSuggestion', '/unban', 'Unban player', {
 			{ name = 'playerid' },
 		})
 	end
 
-	RegisterEmoteSuggestion('/agree')
-	RegisterEmoteSuggestion('/amaze')
-	RegisterEmoteSuggestion('/angry')
-	RegisterEmoteSuggestion('/apologize')
-	RegisterEmoteSuggestion('/applaud')
-	RegisterEmoteSuggestion('/attack')
+	registerEmoteSuggestion('/agree')
+	registerEmoteSuggestion('/amaze')
+	registerEmoteSuggestion('/angry')
+	registerEmoteSuggestion('/apologize')
+	registerEmoteSuggestion('/applaud')
+	registerEmoteSuggestion('/attack')
 
-	RegisterEmoteSuggestion('/bashful')
-	RegisterEmoteSuggestion('/beckon')
-	RegisterEmoteSuggestion('/beg')
-	RegisterEmoteSuggestion('/bite')
-	RegisterEmoteSuggestion('/bleed', true)
-	RegisterEmoteSuggestion('/blow')
-	RegisterEmoteSuggestion('/blush')
-	RegisterEmoteSuggestion('/bored')
-	RegisterEmoteSuggestion('/bounce')
-	RegisterEmoteSuggestion('/bow')
-	RegisterEmoteSuggestion('/brb')
-	RegisterEmoteSuggestion('/bye')
+	registerEmoteSuggestion('/bashful')
+	registerEmoteSuggestion('/beckon')
+	registerEmoteSuggestion('/beg')
+	registerEmoteSuggestion('/bite')
+	registerEmoteSuggestion('/bleed', true)
+	registerEmoteSuggestion('/blow')
+	registerEmoteSuggestion('/blush')
+	registerEmoteSuggestion('/bored')
+	registerEmoteSuggestion('/bounce')
+	registerEmoteSuggestion('/bow')
+	registerEmoteSuggestion('/brb')
+	registerEmoteSuggestion('/bye')
 
-	RegisterEmoteSuggestion('/cackle')
-	RegisterEmoteSuggestion('/calm')
-	RegisterEmoteSuggestion('/cat')
-	RegisterEmoteSuggestion('/charge', true)
-	RegisterEmoteSuggestion('/cheer')
-	RegisterEmoteSuggestion('/chew')
-	RegisterEmoteSuggestion('/chicken')
-	RegisterEmoteSuggestion('/chuckle')
-	RegisterEmoteSuggestion('/clap')
-	RegisterEmoteSuggestion('/cold')
-	RegisterEmoteSuggestion('/comfort')
-	RegisterEmoteSuggestion('/commend')
-	RegisterEmoteSuggestion('/confused')
-	RegisterEmoteSuggestion('/congrats')
-	RegisterEmoteSuggestion('/cough')
-	RegisterEmoteSuggestion('/cower')
-	RegisterEmoteSuggestion('/crack')
-	RegisterEmoteSuggestion('/cringe')
-	RegisterEmoteSuggestion('/cry')
-	RegisterEmoteSuggestion('/cuddle')
-	RegisterEmoteSuggestion('/curious')
+	registerEmoteSuggestion('/cackle')
+	registerEmoteSuggestion('/calm')
+	registerEmoteSuggestion('/cat')
+	registerEmoteSuggestion('/charge', true)
+	registerEmoteSuggestion('/cheer')
+	registerEmoteSuggestion('/chew')
+	registerEmoteSuggestion('/chicken')
+	registerEmoteSuggestion('/chuckle')
+	registerEmoteSuggestion('/clap')
+	registerEmoteSuggestion('/cold')
+	registerEmoteSuggestion('/comfort')
+	registerEmoteSuggestion('/commend')
+	registerEmoteSuggestion('/confused')
+	registerEmoteSuggestion('/congrats')
+	registerEmoteSuggestion('/cough')
+	registerEmoteSuggestion('/cower')
+	registerEmoteSuggestion('/crack')
+	registerEmoteSuggestion('/cringe')
+	registerEmoteSuggestion('/cry')
+	registerEmoteSuggestion('/cuddle')
+	registerEmoteSuggestion('/curious')
 
-	RegisterEmoteSuggestion('/dance')
-	RegisterEmoteSuggestion('/disappointed')
-	RegisterEmoteSuggestion('/doom')
-	RegisterEmoteSuggestion('/drink')
-	RegisterEmoteSuggestion('/duck')
+	registerEmoteSuggestion('/dance')
+	registerEmoteSuggestion('/disappointed')
+	registerEmoteSuggestion('/doom')
+	registerEmoteSuggestion('/drink')
+	registerEmoteSuggestion('/duck')
 
-	RegisterEmoteSuggestion('/facepalm')
+	registerEmoteSuggestion('/facepalm')
 
-	RegisterEmoteSuggestion('/helpme', true)
-	RegisterEmoteSuggestion('/hi')
+	registerEmoteSuggestion('/helpme', true)
+	registerEmoteSuggestion('/hi')
 
-	RegisterEmoteSuggestion('/jk')
+	registerEmoteSuggestion('/jk')
 
-	RegisterEmoteSuggestion('/laugh')
+	registerEmoteSuggestion('/laugh')
 
-	RegisterEmoteSuggestion('/money', true) -- Not an emote at all
-	RegisterEmoteSuggestion('/mute') -- Not an emote at all
-	RegisterEmoteSuggestion('/unmute') -- Not an emote at all
+	registerEmoteSuggestion('/money', true) -- Not an emote at all
+	registerEmoteSuggestion('/mute') -- Not an emote at all
+	registerEmoteSuggestion('/unmute') -- Not an emote at all
 
-	RegisterEmoteSuggestion('/ping') -- Not an emote at all
+	registerEmoteSuggestion('/ping') -- Not an emote at all
 
-	RegisterEmoteSuggestion('/help', true) -- Not an emote at all
-	RegisterEmoteSuggestion('/ammo', true) -- Not an emote at all
-	RegisterEmoteSuggestion('/report', true) -- Not an emote at all
-	RegisterEmoteSuggestion('/cash', true) -- Not an emote at all
-	RegisterEmoteSuggestion('/quit', true) -- Not an emote at all
-	RegisterEmoteSuggestion('/vehicle', true) -- Not an emote at all
+	registerEmoteSuggestion('/help', true) -- Not an emote at all
+	registerEmoteSuggestion('/ammo', true) -- Not an emote at all
+	registerEmoteSuggestion('/report', true) -- Not an emote at all
+	registerEmoteSuggestion('/skin', true) -- Not an emote at all
+	registerEmoteSuggestion('/cash', true) -- Not an emote at all
+	registerEmoteSuggestion('/quit', true) -- Not an emote at all
+	registerEmoteSuggestion('/vehicle', true) -- Not an emote at all
+	registerEmoteSuggestion('/faction', true) -- Not an emote at all
 
-	RegisterEmoteSuggestion('/id', true) -- Not an emote at all
+	registerEmoteSuggestion('/id', true) -- Not an emote at all
 end)
-
-
-RegisterNetEvent('lsv:addCrewMessage')
-AddEventHandler('lsv:addCrewMessage', function(message)
-	if #Player.CrewMembers == 0 then return end
-	TriggerServerEvent('lsv:addCrewMessage', Player.CrewMembers, message)
-end)
-
 
 AddEventHandler('lsv:setupHud', function(hud)
 	if hud.discordUrl ~= '' then

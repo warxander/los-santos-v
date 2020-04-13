@@ -1,15 +1,23 @@
+-- TODO Make me module?
 DeathTimer = nil
 TimeToRespawn = Settings.spawn.deathTime
 
-local isSpawnInProcess = false
+local _isSpawnInProcess = false
 
 function spawnPlayer(spawnPoint)
-	if isSpawnInProcess then return end
-	isSpawnInProcess = true
+	if _isSpawnInProcess then
+		return
+	end
+
+	local isFirstSpawn = spawnPoint ~= nil
+
+	_isSpawnInProcess = true
 
 	if not GetIsLoadingScreenActive() then
 		DoScreenFadeOut(500)
-		while not IsScreenFadedOut() do Citizen.Wait(0) end
+		while not IsScreenFadedOut() do
+			Citizen.Wait(0)
+		end
 	end
 
 	if spawnPoint then
@@ -26,10 +34,18 @@ function spawnPlayer(spawnPoint)
 
 			local diff = { r = radius * math.sqrt(GetRandomFloatInRange(0.0, 1.0)), theta = GetRandomFloatInRange(0.0, 1.0) * 2 * math.pi }
 			local xDiff = diff.r * math.cos(diff.theta)
-			if xDiff >= 0 then xDiff = math.max(radius, xDiff) else xDiff = math.min(-radius, xDiff) end
+			if xDiff >= 0 then
+				xDiff = math.max(radius, xDiff)
+			else
+				xDiff = math.min(-radius, xDiff)
+			end
 
 			local yDiff = diff.r * math.sin(diff.theta)
-			if yDiff >= 0 then yDiff = math.max(radius, yDiff) else yDiff = math.min(-radius, yDiff) end
+			if yDiff >= 0 then
+				yDiff = math.max(radius, yDiff)
+			else
+				yDiff = math.min(-radius, yDiff)
+			end
 
 			local x = playerPosition.x + xDiff
 			local y = playerPosition.y + yDiff
@@ -41,6 +57,7 @@ function spawnPlayer(spawnPoint)
 				for _, i in ipairs(GetActivePlayers()) do
 					if i ~= PlayerId() then
 						local ped = GetPlayerPed(i)
+
 						if DoesEntityExist(ped) then
 							local pedCoords = GetEntityCoords(ped)
 							if Vdist(coords.x, coords.y, coords.z, pedCoords.x, pedCoords.y, pedCoords.z) < Settings.spawn.radius.minDistanceToPlayer then
@@ -56,23 +73,26 @@ function spawnPlayer(spawnPoint)
 				spawnPoint = { }
 				spawnPoint.x, spawnPoint.y, spawnPoint.z = coords.x, coords.y, coords.z
 			else
-				if tryCount ~= Settings.spawn.tryCount then tryCount = tryCount + 1
+				if tryCount ~= Settings.spawn.tryCount then
+					tryCount = tryCount + 1
 				else
 					radius = radius + Settings.spawn.radius.increment
 					tryCount = 0
 				end
 			end
 
-			if spawnPoint then break end
+			if spawnPoint then
+				break
+			end
 
-			if startSpawnTimer:Elapsed() >= Settings.spawn.timeout then
+			if startSpawnTimer:elapsed() >= Settings.spawn.timeout then
 				spawnPoint = table.random(Settings.spawn.points)
 				Gui.DisplayPersonalNotification('Unable to find suitable place for spawning.')
 			end
 		end
 	end
 
-	Player.SetFreeze(true)
+	Player.SetPassiveMode(true, not isFirstSpawn)
 	local ped = PlayerPedId()
 
 	RequestCollisionAtCoord(spawnPoint.x, spawnPoint.y, spawnPoint.z)
@@ -84,18 +104,21 @@ function spawnPlayer(spawnPoint)
 	ClearPedBloodDamage(ped)
 	ClearPedWetness(ped)
 
-	if GetIsLoadingScreenActive() then ShutdownLoadingScreen() end
+	if GetIsLoadingScreenActive() then
+		ShutdownLoadingScreen()
+	end
 
 	if IsScreenFadedOut() then
 		DoScreenFadeIn(500)
-		while not IsScreenFadedIn() do Citizen.Wait(0) end
+		while not IsScreenFadedIn() do
+			Citizen.Wait(0)
+		end
 	end
 
 	TriggerEvent('playerSpawned')
 
-	isSpawnInProcess = false
+	_isSpawnInProcess = false
 end
-
 
 AddEventHandler('lsv:init', function()
 	while true do
@@ -103,7 +126,7 @@ AddEventHandler('lsv:init', function()
 
 		if DoesEntityExist(PlayerPedId()) then
 			if NetworkIsPlayerActive(PlayerId()) then
-				if not isSpawnInProcess then
+				if not _isSpawnInProcess then
 					if DeathTimer and GetTimeDifference(GetGameTimer(), DeathTimer) > TimeToRespawn then
 						spawnPlayer()
 					end
@@ -115,7 +138,9 @@ AddEventHandler('lsv:init', function()
 					DeathTimer = GetGameTimer()
 					TimeToRespawn = Settings.spawn.deathTime
 				end
-			else DeathTimer = nil end
+			else
+				DeathTimer = nil
+			end
 		end
 	end
 end)

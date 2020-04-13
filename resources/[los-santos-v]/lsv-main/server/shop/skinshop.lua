@@ -1,16 +1,21 @@
 RegisterNetEvent('lsv:updatePlayerSkin')
-AddEventHandler('lsv:updatePlayerSkin', function(id)
+AddEventHandler('lsv:updatePlayerSkin', function(skinIndex, category)
 	local player = source
+	if not PlayerData.IsExists(player) then
+		return
+	end
 
-	if not Scoreboard.IsPlayerOnline(player) then return end
+	local skin = Settings.skins[category][skinIndex]
 
-	local skin = Settings.skins[id]
+	if skin.rank and PlayerData.GetRank(player) < skin.rank then
+		return
+	end
 
-	if skin.rank and Scoreboard.GetPlayerRank(player) < skin.rank then return end
-	if skin.kills and Scoreboard.GetPlayerKills(player) < skin.kills then return end
-	if skin.prestige and Scoreboard.GetPlayerPrestige(player) < skin.prestige then return end
+	if skin.prestige and PlayerData.GetPrestige(player) < skin.prestige then
+		return
+	end
 
-	Db.SetValue(player, 'SkinModel', Db.ToString(id), function()
-		TriggerClientEvent('lsv:playerSkinUpdated', player, id)
+	Db.UpdateSkinModel(player, skin.id, function()
+		TriggerClientEvent('lsv:playerSkinUpdated', player, skin.id)
 	end)
 end)

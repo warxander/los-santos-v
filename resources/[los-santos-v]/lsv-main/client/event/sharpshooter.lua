@@ -1,50 +1,62 @@
-local instructionsText = 'Compete to the most headshots in the given time.'
-local titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
-local playerColors = { Color.BLIP_YELLOW, Color.BLIP_GREY, Color.BLIP_BROWN }
-local playerPositions = { '1st: ', '2nd: ', '3rd: ' }
+local _instructionsText = 'Compete to the most headshots in the given time.'
+local _titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
+local _playerColors = { Color.YELLOW, Color.GREY, Color.BROWN }
+local _playerPositions = { '1st: ', '2nd: ', '3rd: ' }
 
-local sharpShooterData = nil
+local _sharpShooterData = nil
 
 local function getPlayerPoints()
-	local player = table.find_if(sharpShooterData.players, function(player)
+	local player = table.find_if(_sharpShooterData.players, function(player)
 		return player.id == Player.ServerId()
 	end)
-	if not player then return nil end
+
+	if not player then
+		return nil
+	end
+
 	return player.points
 end
 
-
 RegisterNetEvent('lsv:startSharpShooter')
 AddEventHandler('lsv:startSharpShooter', function(data, passedTime)
-	if sharpShooterData then return end
+	if _sharpShooterData then
+		return
+	end
 
 	-- Preparations
-	sharpShooterData = { }
+	_sharpShooterData = { }
 
-	sharpShooterData.startTime = GetGameTimer()
-	if passedTime then sharpShooterData.startTime = sharpShooterData.startTime - passedTime end
-	sharpShooterData.players = data.players
+	_sharpShooterData.startTime = GetGameTimer()
+	if passedTime then
+		_sharpShooterData.startTime = _sharpShooterData.startTime - passedTime
+	end
+
+	_sharpShooterData.players = data.players
 
 	-- GUI
 	Citizen.CreateThread(function()
-		if Player.IsInFreeroam() and not passedTime then Gui.StartEvent('Sharpshooter', instructionsText) end
+		if Player.IsInFreeroam() and not passedTime then
+			Gui.StartEvent('Sharpshooter', _instructionsText)
+		end
 
 		while true do
 			Citizen.Wait(0)
 
-			if not sharpShooterData then return end
+			if not _sharpShooterData then
+				return
+			end
 
 			if Player.IsInFreeroam() then
 				Gui.DisplayObjectiveText('Compete to the most headshots.')
 
-				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.sharpShooter.duration - GetGameTimer() + sharpShooterData.startTime), 1)
+				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.sharpShooter.duration - GetGameTimer() + _sharpShooterData.startTime), 1)
 				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0, 2)
 
 				local barPosition = 3
 				for i = barPosition, 1, -1 do
-					if sharpShooterData.players[i] then
-						Gui.DrawBar(playerPositions[i]..GetPlayerName(GetPlayerFromServerId(sharpShooterData.players[i].id)), sharpShooterData.players[i].points,
-							barPosition, Color.GetHudFromBlipColor(playerColors[i]), true)
+					if _sharpShooterData.players[i] then
+						Gui.DrawBar(_playerPositions[i]..GetPlayerName(GetPlayerFromServerId(_sharpShooterData.players[i].id)), _sharpShooterData.players[i].points,
+							barPosition, _playerColors[i], true)
 						barPosition = barPosition + 1
 					end
 				end
@@ -53,22 +65,26 @@ AddEventHandler('lsv:startSharpShooter', function(data, passedTime)
 	end)
 end)
 
-
 RegisterNetEvent('lsv:updateSharpShooterPlayers')
 AddEventHandler('lsv:updateSharpShooterPlayers', function(players)
-	if sharpShooterData then sharpShooterData.players = players end
+	if _sharpShooterData then
+		_sharpShooterData.players = players
+	end
 end)
-
 
 RegisterNetEvent('lsv:finishSharpShooter')
 AddEventHandler('lsv:finishSharpShooter', function(winners)
+	if not _sharpShooterData then
+		return
+	end
+
 	if not winners then
-		sharpShooterData = nil
+		_sharpShooterData = nil
 		return
 	end
 
 	local playerPoints = getPlayerPoints()
-	sharpShooterData = nil
+	_sharpShooterData = nil
 
 	local isPlayerWinner = false
 	for i = 1, math.min(3, #winners) do
@@ -81,13 +97,15 @@ AddEventHandler('lsv:finishSharpShooter', function(winners)
 	local messageText = isPlayerWinner and 'You have won Sharpshooter with a score of '..playerPoints or Gui.GetPlayerName(winners[1], '~p~')..' has won Sharpshooter.'
 
 	if Player.IsInFreeroam() and playerPoints then
-		if isPlayerWinner then PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
-		else PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true) end
+		if isPlayerWinner then
+			PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
+		else
+			PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true)
+		end
 
-		local scaleform = Scaleform:Request('MIDSIZED_MESSAGE')
-		scaleform:Call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
-		scaleform:RenderFullscreenTimed(10000)
-		scaleform:Delete()
+		local scaleform = Scaleform.NewAsync('MIDSIZED_MESSAGE')
+		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and _titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
+		scaleform:renderFullscreenTimed(10000)
 	else
 		Gui.DisplayNotification(messageText)
 	end

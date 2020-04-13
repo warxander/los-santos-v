@@ -1,47 +1,119 @@
 local logger = Logger.New('Session')
 
-local lastSpawnPointIndex = nil
+local _lastSpawnPointIndex = nil
 
-local function initPlayer(player, playerStats, isRegistered)
-	if not playerStats.Weapons then playerStats.Weapons = Settings.defaultPlayerWeapons
-	else playerStats.Weapons = json.decode(playerStats.Weapons) end
+local _nowDate = os.date('*t')
+local _serverRestartTime = table.ifind_if(Settings.serverRestart.times, function(time)
+	return _nowDate.hour < time.hour
+end)
+
+local _serverRestartDate = _nowDate
+_serverRestartDate.hour = _serverRestartTime.hour
+_serverRestartDate.min = _serverRestartTime.min
+_serverRestartDate.sec = 0
+
+logger:info('Next server restart at '.._serverRestartDate.hour..':'.._serverRestartDate.min)
+
+local function initPlayer(player, playerName, playerStats, isRegistered)
+	if not playerStats.Weapons then
+		playerStats.Weapons = Settings.defaultPlayerWeapons
+	else
+		playerStats.Weapons = json.decode(playerStats.Weapons)
+	end
 
 	playerStats.Rank = Rank.CalculateRank(playerStats.Experience)
 	playerStats.SkillStats = Stat.CalculateStats(playerStats.Rank)
 
-	if not playerStats.PatreonTier then playerStats.PatreonTier = 0 end
-
-	playerStats.Identifier = Scoreboard.GetPlayerIdentifier(player)
-
-	local spawnPoints = Settings.spawn.points
-	if lastSpawnPointIndex then
-		spawnPoints = table.filter(spawnPoints, function(_, i) return i ~= lastSpawnPointIndex end)
+	if not playerStats.PatreonTier then
+		playerStats.PatreonTier = 0
 	end
 
-	lastSpawnPointIndex = math.random(#spawnPoints)
-	playerStats.SpawnPoint = spawnPoints[lastSpawnPointIndex]
+	local nowTime = os.time()
+	if not playerStats.LoginTime then
+		playerStats.LoginTime = nowTime
+	end
 
-	Scoreboard.AddPlayer(player, playerStats)
+	playerStats.ServerRestartIn = os.time(_serverRestartDate) - nowTime
 
-	local time = os.time()
-	Db.UpdateLoginTime(player, time, function()
-		if playerStats.PatreonTier ~= 0 then
-			if playerStats.LoginTime and time - playerStats.LoginTime >= Settings.patreonDailyReward.time then
-				Db.UpdateCash(player, Settings.patreonDailyReward.cash)
-				Db.UpdateExperience(player, Settings.patreonDailyReward.exp)
-				TriggerClientEvent('lsv:patreonDailyRewarded', player)
-			end
-		end
-	end)
+	playerStats.Identifier = PlayerData.GetIdentifier(player)
+	playerStats.PlayerName = playerName
+
+	local spawnPoints = Settings.spawn.points
+	if _lastSpawnPointIndex then
+		spawnPoints = table.filter(spawnPoints, function(_, i)
+			return i ~= _lastSpawnPointIndex
+		end)
+	end
+
+	_lastSpawnPointIndex = math.random(#spawnPoints)
+	playerStats.SpawnPoint = spawnPoints[_lastSpawnPointIndex]
+
+	PlayerData.Add(player, playerStats)
 
 	TriggerClientEvent('lsv:playerLoaded', player, playerStats, isRegistered)
-	TriggerClientEvent('lsv:playerConnected', -1, player)
-
-	TriggerEvent('lsv:playerConnected', player)
 end
 
+RegisterNetEvent('lsv:playerInitialized')
+AddEventHandler('lsv:playerInitialized', function()
+	local player = source
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	TriggerSignal('lsv:playerConnected', player)
+	TriggerClientEvent('lsv:playerConnected', -1, player)
+end)
+
+RegisterNetEvent('lsv:loadPlayer')
+AddEventHandler('lsv:loadPlayer', function()
+	local player = source
+	local playerName = GetPlayerName(player)
+	local identifier = PlayerData.GetIdentifier(player)
+
+	Db.FindPlayer(player, function(data)
+		if not data then
+			Db.RegisterPlayer(player, function(data)
+				initPlayer(player, playerName, data, true)
+				logger:info('Register { '..playerName..', '..player..', '..identifier..' }')
+			end)
+		else
+			initPlayer(player, playerName, data, false)
+			logger:info('Loaded { '..playerName..', '..player..', '..identifier..' }')
+		end
+	end)
+end)
+
+RegisterNetEvent('lsv:kickAFKPlayer')
+AddEventHandler('lsv:kickAFKPlayer', function()
+	local player = source
+
+	logger:info('Drop AFK player { '..player..' }')
+
+	DropPlayer(player, 'You were AFK for more than '..math.ceil(Settings.afkTimeout / 60)..' minutes.')
+end)
+
+RegisterNetEvent('lsv:upPrestigeLevel')
+AddEventHandler('lsv:upPrestigeLevel', function()
+	local player = source
+	if not PlayerData.IsExists(player) or PlayerData.GetRank(player) < Settings.minPrestigeRank then
+		return
+	end
+
+	local prestige = PlayerData.GetPrestige(player)
+	if prestige >= Settings.maxPrestige then
+		return
+	end
+
+	prestige = prestige + 1
+	Db.UpdatePrestige(player, function()
+		logger:info('Prestige { '..player..', '..prestige..' }')
+		DropPlayer(player, 'Congratulations, you have earned Prestige '..prestige..'!\nPlease, re-login to the server and sorry for inconvenience.')
+	end)
+end)
 
 AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
+	local player = source
+
 	deferrals.defer()
 
 	if string.len(playerName) > Settings.maxPlayerNameLength then
@@ -49,113 +121,80 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 		return
 	end
 
-	local player = source
-	local license = '\n\nCopy and provide your identifier for ban appeal in Discord:\n'..Scoreboard.GetPlayerIdentifier(player)
-
-	if Scoreboard.IsPlayerOnline(player) then
-		Db.BanPlayer(player, function()
-			local reason = 'Abusing Multiple Accounts'
-			Discord.ReportAutoBanPlayer(player, reason)
-			deferrals.done('You\'re permanently banned from this server for '..reason..'.'..license)
-		end)
-		return
-	end
+	local playerId = PlayerData.GetIdentifier(player)
+	local playerDiscordId = Discord.GetIdentifier(player)
+	local license = playerId and '\n\nCopy and provide your identifier for ban appeal in Discord:\n'..playerId or ''
 
 	deferrals.update('Checking player profile...')
 
-	Db.GetBanStatus(player, function(data)
-		if #data == 0 or not data[1].Banned then
-			deferrals.done()
-			return
+	Db.GetFields(player, { 'Banned', 'BanExpiresDate', 'PatreonTier', 'Moderator' }, function(data)
+		local needToBeUnbanned = false
+		if data then
+			if data.Banned then
+				if data.BanExpiresDate then
+					if os.time() <= data.BanExpiresDate then
+						deferrals.done('You\'re temporarily banned from this server.\nBan expires in '..os.date('%Y-%m-%d %X '..Settings.serverTimeZone, data.BanExpiresDate)..license)
+					else
+						needToBeUnbanned = true
+					end
+				else
+					deferrals.done('You\'re permanently banned from this server.'..license)
+				end
+			end
 		end
 
-		if data[1].BanExpiresDate then
-			if os.time() <= data[1].BanExpiresDate then
-				deferrals.done('You\'re temporarily banned from this server.\nBan expires in '..os.date('%Y-%m-%d %X '..Settings.serverTimeZone, data[1].BanExpiresDate)..license)
-			else
-				Db.UnbanPlayer(player, function()
-					deferrals.done()
+		local patreonTier = nil
+		local moderatorLevel = nil
+		if data then
+			patreonTier = data.PatreonTier
+			moderatorLevel = data.Moderator
+		end
+
+		Discord.GetRolesById(playerDiscordId, function(roles)
+			logger:info('Roles { '..playerName..', '..tostring(playerDiscordId)..', '..#roles..' }')
+
+			local newPatreonTier = nil
+			local newModeratorLevel = nil
+
+			if #roles ~= 0 then
+				table.iforeach(Settings.patreon.roleIds, function(roleId, roleIndex)
+					if table.ifind(roles, roleId) then
+						newPatreonTier = roleIndex
+					end
+				end)
+
+				table.iforeach(Settings.moderator.roleIds, function(roleId, roleIndex)
+					if table.ifind(roles, roleId) then
+						newModeratorLevel = roleIndex
+					end
 				end)
 			end
-		else
-			deferrals.done('You\'re permanently banned from this server.'..license)
-		end
+
+			if needToBeUnbanned then
+				Db.UnbanPlayerById(playerId)
+			end
+
+			if patreonTier ~= newPatreonTier then
+				Db.UpdatePatreonTierById(playerId, newPatreonTier)
+			end
+
+			if moderatorLevel ~= newModeratorLevel then
+				Db.UpdateModeratorById(playerId, newModeratorLevel)
+			end
+
+			deferrals.done()
+		end)
 	end)
 end)
-
 
 AddEventHandler('playerDropped', function(reason)
 	local player = source
-	local playerName = GetPlayerName(player)
+	local playerName = GetPlayerName(player) or '<Unknown name>'
 
-	logger:Info('Dropped { '..playerName..', '..player..', '..reason..' }')
+	logger:info('Dropped { '..playerName..', '..player..', '..reason..' }')
 
-	Scoreboard.RemovePlayer(player)
+	TriggerSignal('lsv:playerDropped', player)
 
+	PlayerData.Remove(player)
 	TriggerClientEvent('lsv:playerDisconnected', -1, playerName, player, reason)
-
-	TriggerEvent('lsv:playerDropped', player)
-end)
-
-
-RegisterNetEvent('lsv:loadPlayer')
-AddEventHandler('lsv:loadPlayer', function()
-	local player = source
-	local playerName = GetPlayerName(player)
-	local identifier = Scoreboard.GetPlayerIdentifier(player)
-
-	Db.FindPlayer(player, function(data)
-		if #data == 0 then
-			Db.RegisterPlayer(player, function(data)
-				initPlayer(player, data[1], true)
-				logger:Info('Register { '..playerName..', '..player..', '..identifier..' }')
-			end)
-		else
-			initPlayer(player, data[1], false)
-			logger:Info('Loaded { '..playerName..', '..player..', '..identifier..' }')
-		end
-	end)
-end)
-
-
-RegisterNetEvent('lsv:savePlayerWeapons')
-AddEventHandler('lsv:savePlayerWeapons', function(weapons)
-	local player = source
-
-	if #weapons == 0 then return end
-
-	local prohibitedWeapon = table.ifind_if(weapons, function(weapon) return weapon.id == 'WEAPON_RAILGUN' or weapon.id == 'WEAPON_BULLPUPRIFLE' or weapon.id == 'WEAPON_GUSENBERG' end)
-
-	if prohibitedWeapon then
-		DropPlayer(player, 'You have received a prohibited weapon due to hacker activity.\nYour progress is saved, but you need to manually reconnect to the server.')
-		return
-	end
-
-	Db.SetValue(player, 'Weapons', Db.ToString(json.encode(weapons)))
-end)
-
-
-RegisterNetEvent('lsv:kickAFKPlayer')
-AddEventHandler('lsv:kickAFKPlayer', function()
-	local player = source
-
-	logger:Info('Drop AFK player { '..player..' }')
-
-	DropPlayer(player, 'You were AFK for more than '..math.ceil(Settings.afkTimeout / 60)..' minutes.')
-end)
-
-
-RegisterNetEvent('lsv:getPrestige')
-AddEventHandler('lsv:getPrestige', function()
-	local player = source
-	if not Scoreboard.IsPlayerOnline(player) or Scoreboard.GetPlayerRank(player) < Settings.minPrestigeRank then return end
-
-	local prestige = Scoreboard.GetPlayerPrestige(player)
-	if prestige >= Settings.maxPrestige then return end
-
-	prestige = prestige + 1
-	Db.UpdatePrestige(player, function()
-		logger:Info('Prestige { '..player..', '..prestige..' }')
-		DropPlayer(player, 'Congratulations, you have earned Prestige '..prestige..'!\nPlease, re-login to the server and sorry for inconvenience.')
-	end)
 end)

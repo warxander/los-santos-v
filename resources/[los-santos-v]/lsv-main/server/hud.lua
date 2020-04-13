@@ -1,12 +1,12 @@
-local hud = { }
+local _hud = nil
 
+AddSignalHandler('lsv:playerConnected', function(player)
+	if not _hud then
+		_hud = { }
 
-Citizen.CreateThread(function()
-	hud.discordUrl = GetConvar('discord_url', '')
-	hud.pauseMenuTitle = GetConvar('pause_menu_title', '')
-end)
+		_hud.discordUrl = GetConvar('discord_url', '')
+		_hud.pauseMenuTitle = GetConvar('pause_menu_title', '')
+	end
 
-
-AddEventHandler('lsv:playerConnected', function(player)
-	TriggerClientEvent('lsv:setupHud', player, hud)
+	TriggerClientEvent('lsv:setupHud', player, _hud)
 end)
