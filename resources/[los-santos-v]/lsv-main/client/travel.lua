@@ -1,4 +1,5 @@
 local _currentTravelIndex = nil
+local _travelBlips = { }
 
 RegisterNetEvent('lsv:useFastTravel')
 AddEventHandler('lsv:useFastTravel', function(travelIndex)
@@ -32,9 +33,10 @@ AddEventHandler('lsv:init', function()
 		local blip = Map.CreatePlaceBlip(Blip.FAST_TRAVEL, place.inPosition.x, place.inPosition.y, place.inPosition.z, place.name)
 		SetBlipScale(blip, 1.2)
 		SetBlipCategory(blip, 1)
+		table.insert(_travelBlips, blip)
 	end)
 
-	WarMenu.CreateMenu('fastTravel', 'Fast Travel')
+	Gui.CreateMenu('fastTravel', 'Fast Travel')
 	WarMenu.SetTitleColor('fastTravel', Color.WHITE.r, Color.WHITE.g, Color.WHITE.b)
 	WarMenu.SetTitleBackgroundColor('fastTravel', Color.DARK_BLUE.r, Color.DARK_BLUE.g, Color.DARK_BLUE.b)
 	WarMenu.SetSubTitle('fastTravel', 'Select Your Destination')
@@ -67,30 +69,29 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if not IsPlayerDead(PlayerId()) then
-			local isFastTravelAvailable = Player.IsInFreeroam()
+		local isPlayerInFreeroam = Player.IsInFreeroam()
+		local playerPosition = Player.Position()
 
-			table.iforeach(Settings.travel.places, function(place, travelIndex)
+		table.iforeach(Settings.travel.places, function(place, travelIndex)
+			SetBlipAlpha(_travelBlips[travelIndex], isPlayerInFreeroam and 255 or 0)
+
+			if isPlayerInFreeroam then
 				Gui.DrawPlaceMarker(place.inPosition, fastTravelColor)
 
-				if Player.DistanceTo(place.inPosition, true) < Settings.placeMarker.radius then
+				if World.GetDistance(playerPosition, place.inPosition, true) < Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
-						if not isFastTravelAvailable then
-							Gui.DisplayHelpText('Fast Travel is not available right now.')
-						else
-							Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to open Fast Travel menu.')
+						Gui.DisplayHelpText('Press ~INPUT_TALK~ to open Fast Travel menu.')
 
-							if IsControlJustReleased(0, 38) then
-								_currentTravelIndex = travelIndex
-								Gui.OpenMenu('fastTravel')
-							end
+						if IsControlJustReleased(0, 46) then
+							_currentTravelIndex = travelIndex
+							Gui.OpenMenu('fastTravel')
 						end
 					end
 				elseif WarMenu.IsMenuOpened('fastTravel') and travelIndex == _currentTravelIndex then
 					WarMenu.CloseMenu()
 					Prompt.Hide()
 				end
-			end)
-		end
+			end
+		end)
 	end
 end)

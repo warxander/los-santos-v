@@ -34,10 +34,11 @@ AddEventHandler('lsv:duelAccepted', function(opponent)
 	TriggerClientEvent('lsv:duelUpdated', opponent, ChallengeManager.GetData(opponent))
 end)
 
-AddEventHandler('lsv:onPlayerKilled', function(killer)
+AddEventHandler('lsv:onPlayerKilled', function(killData)
+	local killer = killData.killer
 	local victim = source
 
-	if killer == -1 or not ChallengeManager.IsPlayerInChallenge(killer) or ChallengeManager.GetPlayerOpponent(killer) ~= victim then
+	if not ChallengeManager.IsPlayerInChallenge(killer) or ChallengeManager.GetPlayerOpponent(killer) ~= victim then
 		return
 	end
 

@@ -24,6 +24,21 @@ local function registerEmote(command, soloMessage, targetMessage)
 	end)
 end
 
+local function registerStaticCommand(commandName, message)
+	RegisterCommand(commandName, function(source)
+		if not PlayerData.IsExists(source) then
+			return
+		end
+
+		local message = {
+			color = _systemMessageColor,
+			args = { message },
+		}
+
+		TriggerClientEvent('chat:addMessage', source, message)
+	end)
+end
+
 RegisterNetEvent('_chat:messageEntered')
 AddEventHandler('_chat:messageEntered', function(author, color, message)
 	if not message or not author or message == '' then
@@ -57,8 +72,8 @@ AddEventHandler('lsv:addCrewMessage', function(members, message)
 		args = { '['..GetPlayerName(player)..']: '..message }
 	}
 
-	table.insert(members, player)
-	table.foreach(members, function(member)
+	members[player] = true
+	table.foreach(members, function(_, member)
 		TriggerEvent('lsv:addMessage', player, member, message)
 	end)
 end)
@@ -157,19 +172,6 @@ RegisterCommand('unmute', function(source, args)
 	TriggerClientEvent('chat:addMessage', source, message)
 end)
 
-RegisterCommand('money', function(source)
-	if not PlayerData.IsExists(source) then
-		return
-	end
-
-	local message = {
-		color = _systemMessageColor,
-		args = { 'You have $'..PlayerData.GetCash(source)..'. Hold Z to show PlayerData.' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
 RegisterCommand('ping', function(source, args)
 	local player = source
 	if args[1] then
@@ -212,120 +214,19 @@ RegisterCommand('ping', function(source, args)
 	TriggerClientEvent('chat:addMessage', source, message)
 end)
 
-RegisterCommand('help', function(source)
-	if not PlayerData.IsExists(source) then
+RegisterCommand('id', function(source, args)
+	local player = source
+	if args[1] then
+		player = tonumber(args[1])
+	end
+
+	if not PlayerData.IsExists(player) then
 		return
 	end
 
 	local message = {
 		color = _systemMessageColor,
-		args = { 'Earn money and ranking up to unlock new weapons and vehicles.\nCompete with other players by doing Free Roam missions, events and deathmatch.\nJoin our Discord for more details.' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
-RegisterCommand('ammo', function(source)
-	if not PlayerData.IsExists(source) then
-		return
-	end
-
-	local message = {
-		color = _systemMessageColor,
-		args = { 'Use Interaction menu (M by default) to buy ammo.' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
-RegisterCommand('report', function(source)
-	if not PlayerData.IsExists(source) then
-		return
-	end
-
-	local message = {
-		color = _systemMessageColor,
-		args = { 'Use Interaction menu (M by default) to report other players.' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
-RegisterCommand('skin', function(source)
-	if not PlayerData.IsExists(source) then
-		return
-	end
-
-	local message = {
-		color = _systemMessageColor,
-		args = { 'Visit Clothes Store to change your character appearance.' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
-RegisterCommand('cash', function(source)
-	if not PlayerData.IsExists(source) then
-		return
-	end
-
-	local message = {
-		color = _systemMessageColor,
-		args = { 'Hold Z (by default) to view the scoreboard.' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
-RegisterCommand('quit', function(source)
-	if not PlayerData.IsExists(source) then
-		return
-	end
-
-	local message = {
-		color = _systemMessageColor,
-		args = { 'Use Pause Menu to exit the server. Hope to see you soon!' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
-RegisterCommand('vehicle', function(source)
-	if not PlayerData.IsExists(source) then
-		return
-	end
-
-	local message = {
-		color = _systemMessageColor,
-		args = { 'Use Personal Vehicle menu (Y by default) to customize and control your Personal Vehicle.' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
-RegisterCommand('faction', function(source)
-	if not PlayerData.IsExists(source) then
-		return
-	end
-
-	local message = {
-		color = _systemMessageColor,
-		args = { 'Use Interaction menu (M by default) to join any Faction and get extra reward for killing opposite faction players.' },
-	}
-
-	TriggerClientEvent('chat:addMessage', source, message)
-end)
-
-RegisterCommand('id', function(source)
-	if not PlayerData.IsExists(source) then
-		return
-	end
-
-	local identifier = PlayerData.GetIdentifier(source)
-
-	local message = {
-		color = _systemMessageColor,
-		args = { 'Your id is '..identifier },
+		args = { tostring(PlayerData.GetIdentifier(player)) },
 	}
 
 	TriggerClientEvent('chat:addMessage', source, message)
@@ -388,6 +289,16 @@ registerEmote('hi', '%s greets everyone with a hearty hello!', '%s greets %s wit
 registerEmote('jk', '%s was just kidding!', '%s lets %s know that he was just kidding!')
 
 registerEmote('laugh', '%s laughs.', '%s laughs at %s.')
+
+registerStaticCommand('help', 'Use this commands to read more about main server features:\n/money, /weapons, /vehicle, /skin, /missions, /report')
+registerStaticCommand('weapons', 'Use Interaction menu (M by default) to buy weapons and ammo.')
+registerStaticCommand('ammo', 'Use Interaction menu (M by default) to buy weapons and ammo.')
+registerStaticCommand('report', 'Use Report Player (B by default) menu to report other players.')
+registerStaticCommand('passive', 'Not available as it\'s PvPvE (player-versus-player-versus-enviroment) game mode.')
+registerStaticCommand('missions', 'Look for blue markers on the map to start a Mission.\nComplete them to earn money and experience.\nOther players can try to kill you during mission to earn extra reward.')
+registerStaticCommand('vehicle', 'Purchase Garage to start collecting your Personal Vehicles.\nStart Vehicle Import mission to get your first vehicle.\nStart Vehicle Export mission from your Garage to sell it and free slot.')
+registerStaticCommand('money', 'Earn money by killing other players, participating in Freeroam Events or doing Missions.')
+registerStaticCommand('skin', 'Visit Clothes Store to change your character appearance.')
 
 AddEventHandler('lsv:addMessage', function(from, to, message)
 	local players = { }

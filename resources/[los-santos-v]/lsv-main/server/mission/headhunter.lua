@@ -1,14 +1,12 @@
 RegisterNetEvent('lsv:headhunterFinished')
-AddEventHandler('lsv:headhunterFinished', function(eventStartTime, loseTheCopsStartTime, eventEndTime)
+AddEventHandler('lsv:headhunterFinished', function(targetsLeft)
 	local player = source
+	if not PlayerData.IsExists(player) or targetsLeft < 0 then
+		return
+	end
 
-	local totalLoseTheCopsTime = eventEndTime - loseTheCopsStartTime
-	local totalTimeLeft = eventStartTime + Settings.headhunter.time - loseTheCopsStartTime
-	local cash = Settings.headhunter.rewards.cash.min + math.floor((1.0 - totalLoseTheCopsTime / totalTimeLeft) * (Settings.headhunter.rewards.cash.max - Settings.headhunter.rewards.cash.min))
-	local exp = Settings.headhunter.rewards.exp.min + math.floor((1.0 - totalLoseTheCopsTime / totalTimeLeft) * (Settings.headhunter.rewards.exp.max - Settings.headhunter.rewards.exp.min))
-
-	PlayerData.UpdateCash(player, cash)
-	PlayerData.UpdateExperience(player, exp)
+	PlayerData.UpdateCash(player, Settings.headhunter.reward.cash * (Settings.headhunter.count - targetsLeft))
+	PlayerData.UpdateExperience(player, Settings.headhunter.reward.exp * (Settings.headhunter.count - targetsLeft))
 
 	TriggerClientEvent('lsv:headhunterFinished', player, true, '')
 end)

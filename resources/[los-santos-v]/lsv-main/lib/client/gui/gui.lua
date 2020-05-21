@@ -10,34 +10,44 @@ function Gui.GetPlayerName(serverId, color, lowercase)
 		end
 	else
 		if not color then
-			local isPlayerEnforcer = false
-			local isPlayerCriminal = false
-			if Player.Faction ~= Settings.faction.Neutral and PlayerData.IsExists(serverId) then
-				local faction = PlayerData.GetFaction(serverId)
-				isPlayerEnforcer = faction == Settings.faction.Enforcer
-				isPlayerCriminal = faction == Settings.faction.Criminal
-			end
-
-			if Player.IsCrewMember(serverId) then
+			if Player.CrewMembers[serverId] then
 				color = '~b~'
-			elseif isPlayerEnforcer then
-				color = '~d~'
-			elseif serverId == World.ChallengingPlayer or serverId == World.BeastPlayer or serverId == World.HotPropertyPlayer or isPlayerCriminal then
+			elseif serverId == World.ChallengingPlayer or serverId == World.BeastPlayer or serverId == World.HotPropertyPlayer or MissionManager.IsPlayerOnMission(serverId) then
 				color = '~r~'
-			elseif MissionManager.IsPlayerOnMission(serverId) then
-				color = '~p~'
 			else
 				color = '~w~'
 			end
 		end
 
-		return color..'<C>'..GetPlayerName(GetPlayerFromServerId(serverId))..'</C>~w~'
+		local playerName = PlayerData.IsExists(serverId) and PlayerData.GetName(serverId) or GetPlayerName(GetPlayerFromServerId(serverId))
+		return color..'<C>'..playerName..'</C>~w~'
 	end
+end
+
+function Gui.CreateMenu(id, title)
+	WarMenu.CreateMenu(id, title)
+	WarMenu.SetMenuMaxOptionCountOnScreen(id, Settings.maxMenuOptionCount)
 end
 
 function Gui.OpenMenu(id)
 	if not WarMenu.IsAnyMenuOpened() and Player.IsActive() then
 		WarMenu.OpenMenu(id)
+	end
+end
+
+function Gui.GetTextInputResultAsync(maxInputLength, defaultText)
+	DisplayOnscreenKeyboard(1, 'FMMC_MPM_NA', '', defaultText or '', '', '', '', maxInputLength)
+
+	while true do
+		Citizen.Wait(0)
+		DisableAllControlActions(0)
+
+		local status = UpdateOnscreenKeyboard()
+		if status == 2 then
+			return nil
+		elseif status == 1 then
+			return GetOnscreenKeyboardResult()
+		end
 	end
 end
 
@@ -72,10 +82,10 @@ function Gui.DisplayNotification(text, pic, title, subtitle, icon)
 	end
 end
 
-function Gui.DisplayPersonalNotification(text, pic, title, subtitle, icon)
+function Gui.DisplayPersonalNotification(text, pic, title, subtitle, icon, backgroundColor)
 	BeginTextCommandThefeedPost('STRING')
 	Gui.AddText(text)
-	ThefeedNextPostBackgroundColor(200)
+	ThefeedNextPostBackgroundColor(backgroundColor or 200)
 
 	if pic then
 		EndTextCommandThefeedPostMessagetext(pic, pic, false, icon or 4, title or '', subtitle or '')
@@ -148,15 +158,18 @@ function Gui.DisplayObjectiveText(text)
 	EndTextCommandPrint(1, true)
 end
 
-
-function Gui.DrawPlaceMarker(position, color, radius)
+function Gui.DrawMarker(type, position, color, radius, height, bobUpAndDown)
 	if not radius then
 		radius = Settings.placeMarker.radius
 	end
 
 	if IsSphereVisible(position.x, position.y, position.z, radius) then
-		DrawMarker(1, position.x, position.y, position.z - 1, 0, 0, 0, 0, 0, 0, radius * 2, radius * 2, radius * 2, color.r, color.g, color.b, color.a or Settings.placeMarker.opacity, false, nil, nil, false)
+		DrawMarker(type, position.x, position.y, position.z - 1, 0, 0, 0, 0, 0, 0, radius * 2, radius * 2, height or radius * 2, color.r, color.g, color.b, color.a or Settings.placeMarker.opacity, bobUpAndDown, true, nil, false)
 	end
+end
+
+function Gui.DrawPlaceMarker(position, color, radius, height)
+	Gui.DrawMarker(1, position, color, radius, height)
 end
 
 function Gui.StartEvent(name, message)
@@ -212,7 +225,15 @@ function Gui.FinishMission(name, success, reason)
 		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', string.upper(name)..' '..status, reason)
 		scaleform:renderFullscreenTimed(7000)
 	else
-		Gui.DisplayPersonalNotification(success and 'You have completed '..name..'.' or 'You have failed '..name..'.')
+		local message = name
+		if success then
+			message = message..' Completed\n'
+		else
+			message = message..' Failed\n'
+		end
+		message = message..reason
+
+		Gui.DisplayPersonalNotification(message)
 	end
 end
 

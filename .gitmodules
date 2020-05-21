@@ -4,3 +4,6 @@
 [submodule "resources/vSql"]
 	path = resources/vSql
 	url = https://github.com/warxander/vSql.git
+[submodule "resources/warmoji"]
+	path = resources/warmoji
+	url = https://github.com/warxander/warmoji.git

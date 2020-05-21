@@ -10,7 +10,7 @@ local _players = { }
 local function finishMission(success)
 	if not success and _missionPlaces[MissionManager.Mission] then
 		_missionPlaces[MissionManager.Mission].finished = false
-		SetBlipColour(_missionPlaces[MissionManager.Mission].blip, Color.BLIP_PURPLE)
+		SetBlipColour(_missionPlaces[MissionManager.Mission].blip, Color.BLIP_BLUE)
 	end
 
 	MissionManager.Mission = nil
@@ -65,10 +65,10 @@ AddEventHandler('lsv:updateMissions', function(missions, players)
 		mission.finished = false
 
 		if not mission.blip then
-			mission.blip = Map.CreatePlaceBlip(Blip.MISSION, mission.x, mission.y, mission.z, mission.name, Color.BLIP_PURPLE)
+			mission.blip = Map.CreatePlaceBlip(Blip.MISSION, mission.x, mission.y, mission.z, mission.name, Color.BLIP_BLUE)
 		else
 			Map.SetBlipText(mission.blip, mission.name)
-			SetBlipColour(Color.BLIP_PURPLE)
+			SetBlipColour(Color.BLIP_BLUE)
 		end
 	end)
 
@@ -81,19 +81,21 @@ end)
 
 AddEventHandler('lsv:init', function()
 	local closestMissionBlip = nil
-	local missionColor = Color.PURPLE
+	local missionColor = Color.BLUE
 
 	while true do
 		Citizen.Wait(0)
 
 		local isPlayerInFreeroam = Player.IsInFreeroam()
-		local playerPosition = GetEntityCoords(PlayerPedId())
+		local playerPosition = Player.Position()
 		local closestBlip = nil
 		local closestBlipDistance = nil
 
 		table.iforeach(_missionPlaces, function(mission, id)
+			SetBlipAlpha(mission.blip, isPlayerInFreeroam and 255 or 0)
+
 			if mission.name and isPlayerInFreeroam and not mission.finished then
-				local missionDistance = GetDistanceBetweenCoords(mission.x, mission.y, mission.z, playerPosition.x, playerPosition.y, playerPosition.z, true)
+				local missionDistance = World.GetDistance(mission, playerPosition, true)
 
 				if not closestBlipDistance or missionDistance < closestBlipDistance then
 					closestBlipDistance = missionDistance
@@ -103,9 +105,9 @@ AddEventHandler('lsv:init', function()
 				Gui.DrawPlaceMarker(mission, missionColor)
 
 				if missionDistance < Settings.placeMarker.radius then
-					Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to start '..mission.name..'.')
+					Gui.DisplayHelpText('Press ~INPUT_TALK~ to start '..mission.name..'.')
 
-					if IsControlJustReleased(0, 38) then
+					if IsControlJustReleased(0, 46) then
 						mission.finished = true
 						SetBlipColour(mission.blip, Color.BLIP_GREY)
 

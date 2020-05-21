@@ -1,7 +1,6 @@
 local _vehicle = nil
 local _vehicleBlip = nil
 local _dropOffBlip = nil
-local _dropOffLocationBlip = nil
 
 local _helpHandler = nil
 
@@ -15,10 +14,10 @@ AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
 
 	World.EnableWanted(false)
 
-	if not success and not IsPedInVehicle(PlayerPedId(), _vehicle, false) then
-		SetEntityAsMissionEntity(_vehicle, true, true)
-		DeleteVehicle(_vehicle)
-	end
+	Player.LeaveVehicle(_vehicle)
+	SetVehicleDoorsLockedForAllPlayers(_vehicle, true)
+
+	World.MarkVehicleToDelete(_vehicle, 5000)
 	_vehicle = nil
 
 	RemoveBlip(_vehicleBlip)
@@ -27,17 +26,15 @@ AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
 	RemoveBlip(_dropOffBlip)
 	_dropOffBlip = nil
 
-	RemoveBlip(_dropOffLocationBlip)
-	_dropOffLocationBlip = nil
-
 	Gui.FinishMission('Asset Recovery', success, reason)
 end)
 
 AddEventHandler('lsv:startAssetRecovery', function()
 	local variant = table.random(Settings.assetRecovery.variants)
+	local vehicleModel = table.random(Settings.assetRecovery.vehicles)
 
-	Streaming.RequestModelAsync(variant.vehicle)
-	local vehicleHash = GetHashKey(variant.vehicle)
+	Streaming.RequestModelAsync(vehicleModel)
+	local vehicleHash = GetHashKey(vehicleModel)
 	_vehicle = CreateVehicle(vehicleHash, variant.vehicleLocation.x, variant.vehicleLocation.y, variant.vehicleLocation.z, variant.vehicleLocation.heading, false, true)
 	SetVehicleModKit(_vehicle, 0)
 	SetVehicleMod(_vehicle, 16, 4)
@@ -46,6 +43,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 	local missionTimer = Timer.New()
 	local isInVehicle = false
+	local loseTheCops = false
 	local routeBlip = nil
 
 	_vehicleBlip = AddBlipForEntity(_vehicle)
@@ -63,9 +61,6 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	SetBlipHighDetail(_dropOffBlip, true)
 	SetBlipAlpha(_dropOffBlip, 0)
 
-	_dropOffLocationBlip = Map.CreateRadiusBlip(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, Settings.assetRecovery.dropRadius, Color.BLIP_YELLOW)
-	SetBlipAlpha(_dropOffLocationBlip, 0)
-
 	Gui.StartMission('Asset Recovery', 'Steal the vehicle and deliver it to the drop-off location.')
 
 	Citizen.CreateThread(function()
@@ -78,10 +73,18 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 			SetBlipAlpha(_vehicleBlip, isInVehicle and 0 or 255)
 			SetBlipAlpha(_dropOffBlip, isInVehicle and 255 or 0)
-			SetBlipAlpha(_dropOffLocationBlip, isInVehicle and 128 or 0)
 
 			if Player.IsActive() then
-				Gui.DisplayObjectiveText(isInVehicle and 'Deliver the vehicle to the ~y~drop off~w~.' or 'Steal the ~g~vehicle~w~.')
+				local objectiveText = ''
+				if not isInVehicle then
+					objectiveText = 'Steal the ~g~vehicle~w~.'
+				elseif not loseTheCops or GetPlayerWantedLevel(PlayerId()) == 0 then
+					objectiveText = 'Deliver the vehicle to the ~y~drop off~w~.'
+				else
+					objectiveText = 'Lose the cops.'
+				end
+
+				Gui.DisplayObjectiveText(objectiveText)
 				Gui.DrawTimerBar('MISSION TIME', Settings.assetRecovery.time - missionTimer:elapsed(), 1)
 
 				if isInVehicle then
@@ -117,8 +120,11 @@ AddEventHandler('lsv:startAssetRecovery', function()
 			isInVehicle = IsPedInVehicle(PlayerPedId(), _vehicle, false)
 
 			if isInVehicle then
+				Gui.DrawPlaceMarker(variant.dropOffLocation, Color.YELLOW)
+
 				if not NetworkGetEntityIsNetworked(_vehicle) then
 					NetworkRegisterEntityAsNetworked(_vehicle)
+					World.SetWantedLevel(4, 5, true)
 					Gui.DisplayPersonalNotification('You have stolen a vehicle.')
 					_helpHandler = HelpQueue.PushFront('Minimize the vehicle damage to get extra reward.')
 				end
@@ -128,11 +134,13 @@ AddEventHandler('lsv:startAssetRecovery', function()
 					routeBlip = _dropOffBlip
 				end
 
-				World.SetWantedLevel(3)
-
-				if Player.DistanceTo(variant.dropOffLocation, true) < Settings.assetRecovery.dropRadius then
+				if Player.DistanceTo(variant.dropOffLocation, true) < Settings.assetRecovery.dropRadius and GetPlayerWantedLevel(PlayerId()) == 0 then
 					TriggerServerEvent('lsv:assetRecoveryFinished', GetEntityHealth(_vehicle) / GetEntityMaxHealth(_vehicle))
 					return
+				elseif not loseTheCops and Player.DistanceTo(variant.dropOffLocation, true) < Settings.assetRecovery.nearDistance then
+					_helpHandler = HelpQueue.PushFront('You are nearing the drop-off location. Lose your Wanted Level before delivering the vehicle.')
+					World.SetWantedLevel(2, 2)
+					loseTheCops = true
 				end
 			elseif routeBlip ~= _vehicleBlip then
 				SetBlipRoute(_vehicleBlip, true)

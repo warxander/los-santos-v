@@ -1,5 +1,5 @@
 RegisterNetEvent('lsv:updatePlayerSkin')
-AddEventHandler('lsv:updatePlayerSkin', function(skinIndex, category)
+AddEventHandler('lsv:updatePlayerSkin', function(skinModel, skinIndex, category)
 	local player = source
 	if not PlayerData.IsExists(player) then
 		return
@@ -15,7 +15,7 @@ AddEventHandler('lsv:updatePlayerSkin', function(skinIndex, category)
 		return
 	end
 
-	Db.UpdateSkinModel(player, skin.id, function()
-		TriggerClientEvent('lsv:playerSkinUpdated', player, skin.id)
+	Db.UpdateSkinModel(player, skinModel, function()
+		TriggerClientEvent('lsv:playerSkinUpdated', player, skinModel)
 	end)
 end)

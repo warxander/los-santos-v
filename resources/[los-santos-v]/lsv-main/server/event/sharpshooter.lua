@@ -3,13 +3,11 @@ local logger = Logger.New('SharpShooter')
 local _sharpShooterData = nil
 
 local function getPlayerIndexById(id)
-	for i, v in pairs(_sharpShooterData.players) do
-		if v.id == id then
-			return i
-		end
-	end
+	local _, index = table.ifind_if(_sharpShooterData.players, function(player)
+		return player.id == id
+	end)
 
-	return nil
+	return index
 end
 
 local function sortPlayersByPoints(l, r)
@@ -74,12 +72,12 @@ AddEventHandler('lsv:startSharpShooter', function()
 	end
 end)
 
-AddEventHandler('lsv:onPlayerKilled', function(killer, data)
-	if not _sharpShooterData or killer == -1 or not data.killerheadshot then
+AddEventHandler('lsv:onPlayerKilled', function(killData)
+	if not _sharpShooterData or not killData.headshot then
 		return
 	end
 
-	local player = killer
+	local player = killData.killer
 	local playerIndex = getPlayerIndexById(player)
 	if not playerIndex then
 		table.insert(_sharpShooterData.players, { id = player, points = 1 })

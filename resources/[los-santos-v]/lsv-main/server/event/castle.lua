@@ -3,12 +3,11 @@ local logger = Logger.New('Castle')
 local _castleData = nil
 
 local function getPlayerIndexById(id)
-	for i, v in pairs(_castleData.players) do
-		if v.id == id then
-			return i end
-	end
+	local _, index = table.ifind_if(_castleData.players, function(player)
+		return player.id == id
+	end)
 
-	return nil
+	return index
 end
 
 local function sortPlayersByPoints(l, r)

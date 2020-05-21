@@ -1,6 +1,35 @@
-local _reportedPlayers = { }
-local _reportingPlayer = nil
-local _reportingReasons = { 'Inappropriate Player Name', 'Harassment', 'Cheating', 'Spam', 'Abusing Game Mechanics' }
+local _actions = {
+	{ name = 'Cheer', scenario = 'WORLD_HUMAN_CHEERING' },
+	{ name = 'Shocking', scenario = 'WORLD_HUMAN_MOBILE_FILM_SHOCKING' },
+	{ name = 'Lean', scenario = 'WORLD_HUMAN_LEANING' },
+	{ name = 'Smoke', scenario = 'WORLD_HUMAN_SMOKING' },
+	{ name = 'Drink', scenario = 'WORLD_HUMAN_DRINKING' },
+	{ name = 'Muscle Flex', scenario = 'WORLD_HUMAN_MUSCLE_FLEX' },
+	{ name = 'Party', scenario = 'WORLD_HUMAN_PARTYING' },
+	{ name = 'Musician', scenario = 'WORLD_HUMAN_MUSICIAN' },
+	{ name = 'Paparazzi', scenario = 'WORLD_HUMAN_PAPARAZZI' },
+	{ name = 'Prostitute', scenario = 'WORLD_HUMAN_PROSTITUTE_HIGH_CLASS' },
+	{ name = 'Strip Watch', scenario = 'WORLD_HUMAN_STRIP_WATCH_STAND' },
+	{ name = 'Fishing', scenario = 'WORLD_HUMAN_STAND_FISHING' },
+	{ name = 'Yoga', scenario = 'WORLD_HUMAN_YOGA' },
+	{ name = 'Sunbathe', scenario = 'WORLD_HUMAN_SUNBATHE' },
+	{ name = 'Picnic', scenario = 'WORLD_HUMAN_PICNIC' },
+	{ name = 'Binoculars', scenario = 'WORLD_HUMAN_BINOCULARS' },
+	{ name = 'Investigation', scenario = 'CODE_HUMAN_POLICE_INVESTIGATE' },
+	{ name = 'Time of Death', scenario = 'CODE_HUMAN_MEDIC_TIME_OF_DEATH' },
+	{ name = 'Fire', scenario = 'WORLD_HUMAN_STAND_FIRE' },
+}
+
+local _crewRace = { }
+local _crewFinishRadius = 10.
+
+local function resetCrewRace()
+	if _crewRace.blip then
+		RemoveBlip(_crewRace.blip)
+	end
+
+	_crewRace = { }
+end
 
 local function weaponTintPrice(tint, weaponHash)
 	if GetPedWeaponTintIndex(PlayerPedId(), weaponHash) == tint.index then
@@ -98,13 +127,6 @@ AddEventHandler('lsv:weaponPurchased', function(weapon)
 	Prompt.Hide()
 end)
 
-RegisterNetEvent('lsv:weaponSold')
-AddEventHandler('lsv:weaponSold', function(weapon)
-	RemoveWeaponFromPed(PlayerPedId(), GetHashKey(weapon))
-	Player.SaveWeapons()
-	Prompt.Hide()
-end)
-
 RegisterNetEvent('lsv:ammoRefilled')
 AddEventHandler('lsv:ammoRefilled', function(weapon, amount, fullAmmo)
 	if amount then
@@ -122,7 +144,99 @@ AddEventHandler('lsv:ammoRefilled', function(weapon, amount, fullAmmo)
 	Prompt.Hide()
 end)
 
+RegisterNetEvent('lsv:crewRaceFinished')
+AddEventHandler('lsv:crewRaceFinished', function(winner)
+	if not Player.IsInCrew() then
+		return
+	end
+
+	Gui.DisplayPersonalNotification(Gui.GetPlayerName(winner)..' won Crew Race.')
+
+	resetCrewRace()
+
+	if Player.ServerId() == winner then
+		PlaySoundFrontend(-1, 'RACE_PLACED', 'HUD_AWARDS', true)
+
+		local scaleform = Scaleform.NewAsync('MIDSIZED_MESSAGE')
+		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', 'WINNER', '')
+		scaleform:renderFullscreenTimed(7000)
+	end
+end)
+
+RegisterNetEvent('lsv:crewRaceStarted')
+AddEventHandler('lsv:crewRaceStarted', function(finishCoords)
+	if not Player.IsInCrew() then
+		return
+	end
+
+	_crewRace.inProgress = true
+
+	_crewRace.blip = Map.CreatePlaceBlip(Blip.CREW_RACE_FINISH, finishCoords.x, finishCoords.y, finishCoords.z)
+	SetBlipAsShortRange(_crewRace.blip, false)
+	SetBlipRouteColour(_crewRace.blip, Color.BLIP_YELLOW)
+	SetBlipRoute(_crewRace.blip, true)
+	Map.SetBlipFlashes(_crewRace.blip)
+
+	_crewRace.finishCoords = finishCoords
+
+	if Player.IsACrewLeader() then
+		DeleteWaypoint()
+		WarMenu.CloseMenu()
+		Prompt.Hide()
+	end
+
+	local countdownMessages = { '3...', '2...', '1...' }
+	while #countdownMessages ~= 0 do
+		PlaySoundFrontend(-1, '3_2_1', 'HUD_MINI_GAME_SOUNDSET', true)
+		Gui.DisplayPersonalNotification(countdownMessages[1])
+		Citizen.Wait(1000)
+		table.remove(countdownMessages, 1)
+	end
+
+	PlaySoundFrontend(-1, 'GO', 'HUD_MINI_GAME_SOUNDSET', true)
+	Gui.DisplayPersonalNotification('GO!')
+
+	while true do
+		Citizen.Wait(0)
+
+		if not _crewRace.inProgress then
+			return
+		end
+
+		if Player.DistanceTo(_crewRace.finishCoords) < _crewFinishRadius then
+			TriggerServerEvent('lsv:finishCrewRace', Player.ServerId())
+			return
+		end
+	end
+end)
+
+RegisterNetEvent('lsv:crewMemberLeft')
+AddEventHandler('lsv:crewMemberLeft', function(player)
+	if not Player.IsInCrew() or player ~= Player.ServerId() then
+		return
+	end
+
+	resetCrewRace()
+end)
+
+RegisterNetEvent('lsv:crewDisbanded')
+AddEventHandler('lsv:crewDisbanded', function()
+	if not Player.IsInCrew() then
+		return
+	end
+
+	resetCrewRace()
+end)
+
+--TODO: Use signals (?)
+RegisterNetEvent('lsv:settingUpdated')
+AddEventHandler('lsv:settingUpdated', function()
+	Prompt.Hide()
+end)
+
 AddEventHandler('lsv:init', function()
+	local killYourselfTimer = Timer.New()
+
 	local selectedWeapon = nil
 	local selectedWeaponHash = nil
 	local selectedWeaponCategory = nil
@@ -131,20 +245,21 @@ AddEventHandler('lsv:init', function()
 
 	local challengeTarget = nil
 
-	WarMenu.CreateMenu('interaction', GetPlayerName(PlayerId()))
-	WarMenu.SetMenuMaxOptionCountOnScreen('interaction', Settings.maxMenuOptionCount)
+	Gui.CreateMenu('interaction', GetPlayerName(PlayerId()))
 	WarMenu.SetTitleColor('interaction', 255, 255, 255)
 	WarMenu.SetTitleBackgroundColor('interaction', Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, Color.WHITE.a)
 	WarMenu.SetTitleBackgroundSprite('interaction', 'commonmenu', 'interaction_bgd')
 
 	WarMenu.CreateSubMenu('interaction_confirm', 'interaction', 'Are you sure?')
 
-	WarMenu.CreateSubMenu('inviteToCrew', 'interaction', 'Invite to Crew')
+	WarMenu.CreateSubMenu('actions', 'interaction', 'Actions')
+
+	WarMenu.CreateSubMenu('manageCrew', 'interaction', 'Manage Crew')
+	WarMenu.CreateSubMenu('inviteToCrew', 'manageCrew', 'Invite to Crew')
 
 	WarMenu.CreateSubMenu('stats', 'interaction', 'Statistics')
 
-	WarMenu.CreateSubMenu('reportPlayer', 'interaction', 'Report Player')
-	WarMenu.CreateSubMenu('reportReason', 'reportPlayer', 'Select a reason for reporting')
+	WarMenu.CreateSubMenu('settings', 'interaction', 'Player Settings')
 
 	WarMenu.CreateSubMenu('ammunation', 'interaction', 'Ammu-Nation')
 	WarMenu.SetTitleColor('ammunation', 0, 0, 0, 0)
@@ -155,8 +270,7 @@ AddEventHandler('lsv:init', function()
 	WarMenu.CreateSubMenu('ammunation_weapons', 'ammunation_weaponCategories', '')
 	WarMenu.SetMenuButtonPressedSound('ammunation_weapons', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
-	WarMenu.CreateSubMenu('ammunation_sell', 'ammunation_weapons')
-	WarMenu.SetMenuButtonPressedSound('ammunation_sell', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+	WarMenu.CreateSubMenu('ammunation_discard', 'ammunation_weapons')
 
 	WarMenu.CreateSubMenu('ammunation_ammunition', 'ammunation', 'Ammunition')
 
@@ -176,28 +290,67 @@ AddEventHandler('lsv:init', function()
 
 	while true do
 		if WarMenu.IsMenuOpened('interaction') then
+			local killYourselfLeft = Settings.killYourselfInterval - killYourselfTimer:elapsed()
+
 			if IsPlayerDead(PlayerId()) then
 				WarMenu.CloseMenu()
 				Prompt.Hide()
 			elseif WarMenu.MenuButton('Ammu-Nation', 'ammunation') then
+			elseif IsPedActiveInScenario(PlayerPedId()) and WarMenu.Button('Cancel Action') then
+				ClearPedTasks(PlayerPedId())
+				WarMenu.CloseMenu()
+			elseif not IsPedActiveInScenario(PlayerPedId()) and WarMenu.MenuButton('Actions', 'actions') then
 			elseif Player.IsInFreeroam() and WarMenu.MenuButton('Challenges', 'challenges') then
-			elseif Player.Faction ~= Settings.faction.Neutral and WarMenu.Button('Leave Faction') then
-				Player.ResetModel()
-				TriggerServerEvent('lsv:leaveFaction')
-				WarMenu.CloseMenu()
-			elseif WarMenu.MenuButton('Invite to Crew', 'inviteToCrew') then
-			elseif #Player.CrewMembers ~= 0 and WarMenu.Button('Leave Crew') then
+			elseif Player.IsACrewLeader() and WarMenu.MenuButton('Manage Crew', 'manageCrew') then
+			elseif Player.IsInCrew() and not Player.IsACrewLeader() and WarMenu.Button('Leave Crew') then
 				TriggerServerEvent('lsv:leaveCrew')
+				Prompt.ShowAsync()
 				WarMenu.CloseMenu()
+			elseif not Player.IsInCrew() and WarMenu.Button('Form Crew') then
+				TriggerServerEvent('lsv:formCrew')
+				Prompt.ShowAsync()
 			elseif WarMenu.MenuButton('Statistics', 'stats') then
-			elseif WarMenu.Button('Kill Yourself') then
-				SetEntityHealth(PlayerPedId(), 0)
-
-				WarMenu.CloseMenu()
-			elseif WarMenu.MenuButton('Report Player', 'reportPlayer') then
+			elseif WarMenu.MenuButton('Settings', 'settings') then
+			elseif WarMenu.Button('Kill Yourself', killYourselfLeft > 0 and string.from_ms(killYourselfLeft) or '') then
+				if killYourselfLeft <= 0 then
+					SetEntityHealth(PlayerPedId(), 0)
+					WarMenu.CloseMenu()
+					killYourselfTimer:restart()
+				end
 			elseif Player.Rank >= Settings.minPrestigeRank and Player.Prestige < Settings.maxPrestige and WarMenu.MenuButton('~y~Up Prestige To Level '..(Player.Prestige + 1), 'interaction_confirm') then
-			elseif MissionManager.Mission and WarMenu.Button('~r~Cancel Mission') then
+			elseif MissionManager.Mission and WarMenu.Button('~r~Finish Mission') then
 				MissionManager.FinishMission()
+				WarMenu.CloseMenu()
+			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('actions') then
+			local playerPed = PlayerPedId()
+			table.iforeach(_actions, function(actionData)
+				if WarMenu.Button(actionData.name) then
+					if IsPedInAnyVehicle(playerPed, true) or not IsPedStill(playerPed) then
+						Gui.DisplayPersonalNotification('You can\'t play any action right now.')
+					else
+						TaskStartScenarioInPlace(playerPed, actionData.scenario, 0, true)
+						WarMenu.CloseMenu()
+					end
+				end
+			end)
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('manageCrew') then
+			if WarMenu.MenuButton('Invite to Crew', 'inviteToCrew') then
+			elseif not _crewRace.inProgress and WarMenu.Button('Start Race') then
+				local blip = Player.GetWaypoint()
+				if DoesBlipExist(blip) then
+					TriggerServerEvent('lsv:startCrewRace', GetBlipCoords(blip))
+					Prompt.ShowAsync()
+				else
+					Gui.DisplayPersonalNotification('You need to place Waypoint first.')
+				end
+			elseif WarMenu.Button('~r~Disband Crew') then
+				TriggerServerEvent('lsv:disbandCrew')
+				Prompt.ShowAsync()
 				WarMenu.CloseMenu()
 			end
 
@@ -220,13 +373,26 @@ AddEventHandler('lsv:init', function()
 			local timePlayedMin = Player.TimePlayed / (1000 * 60);
 
 			if WarMenu.Button('Time Played', string.format('%02d:%02d', math.floor(timePlayedMin / 60), math.floor(timePlayedMin % 60))) then
+			elseif WarMenu.Button('Money Wasted', '$'..Player.MoneyWasted) then
 			elseif WarMenu.Button('Kills', Player.Kills) then
 			elseif WarMenu.Button('Deaths', Player.Deaths) then
 			elseif WarMenu.Button('Headshots', Player.Headshots..' ('..string.format('%02.2f', (Player.Headshots / Player.Kills) * 100)..'%)') then
 			elseif WarMenu.Button('Max Killstreak', Player.MaxKillstreak) then
+			elseif WarMenu.Button('Vehicle Kills', Player.VehicleKills) then
+			elseif WarMenu.Button('Longest Kill Distance', string.format('%dm', Player.LongestKillDistance)) then
 			elseif WarMenu.Button('Missions Done', Player.MissionsDone) then
 			elseif WarMenu.Button('Events Won', Player.EventsWon) then
 			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('settings') then
+			table.foreach(Settings.player, function(name, id)
+				local value = Player.Settings[id]
+				if WarMenu.CheckBox(name, value) then
+					TriggerServerEvent('lsv:updatePlayerSetting', id, not value)
+					Prompt.ShowAsync()
+				end
+			end)
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation') then
@@ -247,7 +413,7 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_weapons') then
 			table.foreach(Settings.ammuNationWeapons[selectedWeaponCategory], function(weapon)
-				if Weapon[weapon].cash and WarMenu.MenuButton(Weapon[weapon].name, 'ammunation_sell', weaponPrice(weapon)) then
+				if Weapon[weapon].cash and WarMenu.MenuButton(Weapon[weapon].name, 'ammunation_discard', weaponPrice(weapon)) then
 					if not HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) then
 						WarMenu.OpenMenu('ammunation_weapons')
 						if Weapon[weapon].rank and Weapon[weapon].rank > Player.Rank then
@@ -260,17 +426,16 @@ AddEventHandler('lsv:init', function()
 						end
 					else
 						selectedWeapon = weapon
-						local sellPrice = math.floor(Weapon[weapon].cash * Settings.sellWeaponRatio)
-						WarMenu.SetSubTitle('ammunation_sell', 'Sell '..Weapon[weapon].name..' for $'..sellPrice..'?')
+						WarMenu.SetSubTitle('ammunation_discard', 'Do you want to discard '..Weapon[weapon].name..'?')
 					end
 				end
 			end)
 
 			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_sell') then
+		elseif WarMenu.IsMenuOpened('ammunation_discard') then
 			if WarMenu.MenuButton('Yes', 'ammunation_weapons') then
-				TriggerServerEvent('lsv:sellWeapon', selectedWeapon)
-				Prompt.ShowAsync()
+				RemoveWeaponFromPed(PlayerPedId(), GetHashKey(selectedWeapon))
+				Player.SaveWeapons()
 			elseif WarMenu.MenuButton('No', 'ammunation_weapons') then
 			end
 
@@ -396,35 +561,13 @@ AddEventHandler('lsv:init', function()
 			for _, i in ipairs(GetActivePlayers()) do
 				if i ~= PlayerId() then
 					local player = GetPlayerServerId(i)
-					if not Player.IsCrewMember(player) and WarMenu.Button(GetPlayerName(i)) then
+					if not Player.CrewMembers[player] and WarMenu.Button(GetPlayerName(i)) then
 						Gui.DisplayPersonalNotification('You have sent Crew Invitation to '..Gui.GetPlayerName(player))
 						TriggerServerEvent('lsv:inviteToCrew', player)
 						WarMenu.CloseMenu()
 					end
 				end
 			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('reportPlayer') then
-			for _, i in ipairs(GetActivePlayers()) do
-				if i ~= PlayerId() then
-					local target = GetPlayerServerId(i)
-					if not table.find(_reportedPlayers, target) and WarMenu.MenuButton(GetPlayerName(i), 'reportReason') then
-						_reportingPlayer = target
-					end
-				end
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('reportReason') then
-			table.foreach(_reportingReasons, function(reason)
-				if WarMenu.Button(reason) then
-					TriggerServerEvent('lsv:reportPlayer', _reportingPlayer, reason)
-					table.insert(_reportedPlayers, _reportingPlayer)
-					_reportingPlayer = nil
-					WarMenu.CloseMenu()
-				end
-			end)
 
 			WarMenu.Display()
 		end

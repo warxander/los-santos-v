@@ -101,6 +101,7 @@ function spawnPlayer(spawnPoint)
 
 	ClearPedTasksImmediately(ped)
 	StopEntityFire(ped)
+	ClearPedEnvDirt(ped)
 	ClearPedBloodDamage(ped)
 	ClearPedWetness(ped)
 

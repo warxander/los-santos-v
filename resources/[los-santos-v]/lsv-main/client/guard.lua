@@ -70,7 +70,7 @@ AddEventHandler('lsv:init', function()
 		end
 
 		-- Player invincibility, health/armour modifications
-		if Player.IsActive() then
+		if Player.IsActive() and not Player.InPassiveMode then
 			if GetPlayerInvincible(PlayerId()) or GetEntityHealth(PlayerPedId()) > 200 or GetPedArmour(PlayerId()) > Settings.armour.max then
 				TriggerEvent('lsv:autoBanPlayer', 'God Mode')
 				return

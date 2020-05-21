@@ -75,13 +75,13 @@ AddEventHandler('lsv:startGunGame', function()
 	end
 end)
 
-AddEventHandler('lsv:onPlayerKilled', function(killer, data)
-	if not _gunGameData or killer == -1 or not data.weaponhash or
-		not table.ifind_if(Settings.ammuNationWeapons[_gunGameData.category], function(weapon) return GetHashKey(weapon) == data.weaponhash end) then
+AddEventHandler('lsv:onPlayerKilled', function(killData)
+	if not _gunGameData or not killData.weaponHash or
+		not table.ifind_if(Settings.ammuNationWeapons[_gunGameData.category], function(weapon) return GetHashKey(weapon) == killData.weaponHash end) then
 			return
 	end
 
-	local player = killer
+	local player = killData.killer
 	local playerIndex = getPlayerIndexById(player)
 	if not playerIndex then
 		table.insert(_gunGameData.players, { id = player, points = 1 })

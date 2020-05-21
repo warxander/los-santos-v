@@ -162,7 +162,7 @@ function Scoreboard.DisplayThisFrame()
 		-- Draw player name
 		local isPatron = player.patreonTier ~= 0
 		local playerColor = Color.DARK_BLUE
-		if Player.IsCrewMember(player.id) then
+		if Player.CrewMembers[player.id] then
 			playerColor = Color.LIGHT_BLUE
 		elseif isPatron then
 			playerColor = Color.ORANGE
@@ -198,8 +198,6 @@ function Scoreboard.DisplayThisFrame()
 
 		-- Draw player status
 		local playerStatusColor = Color.WHITE
-		if player.faction == Settings.faction.Enforcer then playerStatusColor = Color.DARK_BLUE
-		elseif player.faction == Settings.faction.Criminal then playerStatusColor = Color.RED end
 		Gui.DrawRect(playerStatusPosition, _playerStatusWidth, _tableHeight, playerStatusColor)
 
 		-- Draw cash

@@ -1,15 +1,3 @@
-local function getSkinRequirements(skin)
-	if skin.id == Player.Skin then
-		return 'Used'
-	end
-
-	if skin.rank and Player.Rank < skin.rank then
-		return 'Rank '..skin.rank
-	end
-
-	return ''
-end
-
 Citizen.CreateThread(function()
 	while not NetworkIsPlayerActive(PlayerId()) do
 		Citizen.Wait(0)
@@ -37,12 +25,10 @@ end)
 
 RegisterNetEvent('lsv:playerLoaded')
 AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
-	local seed = tonumber(string.match(playerData.Identifier, '[0-9]+'))
-
-	math.randomseed(seed)
+	math.randomseed(playerData.Seed)
 	math.random(); math.random(); math.random();
 
-	SetRandomSeed(math.floor(math.random()))
+	SetRandomSeed(playerData.Seed)
 
 	ShutdownLoadingScreen()
 
@@ -51,61 +37,8 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 	Player.Init(playerData)
 	Prompt.Hide()
 
-	WarMenu.CreateMenu('faction', GetPlayerName(PlayerId()))
-	WarMenu.SetSubTitle('faction', 'Select Your Faction')
-	WarMenu.SetMenuMaxOptionCountOnScreen('faction', Settings.maxMenuOptionCount)
-	WarMenu.SetTitleColor('faction', 255, 255, 255)
-	WarMenu.SetTitleBackgroundColor('faction', Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, Color.WHITE.a)
-	WarMenu.SetTitleBackgroundSprite('faction', 'commonmenu', 'interaction_bgd')
-
-	WarMenu.CreateSubMenu('faction_skin', 'faction', 'Select Your Skin')
-	WarMenu.SetMenuButtonPressedSound('faction_skin', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
-
-	Gui.DisplayPersonalNotification('Your Faction choice is not permanent!')
-
-	Player.SetModel(playerData.SkinModel)
+	Player.SetModelAsync(playerData.SkinModel)
 	spawnPlayer(playerData.SpawnPoint) -- TODO Module ?
-
-	WarMenu.OpenMenu('faction')
-
-	local selectedFaction = nil
-
-	while true do
-		Citizen.Wait(0)
-
-		if not WarMenu.IsMenuOpened('faction') and not WarMenu.IsMenuOpened('faction_skin') then
-			break
-		elseif WarMenu.IsMenuOpened('faction') then
-			if WarMenu.Button('Neutral') then
-				WarMenu.CloseMenu()
-			elseif WarMenu.MenuButton('Enforcer', 'faction_skin') then
-				selectedFaction = Settings.faction.Enforcer
-			elseif WarMenu.MenuButton('Criminal', 'faction_skin') then
-				selectedFaction = Settings.faction.Criminal
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('faction_skin') then
-			if WarMenu.Button('Default') then
-				TriggerServerEvent('lsv:joinFaction', selectedFaction)
-				WarMenu.CloseMenu()
-			else
-				for _, skin in ipairs(Settings.factionSkins[selectedFaction]) do
-					if WarMenu.Button(skin.name, getSkinRequirements(skin)) then
-						if skin.rank and skin.rank > Player.Rank then
-							Gui.DisplayPersonalNotification('Your Rank is too low.')
-						else
-							TriggerServerEvent('lsv:joinFaction', selectedFaction)
-							Player.SetModel(skin.id, true)
-							WarMenu.CloseMenu()
-						end
-					end
-				end
-			end
-
-			WarMenu.Display()
-		end
-	end
 
 	Player.SetPassiveMode(true)
 
@@ -120,11 +53,12 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 	Player.Loaded = true
 
 	Player.SetPassiveMode(true, true)
-	Citizen.Wait(Settings.spawnProtectionTime)
-	Player.SetPassiveMode(false)
 
 	TriggerEvent('lsv:init', playerData)
 	TriggerServerEvent('lsv:playerInitialized')
+
+	Citizen.Wait(Settings.spawnProtectionTime)
+	Player.SetPassiveMode(false)
 end)
 
 AddEventHandler('playerSpawned', function()
@@ -138,10 +72,7 @@ AddEventHandler('playerSpawned', function()
 		GiveWeaponToPed(playerPed, `GADGET_PARACHUTE`, 1, false, false)
 	end
 
-	while not HasCollisionLoadedAroundEntity(playerPed) do
-		Citizen.Wait(0)
-	end
-	PlaceObjectOnGroundProperly(playerPed)
+	Streaming.RequestEntityCollisionAsync(playerPed)
 
 	if Player.Loaded then
 		Citizen.Wait(Settings.spawnProtectionTime)

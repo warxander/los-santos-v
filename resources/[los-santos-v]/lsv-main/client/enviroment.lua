@@ -24,35 +24,31 @@ AddEventHandler('lsv:updateWeather', function(weather)
 end)
 
 Citizen.CreateThread(function()
-	local vehiclesToDelete = { }
+	World.AddVehicleHandler(function(vehicle)
+		if table.ifind(Settings.world.blacklistVehicles, GetEntityModel(vehicle)) then
+			World.MarkVehicleToDelete(vehicle)
+		end
+	end)
+end)
 
+Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(100)
+		Citizen.Wait(0)
 
-		World.ForEachVehicleAsync(function(vehicle)
-			local modelHash = GetEntityModel(vehicle)
-			if table.ifind_if(Settings.world.blacklistVehicles, function(blacklistHash)
-				return modelHash == blacklistHash
-			end) then
-				table.insert(vehiclesToDelete, vehicle)
-			end
-		end)
+		SetPedDensityMultiplierThisFrame(Settings.density.ped)
+		SetScenarioPedDensityMultiplierThisFrame(Settings.density.ped, Settings.density.ped)
 
-		table.iforeach(vehiclesToDelete, function(vehicle)
-			if DoesEntityExist(vehicle) then
-				NetworkRequestControlOfEntity(vehicle) --TODO: Should I wait here?
-				SetEntityAsMissionEntity(vehicle, true, true)
-				DeleteVehicle(vehicle)
-			end
-		end)
-
-		table.clear(vehiclesToDelete)
+		SetParkedVehicleDensityMultiplierThisFrame(Settings.density.vehicle)
+		SetRandomVehicleDensityMultiplierThisFrame(Settings.density.vehicle)
+		SetVehicleDensityMultiplierThisFrame(Settings.density.vehicle)
 	end
 end)
 
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1000)
+
+		DisablePlayerVehicleRewards(PlayerId())
 		NetworkOverrideClockTime(NetworkGetServerTime())
 	end
 end)

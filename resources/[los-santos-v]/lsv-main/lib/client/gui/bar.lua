@@ -1,4 +1,4 @@
-local _barWidth = 0.145
+local _barWidth = 0.155
 local _barHeight = 0.035
 
 local _barProgressWidth = _barWidth / 2.65
@@ -7,7 +7,7 @@ local _barProgressHeight = _barHeight / 3.25
 local _barTexture = 'all_black_bg'
 local _barTextureDict = 'timerbars'
 
-function Gui.DrawBar(title, text, barPosition, color, isPlayerText)
+function Gui.DrawBar(title, text, barPosition, color, isPlayerText, isMonospace)
 	RequestStreamedTextureDict(_barTextureDict)
 	if not HasStreamedTextureDictLoaded(_barTextureDict) then
 		return
@@ -24,15 +24,15 @@ function Gui.DrawBar(title, text, barPosition, color, isPlayerText)
 
 	Gui.SetTextParams(font, color, scale, isPlayerText, false, false)
 	Gui.DrawText(title, { x = SafeZone.Right() - _barWidth / 2, y = y - margin }, SafeZone.Size() - _barWidth / 2)
-	Gui.SetTextParams(0, color, 0.5, false, false, false)
+	Gui.SetTextParams(isMonospace and 5 or 0, color, 0.5, false, false, false)
 	Gui.DrawText(text, { x = SafeZone.Right() - 0.00285, y = y - 0.0175 }, _barWidth / 2)
 end
 
-function Gui.DrawTimerBar(text, ms, barPosition, isPlayerText, color)
+function Gui.DrawTimerBar(text, ms, barPosition, isPlayerText, color, highAccuracy)
 	if not color then
 		color = ms <= 10000 and Color.RED or Color.WHITE
 	end
-	Gui.DrawBar(text, string.from_ms(ms), barPosition, color, isPlayerText)
+	Gui.DrawBar(text, string.from_ms(ms, highAccuracy), barPosition, color, isPlayerText, true)
 end
 
 function Gui.DrawProgressBar(title, progress, barPosition, color)

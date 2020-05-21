@@ -10,6 +10,7 @@ local _events = {
 	{ id = 'StockPiling', name = 'Stockpiling' },
 	{ id = 'SharpShooter', name = 'Sharpshooter' },
 	{ id = 'HotProperty', name = 'Hot Property' },
+	{ id = 'PennedIn', name = 'Penned In' },
 }
 
 local _lastEventTimer = nil

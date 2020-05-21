@@ -101,12 +101,14 @@ AddEventHandler('lsv:onPlayerDied', function()
 	TriggerClientEvent('lsv:huntTheBeastKilled', -1)
 end)
 
-AddEventHandler('lsv:onPlayerKilled', function(killer)
+AddEventHandler('lsv:onPlayerKilled', function(killData)
 	local victim = source
 
 	if not _beastData or _beastData.beast ~= victim or _beastData.livesLeft == 0 then
 		return
 	end
+
+	local killer = killData.killer
 
 	logger:info('Killed { '..killer..' }')
 

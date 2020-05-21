@@ -114,7 +114,7 @@ AddEventHandler('lsv:startVelocity', function()
 		end
 
 		if not DoesEntityExist(_vehicle) or not IsVehicleDriveable(_vehicle, false) then
-			TriggerEvent('lsv:velocityFinished', false, 'A _vehicle has been destroyed.')
+			TriggerEvent('lsv:velocityFinished', false, 'A vehicle has been destroyed.')
 			return
 		end
 
@@ -151,6 +151,7 @@ AddEventHandler('lsv:startVelocity', function()
 						end
 
 						NetworkExplodeVehicle(_vehicle, true, false, false)
+						SetEntityAsNoLongerNeeded(_vehicle)
 
 						TriggerEvent('lsv:velocityFinished', false, 'The bomb has detonated.')
 						return

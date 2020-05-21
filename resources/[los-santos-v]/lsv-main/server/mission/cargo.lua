@@ -44,6 +44,6 @@ AddEventHandler('lsv:purchaseCargoCrate', function(crateIndex)
 	end
 end)
 
-AddEventHandler('lsv:playerDisconnected', function(player)
+AddSignalHandler('lsv:playerDropped', function(player)
 	_players[player] = nil
 end)

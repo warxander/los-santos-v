@@ -29,6 +29,7 @@ AddEventHandler('lsv:startMostWanted', function()
 	end)
 
 	World.EnableWanted(true)
+	World.SetWantedLevel(3)
 
 	while true do
 		Citizen.Wait(0)
@@ -39,9 +40,7 @@ AddEventHandler('lsv:startMostWanted', function()
 		end
 
 		if missionTimer:elapsed() < Settings.mostWanted.time then
-			World.SetWantedLevel(5)
-
-			if IsPlayerDead(PlayerId()) then
+			if IsPlayerDead(PlayerId()) or GetPlayerWantedLevel(PlayerId()) == 0 then
 				TriggerServerEvent('lsv:mostWantedFinished', missionTimer:elapsed())
 				return
 			end

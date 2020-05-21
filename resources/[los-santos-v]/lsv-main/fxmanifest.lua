@@ -18,11 +18,12 @@ server_scripts {
 	'lib/utils/string.lua',
 	'lib/utils/timer.lua',
 
+	'lib/settings.lua',
 	'lib/logger.lua',
 	'lib/weapon.lua',
 	'lib/blip.lua',
+	'lib/color.lua',
 	'lib/rank.lua',
-	'lib/settings.lua',
 
 	'lib/server/db.lua',
 	'lib/server/guard.lua',
@@ -33,6 +34,7 @@ server_scripts {
 	'lib/server/eventscheduler.lua',
 	'lib/server/missionmanager.lua',
 	'lib/server/challengemanager.lua',
+	'lib/server/crew.lua',
 }
 
 server_scripts {
@@ -47,9 +49,8 @@ server_scripts {
 	'server/report.lua',
 	'server/moderator.lua',
 	'server/pingkick.lua',
-	'server/crew.lua',
 	'server/travel.lua',
-	'server/faction.lua',
+	'server/garage.lua',
 
 	'server/event/castle.lua',
 	'server/event/gun.lua',
@@ -57,6 +58,7 @@ server_scripts {
 	'server/event/beast.lua',
 	'server/event/stockpiling.lua',
 	'server/event/sharpshooter.lua',
+	'server/event/penned.lua',
 
 	'server/shop/ammunation.lua',
 	'server/shop/skinshop.lua',
@@ -68,6 +70,11 @@ server_scripts {
 	'server/mission/mostwanted.lua',
 	'server/mission/velocity.lua',
 	'server/mission/cargo.lua',
+	'server/mission/import.lua',
+	'server/mission/export.lua',
+	'server/mission/sightseer.lua',
+	'server/mission/survival.lua',
+	'server/mission/timetrial.lua',
 
 	'server/challenge/duel.lua',
 }
@@ -80,11 +87,12 @@ client_scripts {
 	'lib/utils/string.lua',
 	'lib/utils/timer.lua',
 
+	'lib/settings.lua',
 	'lib/logger.lua',
 	'lib/weapon.lua',
 	'lib/blip.lua',
+	'lib/color.lua',
 	'lib/rank.lua',
-	'lib/settings.lua',
 
 	'lib/client/prompt.lua',
 
@@ -97,12 +105,13 @@ client_scripts {
 	'lib/client/world.lua',
 	'lib/client/streaming.lua',
 	'lib/client/scaleform.lua',
-	'lib/client/color.lua',
 	'lib/client/player.lua',
 	'lib/client/map.lua',
 	'lib/client/playerdata.lua',
 	'lib/client/missionmanager.lua',
 	'lib/client/challengemanager.lua',
+	'lib/client/vehicle.lua',
+	'lib/client/decor.lua',
 }
 
 client_scripts {
@@ -116,10 +125,10 @@ client_scripts {
 	'client/report.lua',
 	'client/hud.lua',
 	'client/playertags.lua',
-	'client/crate.lua',
 	'client/pingkick.lua',
 	'client/crew.lua',
 	'client/travel.lua',
+	'client/garage.lua',
 
 	'client/event/castle.lua',
 	'client/event/gun.lua',
@@ -127,6 +136,7 @@ client_scripts {
 	'client/event/beast.lua',
 	'client/event/stockpiling.lua',
 	'client/event/sharpshooter.lua',
+	'client/event/penned.lua',
 
 	'client/menu/interaction.lua',
 	'client/menu/moderator.lua',
@@ -141,6 +151,11 @@ client_scripts {
 	'client/mission/mostwanted.lua',
 	'client/mission/velocity.lua',
 	'client/mission/cargo.lua',
+	'client/mission/import.lua',
+	'client/mission/export.lua',
+	'client/mission/sightseer.lua',
+	'client/mission/survival.lua',
+	'client/mission/timetrial.lua',
 
 	'client/challenge/duel.lua',
 }

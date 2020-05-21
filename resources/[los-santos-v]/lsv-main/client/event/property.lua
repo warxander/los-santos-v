@@ -5,8 +5,8 @@ local _instructionsText = 'Collect the briefcase and hold it for as long as poss
 
 local _propertyData = nil
 
-local function createBriefcase(x, y, z)
-	_propertyData.pickup = CreatePickupRotate(`PICKUP_MONEY_CASE`, x, y, z, 0.0, 0.0, 0.0, 8, 1)
+local function createBriefcase(position)
+	_propertyData.pickup = CreatePickupRotate(`PICKUP_MONEY_CASE`, position.x, position.y, position.z, 0.0, 0.0, 0.0, 8, 1)
 	_propertyData.blip = Map.CreatePickupBlip(_propertyData.pickup, 'PICKUP_MONEY_CASE', Color.BLIP_GREEN)
 	SetBlipAsShortRange(_propertyData.blip, false)
 	SetBlipScale(_propertyData.blip, 1.1)
@@ -23,7 +23,10 @@ local function removeBriefcase()
 end
 
 local function getPlayerPoints()
-	local player = table.find_if(_propertyData.players, function(player) return player.id == Player.ServerId() end)
+	local player = table.find_if(_propertyData.players, function(player)
+		return player.id == Player.ServerId()
+	end)
+
 	if not player then
 		return nil
 	end
@@ -50,7 +53,7 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 	World.HotPropertyPlayer = data.currentPlayer
 
 	if not data.currentPlayer then
-		createBriefcase(data.position[1], data.position[2], data.position[3])
+		createBriefcase(data.position)
 		SetBlipAlpha(_propertyData.blip, 0)
 	end
 
@@ -121,7 +124,7 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 
 			if World.HotPropertyPlayer == Player.ServerId() then
 				if IsPedInAnyVehicle(PlayerPedId(), false) then
-					TriggerServerEvent('lsv:hotPropertyDropped', { table.unpack(Player.Position()) })
+					TriggerServerEvent('lsv:hotPropertyDropped', Player.Position())
 					World.HotPropertyPlayer = nil
 					Gui.DisplayHelpText('Keep walking on foot to hold the briefcase.')
 				else
@@ -164,11 +167,11 @@ AddEventHandler('lsv:hotPropertyDropped', function(player, position)
 	end
 
 	if not position then
-		position = { table.unpack(GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(player)))) }
+		position = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(player)))
 	end
 
 	removeBriefcase()
-	createBriefcase(position[1], position[2], position[3])
+	createBriefcase(position)
 
 	World.HotPropertyPlayer = nil
 end)

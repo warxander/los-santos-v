@@ -14,7 +14,34 @@ _serverRestartDate.sec = 0
 
 logger:info('Next server restart at '.._serverRestartDate.hour..':'.._serverRestartDate.min)
 
+local _maxPlayersCount = GetConvarInt('sv_maxclients', 32)
+local _playersQueue = { }
+
+local function sortPlayersQueue(l, r)
+	if l.isPatreon and not r.isPatreon then return true end
+	if not l.isPatreon and r.isPatreon then return false end
+
+	if l.isModerator and not r.isModerator then return true end
+	if not l.isModerator and r.isModerator then return false end
+
+	return l.loginTime < r.loginTime
+end
+
+local function getPlayerPositionInQueue(playerId)
+	local _, position = table.ifind_if(_playersQueue, function(data)
+		return data.id == playerId
+	end)
+
+	return position
+end
+
 local function initPlayer(player, playerName, playerStats, isRegistered)
+	if not playerStats.SkinModel then
+		playerStats.SkinModel = Settings.defaultPlayerModel
+	else
+		playerStats.SkinModel = json.decode(playerStats.SkinModel)
+	end
+
 	if not playerStats.Weapons then
 		playerStats.Weapons = Settings.defaultPlayerWeapons
 	else
@@ -33,9 +60,10 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 		playerStats.LoginTime = nowTime
 	end
 
+	playerStats.Seed = nowTime
+
 	playerStats.ServerRestartIn = os.time(_serverRestartDate) - nowTime
 
-	playerStats.Identifier = PlayerData.GetIdentifier(player)
 	playerStats.PlayerName = playerName
 
 	local spawnPoints = Settings.spawn.points
@@ -47,6 +75,24 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 
 	_lastSpawnPointIndex = math.random(#spawnPoints)
 	playerStats.SpawnPoint = spawnPoints[_lastSpawnPointIndex]
+
+	if not playerStats.Garages then
+		playerStats.Garages = { }
+	else
+		playerStats.Garages = json.decode(playerStats.Garages)
+	end
+
+	if not playerStats.Vehicles then
+		playerStats.Vehicles = { }
+	else
+		playerStats.Vehicles = json.decode(playerStats.Vehicles)
+	end
+
+	if not playerStats.Settings then
+		playerStats.Settings = { }
+	else
+		playerStats.Settings = json.decode(playerStats.Settings)
+	end
 
 	PlayerData.Add(player, playerStats)
 
@@ -114,6 +160,11 @@ end)
 AddEventHandler('playerConnecting', function(playerName, setKickReason, deferrals)
 	local player = source
 
+	local loginTime = os.time()
+	local playerId = PlayerData.GetIdentifier(player)
+	local playerDiscordId = Discord.GetIdentifier(player)
+	local license = playerId and '\n\nCopy and provide your identifier for ban appeal in Discord:\n'..playerId or ''
+
 	deferrals.defer()
 
 	if string.len(playerName) > Settings.maxPlayerNameLength then
@@ -121,18 +172,14 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 		return
 	end
 
-	local playerId = PlayerData.GetIdentifier(player)
-	local playerDiscordId = Discord.GetIdentifier(player)
-	local license = playerId and '\n\nCopy and provide your identifier for ban appeal in Discord:\n'..playerId or ''
-
 	deferrals.update('Checking player profile...')
 
-	Db.GetFields(player, { 'Banned', 'BanExpiresDate', 'PatreonTier', 'Moderator' }, function(data)
+	Db.GetFields(playerId, { 'Banned', 'BanExpiresDate', 'PatreonTier', 'Moderator' }, function(data)
 		local needToBeUnbanned = false
 		if data then
 			if data.Banned then
 				if data.BanExpiresDate then
-					if os.time() <= data.BanExpiresDate then
+					if loginTime <= data.BanExpiresDate then
 						deferrals.done('You\'re temporarily banned from this server.\nBan expires in '..os.date('%Y-%m-%d %X '..Settings.serverTimeZone, data.BanExpiresDate)..license)
 					else
 						needToBeUnbanned = true
@@ -182,19 +229,51 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 				Db.UpdateModeratorById(playerId, newModeratorLevel)
 			end
 
-			deferrals.done()
+			if PlayerData.GetCount() >= _maxPlayersCount then
+				table.insert(_playersQueue, {
+					id = playerId,
+					loginTime = loginTime,
+					isModerator = moderatorLevel,
+					isPatreon = patreonTier,
+				})
+				table.sort(_playersQueue, sortPlayersQueue)
+
+				while true do
+					local position = getPlayerPositionInQueue(playerId)
+
+					if PlayerData.GetCount() < _maxPlayersCount and position == 1 then
+						table.remove(_playersQueue, position)
+						deferrals.done()
+						return
+					else
+						deferrals.update('Server is Full\nPosition in Queue: '..position)
+					end
+
+					Citizen.Wait(1000)
+				end
+			else
+				deferrals.done()
+			end
 		end)
 	end)
 end)
 
 AddEventHandler('playerDropped', function(reason)
 	local player = source
+	local playerId = PlayerData.GetIdentifier(player)
 	local playerName = GetPlayerName(player) or '<Unknown name>'
 
-	logger:info('Dropped { '..playerName..', '..player..', '..reason..' }')
+	if playerId then
+		local position = getPlayerPositionInQueue(playerId)
+		if position then
+			table.remove(_playersQueue, position)
+		end
+	end
 
 	TriggerSignal('lsv:playerDropped', player)
 
 	PlayerData.Remove(player)
 	TriggerClientEvent('lsv:playerDisconnected', -1, playerName, player, reason)
+
+	logger:info('Dropped { '..playerName..', '..player..', '..reason..' }')
 end)

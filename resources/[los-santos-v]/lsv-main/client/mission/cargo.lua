@@ -147,43 +147,35 @@ AddEventHandler('lsv:startSpecialCargo', function(cargo)
 end)
 
 AddEventHandler('lsv:init', function()
-	WarMenu.CreateMenu('office', 'Office')
+	Gui.CreateMenu('office', 'Office')
 	WarMenu.SetSubTitle('office', 'Buy Crates to Start')
-	WarMenu.SetTitleBackgroundColor('office', Color.PURPLE.r, Color.PURPLE.g, Color.PURPLE.b, Color.PURPLE.a)
+	WarMenu.SetTitleBackgroundColor('office', Color.BLUE.r, Color.BLUE.g, Color.BLUE.b, Color.BLUE.a)
 	WarMenu.SetMenuButtonPressedSound('office', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	table.iforeach(_offices, function(office)
-		office.blip = Map.CreatePlaceBlip(Blip.OFFICE, office.x, office.y, office.z, nil, Color.BLIP_PURPLE)
+		office.blip = Map.CreatePlaceBlip(Blip.OFFICE, office.x, office.y, office.z, nil, Color.BLIP_BLUE)
 	end)
 
 	local officeOpenedMenuIndex = nil
-	local closestOfficeBlip = nil
-	local officeColor = Color.PURPLE
+	local officeColor = Color.BLUE
 
 	while true do
 		Citizen.Wait(0)
 
 		local isPlayerInFreeroam = Player.IsInFreeroam()
-		local playerPosition = GetEntityCoords(PlayerPedId())
-		local closestBlip = nil
-		local closestBlipDistance = nil
+		local playerPosition = Player.Position()
 
 		table.iforeach(_offices, function(office, officeIndex)
+			SetBlipAlpha(office.blip, isPlayerInFreeroam and 255 or 0)
+
 			if isPlayerInFreeroam then
-				local officeDistance = GetDistanceBetweenCoords(office.x, office.y, office.z, playerPosition.x, playerPosition.y, playerPosition.z, true)
-
-				if not closestBlipDistance or officeDistance < closestBlipDistance then
-					closestBlipDistance = officeDistance
-					closestBlip = office.blip
-				end
-
 				Gui.DrawPlaceMarker(office, officeColor)
 
-				if officeDistance < Settings.placeMarker.radius then
+				if World.GetDistance(playerPosition, office, true) < Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
-						Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to start '..Settings.cargo.missionName..'.')
+						Gui.DisplayHelpText('Press ~INPUT_TALK~ to start '..Settings.cargo.missionName..'.')
 
-						if IsControlJustReleased(0, 38) then
+						if IsControlJustReleased(0, 46) then
 							officeOpenedMenuIndex = officeIndex
 							Gui.OpenMenu('office')
 						end
@@ -193,17 +185,6 @@ AddEventHandler('lsv:init', function()
 				end
 			end
 		end)
-
-		if closestBlip then
-			if closestOfficeBlip ~= closestBlip then
-				if closestOfficeBlip then
-					SetBlipAsShortRange(closestOfficeBlip, true)
-				end
-
-				SetBlipAsShortRange(closestBlip, false)
-				closestOfficeBlip = closestBlip
-			end
-		end
 
 		if WarMenu.IsMenuOpened('office') then
 			table.iforeach(Settings.cargo.crates, function(crate, crateIndex)

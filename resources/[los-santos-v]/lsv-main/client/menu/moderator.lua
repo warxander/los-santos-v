@@ -1,3 +1,4 @@
+local _reportedPlayers = { }
 local _target = nil
 
 local _moderationEventName = nil
@@ -20,26 +21,17 @@ AddEventHandler('lsv:playerBanned', function(name, cheatName)
 end)
 
 AddEventHandler('lsv:init', function()
-	if not Player.Moderator then
-		return
-	end
-
 	while true do
 		Citizen.Wait(0)
 
-		if IsControlJustReleased(0, 29) then
+		if IsControlJustReleased(0, 305) then
 			Gui.OpenMenu('moderator')
 		end
 	end
 end)
 
 AddEventHandler('lsv:init', function()
-	if not Player.Moderator then
-		return
-	end
-
-	WarMenu.CreateMenu('moderator', 'Moderator Menu')
-	WarMenu.SetMenuMaxOptionCountOnScreen('moderator', Settings.maxMenuOptionCount)
+	Gui.CreateMenu('moderator', Player.Moderator and 'Moderator Menu' or 'Report Player')
 	WarMenu.SetSubTitle('moderator', 'Select Player')
 	WarMenu.SetTitleColor('moderator', 255, 255, 255)
 	WarMenu.SetTitleBackgroundColor('moderator', 178, 98, 135)
@@ -63,23 +55,30 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('playermoderation') then
-			if WarMenu.MenuButton('Kick', 'moderationReason') then
-				_moderationEventName = 'lsv:kickPlayer'
-				WarMenu.SetSubTitle('moderationReason', 'Select reason for kicking')
-			elseif WarMenu.MenuButton('Temp Ban', 'moderationReason') then
-				_moderationEventName = 'lsv:tempBanPlayer'
-				WarMenu.SetSubTitle('moderationReason', 'Select reason for banning')
-			elseif WarMenu.Button('Spectate') then
-				setSpectatorModeEnabled(true)
-				while not IsControlJustReleased(3, 177) do
-					Gui.DisplayHelpText('Press ~INPUT_CELLPHONE_CANCEL~ to stop spectating.')
-					Gui.DisplayObjectiveText('Spectating '..Gui.GetPlayerName(_target, '~w~'))
-					Citizen.Wait(0)
+			if not Player.Moderator then
+				if not _reportedPlayers[_target] and WarMenu.MenuButton('Report', 'moderationReason') then
+					_moderationEventName = 'lsv:reportPlayer'
+					WarMenu.SetSubTitle('moderationReason', 'Select reason for reporting')
 				end
-				setSpectatorModeEnabled(false)
-			elseif Player.Moderator == Settings.moderator.levels.Administrator and WarMenu.MenuButton('~r~Ban', 'moderationReason') then
-				_moderationEventName = 'lsv:banPlayer'
-				WarMenu.SetSubTitle('moderationReason', 'Select reason for banning')
+			else
+				if WarMenu.MenuButton('Kick', 'moderationReason') then
+					_moderationEventName = 'lsv:kickPlayer'
+					WarMenu.SetSubTitle('moderationReason', 'Select reason for kicking')
+				elseif WarMenu.MenuButton('Temp Ban', 'moderationReason') then
+					_moderationEventName = 'lsv:tempBanPlayer'
+					WarMenu.SetSubTitle('moderationReason', 'Select reason for banning')
+				elseif WarMenu.Button('Spectate') then
+					setSpectatorModeEnabled(true)
+					while not IsControlJustReleased(3, 177) do
+						Gui.DisplayHelpText('Press ~INPUT_CELLPHONE_CANCEL~ to stop spectating.')
+						Gui.DisplayObjectiveText('Spectating '..Gui.GetPlayerName(_target, '~w~'))
+						Citizen.Wait(0)
+					end
+					setSpectatorModeEnabled(false)
+				elseif Player.Moderator == Settings.moderator.levels.Administrator and WarMenu.MenuButton('~r~Ban', 'moderationReason') then
+					_moderationEventName = 'lsv:banPlayer'
+					WarMenu.SetSubTitle('moderationReason', 'Select reason for banning')
+				end
 			end
 
 			WarMenu.Display()
@@ -88,6 +87,9 @@ AddEventHandler('lsv:init', function()
 				if _moderationEventName ~= 'lsv:tempBanPlayer' then
 					if WarMenu.Button(reason) then
 						TriggerServerEvent(_moderationEventName, _target, reason)
+						if _moderationEventName == 'lsv:reportPlayer' then
+							_reportedPlayers[_target] = true
+						end
 						_target = nil
 						_moderationEventName = nil
 						WarMenu.CloseMenu()
@@ -114,4 +116,8 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		end
 	end
+end)
+
+AddEventHandler('lsv:playerDisconnected', function(_, player)
+	_reportedPlayers[player] = nil
 end)

@@ -74,28 +74,28 @@ Weapon.WEAPON_MINIGUN = {
 Weapon.WEAPON_GRENADE = {
 	name = 'Grenade',
 	components = { },
-	cash = 31,
+	cash = 300,
 	rank = 5,
 }
 
 Weapon.WEAPON_STICKYBOMB = {
 	name = 'Sticky Bomb',
 	components = { },
-	cash = 94,
+	cash = 400,
 	rank = 19,
 }
 
 Weapon.WEAPON_SMOKEGRENADE = {
 	name = 'Tear Gas',
 	components = { },
-	cash = 14,
+	cash = 150,
 	rank = 13,
 }
 
 Weapon.WEAPON_MOLOTOV = {
 	name = 'Molotov Cocktail',
 	components = { },
-	cash = 67,
+	cash = 200,
 	rank = 17,
 }
 
@@ -131,7 +131,7 @@ Weapon.WEAPON_HOMINGLAUNCHER = {
 Weapon.WEAPON_PROXMINE = {
 	name = 'Proximity Mine',
 	components = { },
-	cash = 119,
+	cash = 600,
 	rank = 21,
 }
 

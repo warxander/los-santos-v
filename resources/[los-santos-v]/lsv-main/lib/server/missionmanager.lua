@@ -5,7 +5,7 @@ local logger = Logger.New('MissionManager')
 
 local _players = { }
 
-local _missionNames = { 'Most Wanted', 'Headhunter', 'Velocity', 'Asset Recovery', 'Heist' }
+local _missionNames = { 'Most Wanted', 'Headhunter', 'Velocity', 'Asset Recovery', 'Heist', 'Sightseer' }
 local _missions = Settings.mission.places
 
 function MissionManager.IsPlayerOnMission(player)
@@ -37,21 +37,6 @@ AddEventHandler('lsv:missionFinished', function(success)
 
 	_players[player] = nil
 	TriggerClientEvent('lsv:missionFinished', -1, player, missionName)
-
-	if success then
-		local playerFaction = PlayerData.GetFaction(player)
-		if playerFaction ~= Settings.faction.Neutral then
-			PlayerData.ForEach(function(data)
-				if data.id ~= player and data.faction == playerFaction then
-					PlayerData.UpdateCash(data.id, Settings.mission.factionRewards.cash)
-					PlayerData.UpdateExperience(data.id, Settings.mission.factionRewards.exp)
-				end
-			end)
-		end
-	elseif success == false then
-		PlayerData.UpdateCash(player, Settings.mission.failedRewards.cash)
-		PlayerData.UpdateExperience(player, Settings.mission.failedRewards.exp)
-	end
 end)
 
 Citizen.CreateThread(function()

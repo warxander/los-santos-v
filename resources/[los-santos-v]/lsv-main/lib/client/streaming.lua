@@ -21,6 +21,16 @@ function Streaming.RequestModelAsync(model)
 	end
 end
 
+function Streaming.RequestEntityCollisionAsync(entity)
+	local coords = GetEntityCoords(entity)
+	if not HasCollisionLoadedAroundEntity(entity) then
+		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+		while not HasCollisionLoadedAroundEntity(entity) do
+			Citizen.Wait(0)
+		end
+	end
+end
+
 function Streaming.RequestStreamedTextureDictAsync(textureDict)
 	if not HasStreamedTextureDictLoaded(textureDict) then
 		RequestStreamedTextureDict(textureDict)

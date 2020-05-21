@@ -7,7 +7,10 @@ World.ChallengingPlayer = nil
 
 local _wantedEnabled = true
 
-local function enumerateEntitiesAsync(initFunc, moveFunc, disposeFunc, func)
+local _pedHandlers = { }
+local _vehicleHandlers = { }
+
+local function enumerateEntities(initFunc, moveFunc, disposeFunc, func, handlers)
 	local iter, entity = initFunc()
 
 	if iter == -1 or not entity or entity == 0 then
@@ -17,15 +20,34 @@ local function enumerateEntitiesAsync(initFunc, moveFunc, disposeFunc, func)
 
 	local finished = false
 	repeat
-		if func(entity) then
-			break
-		end
-
-		Citizen.Wait(0)
+		func(entity)
 		finished, entity = moveFunc(iter)
 	until not finished
 
 	disposeFunc(iter)
+end
+
+local function processHandlers(entity, handlers)
+	if DoesEntityExist(entity) then
+		table.iforeach(handlers, function(handlerFunc)
+			handlerFunc(entity)
+		end)
+	end
+end
+
+function World.GetDistance(pos1, pos2, useZ)
+	return GetDistanceBetweenCoords(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, useZ)
+end
+
+function World.TryGetClosestVehicleNode(entity, maxDistance)
+	local entityPos = GetEntityCoords(entity)
+	local success, position, heading = GetNthClosestVehicleNodeWithHeading(entityPos.x, entityPos.y, entityPos.z, GetRandomIntInRange(2, 5))
+
+	if not success or World.GetDistance(entityPos, position, true) > maxDistance then
+		return nil
+	end
+
+	return { position = position, heading = heading }
 end
 
 function World.EnablePvp(enabled)
@@ -71,18 +93,44 @@ function World.SetWantedLevel(level, maxLevel, permanent)
 	SetMaxWantedLevel(maxLevel)
 end
 
-function World.ForEachObjectAsync(func)
-	enumerateEntitiesAsync(FindFirstObject, FindNextObject, EndFindObject, func)
+function World.MarkVehicleToDelete(vehicle, timeout)
+	SetTimeout(timeout or 0, function()
+		Decor.SetToVehicle(vehicle, 'LSV_DELETE_VEHICLE', true)
+	end)
 end
 
-function World.ForEachPedAsync(func)
-	enumerateEntitiesAsync(FindFirstPed, FindNextPed, EndFindPed, func)
+function World.MarkPedToDelete(ped, timeout)
+	SetTimeout(timeout or 0, function()
+		Decor.SetToPed(ped, 'LSV_DELETE_PED', true)
+	end)
 end
 
-function World.ForEachVehicleAsync(func)
-	enumerateEntitiesAsync(FindFirstVehicle, FindNextVehicle, EndFindVehicle, func)
+function World.AddPedHandler(handlerFunc)
+	table.insert(_pedHandlers, handlerFunc)
 end
 
-function World.ForEachPickupAsync(func)
-	enumerateEntitiesAsync(FindFirstPickup, FindNextPickup, EndFindPickup, func)
+function World.AddVehicleHandler(handlerFunc)
+	table.insert(_vehicleHandlers, handlerFunc)
 end
+
+AddEventHandler('lsv:init', function()
+	Citizen.CreateThread(function()
+		while true do
+			Citizen.Wait(0)
+
+			enumerateEntities(FindFirstPed, FindNextPed, EndFindPed, function(ped)
+				processHandlers(ped, _pedHandlers)
+			end)
+		end
+	end)
+
+	Citizen.CreateThread(function()
+		while true do
+			Citizen.Wait(0)
+
+			enumerateEntities(FindFirstVehicle, FindNextVehicle, EndFindVehicle, function(vehicle)
+				processHandlers(vehicle, _vehicleHandlers)
+			end)
+		end
+	end)
+end)

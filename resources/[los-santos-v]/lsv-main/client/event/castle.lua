@@ -54,10 +54,12 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 				return
 			end
 
-			SetBlipAlpha(_castleData.blip, MissionManager.Mission and 0 or 255)
-			SetBlipAlpha(_castleData.zoneBlip, MissionManager.Mission and 0 or 128)
+			local isPlayerInFreeroam = Player.IsInFreeroam()
 
-			if Player.IsInFreeroam() then
+			SetBlipAlpha(_castleData.blip, isPlayerInFreeroam and 255 or 0)
+			SetBlipAlpha(_castleData.zoneBlip, isPlayerInFreeroam and 128 or 0)
+
+			if isPlayerInFreeroam then
 				Gui.DisplayObjectiveText(Player.DistanceTo(_castleData.place, true) <= Settings.castle.radius and
 					'Defend the ~p~Castle area~w~.' or 'Enter the ~p~Castle area~w~ to become the King.')
 

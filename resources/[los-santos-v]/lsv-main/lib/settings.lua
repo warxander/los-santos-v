@@ -8,9 +8,17 @@ Settings.pingThreshold = 250
 Settings.maxPlayerNameLength = 24
 Settings.enableVoiceChat = false
 Settings.discordNotificationInterval = 900000
+Settings.minKillstreakNotification = 10
 Settings.serverTimeZone = '(UTC+1)'
 Settings.maxMenuOptionCount = 7
 Settings.spawnProtectionTime = 3000
+Settings.killYourselfInterval = 60000
+
+-- Density Multipliers
+Settings.density = {
+	ped = 0.55,
+	vehicle = 0.25,
+}
 
 -- Server restart
 Settings.serverRestart = {
@@ -25,8 +33,16 @@ Settings.serverRestart = {
 
 -- Weather
 Settings.weather = { }
-Settings.weather.types = { 'CLEAR', 'EXTRASUNNY', 'CLOUDS', 'OVERCAST', 'CLEARING', 'SMOG', 'FOGGY' }
+Settings.weather.types = { 'CLEAR', 'EXTRASUNNY', 'CLOUDS', 'OVERCAST', 'CLEARING' }
 Settings.weather.interval = { min = 10, max = 20 } -- in minutes
+
+-- Player settings
+Settings.player = {
+	['disableCrosshair'] = 'Disable Crosshair',
+	['disableKillFeed'] = 'Disable Kill Feed',
+	['disableTips'] = 'Disable Tips',
+	['disableEventTimer'] = 'Disable Event Timer',
+}
 
 -- Killstreak
 Settings.killstreakTimeout = 5000
@@ -37,7 +53,10 @@ Settings.maxPrestige = 10
 Settings.prestigeBonus = 0.035
 
 -- Crew
-Settings.crewInvitationTimeout = 10000
+Settings.crew = {
+	rewardBonus = { cash = 0.1, exp = 0.05 },
+	invitationTimeout = 10000,
+}
 
 -- Vehicle restriction
 Settings.specialVehicleMinRank = 5
@@ -49,8 +68,8 @@ Settings.moderator = {
 		['Administrator'] = 2,
 	},
 	roleIds = {
-		'568496897032060938', -- Moderator
-		'568518449567891469', -- Administrator
+		'', -- Moderator
+		'', -- Administrator
 	},
 }
 
@@ -60,7 +79,7 @@ Settings.gta2Cam = {
 	max = 48.,
 	step = 0.25,
 	minSpeed = 24.,
-	key = { code = 212, name = 'INPUT_FRONTEND_SOCIAL_CLUB' }, -- HOME
+	key = { code = 171, name = 'INPUT_SPECIAL_ABILITY_PC' }, -- CAPS LOCK
 }
 
 -- Spawn settings
@@ -225,6 +244,10 @@ Settings.defaultPlayerWeapons = {
 	{ id = 'WEAPON_MICROSMG', ammo = 16 * 10, components = { }, selected = true },
 	{ id = 'WEAPON_SAWNOFFSHOTGUN', ammo = 8 * 10, components = { } },
 }
+Settings.defaultPlayerModel = {
+	model = 'a_m_y_hipster_01',
+	components = { },
+}
 Settings.stats = {
 	strength = { min = 75, max = 80 },
 	shooting = { min = 40, max = 60 },
@@ -267,7 +290,6 @@ Settings.cashPerKillstreak = 25
 Settings.maxCashPerKillstreak = 500
 Settings.cashPerHeadshot = 25
 Settings.cashPerMission = 50
-Settings.cashPerFaction = 25
 Settings.cashPerMelee = 25
 
 -- Experience
@@ -276,7 +298,6 @@ Settings.expPerKillstreak = 25
 Settings.maxExpPerKillstreak = 500
 Settings.expPerHeadshot = 25
 Settings.expPerMission = 75
-Settings.expPerFaction = 50
 Settings.expPerMelee = 25
 
 -- Bounty
@@ -285,103 +306,6 @@ Settings.bounty = {
 	reward = {
 		cash = 50,
 		exp = 75,
-	},
-}
-
--- Factions
-Settings.faction = {
-	Neutral = 0,
-	Enforcer = 1,
-	Criminal = 2,
-}
-
-Settings.factionNames = {
-	[Settings.faction.Neutral] = 'Neutral',
-	[Settings.faction.Enforcer] = 'Enforcer',
-	[Settings.faction.Criminal] = 'Criminal',
-}
-
-Settings.factionSkins = {
-	[Settings.faction.Enforcer] = {
-		{
-			id = 's_m_y_cop_01',
-			name = 'Cop (Male)',
-			rank = 10,
-		},
-
-		{
-			id = 's_f_y_cop_01',
-			name = 'Cop (Female)',
-			rank = 10,
-		},
-
-		{
-			id = 's_m_m_snowcop_01',
-			name = 'Cop (Snow)',
-			rank = 15,
-		},
-
-		{
-			id = 's_m_y_sheriff_01',
-			name = 'Sheriff (Male)',
-			rank = 25,
-		},
-
-		{
-			id = 's_f_y_sheriff_01',
-			name = 'Sheriff (Female)',
-			rank = 25,
-		},
-
-		{
-			id = 's_m_y_swat_01',
-			name = 'SWAT',
-			rank = 50,
-		},
-
-		{
-			id = 'u_m_y_juggernaut_01',
-			name = 'Juggernaut',
-			rank = 75,
-		},
-	},
-
-	[Settings.faction.Criminal] = {
-		{
-			id = 'g_m_y_lost_01',
-			name = 'The Lost MC (Male)',
-			rank = 1,
-		},
-
-		{
-			id = 'g_f_y_lost_01',
-			name = 'The Lost MC (Female)',
-			rank = 1,
-		},
-
-		{
-			id = 'g_m_y_ballaorig_01',
-			name = 'Ballas (Male)',
-			rank = 1,
-		},
-
-		{
-			id = 'g_f_y_ballas_01',
-			name = 'Ballas (Female)',
-			rank = 1,
-		},
-
-		{
-			id = 'g_m_y_famfor_01',
-			name = 'The Families (Male)',
-			rank = 1,
-		},
-
-		{
-			id = 'g_f_y_families_01',
-			name = 'The Families (Female)',
-			rank = 1,
-		},
 	},
 }
 
@@ -456,81 +380,13 @@ Settings.duel = {
 -- Personal Vehicles
 Settings.personalVehicle = {
 	maxDistance = 50.0,
-	freeMaxRank = 5,
-	vehicles = {
-		['Free'] = {
-			['bmx'] = { name = 'BMX', cash = 0 },
-			['ruiner'] = { name = 'Imponte Ruiner', cash = 0 },
-			['sanchez'] = { name = 'Sanchez', cash = 0 },
-		},
-
-		['Enforcer'] = {
-			['police2'] = { name = 'Enforcer Buffalo', cash = 58, rank = 1 },
-			['policeb'] = { name = 'Enforcer Bike', cash = 64, rank = 5 },
-			['fbi'] = { name = 'FIB Buffalo', cash = 142, rank = 10 },
-			['police3'] = { name = 'Enforcer Interceptor', cash = 228, rank = 15 },
-			['policet'] = { name = 'Enforcer Transporter', cash = 470, rank = 20 },
-			['polmav'] = { name = 'Enforcer Maverick', cash = 1560, rank = 25 },
-		},
-
-		['Sports'] = {
-			['sultan'] = { name = 'Sultan', cash = 18, rank = 5 },
-			['penumbra'] = { name = 'Maibatsu Penumbra', cash = 36, rank = 8 },
-			['futo'] = { name = 'Karin Futo', cash = 38, rank = 11 },
-			['buffalo'] = { name = 'Buffalo', cash = 52, rank = 14 },
-			['schwarzer'] = { name = 'Benefactor Schwartzer', cash = 120, rank = 17 },
-			['banshee'] = { name = 'Banshee', cash = 135, rank = 20 },
-			['comet2'] = { name = 'Comet', cash = 150, rank = 23 },
-			['ninef'] = { name = 'Obey 9F', cash = 180, rank = 26 },
-			['feltzer2'] = { name = 'Feltzer', cash = 195, rank = 29 },
-			['rapidgt'] = { name = 'Dewbauchee Rapid GT', cash = 198, rank = 32 },
-			['coquette'] = { name = 'Invetero Coquette', cash = 207, rank = 35 },
-			['italigto'] = { name = 'Itali GTO', cash = 294, rank = 38 },
-			['jester'] = { name = 'Dinka Jester', cash = 360, rank = 41 },
-		},
-
-		['Motorcycles'] = {
-			['akuma'] = { name = 'Dinka Akuma', cash = 135, rank = 4 },
-			['pcj'] = { name = 'PCJ-600', cash = 135, rank = 7 },
-			['ruffian'] = { name = 'Pegassi Ruffian', cash = 135, rank = 10 },
-			['vader'] = { name = 'Shitzu Vader', cash = 135, rank = 13 },
-			['nemesis'] = { name = 'Principe Nemesis', cash = 180, rank = 16 },
-			['double'] = { name = 'Dinka Double T', cash = 180, rank = 19 },
-			['daemon'] = { name = 'Daemon', cash = 218, rank = 22 },
-			['bati'] = { name = 'Pegassi Bati 801', cash = 225, rank = 25 },
-			['hexer'] = { name = 'Hexer', cash = 225, rank = 28 },
-			['bagger'] = { name = 'Bagger', cash = 240, rank = 31 },
-		},
-
-		['Super'] = {
-			['voltic'] = { name = 'Coil Voltic', cash = 225, rank = 9 },
-			['italigtb'] = { name = 'Itali GTB', cash = 284, rank = 12 },
-			['cheetah'] = { name = 'Grotti Cheetah', cash = 325, rank = 15 },
-			['osiris'] = { name = 'Pegassi Osiris', cash = 293, rank = 18 },
-			['penetrator'] = { name = 'Penetrator', cash = 398, rank = 21 },
-			['adder'] = { name = 'Truffade Adder', cash = 440, rank = 24 },
-			['tempesta'] = { name = 'Pegassi Tempesta', cash = 500, rank = 27 },
-		},
-
-		['Military'] = {
-			['dune3'] = { name = 'Dune FAV', cash = 1130, rank = 5 },
-			['technical'] = { name = 'Karin Technical', cash = 1263, rank = 10 },
-			['caracara'] = { name = 'Vapid Caracara', cash = 1775, rank = 15 },
-			['barrage'] = { name = 'HVY Barrage', cash = 2121, rank = 20 },
-			['boxville5'] = { name = 'Armored Boxville', cash = 2926, rank = 25 },
-		},
-
-		['Prestige'] = {
-			['phantom2'] = { name = 'Phantom Wedge', cash = 1276, prestige = 1, rank = 1 },
-			['thruster'] = { name = 'Thruster', cash = 1828, prestige = 2, rank = 1 },
-			['oppressor'] = { name = 'Pegassi Oppressor', cash = 2360, prestige = 3, rank = 1 },
-		},
-	}
+	rentPrice = 100,
+	rerollColorsPrice = { base = 2500, perRoll = 500 },
 }
 
 -- Events
 Settings.event = {
-	interval = 600000,
+	interval = 900000,
 	minPlayers = 3,
 }
 
@@ -708,6 +564,19 @@ Settings.castle = {
 	},
 }
 
+-- Penned In
+Settings.penned = {
+	duration = 900000,
+	rewards = {
+		top = {
+			{ cash = 15000, exp = 5000 },
+			{ cash = 10000, exp = 4000 },
+			{ cash = 5000, exp = 3000 },
+		},
+		point = { cash = 100, exp = 60 },
+	},
+}
+
 -- Hot Property
 Settings.property = {
 	duration = 900000,
@@ -795,7 +664,6 @@ Settings.huntTheBeast = {
 }
 
 -- AmmuNation weapons
-Settings.sellWeaponRatio = 0.5
 Settings.ammuNationWeapons = {
 	['Handguns'] = {
 		'WEAPON_COMBATPISTOL',
@@ -913,7 +781,7 @@ Settings.ammuNationRefillAmmo = {
 		weapons = {
 			'WEAPON_SMOKEGRENADE',
 		},
-		ammo = 3,
+		ammo = 1,
 		price = 150,
 	},
 
@@ -921,32 +789,32 @@ Settings.ammuNationRefillAmmo = {
 		weapons = {
 			'WEAPON_GRENADE',
 		},
-		ammo = 3,
-		price = 250,
+		ammo = 1,
+		price = 300,
 	},
 
 	['Molotov Cocktail Units'] = {
 		weapons = {
 			'WEAPON_MOLOTOV',
 		},
-		ammo = 3,
-		price = 300,
+		ammo = 1,
+		price = 200,
 	},
 
 	['Sticky Bomb Units'] = {
 		weapons = {
 			'WEAPON_STICKYBOMB',
 		},
-		ammo = 3,
-		price = 600,
+		ammo = 1,
+		price = 400,
 	},
 
 	['Proximity Mine Units'] = {
 		weapons = {
 			'WEAPON_PROXMINE',
 		},
-		ammo = 3,
-		price = 1000,
+		ammo = 1,
+		price = 600,
 	},
 
 	['Flare Gun Rounds'] = {
@@ -954,14 +822,14 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_FLAREGUN',
 		},
 		ammo = 2,
-		price = 200,
+		price = 100,
 	},
 
 	['Fireworks'] = {
 		weapons = {
 			'WEAPON_FIREWORK',
 		},
-		ammo = 3,
+		ammo = 2,
 		price = 300,
 	},
 }
@@ -969,22 +837,22 @@ Settings.ammuNationRefillAmmo = {
 -- AmmuNation Special Weapons Ammo
 Settings.ammuNationSpecialAmmo = {
 	['WEAPON_GRENADELAUNCHER'] = {
-		ammo = 1 * 2, -- 20
+		ammo = 1 * 2,
 		price = 250,
 		type = 'Grenades',
 	},
 	['WEAPON_RPG'] = {
 		ammo = 1 * 2,
-		price = 500,
+		price = 1000,
 		type = 'Rockets',
 	},
 	['WEAPON_HOMINGLAUNCHER'] = {
 		ammo = 1 * 2,
-		price = 750,
+		price = 1500,
 		type = 'Rockets',
 	},
 	['WEAPON_MINIGUN'] = {
-		ammo = 1 * 250,
+		ammo = 1 * 150,
 		price = 1000,
 		type = 'Rounds',
 	},
@@ -1005,6 +873,22 @@ Settings.ammuNationSpecialAmmo = {
 	},
 }
 
+-- Garages
+Settings.garages = {
+	['bighorn'] = { name = '12 Little Bighorn Avenue', location = { x = 724.84875488281, y = -1193.2897949219, z = 24.279363632202 }, exportPos = { x = 745.16888427734, y = -1186.9566650391, z = 23.862798690796, heading = 179.29594421387 }, capacity = 2, price = 25000 },
+	['popular'] = { name = 'Unit 124 Popular Street', location = { x = 850.49475097656, y = -1054.1494140625, z = 28.072996139526 }, exportPos = { x = 852.34204101562, y = -1067.7164306641, z = 27.638542175293, heading = 298.35974121094 }, capacity = 2, price = 25000 },
+	['strawberry'] = { name = '1 Strawberry Ave', location = { x = -243.27192687988, y = 6236.60546875, z = 31.489896774292 }, exportPos = { x = -236.02571105957, y = 6251.2338867188, z = 31.074998855591, heading = 180.44511413574 }, capacity = 2, price = 26000 },
+	['paleto'] = { name = '142 Paleto Boulevard', location = { x = -75.815055847168, y = 6425.3857421875, z = 31.490455627441 }, exportPos = { x = -85.855415344238, y = 6425.8515625, z = 31.076944351196, heading = 9.9898443222046 }, capacity = 2, price = 26500 },
+	['grapeseed'] = { name = '1932 Grapeseed Ave', location = { x = 2552.7360839844, y = 4672.2963867188, z = 33.948055267334 }, exportPos = { x = 2539.9235839844, y = 4667.8383789062, z = 33.636329650879, heading = 316.12057495117 }, capacity = 2, price = 27500 },
+	['route68'] = { name = '1200 Route 68', location = { x = 645.95910644531, y = 2792.4018554688, z = 41.934226989746 }, exportPos = { x = 640.73187255859, y = 2780.67578125, z = 41.566078186035, heading = 244.71063232422 }, capacity = 2, price = 28500 },
+	['lowenstein'] = { name = '0754 Roy Lowenstein Boulevard', location = { x = 217.00907897949, y = 2605.5505371094, z = 46.025905609131 }, exportPos = { x = 225.76179504394, y = 2604.5578613281, z = 45.461112976074, heading = 11.545246124268 }, capacity = 2, price = 29500 },
+	['ocean'] = { name = '2000 Great Ocean Highway', location = { x = -2214.7111816406, y = 4239.3349609375, z = 47.444316864014 }, exportPos = { x = -2224.400390625, y = 4231.4140625, z = 46.571208953857, heading = 338.03921508789 }, capacity = 2, price = 31500 },
+	['senora'] = { name = '1920 Senora Way', location = { x = 2465.7077636719, y = 1589.3356933594, z = 32.720333099365 }, exportPos = { x = 2463.4279785156, y = 1599.1195068359, z = 32.30638885498, heading = 225.43823242188 }, capacity = 2, price = 32000 },
+	['perro'] = { name = '634 Boulevard Del Perro', location = { x = -1243.2457275391, y = -257.56817626953, z = 38.988910675049 }, exportPos = { x = -1254.8660888672, y = -264.32922363281, z = 38.547180175781, heading = 299.79345703125 }, capacity = 2, price = 33500 },
+	['mirror'] = { name = '0897 Mirror Park Boulevard', location = { x = 971.50524902344, y = -115.44449615479, z = 74.353134155273 }, exportPos = { x = 952.14764404297, y = -124.66337585449, z = 73.94783782959, heading = 227.5818939209 }, capacity = 2, price = 33500 },
+	['innocence'] = { name = 'Garage Innocence Boulevard', location = { x = -338.61236572266, y = -1464.3701171875, z = 30.57995223999 }, exportPos = { x = -336.50442504883, y = -1495.2662353516, z = 30.211177825928, heading = 1.8535748720169 }, capacity = 2, price = 34000 },
+}
+
 -- Missions
 Settings.mission = {
 	resetTimeInterval = 10800000,
@@ -1013,7 +897,6 @@ Settings.mission = {
 		{ x = 1013.4348754883, y = -2150.8464355469, z = 31.533414840698 },
 		{ x = 1213.0318603516, y = -1251.0944824219, z = 36.325752258301 },
 		{ x = 707.24340820313, y = -966.26904296875, z = 30.412851333618 },
-		{ x = -29.890213012695, y = -1104.3305664063, z = 26.422355651855 },
 		{ x = 114.35282897949, y = -1961.0159912109, z = 21.334199905396 },
 		{ x = -429.37182617188, y = -1727.9987792969, z = 19.783857345581 },
 		{ x = -1320.5399169922, y = -1264.0423583984, z = 4.5883016586304 },
@@ -1025,8 +908,579 @@ Settings.mission = {
 		{ x = -1008.0339355469, y = -487.32397460938, z = 39.969467163086 },
 		{ x = -66.46614074707, y = 490.74649047852, z = 144.69189453125 },
 	},
-	failedRewards = { cash = 2500, exp = 1000 },
-	factionRewards = { cash = 2500, exp = 1000 },
+}
+
+-- Sightseer Mission
+Settings.sightseer = {
+	time = 1200000,
+	count = 3,
+	radius = 150.,
+	reward = { cash = 7000, exp = 1500 },
+	locations = {
+		{
+			pickup = { x = -599.75555419922, y = 2092.7365722656, z = 131.34963989258 },
+			blip = { x = -608.19818115234, y = 2168.2839355469, z = 132.06150817871 },
+		},
+
+		{
+			pickup = { x = -58.449527740479, y = 4415.794921875, z = 56.943382263184 },
+			blip = { x = -102.0174331665, y = 4336.361328125, z = 64.431060791016 },
+		},
+
+		{
+			pickup = { x = 171.10818481445, y = 6655.9453125, z = 31.263204574585 },
+			blip = { x = 180.10113525391, y = 6603.1606445312, z = 31.868167877197 },
+		},
+
+		{
+			pickup = { x = -1521.1121826172, y = 1492.6697998047, z = 111.58812713623 },
+			blip = { x = -1463.5482177734, y = 1555.7222900391, z = 112.20551300049 },
+		},
+
+		{
+			pickup = { x = -823.94573974609, y = -1222.0697021484, z = 7.3654088973999 },
+			blip = { x = -770.58081054688, y = -1117.0239257812, z = 10.702531814575 },
+		},
+
+		{
+			pickup = { x = -2012.4709472656, y = -237.6145324707, z = 24.230735778809 },
+			blip = { x = -2042.6817626953, y = -323.37023925781, z = 24.190572738647 },
+		},
+
+		{
+			pickup = { x = -175.30905151367, y = -633.02911376953, z = 48.982280731201 },
+			blip = { x = -260.16171264648, y = -661.34729003906, z = 33.254501342773 },
+		},
+
+		{
+			pickup = { x = -680.76568603516, y = 5799.2431640625, z = 17.330949783325 },
+			blip = { x = -666.47509765625, y = 5724.1142578125, z = 24.474815368652 },
+		},
+
+		{
+			pickup = { x = -2080.9743652344, y = 2608.7509765625, z = 3.0839750766754 },
+			blip = { x = -1957.7847900391, y = 2537.9438476562, z = 2.7406125068665 },
+		},
+
+		{
+			pickup = { x = 708.80535888672, y = -1256.3937988281, z = 26.15807723999 },
+			blip = { x = 782.04046630859, y = -1200.8443603516, z = 27.151304244995 },
+		},
+	},
+}
+
+-- Survival Mission
+Settings.survival = {
+	waveInterval = 15000,
+	radius = 200.,
+	places = {
+		['delPerroPier'] = {
+			name = 'Del Perro Pier',
+			position = { x = -1812.7276611328, y = -1200.2236328125, z = 13.017380714417 },
+			spawnPoints = {
+				{ x = -1792.1228027344, y = -1205.8507080078, z = 13.01727771759 },
+				{ x = -1829.9234619141, y = -1249.4245605469, z = 13.017275810242 },
+				{ x = -1843.1929931641, y = -1238.1595458984, z = 13.01727104187 },
+				{ x = -1859.3570556641, y = -1198.33203125, z = 13.017113685608 },
+				{ x = -1841.5341796875, y = -1174.2681884766, z = 13.017238616943 },
+			},
+			pedModels = { 's_m_m_fiboffice_01', 's_m_m_fiboffice_02' },
+		},
+
+		['boneyard'] = {
+			name = 'Boneyard',
+			position = { x = 2398.6564941406, y = 3100.9060058594, z = 48.152835845947 },
+			spawnPoints = {
+				{ x = 2432.2937011719, y = 3103.146484375, z = 48.15311050415 },
+				{ x = 2429.263671875, y = 3122.6384277344, z = 48.233783721924 },
+				{ x = 2405.5139160156, y = 3136.4226074219, z = 48.153293609619 },
+				{ x = 2373.4743652344, y = 3085.6376953125, z = 48.15306854248 },
+				{ x = 2371.2937011719, y = 3047.7802734375, z = 48.152400970459 },
+				{ x = 2396.5988769531, y = 3052.2856445312, z = 48.80778503418 },
+			},
+			pedModels = { 'a_m_m_hillbilly_01' },
+		},
+
+		['industrialPlant'] = {
+			name = 'Industrial Plant',
+			position = { x = 290.63095092773, y = 2864.5021972656, z = 43.642414093018 },
+			spawnPoints = {
+				{ x = 393.7438659668, y = 2885.2692871094, z = 41.626586914062 },
+				{ x = 399.55828857422, y = 2914.0847167969, z = 41.777881622314 },
+				{ x = 301.61053466797, y = 2814.2705078125, z = 43.436069488525 },
+				{ x = 281.68664550781, y = 2888.1027832031, z = 43.605697631836 },
+			},
+			pedModels = { 's_m_m_armoured_01', 's_m_m_armoured_02', 's_m_m_security_01' },
+		},
+
+		['processed'] = {
+			name = 'Processed',
+			position = { x = 1531.1279296875, y = -2131.9848632812, z = 76.903244018555 },
+			spawnPoints = {
+				{ x = 1556.4866943359, y = -2173.5100097656, z = 77.428253173828 },
+				{ x = 1560.2288818359, y = -2069.5710449219, z = 77.08618927002 },
+				{ x = 1501.3900146484, y = -2170.6591796875, z = 77.985824584961 },
+				{ x = 1487.9365234375, y = -2152.4020996094, z = 76.963684082031 },
+				{ x = 1494.2650146484, y = -2077.9951171875, z = 77.190147399902 },
+			},
+			pedModels = { 's_m_m_armoured_01', 's_m_m_armoured_02', 's_m_m_security_01' },
+		},
+
+		--
+		['railyard'] = {
+			name = 'Railyard',
+			position = { x = 1092.7104492188, y = -2295.0122070312, z = 30.121719360352 },
+			spawnPoints = {
+				{ x = 1074.1257324219, y = -2319.6306152344, z = 30.313261032104 },
+				{ x = 1115.7362060547, y = -2316.4497070312, z = 30.565713882446 },
+				{ x = 1142.7464599609, y = -2300.6674804688, z = 30.696245193481 },
+				{ x = 1124.6759033203, y = -2243.6569824219, z = 30.317899703979 },
+				{ x = 1099.3756103516, y = -2219.5349121094, z = 30.569871902466 },
+			},
+			pedModels = { 's_m_m_armoured_01', 's_m_m_armoured_02', 's_m_m_security_01' },
+		},
+
+		['sandy'] = {
+			name = 'Sandy',
+			position = { x = 1890.4010009766, y = 3784.640625, z = 32.797779083252 },
+			spawnPoints = {
+				{ x = 1853.3210449219, y = 3753.416015625, z = 33.14192199707 },
+				{ x = 1838.4857177734, y = 3780.7014160156, z = 33.185558319092 },
+				{ x = 1921.9552001953, y = 3735.2009277344, z = 32.701507568359 },
+				{ x = 1928.3527832031, y = 3831.3879394531, z = 32.260299682617 },
+			},
+			pedModels = { 'a_m_m_hillbilly_02' },
+		},
+	},
+	reward = {
+		cash = 15000, exp = 7000,
+		cashPerWave = 2000, expPerWave = 1000,
+	},
+	recordReward = { cash = 15000, exp = 5000 },
+}
+
+-- Vehicle Import Mission
+Settings.vehicleImport = {
+	time = 1200000,
+	minVehicleHealthRatio = 0.5,
+	dropRadius = 10.,
+	plates = {
+		'4X3R0L',
+		'PR0BOZ',
+		'KW4KUN',
+		'X4ND3R',
+		'R1FL3',
+		'P4NP00L',
+		'SW34TZ',
+		'N3KR0Z',
+		'R1PJH',
+		'K3V1N',
+		'PL3XT4Y',
+		'URM3MK3K',
+		'W4LT3R',
+		'W4S1L',
+		'T0KY0',
+	},
+	tiers = {
+		{
+			name = 'Low',
+			price = 5000,
+			models = {
+				['sultan'] = { name = 'Karin Sultan' },
+				['penumbra'] = { name = 'Maibatsu Penumbra' },
+				['futo'] = { name = 'Karin Futo' },
+				['buffalo'] = { name = 'Bravado Buffalo' },
+				['buffalo2'] = { name = 'Bravado Buffalo S' },
+				['schwarzer'] = { name = 'Benefactor Schwartzer' },
+				['sentinel'] = { name = 'Ubermacht Sentinel XS' },
+				['cogcabrio'] = { name = 'Enus Cognoscenti Cabrio' },
+				['warrener'] = { name = 'Vulcan Warrener' },
+				['windsor'] = { name = 'Enus Windsor' },
+				['windsor2'] = { name = 'Enus Windsor Drop' },
+				['fusilade'] = { name = 'Schyster Fusilade' },
+				['blista2'] = { name = 'Dinka Blista Compact' },
+				['blista3'] = { name = 'Dinka Blista GGM' },
+				['ruiner'] = { name = 'Imponte Ruiner' },
+				['vigero'] = { name = 'Declasse Vigero' },
+				['phoenix'] = { name = 'Imponte Phoenix' },
+				['tampa'] = { name = 'Declasse Tampa' },
+				['nightshade'] = { name = 'Imponte Nightshade' },
+				['tulip'] = { name = 'Declasse Tulip' },
+				['ellie'] = { name = 'Vapid Ellie' },
+				['hotknife'] = { name = 'Vapid Hotknife' },
+				['savestra'] = { name = 'Annis Savestra' },
+				['retinue'] = { name = 'Vapid Retinue' },
+				['vamos'] = { name = 'Declasse Vamos' },
+				['sabregt'] = { name = 'Declasse Sabre' },
+				['brioso'] = { name = 'Brioso R/A' },
+				['bifta'] = { name = 'BF Bifta' },
+				['panto'] = { name = 'Benefactor Panto' },
+
+				['hexer'] = { name = 'LCC Hexer', isBike = true },
+				['bagger'] = { name = 'Western Bagger', isBike = true },
+				['nemesis'] = { name = 'Principe Nemesis', isBike = true },
+				['pcj'] = { name = 'Shitzu PCJ-600', isBike = true },
+				['ruffian'] = { name = 'Pegassi Ruffian', isBike = true },
+				['vader'] = { name = 'Shitzu Vader', isBike = true },
+				['enduro'] = { name = 'Dinka Enduro', isBike = true },
+				['manchez'] = { name = 'Maibatsu Manchez', isBike = true },
+				['daemon'] = { name = 'Western Daemon', isBike = true },
+				['sanchez'] = { name = 'Maibatsu Sanchez', isBike = true },
+				['sanchez2'] = { name = 'Maibatsu Sanchez', isBike = true },
+				['avarus'] = { name = 'LCC Avarus', isBike = true },
+				['sovereign'] = { name = 'Western Sovereign', isBike = true },
+			},
+		},
+
+		{
+			name = 'Medium',
+			price = 10000,
+			models = {
+				['banshee'] = { name = 'Bravado Banshee' },
+				['comet2'] = { name = 'Pfister Comet' },
+				['ninef'] = { name = 'Obey 9F' },
+				['feltzer2'] = { name = 'Benefactor Feltzer' },
+				['rapidgt'] = { name = 'Dewbauchee Rapid GT' },
+				['coquette'] = { name = 'Invetero Coquette' },
+				['jester'] = { name = 'Dinka Jester' },
+				['jester2'] = { name = 'Dinka Jester' },
+				['massacro2'] = { name = 'Dewbauchee Massacro' },
+				['massacro'] = { name = 'Dewbauchee Massacro' },
+				['voltic'] = { name = 'Coil Voltic' },
+				['ruston'] = { name = 'Hijak Ruston' },
+				['lynx'] = { name = 'Ocelot Lynx' },
+				['omnis'] = { name = 'Obey Omnis' },
+				['tropos'] = { name = 'Lampadati Tropos Rallye' },
+				['kuruma'] = { name = 'Karin Kuruma' },
+				['gb200'] = { name = 'Vapid GB200' },
+				['jester3'] = { name = 'Dinka Jester Classic' },
+				['carbonizzare'] = { name = 'Grotti Carbonizzare' },
+				['verlierer2'] = { name = 'Bravado Verlierer' },
+				['elegy2'] = { name = 'Annis Elegy RH8' },
+				['coquette2'] = { name = 'Coquette Classic' },
+				['bestiagts'] = { name = 'Grotti Bestia GTS' },
+				['elegy'] = { name = 'Annis Elegy RH5' },
+				['flashgt'] = { name = 'Vapid Flash GT' },
+				['sultanrs'] = { name = 'Karin Sultan RS' },
+				['schlagen'] = { name = 'Schlagen GT' },
+				['raiden'] = { name = 'Coil Raiden' },
+				['sentinel3'] = { name = 'Sentinel Classic' },
+				['deviant'] = { name = 'Schyster Deviant' },
+				['hotring'] = { name = 'Hotring Sabre' },
+				['z190'] = { name = 'Karin 190z' },
+				['dominator3'] = { name = 'Dominator GTX' },
+				['brawler'] = { name = 'Coil Brawler' },
+				['yosemite'] = { name = 'Declasse Yosemite' },
+
+				['akuma'] = { name = 'Dinka Akuma', isBike= true },
+				['double'] = { name = 'Dinka Double T', isBike= true },
+				['nightblade'] = { name = 'Western Nightblade', isBike= true },
+				['esskey'] = { name = 'Pegassi Esskey', isBike= true },
+				['daemon2'] = { name = 'Western Daemon', isBike= true },
+				['diablous'] = { name = 'Principe Diabolus', isBike= true },
+				['fcr'] = { name = 'Pegassi FCR1000', isBike= true },
+				['thrust'] = { name = 'Dinka Thrust', isBike= true },
+				['defiler'] = { name = 'Shitzu Defiler', isBike= true },
+				['diablous2'] = { name = 'Principe Diabolus Custom', isBike= true },
+				['vortex'] = { name = 'Pegassi Vortex', isBike= true },
+				['zombiea'] = { name = 'Western Zombie Bobber', isBike= true },
+				['zombieb'] = { name = 'Western Zombie Chopper', isBike= true },
+			},
+		},
+
+		{
+			name = 'High',
+			price = 15000,
+			models = {
+				['italigto'] = { name = 'Itali GTO' },
+				['italigtb'] = { name = 'Itali GTB' },
+				['italigtb2'] = { name = 'Itali GTB' },
+				['cheetah'] = { name = 'Grotti Cheetah' },
+				['osiris'] = { name = 'Pegassi Osiris' },
+				['penetrator'] = { name = 'Ocelot Penetrator' },
+				['adder'] = { name = 'Truffade Adder' },
+				['tempesta'] = { name = 'Pegassi Tempesta' },
+				['comet3'] = { name = 'Comet Retro' },
+				['banshee2'] = { name = 'Bravado Banshee 900R' },
+				['seven70'] = { name = 'Dewbauchee Seven70' },
+				['specter2'] = { name = 'Dewbauchee Specter' },
+				['comet5'] = { name = 'Pfister Comet SR' },
+				['turismor'] = { name = 'Grotti Turismo R' },
+				['nero'] = { name = 'Truffade Nero' },
+				['nero2'] = { name = 'Truffade Nero' },
+				['pariah'] = { name = 'Ocelot Pariah' },
+				['sheava'] = { name = 'Emperor ETR1' },
+				['toros'] = { name = 'Pegassi Toros' },
+				['cyclone'] = { name = 'Coil Cyclone' },
+				['turismo2'] = { name = 'Turismo Classic' },
+				['neon'] = { name = 'Pfister Neon' },
+				['t20'] = { name = 'Progen T20' },
+				['xa21'] = { name = 'Ocelot XA-21' },
+				['fmj'] = { name = 'Vapid FMJ' },
+				['gp1'] = { name = 'Progen GP1' },
+				['tezeract'] = { name = 'Pegassi Tezeract' },
+
+				['bati'] = { name = 'Pegassi Bati 801', isBike = true },
+				['bati2'] = { name = 'Pegassi Bati 801RR', isBike = true },
+				['hakuchou'] = { name = 'Shitzu Hakuchou', isBike = true },
+				['hakuchou2'] = { name = 'Shitzu Hakuchou Drag', isBike = true },
+				['carbonrs'] = { name = 'Nagasaki Carbon RS', isBike = true },
+				['chimera'] = { name = 'Nagasaki Chimera', isBike = true },
+				['bf400'] = { name = 'Nagasaki BF400', isBike = true },
+				['gargoyle'] = { name = 'Western Gargoyle', isBike = true },
+				['raptor'] = { name = 'BF Raptor', isBike = true },
+				['cliffhanger'] = { name = 'Western Cliffhanger', isBike = true },
+				['blazer4'] = { name = 'Nagasaki Street Blazer', isBike = true },
+				['fcr2'] = { name = 'Pegassi FCR1000 Custom', isBike = true },
+			},
+		},
+	},
+	locations = {
+		{ x = -1938.2440185547, y = 402.90350341797, z = 95.804191589355, heading = 279.82733154297 },
+		{ x = -1940.8181152344, y = 561.69274902344, z = 114.58443450928, heading = 69.090827941895 },
+		{ x = -1862.1116943359, y = -352.08901977539, z = 48.557804107666, heading = 50.154594421387 },
+		{ x = -3015.7021484375, y = 84.825881958008, z = 10.905931472778, heading = 263.38137817383 },
+		{ x = 135.2931060791, y = -1050.8511962891, z = 28.453567504883, heading = 160.54795837402 },
+		{ x = 174.56343078613, y = 472.45803833008, z = 141.20491027832, heading = 349.80267333984 },
+		{ x = -72.57266998291, y = 356.68804931641, z = 111.74195861816, heading = 243.80653381348 },
+		{ x = -52.963829040527, y = 1949.6928710938, z = 189.48358154297, heading = 28.739295959473 },
+		{ x = 1384.1202392578, y = -600.91546630859, z = 73.635711669922, heading = 53.564197540283 },
+		{ x = -927.52117919922, y = 12.484411239624, z = 47.025131225586, heading = 214.92706298828 },
+		{ x = -910.30535888672, y = -1294.3614501953, z = 4.313506603241, heading = 21.569423675537 },
+		{ x = 260.06396484375, y = 2578.7683105469, z = 44.404975891113, heading = 97.479026794434 },
+		{ x = -767.45104980469, y = 666.22344970703, z = 144.15422058105, heading = 286.42398071289 },
+		{ x = -2995.8610839844, y = 721.37957763672, z = 27.794134140015, heading = 112.10511779785 },
+		{ x = -448.33157348633, y = 371.36795043945, z = 104.07223510742, heading = 91.293769836426 },
+		{ x = 2395.6669921875, y = 3324.3173828125, z = 46.956871032715, heading = 252.67266845703 },
+		{ x = 872.00415039062, y = -178.13139343262, z = 75.468406677246, heading = 150.06623840332 },
+		{ x = 1905.6434326172, y = 564.49908447266, z = 175.45648193359, heading = 241.69448852539 },
+	},
+}
+
+-- Time Trials
+-- Checkpoint types: 15 - 19
+Settings.timeTrial = {
+	tracks = {
+		['armsRace'] = {
+			name = 'Arms Race',
+			position = { x = -2522.0732421875, y = 3259.833984375, z = 32.20064163208, heading = 240.08741760254 },
+			checkpoints = {
+				{ type = 15, x = -2293.9926757812, y = 3136.9899902344, z = 32.197498321533 },
+				{ type = 15, x = -2118.8654785156, y = 3075.6335449219, z = 32.192966461182 },
+				{ type = 16, x = -1922.9372558594, y = 2947.8576660156, z = 32.193450927734 },
+				{ type = 16, x = -1969.5397949219, y = 2858.5942382812, z = 32.194000244141 },
+				{ type = 15, x = -2235.6137695312, y = 2991.0412597656, z = 32.194049835205 },
+				{ type = 15, x = -2520.5336914062, y = 3153.2783203125, z = 32.20491027832 },
+				{ type = 17, x = -2681.189453125, y = 3306.2021484375, z = 32.194755554199 },
+				{ x = -2522.0732421875, y = 3259.833984375, z = 32.20064163208 },
+			},
+		},
+
+		['beforeItWasCool'] = {
+			name = 'Before It Was Cool',
+			position = { x = 1018.3796386719, y = -320.44540405273, z = 66.615844726562, heading = 239.63208007812 },
+			checkpoints = {
+				{ type = 16, x = 1080.8134765625, y = -368.98950195312, z = 66.613090515137 },
+				{ type = 15, x = 1074.89453125, y = -469.58288574219, z = 64.038146972656 },
+				{ type = 15, x = 1029.0557861328, y = -536.35174560547, z = 60.056392669678 },
+				{ type = 15, x = 1013.7613525391, y = -642.16619873047, z = 57.92378616333 },
+				{ type = 16, x = 981.78332519531, y = -669.24670410156, z = 56.916038513184 },
+				{ type = 15, x = 1012.2538452148, y = -719.20123291016, z = 56.998394012451 },
+				{ type = 15, x = 1064.2263183594, y = -758.73791503906, z = 57.143306732178 },
+				{ type = 16, x = 1230.8063964844, y = -757.25354003906, z = 59.180850982666 },
+				{ type = 16, x = 1278.8022460938, y = -716.68206787109, z = 64.196258544922 },
+				{ type = 15, x = 1256.9763183594, y = -546.71282958984, z = 68.397109985352 },
+				{ type = 16, x = 1187.6148681641, y = -509.66622924805, z = 64.423789978027 },
+				{ type = 15, x = 1215.9748535156, y = -375.8801574707, z = 68.235816955566 },
+				{ type = 16, x = 1210.9996337891, y = -299.63659667969, z = 68.55207824707 },
+				{ type = 15, x = 1146.3439941406, y = -243.97428894043, z = 68.539520263672 },
+				{ type = 16, x = 1015.2677001953, y = -211.1280670166, z = 69.63655090332 },
+				{ type = 16, x = 970.42694091797, y = -287.25823974609, z = 66.403961181641 },
+				{ x = 1018.3796386719, y = -320.44540405273, z = 66.615844726562 },
+			},
+		},
+
+		['dippingIn'] = {
+			name = 'Dipping In',
+			position = { x = 891.80639648438, y = 291.97918701172, z = 86.505249023438, heading = 137.16096496582 },
+			checkpoints = {
+				{ type = 15, x = 654.75317382812, y = -31.838098526001, z = 80.373840332031 },
+				{ type = 16, x = 498.89947509766, y = -153.5708770752, z = 55.768962860107 },
+				{ type = 15, x = 372.53652954102, y = -118.31114959717, z = 64.795532226562 },
+				{ type = 16, x = 126.31434631348, y = -24.060775756836, z = 67.042747497559 },
+				{ type = 15, x = 194.02555847168, y = 167.73774719238, z = 104.80919647217 },
+				{ type = 16, x = 267.45886230469, y = 383.28604125976, z = 108.56525421143 },
+				{ type = 16, x = 239.7067565918, y = 446.12487792969, z = 120.80999755859 },
+				{ type = 15, x = 267.84518432617, y = 541.80841064453, z = 140.57237243652 },
+				{ type = 15, x = 274.15560913086, y = 624.56597900391, z = 154.73802185058 },
+				{ type = 15, x = 290.28268432617, y = 769.42742919922, z = 184.05250549316 },
+				{ type = 15, x = 287.67727661133, y = 852.30908203125, z = 193.41627502441 },
+				{ type = 15, x = 316.75845336914, y = 969.74761962891, z = 209.15251159668 },
+				{ type = 15, x = 321.56875610352, y = 1044.31640625, z = 210.63488769531 },
+				{ type = 15, x = 262.97964477539, y = 1175.3020019531, z = 224.51382446289 },
+				{ type = 15, x = 225.98330688476, y = 1391.9118652344, z = 239.18594360352 },
+				{ type = 15, x = 146.67158508301, y = 1505.8950195312, z = 237.77207946777 },
+				{ type = 16, x = 137.74389648438, y = 1653.8446044922, z = 228.26490783691 },
+				{ type = 16, x = 15.254334449768, y = 1733.0382080078, z = 221.45399475098 },
+				{ type = 16, x = -33.632995605469, y = 1840.5479736328, z = 202.94569396973 },
+				{ type = 16, x = -147.47285461426, y = 1869.7644042969, z = 197.57453918457 },
+				{ type = 16, x = -164.08087158203, y = 1935.8997802734, z = 195.62405395508 },
+				{ type = 15, x = -50.771682739258, y = 2007.1220703125, z = 176.31939697266 },
+				{ type = 15, x = 89.707061767578, y = 2093.2529296875, z = 143.73143005371 },
+				{ type = 15, x = 377.51220703125, y = 2096.7602539062, z = 96.874732971191 },
+				{ type = 15, x = 560.69384765625, y = 2181.3933105469, z = 73.291717529297 },
+				{ type = 15, x = 715.16967773438, y = 2192.6906738281, z = 58.078174591064 },
+				{ type = 16, x = 874.44171142578, y = 2227.9926757812, z = 47.914485931396 },
+				{ type = 15, x = 986.95935058594, y = 2146.6848144531, z = 48.185779571533 },
+				{ type = 15, x = 1100.287109375, y = 1960.2211914062, z = 57.672485351562 },
+				{ type = 15, x = 1163.3353271484, y = 1809.9996337891, z = 73.518295288086 },
+				{ type = 15, x = 1250.1497802734, y = 1696.8708496094, z = 82.836463928223 },
+				{ type = 15, x = 1293.2171630859, y = 1517.4437255859, z = 96.901176452637 },
+				{ type = 15, x = 1293.7106933594, y = 1233.2443847656, z = 107.68949890137 },
+				{ type = 15, x = 1302.7578125, y = 955.57946777344, z = 105.28889465332 },
+				{ type = 15, x = 1211.5344238281, y = 663.72729492188, z = 99.302307128906 },
+				{ type = 15, x = 1010.2782592773, y = 472.65078735352, z = 95.80534362793 },
+				{ x = 891.80639648438, y = 291.97918701172, z = 86.505249023438 },
+			},
+		},
+
+		['downtownUnderground'] = {
+			name = 'Downtown Underground',
+			position = { x = -96.678184509277, y = -625.59497070312, z = 35.650379180908, heading = 162.05853271484 },
+			checkpoints = {
+				{ type = 15, x = -159.29318237305, y = -805.36761474609, z = 31.025585174561 },
+				{ type = 16, x = -283.03451538086, y = -1132.2974853516, z = 22.385681152344 },
+				{ type = 15, x = -373.32470703125, y = -1126.8551025391, z = 28.77220916748 },
+				{ type = 16, x = -529.48315429688, y = -1065.9471435547, z = 21.877658843994 },
+				{ type = 15, x = -532.03479003906, y = -946.62420654297, z = 22.966423034668 },
+				{ type = 15, x = -499.19921875, y = -804.86865234375, z = 29.925168991089 },
+				{ type = 17, x = -542.98687744141, y = -670.216796875, z = 32.612251281738 },
+				{ type = 15, x = -453.05648803711, y = -661.84893798828, z = 31.361246109009 },
+				{ type = 15, x = -287.63537597656, y = -661.58367919922, z = 32.591289520264 },
+				{ type = 15, x = -98.775382995605, y = -724.49938964844, z = 43.446018218994 },
+				{ type = 15, x = 5.2460551261902, y = -765.21112060547, z = 43.614719390869 },
+				{ type = 15, x = 217.47831726074, y = -841.42681884766, z = 29.797044754028 },
+				{ type = 16, x = 376.02728271484, y = -852.11352539062, z = 28.678035736084 },
+				{ type = 16, x = 417.62301635742, y = -825.40118408203, z = 28.652936935425 },
+				{ type = 16, x = 491.54058837891, y = -824.34979248047, z = 24.255912780762 },
+				{ type = 16, x = 503.03881835938, y = -695.02471923828, z = 24.395765304565 },
+				{ type = 15, x = 334.40478515625, y = -660.09948730469, z = 28.65025138855 },
+				{ type = 15, x = 66.917991638184, y = -554.47094726562, z = 32.517654418945 },
+				{ type = 16, x = -61.810863494873, y = -551.70281982422, z = 39.167121887207 },
+				{ x = -96.678184509277, y = -625.59497070312, z = 35.650379180908 },
+			},
+		},
+
+		['dockyard'] = {
+			name = 'Dockyard',
+			position = { x = 727.67541503906, y = -2827.5346679688, z = 5.6210932731628, heading = 181.8705291748 },
+			checkpoints = {
+				{ type = 15, x = 713.61206054688, y = -3145.1501464844, z = 18.258142471313 },
+				{ type = 16, x = 758.35626220703, y = -3304.6169433594, z = 17.447574615479 },
+				{ type = 15, x = 934.24945068359, y = -3326.7683105469, z = 6.6895227432251 },
+				{ type = 15, x = 1052.4674072266, y = -3329.7736816406, z = 5.2979621887207 },
+				{ type = 15, x = 1159.4051513672, y = -3330.5495605469, z = 5.2866349220276 },
+				{ type = 16, x = 1249.5373535156, y = -3334.4262695312, z = 5.2106447219849 },
+				{ type = 15, x = 1256.2469482422, y = -3217.0700683594, z = 5.1828451156616 },
+				{ type = 16, x = 1252.4904785156, y = -3098.3813476562, z = 5.184844493866 },
+				{ type = 15, x = 1213.4049072266, y = -3090.1196289062, z = 5.1844143867493 },
+				{ type = 15, x = 1160.3442382812, y = -3112.4106445312, z = 5.1922655105591 },
+				{ type = 16, x = 1086.3358154297, y = -3108.5688476562, z = 5.2793159484863 },
+				{ type = 16, x = 1071.4217529297, y = -2961.3278808594, z = 5.2833557128906 },
+				{ type = 16, x = 985.63775634766, y = -2961.4733886719, z = 5.2770366668701 },
+				{ type = 16, x = 973.97314453125, y = -3109.4250488281, z = 5.2837500572205 },
+				{ type = 15, x = 871.20745849609, y = -3128.6833496094, z = 5.2828459739685 },
+				{ type = 16, x = 784.99047851562, y = -3112.9401855469, z = 5.2584409713745 },
+				{ type = 15, x = 780.17266845703, y = -3038.3603515625, z = 5.183967590332 },
+				{ type = 15, x = 742.54974365234, y = -2973.1518554688, z = 5.1825556755066 },
+				{ type = 16, x = 736.67950439453, y = -2821.2990722656, z = 5.6480441093445 },
+				{ type = 15, x = 672.48449707031, y = -2769.0578613281, z = 5.4683032035828 },
+				{ type = 15, x = 631.93853759766, y = -2668.1000976562, z = 5.4826531410217 },
+				{ type = 15, x = 581.67309570312, y = -2584.4099121094, z = 5.4817662239075 },
+				{ type = 16, x = 446.07388305664, y = -2483.16796875, z = 6.5791025161743 },
+				{ type = 16, x = 452.92776489258, y = -2414.7299804688, z = 10.862649917603 },
+				{ type = 15, x = 514.90759277344, y = -2426.1520996094, z = 13.598086357117 },
+				{ type = 15, x = 600.60498046875, y = -2493.5205078125, z = 16.186182022095 },
+				{ type = 16, x = 676.31939697266, y = -2506.7395019531, z = 19.215810775757 },
+				{ type = 15, x = 725.95513916016, y = -2584.9577636719, z = 18.050830841064 },
+				{ x = 727.67541503906, y = -2827.5346679688, z = 5.6210932731628 },
+			},
+		},
+
+		['stadiumTour'] = {
+			name = 'Stadium Tour',
+			position = { x = -1000.4892578125, y = -2489.0034179688, z = 13.277319908142, heading = 148.05418395996 },
+			checkpoints = {
+				{ type = 16, x = -1078.4425048828, y = -2640.8537597656, z = 13.268272399902 },
+				{ type = 16, x = -966.24163818359, y = -2730.697265625, z = 13.274431228638 },
+				{ type = 15, x = -890.23492431641, y = -2656.4919433594, z = 13.282737731934 },
+				{ type = 16, x = -808.14849853516, y = -2474.7895507812, z = 13.235064506531 },
+				{ type = 15, x = -849.80059814453, y = -2349.4499511719, z = 17.222919464111 },
+				{ type = 15, x = -782.46649169922, y = -2218.5656738281, z = 16.329990386963 },
+				{ type = 15, x = -686.11462402344, y = -2127.5483398438, z = 13.141528129578 },
+				{ type = 15, x = -562.87750244141, y = -2083.7028808594, z = 26.835748672485 },
+				{ type = 15, x = -397.70880126953, y = -2097.1528320312, z = 25.726655960083 },
+				{ type = 15, x = -241.35520935058, y = -2130.9296875, z = 22.078144073486 },
+				{ type = 15, x = -132.4427947998, y = -2091.0495605469, z = 25.245357513428 },
+				{ type = 15, x = 13.099464416504, y = -2045.9080810547, z = 17.850582122803 },
+				{ type = 16, x = 237.63961791992, y = -2063.21484375, z = 17.151449203491 },
+				{ type = 15, x = 341.55770874023, y = -1948.7133789062, z = 24.002775192261 },
+				{ type = 16, x = 459.5270690918, y = -1830.9146728516, z = 27.353366851807 },
+				{ type = 15, x = 351.19741821289, y = -1731.5997314453, z = 28.890005111694 },
+				{ type = 16, x = 184.91226196289, y = -1598.8775634766, z = 28.761892318726 },
+				{ type = 15, x = 29.762624740601, y = -1683.4666748047, z = 28.82054901123 },
+				{ type = 15, x = -245.60266113281, y = -1821.5751953125, z = 28.970197677612 },
+				{ type = 15, x = -410.17636108398, y = -1838.8128662109, z = 20.048416137695 },
+				{ type = 15, x = -493.65414428711, y = -1897.5913085938, z = 16.880882263184 },
+				{ type = 15, x = -651.94427490234, y = -2054.1015625, z = 15.567202568054 },
+				{ type = 15, x = -813.06829833984, y = -2230.5539550781, z = 16.780836105347 },
+				{ type = 15, x = -887.28924560547, y = -2345.0642089844, z = 14.286392211914 },
+				{ type = 15, x = -955.64813232422, y = -2409.9240722656, z = 13.283555030823 },
+				{ x = -1000.4892578125, y = -2489.0034179688, z = 13.277319908142 },
+			},
+		},
+	},
+	reward = { cash = 2500, exp = 1000 },
+	recordReward = { cash = 25000, exp = 5000 },
+}
+
+-- Vehicle Export Mission
+Settings.vehicleExport = {
+	missionName = 'Vehicle Export',
+	time = 1200000,
+	dropRadius = 10.,
+	rewards = {
+		['Low'] = { cash = 15000, exp = 2000 },
+		['Medium'] = { cash = 35000, exp = 3000 },
+		['High'] = { cash = 50000, exp = 4000 },
+	},
+	locations = {
+		-- Private
+		{ x = 165.53135681152, y = 2284.5539550781, z = 92.904891967773 },
+		{ x = -1083.3449707031, y = -498.56158447266, z = 35.779449462891 },
+		{ x = 1573.0148925781, y = 6461.9770507812, z = 24.112468719482 },
+		{ x = 2879.1704101562, y = 4486.150390625, z = 47.701683044434 },
+		{ x = 1188.5020751953, y = -2997.0634765625, z = 5.2410130500793 },
+
+		-- Showroom
+		{ x = 2521.697265625, y = 4113.1098632812, z = 37.969318389893 },
+		{ x = -358.03729248047, y = 6068.3051757812, z = 30.838945388794 },
+		{ x = 2545.2973632812, y = 2581.4235839844, z = 37.283535003662 },
+		{ x = -45.197551727295, y = -1080.7131347656, z = 26.025236129761 },
+		{ x = 386.3576965332, y = 3589.7578125, z = 32.631248474121 },
+		{ x = -66.830711364746, y = 81.486366271973, z = 70.894477844238 },
+		{ x = -806.30999755859, y = -189.03382873535, z = 36.700801849365 },
+
+		-- Dealer
+		{ x = -1614.9732666016, y = 16.929958343506, z = 61.516792297363 },
+		{ x = -2596.6247558594, y = 1929.9840087891, z = 166.64462280273 },
+		{ x = -1910.4896240234, y = 2085.4470214844, z = 139.72282409668 },
+		{ x = -3102.4963378906, y = 716.99108886719, z = 19.842819213867 },
+		{ x = 1407.4151611328, y = 1116.8214111328, z = 114.17623901367 },
+		{ x = -72.888473510742, y = 900.69403076172, z = 234.94180297852 },
+		{ x = 216.56733703613, y = 757.58081054688, z = 204.0071105957 },
+		{ x = -1788.8603515625, y = 456.27008056641, z = 127.64682006836 },
+	},
 }
 
 -- Special Cargo Mission
@@ -1050,10 +1504,10 @@ Settings.cargo = {
 		'Weapons & Ammo',
 	},
 	crates = {
-		{ name = '1 Crate', price = 2000, reward = { cash = 4000, exp = 1000 } },
-		{ name = '2 Crates', price = 4000, reward = { cash = 8000, exp = 2000 } },
-		{ name = '3 Crates', price = 8000, reward = { cash = 16000, exp = 3000 } },
-		{ name = '5 Crates', price = 12000, reward = { cash = 24000, exp = 4000 } },
+		{ name = '1 Crate', price = 2000, reward = { cash = 5000, exp = 1000 } },
+		{ name = '2 Crates', price = 4000, reward = { cash = 10000, exp = 2000 } },
+		{ name = '3 Crates', price = 8000, reward = { cash = 20000, exp = 3000 } },
+		{ name = '5 Crates', price = 12000, reward = { cash = 30000, exp = 4000 } },
 	},
 	vehicles = {
 		'speedo',
@@ -1105,8 +1559,8 @@ Settings.heist = {
 	take = {
 		interval = 3000,
 		rate = {
-			cash = { min = 100, max = 250, limit = 15000 },
-			exp = 0.5,
+			cash = { min = 250, max = 500, limit = 25000 },
+			exp = 0.35,
 		},
 	},
 }
@@ -1126,7 +1580,7 @@ Settings.velocity = {
 	},
 	minSpeed = 60,
 	rewards = {
-		cash = { min = 5000, max = 15000, perAboutToDetonate = 1000 },
+		cash = { min = 15000, max = 25000, perAboutToDetonate = 1000 },
 		exp = { min = 5000, max = 7000, perAboutToDetonate = 200 },
 	},
 }
@@ -1135,7 +1589,7 @@ Settings.velocity = {
 Settings.mostWanted = {
 	time = 480000,
 	rewards = {
-		maxCash = 15000,
+		maxCash = 25000,
 		maxExp = 7000,
 	},
 }
@@ -1143,40 +1597,43 @@ Settings.mostWanted = {
 -- Asset Recovery Mission
 Settings.assetRecovery = {
 	time = 1200000,
+	nearDistance = 2000.,
+	vehicles = {
+		'pigalle',
+		'dominator',
+		'comet2',
+		'feltzer3',
+		'blazer',
+	},
 	variants = {
 		{
-			vehicle = 'pigalle',
 			vehicleLocation = { x = -1041.6690673828, y = -850.52899169922, z = 4.7838535308838, heading = 135.58250427246 },
 			dropOffLocation = { x = 1537.0913085938, y = 6482.6098632813, z = 22.000032424927 },
 		},
 
 		{
-			vehicle = 'dominator',
 			vehicleLocation = { x = 454.39685058594, y = -1024.5531005859, z = 28.112592697144, heading = 92.917694091797 },
 			dropOffLocation = { x = 715.486328125, y = 4175.56640625, z = 40.000110626221 },
 		},
 
 		{
-			vehicle = 'comet2',
 			vehicleLocation = { x = 852.61529541016, y = -1280.2347412109, z = 26.133306503296, heading = 359.4150390625 },
 			dropOffLocation = { x = 1537.0913085938, y = 6482.6098632813, z = 22.000032424927 },
 		},
 
 		{
-			vehicle = 'feltzer3',
 			vehicleLocation = { x = 468.05123901367, y = -65.828109741211, z = 77.158767700195, heading = 238.4743347168 },
 			dropOffLocation = { x = 715.486328125, y = 4175.56640625, z = 40.000110626221 },
 		},
 
 		{
-			vehicle = 'blazer',
 			vehicleLocation = { x = 1866.5213623047, y = 3699.1994628906, z = 32.8317527771, heading = 210.75952148438 },
 			dropOffLocation = { x = 165.90403747559, y = -3081.7749023438, z = 5.5951142311096, heading = 270.91390991211 },
 		},
 	},
-	dropRadius = 25.,
+	dropRadius = 10.,
 	rewards = {
-		cash = { min = 5000, max = 15000 },
+		cash = { min = 15000, max = 25000 },
 		exp = { min = 5000, max = 7000 },
 	},
 }
@@ -1185,33 +1642,26 @@ Settings.assetRecovery = {
 -- Headhunter Mission
 Settings.headhunter = {
 	time = 1200000,
-	radius = 200.,
-	targets = {
-		{
-			location = { x = -1813.0296630859, y = -1207.5499267578, z = 19.169616699219 },
-			pedModel = 'a_m_y_beachvesp_01',
-		},
-
-		{
-			location = { x = -1191.2917480469, y = -508.70294189453, z = 35.566139221191 },
-			pedModel = 'u_m_m_filmdirector',
-		},
-
-		{
-			location = { x = -175.79162597656, y = -604.76159667969, z = 48.222152709961 },
-			pedModel = 's_m_m_highsec_01',
-		},
-
-		{
-			location = { x = 624.09893798828, y = -3021.7360839844, z = 6.2169780731201 },
-			pedModel = 's_m_y_dockwork_01',
-		},
-
-		{
-			location = { x = -619.80187988281, y = 323.91040039063, z = 82.263603210449 },
-			pedModel = 'u_m_m_jesus_01',
-		},
+	taskActivateDistance = 500.,
+	count = 4,
+	locations = {
+		{ x = -40.054077148438, y = -2701.1606445312, z = 6.1575679779053 },
+		{ x = 877.66772460938, y = -2184.248046875, z = 30.519348144531 },
+		{ x = -516.50421142578, y = -1712.9973144531, z = 19.319555282593 },
+		{ x = -1631.5915527344, y = -1095.9350585938, z = 13.024022102356 },
+		{ x = 898.22930908203, y = -1055.4468994141, z = 32.827968597412 },
+		{ x = 452.01345825195, y = -902.2587890625, z = 28.474830627441 },
+		{ x = -1228.4931640625, y = -188.05059814453, z = 39.194133758545 },
+		{ x = 1100.2220458984, y = -418.21313476562, z = 67.154083251953 },
+		{ x = -91.623016357422, y = 836.25329589844, z = 235.72288513184 },
+		{ x = -943.87762451172, y = -2121.0480957031, z = 8.6375122070312, heading = 226.78311157226, inVehicle = true },
+		{ x = 198.6376953125, y = -1557.1477050781, z = 28.592624664307, heading = 213.32002258301, inVehicle = true },
+		{ x = 451.47131347656, y = -934.67437744141, z = 27.890367507935, heading = 179.75053405762, inVehicle = true },
+		{ x = 286.20751953125, y = -11.332187652588, z = 76.810470581055, heading = 248.71377563476, inVehicle = true },
+		{ x = -722.82861328125, y = 30.727191925049, z = 41.764114379883, heading = 103.85273742676, inVehicle = true },
+		{ x = -1357.8287353516, y = -667.52966308594, z = 25.308952331543, heading = 211.10328674316, inVehicle = true },
 	},
+	models = { 'g_m_m_armboss_01', 'u_m_m_filmdirector', 's_m_m_highsec_01' },
 	weapons = {
 		'WEAPON_SPECIALCARBINE',
 		'WEAPON_ADVANCEDRIFLE',
@@ -1219,11 +1669,8 @@ Settings.headhunter = {
 		'WEAPON_MINISMG',
 		'WEAPON_RPG',
 	},
-	wantedLevel = 3,
-	rewards = {
-		cash = { min = 5000, max = 15000 },
-		exp = { min = 5000, max = 7000 },
-	},
+	vehicles = { 'baller5', 'cog552' },
+	reward = { cash = 6000, exp = 1500 },
 }
 
 -- Crates
@@ -1232,7 +1679,7 @@ Settings.crate = {
 	nthRank = 10,
 	reward = {
 		exp = 2500,
-		cash = 7500,
+		cash = 10000,
 	},
 	radius = 200.,
 	weapons = {
@@ -1308,135 +1755,213 @@ Settings.crate = {
 Settings.skins = {
 	['Regular'] = {
 		{
-			id = 'a_m_y_hipster_01',
+			model = 'a_m_y_hipster_01',
 			name = 'Hipster',
 			rank = 1,
 		},
 
 		{
-			id = 'g_m_m_chigoon_01',
-			name = 'Chigoon',
-			rank = 2,
+			model = 's_m_y_cop_01',
+			name = 'Cop',
+			rank = 1,
 		},
 
 		{
-			id = 'a_f_y_business_04',
-			name = 'Business',
+			model = 's_m_m_paramedic_01',
+			name = 'Medic',
+			rank = 1,
+		},
+
+		{
+			model = 'g_m_y_ballaorig_01',
+			name = 'Ballas #1',
+			rank = 1,
+		},
+
+		{
+			model = 'g_m_y_ballasout_01',
+			name = 'Ballas #2',
+			rank = 1,
+		},
+
+		{
+			model = 'g_m_y_famca_01',
+			name = 'Families #1',
+			rank = 1,
+		},
+
+		{
+			model = 'g_m_y_famfor_01',
+			name = 'Families #2',
+			rank = 1,
+		},
+
+		{
+			model = 'a_m_m_bevhills_01',
+			name = 'Middle Class #1',
 			rank = 5,
 		},
 
 		{
-			id = 'g_m_m_chemwork_01',
-			name = 'Chemist',
+			model = 'a_m_m_business_01',
+			name = 'Businessman #1',
 			rank = 10,
 		},
 
 		{
-			id = 's_m_y_fireman_01',
-			name = 'Fireman',
+			model = 'a_m_y_bevhills_01',
+			name = 'Middle Class #2',
+			rank = 15,
+		},
+
+		{
+			model = 'a_m_y_business_01',
+			name = 'Businessman #2',
 			rank = 20,
 		},
 
 		{
-			id = 's_m_m_fibsec_01',
-			name = 'FIB Security',
+			model = 'a_m_m_bevhills_02',
+			name = 'Middle Class #3',
+			rank = 25,
+		},
+
+		{
+			model = 'a_m_y_business_02',
+			name = 'Businessman #3',
 			rank = 30,
 		},
 
 		{
-			id = 's_m_y_clown_01',
-			name = 'Clown',
+			model = 'a_m_y_bevhills_02',
+			name = 'Middle Class #4',
+			rank = 35,
+		},
+
+		{
+			model = 'a_m_y_business_03',
+			name = 'Businessman #4',
 			rank = 40,
 		},
 
 		{
-			id = 'u_m_y_zombie_01',
-			name = 'Zombie',
+			model = 'g_m_m_chigoon_01',
+			name = 'Chigoon',
+			rank = 45,
+		},
+
+		{
+			model = 'g_m_m_chemwork_01',
+			name = 'Chemist',
 			rank = 50,
 		},
 
 		{
-			id = 's_m_m_strperf_01',
-			name = 'Street Performer',
+			model = 's_m_y_fireman_01',
+			name = 'Fireman',
+			rank = 55,
+		},
+
+		{
+			model = 's_m_m_fibsec_01',
+			name = 'FIB Security',
 			rank = 60,
 		},
 
 		{
-			id = 'u_m_y_pogo_01',
-			name = 'Pogo',
+			model = 's_m_y_clown_01',
+			name = 'Clown',
+			rank = 65,
+		},
+
+		{
+			model = 'u_m_y_zombie_01',
+			name = 'Zombie',
 			rank = 70,
 		},
 
 		{
-			id = 's_m_m_movalien_01',
-			name = 'Alien',
+			model = 's_m_m_strperf_01',
+			name = 'Street Performer',
+			rank = 75,
+		},
+
+		{
+			model = 'u_m_y_pogo_01',
+			name = 'Pogo',
 			rank = 80,
 		},
 
 		{
-			id = 'u_m_y_rsranger_01',
+			model = 's_m_m_movalien_01',
+			name = 'Alien',
+			rank = 85,
+		},
+
+		{
+			model = 'u_m_y_rsranger_01',
 			name = 'RS Ranger',
-			rank = 100,
+			rank = 90,
 		},
 	},
 
 	['Prestige'] = {
 		{
-			id = 's_m_m_doctor_01',
+			model = 's_m_m_doctor_01',
 			name = 'Doctor',
 			prestige = 1,
 		},
 
 		{
-			id = 's_m_y_mime',
+			model = 's_m_y_mime',
 			name = 'Mime',
 			prestige = 2,
 		},
 
 		{
-			id = 'u_m_y_mani',
+			model = 'u_m_y_mani',
 			name = 'Mani',
 			prestige = 3,
 		},
 
 		{
-			id = 's_m_m_movspace_01',
+			model = 's_m_m_movspace_01',
 			name = 'Spaceman',
 			prestige = 4,
 		},
 
 		{
-			id = 'u_m_y_imporage',
+			model = 'u_m_y_imporage',
 			name = 'Imporage',
 			prestige = 5,
 		},
 
 		{
-			id = 'u_m_m_griff_01',
+			model = 'u_m_m_griff_01',
 			name = 'Griff?',
 			prestige = 6,
 		},
 
 		{
-			id = 'u_m_y_babyd',
+			model = 'u_m_y_babyd',
 			name = 'Baby',
 			prestige = 7,
 		},
 
 		{
-			id = 's_m_y_factory_01',
+			model = 's_m_y_factory_01',
 			name = 'Factory Man',
 			prestige = 8,
 		},
 
 		{
-			id = 'u_m_m_jesus_01',
+			model = 'u_m_m_jesus_01',
 			name = 'That Guy',
 			prestige = 9,
 		},
 
 		{
-			id = 'u_m_o_filmnoir',
+			model = 'u_m_o_filmnoir',
 			name = 'Dominus',
 			prestige = 10,
 		},

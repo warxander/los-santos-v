@@ -1,96 +1,85 @@
-local function getPlayerByEntityId(entity)
-	for _, id in ipairs(GetActivePlayers()) do
-		if GetPlayerPed(id) == entity then
-			return id
-		end
-	end
-
-	return nil
-end
-
-local function getPedVehicleSeat(ped)
-	local vehicle = GetVehiclePedIsIn(ped, false)
-
-	for i = -2, GetVehicleMaxNumberOfPassengers(vehicle) do
-		if GetPedInVehicleSeat(vehicle, i) == ped then
-			return i
-		end
-	end
-
-	return -2
-end
-
 AddEventHandler('lsv:init', function()
-	local isDead = false
-	local hasBeenDead = false
-	local diedAt = nil
+	local scaleform = Scaleform.NewAsync('MP_BIG_MESSAGE_FREEMODE')
+
+	local instructionalButtonsScaleform = Scaleform.NewAsync('INSTRUCTIONAL_BUTTONS')
+
+	RequestScriptAudioBank('MP_WASTED', 0)
 
 	while true do
 		Citizen.Wait(0)
 
-		local player = PlayerId()
+		if NetworkIsPlayerActive(PlayerId()) then
+			local playerPed = PlayerPedId()
 
-		if NetworkIsPlayerActive(player) then
-			local ped = PlayerPedId()
+			if IsPedFatallyInjured(playerPed) then
+				local deathSource, weaponHash = NetworkGetEntityKillerOfPlayer(PlayerId())
 
-			if IsPedFatallyInjured(ped) and not isDead then
-				isDead = true
-				if not diedAt then
-					diedAt = GetGameTimer()
+				local killer = nil
+				if deathSource == -1 or deathSource == playerPed then
+					killer = PlayerId()
+				elseif IsEntityAPed(deathSource) and IsPedAPlayer(deathSource) then
+					killer = NetworkGetPlayerIndexFromPed(deathSource)
 				end
 
-				local killer, killerweapon = NetworkGetEntityKillerOfPlayer(player)
-				local killerweapongroup = 0
-				local killertype = -1
-				local killerinvehicle = false
-				local killervehiclename = ''
-				local killervehicleseat = 0
-				local killedbyheadshot = false
+				local deathDetails = ''
+				local playerPos = Player.Position()
 
-				local killerentitytype = GetEntityType(killer)
-				if killerentitytype == 1 then
-					killertype = GetPedType(killer)
-					if IsPedInAnyVehicle(killer, false) == 1 then
-						killerinvehicle = true
-						killervehiclename = GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsUsing(killer)))
-						killervehicleseat = getPedVehicleSeat(killer)
-					else
-						killerinvehicle = false
-					end
-				end
+				if not killer then
+					TriggerServerEvent('lsv:onPlayerDied', false, playerPos)
+				elseif killer == PlayerId() then
+					TriggerServerEvent('lsv:onPlayerDied', true, playerPos)
+				else
+					local killData = { }
 
-				local killerid = getPlayerByEntityId(killer)
-				if killer ~= ped and killerid ~= nil and NetworkIsPlayerActive(killerid) then
-					killerid = GetPlayerServerId(killerid)
-					local hasDamagedBone, damagedBone = GetPedLastDamageBone(ped)
+					killData.killer = GetPlayerServerId(killer)
+					killData.position = playerPos
+					killData.killerPosition = GetEntityCoords(deathSource)
+					killData.isKillerInVehicle = IsPedInAnyVehicle(deathSource, false)
+
+					killData.killDistance = math.floor(World.GetDistance(playerPos, killData.killerPosition, true))
+					deathDetails = string.format('Distance: %dm', killData.killDistance)
+
+					local hasDamagedBone, damagedBone = GetPedLastDamageBone(playerPed)
 					if hasDamagedBone and damagedBone == 31086 then
-						killedbyheadshot = true
+						killData.headshot = true
 					end
-					if killerweapon ~= 0 then
-						killerweapongroup = GetWeapontypeGroup(killerweapon)
+
+					if IsWeaponValid(weaponHash) then
+						killData.weaponHash = weaponHash
+						killData.weaponGroup = GetWeapontypeGroup(weaponHash)
+
+						local weaponName = WeaponUtility.GetNameByHash(weaponHash)
+						if weaponName then
+							local tint = GetPedWeaponTintIndex(killer, weaponHash)
+							local tintName = Settings.weaponTintNames[tint]
+							if tintName then
+								weaponName = weaponName..' ('..tintName..')'
+							end
+							deathDetails = 'Killed with '..weaponName..'\n'..deathDetails
+						end
 					end
-				else
-					killerid = -1
+
+					TriggerServerEvent('lsv:onPlayerKilled', killData)
 				end
 
-				if killer == ped or killer == -1 then
-					TriggerServerEvent('lsv:onPlayerDied', killertype, { table.unpack(GetEntityCoords(ped)) })
-					hasBeenDead = true
-				else
-					TriggerServerEvent('lsv:onPlayerKilled', killerid, { killertype = killertype, killerheadshot = killedbyheadshot, weaponhash = killerweapon, weapongroup = killerweapongroup, killerinveh = killerinvehicle, killervehseat = killervehicleseat, killervehname = killervehiclename, killerpos = { table.unpack(GetEntityCoords(ped)) } })
-					hasBeenDead = true
-				end
-			elseif not IsPedFatallyInjured(ped) then
-				isDead = false
-				diedAt = nil
-			end
+				StartScreenEffect('DeathFailOut', 0, true)
+				ShakeGameplayCam('DEATH_FAIL_IN_EFFECT_SHAKE', 1.0)
+				PlaySoundFrontend(-1, 'MP_Flash', 'WastedSounds', 1)
 
-			-- Check if the player has to respawn in order to trigger an event
-			if not hasBeenDead and diedAt ~= nil and diedAt > 0 then
-				TriggerServerEvent('lsv:onPlayerWasted', { table.unpack(GetEntityCoords(ped)) })
-				hasBeenDead = true
-			elseif hasBeenDead and diedAt ~= nil and diedAt <= 0 then
-				hasBeenDead = false
+				instructionalButtonsScaleform:call('CLEAR_ALL')
+				instructionalButtonsScaleform:call('SET_DATA_SLOT', 0, '~INPUT_ATTACK~', 'Respawn Faster')
+				instructionalButtonsScaleform:call('DRAW_INSTRUCTIONAL_BUTTONS')
+
+				scaleform:call('SHOW_SHARD_WASTED_MP_MESSAGE', '~r~WASTED', deathDetails)
+
+				repeat
+					scaleform:renderFullscreen()
+					instructionalButtonsScaleform:renderFullscreen()
+					Citizen.Wait(0)
+				until not IsPedFatallyInjured(PlayerPedId())
+
+				StopScreenEffect('DeathFailOut')
+				StopGameplayCamShaking(true)
 			end
 		end
 	end

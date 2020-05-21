@@ -23,10 +23,10 @@ function PlayerData.Add(player, playerStats)
 		moderator = playerStats.Moderator,
 		name = playerStats.PlayerName,
 		cash = playerStats.Cash,
-		faction = Settings.faction.Neutral,
 		kdRatio = calculateKdRatio(playerStats.Kills, playerStats.Deaths),
 		kills = playerStats.Kills,
 		killstreak = 0,
+		deathstreak = 0,
 		rank = playerStats.Rank,
 		prestige = playerStats.Prestige,
 	}
@@ -36,11 +36,16 @@ function PlayerData.Add(player, playerStats)
 		loginTimer = Timer.New(),
 		timePlayed = playerStats.TimePlayed,
 		headshots = playerStats.Headshots,
+		vehicleKills = playerStats.VehicleKills,
 		deaths = playerStats.Deaths,
 		maxKillstreak = playerStats.MaxKillstreak,
 		experience = playerStats.Experience,
 		missionsDone = playerStats.MissionsDone,
 		eventsWon = playerStats.EventsWon,
+		longestKillDistance = playerStats.LongestKillDistance,
+		garages = playerStats.Garages,
+		vehicles = playerStats.Vehicles,
+		settings = playerStats.Settings,
 	}
 
 	_playerSharedData[player] = sharedData
@@ -88,6 +93,10 @@ function PlayerData.GetRandom()
 	return table.random(_playerSharedData).id
 end
 
+function PlayerData.GetName(player)
+	return _playerSharedData[player].name
+end
+
 function PlayerData.GetLoginTime(player)
 	return _playerLocalData[player].loginTime
 end
@@ -120,22 +129,80 @@ function PlayerData.GetKillstreak(player)
 	return _playerSharedData[player].killstreak
 end
 
-function PlayerData.GetFaction(player)
-	return _playerSharedData[player].faction
-end
-
 function PlayerData.GetKills(player)
 	return _playerSharedData[player].kills
 end
 
-function PlayerData.UpdateFaction(player, faction)
+function PlayerData.HasGarage(player, garage)
+	return _playerLocalData[player].garages[garage]
+end
+
+function PlayerData.GetGaragesCapacity(player)
+	local capacity = 0
+
+	table.foreach(_playerLocalData[player].garages, function(_, garage)
+		capacity = capacity + Settings.garages[garage].capacity
+	end)
+
+	return capacity
+end
+
+function PlayerData.GetVehicles(player)
+	return _playerLocalData[player].vehicles
+end
+
+function PlayerData.GetVehicle(player, vehicleIndex)
+	return _playerLocalData[player].vehicles[vehicleIndex]
+end
+
+function PlayerData.UpdateGarage(player, garage)
 	if not PlayerData.IsExists(player) then
 		return
 	end
 
-	local playerData = _playerSharedData[player]
-	playerData.faction = faction
-	TriggerClientEvent('lsv:updatePlayerData', -1, player, { faction = playerData.faction })
+	local playerData = _playerLocalData[player]
+	if not playerData.garages[garage] then
+		playerData.garages[garage] = true
+		Db.UpdateGarages(player, playerData.garages)
+		TriggerClientEvent('lsv:garageUpdated', player, garage)
+	end
+end
+
+function PlayerData.HasVehicle(player, vehicleIndex)
+	return _playerLocalData[player].vehicles[vehicleIndex]
+end
+
+function PlayerData.AddVehicle(player, vehicle)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local playerData = _playerLocalData[player]
+	table.insert(playerData.vehicles, vehicle)
+	Db.UpdateVehicles(player, playerData.vehicles)
+	TriggerClientEvent('lsv:vehicleAdded', player, vehicle)
+end
+
+function PlayerData.ReplaceVehicle(player, vehicleIndex, vehicle)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local playerData = _playerLocalData[player]
+	playerData.vehicles[vehicleIndex] = vehicle
+	Db.UpdateVehicles(player, playerData.vehicles)
+	TriggerClientEvent('lsv:vehicleReplaced', player, vehicleIndex, vehicle)
+end
+
+function PlayerData.RemoveVehicle(player, vehicleIndex)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local playerData = _playerLocalData[player]
+	table.remove(playerData.vehicles, vehicleIndex)
+	Db.UpdateVehicles(player, playerData.vehicles)
+	TriggerClientEvent('lsv:vehicleRemoved', player, vehicleIndex)
 end
 
 function PlayerData.UpdateCash(player, cash, killDetails)
@@ -155,8 +222,18 @@ function PlayerData.UpdateCash(player, cash, killDetails)
 		if prestige ~= 0 then
 			cash = cash + math.floor(basicCash * prestige * Settings.prestigeBonus)
 		end
+
+		if Crew.IsCrewLeader(player) then
+			local crewCash = math.floor(basicCash * Settings.crew.rewardBonus.cash)
+			Crew.ForEachMember(player, function(member)
+				if member ~= player and PlayerData.IsExists(member) then
+					PlayerData.UpdateCash(member, crewCash)
+				end
+			end)
+		end
 	elseif cash < 0 then
 		cash = -math.min(PlayerData.GetCash(player), math.abs(cash))
+		Db.UpdateMoneyWasted(player, math.abs(cash))
 	end
 
 	if cash ~= 0 then
@@ -186,6 +263,15 @@ function PlayerData.UpdateExperience(player, experience)
 	end
 
 	if experience ~= 0 then
+		if Crew.IsCrewLeader(player) then
+			local crewExp = math.floor(basicExperience * Settings.crew.rewardBonus.exp)
+			Crew.ForEachMember(player, function(member)
+				if member ~= player and PlayerData.IsExists(member) then
+					PlayerData.UpdateExperience(member, crewExp)
+				end
+			end)
+		end
+
 		local playerData = _playerSharedData[player]
 		local playerLocalData = _playerLocalData[player]
 		playerLocalData.experience = playerLocalData.experience + experience
@@ -231,8 +317,26 @@ function PlayerData.UpdateKills(player)
 		TriggerClientEvent('lsv:maxKillstreakUpdated', player, playerLocalData.maxKillstreak)
 	end
 
+	if playerData.deathstreak ~= 0 then
+		playerData.deathstreak = 0
+		data.deathstreak = playerData.deathstreak
+	end
+
 	TriggerClientEvent('lsv:updatePlayerData', -1, player, data)
 	Db.UpdateKills(player, playerData.kills)
+end
+
+function PlayerData.UpdateLongestKillDistance(player, killDistance)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local playerData = _playerLocalData[player]
+	if killDistance > playerData.longestKillDistance then
+		playerData.longestKillDistance = killDistance
+		Db.UpdateLongestKillDistance(player, playerData.longestKillDistance)
+		TriggerClientEvent('lsv:longestKillDistanceUpdated', player, playerData.longestKillDistance)
+	end
 end
 
 function PlayerData.UpdateHeadshots(player)
@@ -247,7 +351,19 @@ function PlayerData.UpdateHeadshots(player)
 	Db.UpdateHeadshots(player, playerData.headshots)
 end
 
-function PlayerData.UpdateDeaths(player)
+function PlayerData.UpdateVehicleKills(player)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local playerData = _playerLocalData[player]
+	playerData.vehicleKills = playerData.vehicleKills + 1
+
+	TriggerClientEvent('lsv:vehicleKillsUpdated', player, playerData.vehicleKills)
+	Db.UpdateVehicleKills(player, playerData.vehicleKills)
+end
+
+function PlayerData.UpdateDeaths(player, isSuicide)
 	if not PlayerData.IsExists(player) then
 		return
 	end
@@ -255,21 +371,29 @@ function PlayerData.UpdateDeaths(player)
 	local playerData = _playerSharedData[player]
 	local playerLocalData = _playerLocalData[player]
 
-	playerLocalData.deaths = playerLocalData.deaths + 1
-
 	local data = { }
-
-	local kdRatio = calculateKdRatio(playerData.kills, playerLocalData.deaths)
-	if playerData.kdRatio ~= kdRatio then
-		playerData.kdRatio = kdRatio
-		data.kdRatio = kdRatio
-	end
 
 	playerData.killstreak = 0
 	data.killstreak = playerData.killstreak
 
+	if not isSuicide then
+		playerLocalData.deaths = playerLocalData.deaths + 1
+
+		local kdRatio = calculateKdRatio(playerData.kills, playerLocalData.deaths)
+		if playerData.kdRatio ~= kdRatio then
+			playerData.kdRatio = kdRatio
+			data.kdRatio = kdRatio
+		end
+
+		playerData.deathstreak = playerData.deathstreak + 1
+		data.deathstreak = playerData.deathstreak
+	end
+
 	TriggerClientEvent('lsv:updatePlayerData', -1, player, data)
-	Db.UpdateDeaths(player, playerLocalData.deaths)
+
+	if not isSuicide then
+		Db.UpdateDeaths(player, playerLocalData.deaths)
+	end
 end
 
 function PlayerData.UpdateMissionsDone(player)
@@ -295,3 +419,17 @@ function PlayerData.UpdateEventsWon(player)
 	TriggerClientEvent('lsv:eventsWonUpdated', player, playerData.eventsWon)
 	Db.UpdateEventsWon(player, playerData.eventsWon)
 end
+
+RegisterNetEvent('lsv:updatePlayerSetting')
+AddEventHandler('lsv:updatePlayerSetting', function(setting, value)
+	local player = source
+	if not PlayerData.IsExists(player) or not Settings.player[setting] or type(value) ~= 'boolean' then
+		return
+	end
+
+	local playerData = _playerLocalData[player]
+	playerData.settings[setting] = value or nil
+
+	Db.UpdateSettings(player, playerData.settings)
+	TriggerClientEvent('lsv:settingUpdated', player, setting, value)
+end)

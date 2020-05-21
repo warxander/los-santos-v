@@ -15,6 +15,8 @@ local _ammunations = {
 local _selectedWeapon = nil
 local _selectedAmmoType = nil
 
+local _crateData = nil
+
 local function specialWeaponAmmoPrice(weapon, ammo, maxAmmo)
 	if ammo == maxAmmo then
 		return 'Maxed'
@@ -48,36 +50,115 @@ AddEventHandler('lsv:specialAmmoRefilled', function(weapon, amount, fullAmmo)
 	Prompt.Hide()
 end)
 
+RegisterNetEvent('lsv:specialCratePurchased')
+AddEventHandler('lsv:specialCratePurchased', function(purchased)
+	if purchased then
+		WarMenu.CloseMenu()
+	else
+		Gui.DisplayPersonalNotification('You don\'t have enough cash.')
+	end
+
+	Prompt.Hide()
+end)
+
+RegisterNetEvent('lsv:spawnSpecialCrate')
+AddEventHandler('lsv:spawnSpecialCrate', function(crate)
+	if _crateData then
+		return
+	end
+
+	PlaySoundFrontend(-1, 'CONFIRM_BEEP', 'HUD_MINI_GAME_SOUNDSET', true)
+	Gui.DisplayPersonalNotification('We have been dropped a Special Crate for you.', 'CHAR_AMMUNATION', 'Ammu-Nation', '', 2)
+
+	_crateData = { }
+	_crateData.pickup = CreatePickupRotate(`PICKUP_PORTABLE_CRATE_UNFIXED`, crate.position.x, crate.position.y, crate.position.z, 0.0, 0.0, 0.0, 512)
+	_crateData.position = crate.position
+	_crateData.location = crate.location
+	_crateData.areaBlip = Map.CreateRadiusBlip(crate.location.x, crate.location.y, crate.location.z, Settings.crate.radius, Color.BLIP_YELLOW)
+
+	_crateData.blip = Map.CreatePlaceBlip(Blip.CRATE_DROP, crate.location.x, crate.location.y, crate.location.z, nil, Color.BLIP_YELLOW)
+	SetBlipAsShortRange(_crateData.blip, false)
+	SetBlipScale(_crateData.blip, 1.5)
+	Map.SetBlipFlashes(_crateData.blip)
+
+	FlashMinimapDisplay()
+
+	while true do
+		Citizen.Wait(0)
+
+		if HasPickupBeenCollected(_crateData.pickup) then
+			TriggerServerEvent('lsv:specialCratePickedUp')
+			return
+		end
+
+		if Player.IsInFreeroam() then
+			if Player.DistanceTo(_crateData.location) < Settings.crate.radius then
+				Gui.DrawProgressBar('CRATE DISTANCE', 1.0 - Player.DistanceTo(_crateData.position) / Settings.crate.radius, 7, Color.YELLOW)
+			end
+		end
+	end
+end)
+
+RegisterNetEvent('lsv:specialCratePickedUp')
+AddEventHandler('lsv:specialCratePickedUp', function(crate)
+	local playerPed = PlayerPedId()
+
+	SetPedArmour(playerPed, GetPlayerMaxArmour(PlayerId()))
+	GiveWeaponToPed(playerPed, GetHashKey(crate.weapon.id), crate.weapon.ammo, false, true)
+
+	Gui.DisplayPersonalNotification('Crate Contents:~w~\n+ $'..Settings.crate.reward.cash..'\n+ '..crate.weapon.name..'\n+ Body Armor')
+	Player.SaveWeapons()
+
+	RemoveBlip(_crateData.areaBlip)
+	RemoveBlip(_crateData.blip)
+
+	_crateData = nil
+end)
+
 AddEventHandler('lsv:init', function()
 	table.iforeach(_ammunations, function(ammunation)
 		Map.CreatePlaceBlip(Blip.AMMU_NATION, ammunation.x, ammunation.y, ammunation.z)
 	end)
 
-	WarMenu.CreateMenu('ammunation_special', '')
-	WarMenu.SetSubTitle('ammunation_special', 'Special Weapons Ammunition')
+	Gui.CreateMenu('ammunation_special', '')
+	WarMenu.SetSubTitle('ammunation_special', 'Special Weapons')
 	WarMenu.SetTitleBackgroundColor('ammunation_special', Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, Color.WHITE.a)
 	WarMenu.SetTitleBackgroundSprite('ammunation_special', 'shopui_title_gunclub', 'shopui_title_gunclub')
 
-	WarMenu.CreateSubMenu('ammunation_specialammo', 'ammunation_special', '')
-	WarMenu.SetMenuButtonPressedSound('ammunation_specialammo', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+	WarMenu.CreateSubMenu('ammunation_special_ammunition', 'ammunation_special', 'Ammunition')
+
+	WarMenu.CreateSubMenu('ammunation_special_ammo', 'ammunation_special', '')
+	WarMenu.SetMenuButtonPressedSound('ammunation_special_ammo', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	while true do
 		Citizen.Wait(0)
 
 		if WarMenu.IsMenuOpened('ammunation_special') then
+			if WarMenu.MenuButton('Ammunition', 'ammunation_special_ammunition') then
+			elseif WarMenu.Button('Drop Special Crate', '$'..Settings.crate.cash) then
+				if _crateData then
+					Gui.DisplayPersonalNotification('Your Special Crate was already delivered.')
+				else
+					TriggerServerEvent('lsv:purchaseSpecialCrate')
+					Prompt.ShowAsync()
+				end
+			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('ammunation_special_ammunition') then
 			table.foreach(Settings.ammuNationSpecialAmmo, function(data, weapon)
 				local weaponHash = GetHashKey(weapon)
 				if HasPedGotWeapon(PlayerPedId(), weaponHash, false) then
-					if WarMenu.MenuButton(Weapon[weapon].name..' '..data.type, 'ammunation_specialammo') then
+					if WarMenu.MenuButton(Weapon[weapon].name..' '..data.type, 'ammunation_special_ammo') then
 						_selectedWeapon = weapon
 						_selectedAmmoType = data.type
-						WarMenu.SetSubTitle('ammunation_specialammo', Weapon[weapon].name..' '..data.type)
+						WarMenu.SetSubTitle('ammunation_special_ammo', Weapon[weapon].name..' '..data.type)
 					end
 				end
 			end)
 
 			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_specialammo')	then
+		elseif WarMenu.IsMenuOpened('ammunation_special_ammo') then
 			local weaponHash = GetHashKey(_selectedWeapon)
 			local _, maxAmmo = GetMaxAmmo(PlayerPedId(), weaponHash)
 			local weaponAmmoType = GetPedAmmoTypeFromWeapon(PlayerPedId(), weaponHash)
@@ -122,15 +203,15 @@ AddEventHandler('lsv:init', function()
 
 				if Player.DistanceTo(ammunation, true) < Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
-						Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to browse Special Weapons ammunition.')
+						Gui.DisplayHelpText('Press ~INPUT_TALK~ to browse Special Weapons ammunition.')
 
-						if IsControlJustReleased(0, 38) then
+						if IsControlJustReleased(0, 46) then
 							ammunationOpenedMenuIndex = ammunationIndex
 							openedFromInteractionMenu = false
 							Gui.OpenMenu('ammunation_special')
 						end
 					end
-				elseif WarMenu.IsMenuOpened('ammunation_special') and ammunationIndex == ammunationOpenedMenuIndex then
+				elseif (WarMenu.IsMenuOpened('ammunation_special') or WarMenu.IsMenuOpened('ammunation_special_ammunition') or WarMenu.IsMenuOpened('ammunation_special_ammo')) and ammunationIndex == ammunationOpenedMenuIndex then
 					WarMenu.CloseMenu()
 					Player.SaveWeapons()
 					Prompt.Hide()

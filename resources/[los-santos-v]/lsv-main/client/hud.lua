@@ -1,21 +1,12 @@
 local _discordUrl = nil
 
-local _cashGained = 0
-local _expGained = 0
-
-local _gainedTimer = Timer.New()
-
 local _killstreak = 0
 local _lastKillTimer = Timer.New()
+
+local _killDetailsTimer = Timer.New()
 local _lastKillDetails = nil
 
 local _lastEventTime = nil
-
-local _factionColors = {
-	[Settings.faction.Neutral] = '~w~',
-	[Settings.faction.Enforcer] = '~d~',
-	[Settings.faction.Criminal] = '~r~',
-}
 
 RegisterNetEvent('lsv:setupHud')
 AddEventHandler('lsv:setupHud', function(hud)
@@ -68,7 +59,7 @@ end)
 
 RegisterNetEvent('lsv:onPlayerDied')
 AddEventHandler('lsv:onPlayerDied', function(player, suicide)
-	if NetworkIsPlayerActive(GetPlayerFromServerId(player)) then
+	if not Player.Settings.disableKillFeed and NetworkIsPlayerActive(GetPlayerFromServerId(player)) then
 		if suicide then
 			Gui.DisplayNotification(Gui.GetPlayerName(player)..' committed suicide.')
 		else
@@ -87,9 +78,13 @@ AddEventHandler('lsv:onPlayerDied', function(player, suicide)
 end)
 
 RegisterNetEvent('lsv:onPlayerKilled')
-AddEventHandler('lsv:onPlayerKilled', function(player, killer, message, isFriendlyFactionKill)
-	if NetworkIsPlayerActive(GetPlayerFromServerId(player)) and NetworkIsPlayerActive(GetPlayerFromServerId(killer)) then
-		Gui.DisplayNotification(Gui.GetPlayerName(killer)..' '..message..' '..Gui.GetPlayerName(player, nil, true))
+AddEventHandler('lsv:onPlayerKilled', function(player, killer, message, killstreak)
+	if not Player.Settings.disableKillFeed and NetworkIsPlayerActive(GetPlayerFromServerId(player)) and NetworkIsPlayerActive(GetPlayerFromServerId(killer)) then
+		local notificationMessage = Gui.GetPlayerName(killer)..' '..message..' '..Gui.GetPlayerName(player, nil, true)
+		if killstreak then
+			notificationMessage = notificationMessage..' (Killstreak '..killstreak..')'
+		end
+		Gui.DisplayNotification(notificationMessage)
 	end
 
 	if player == Player.ServerId() then
@@ -99,12 +94,6 @@ AddEventHandler('lsv:onPlayerKilled', function(player, killer, message, isFriend
 		_killstreak = 0
 		return
 	elseif killer ~= Player.ServerId() then
-		return
-	end
-
-	if isFriendlyFactionKill then
-		_lastKillDetails = 'FRIENDLY FACTION KILL'
-		_gainedTimer:restart()
 		return
 	end
 
@@ -154,13 +143,6 @@ AddEventHandler('lsv:bountyWasSet', function(player)
 	end
 end)
 
-RegisterNetEvent('lsv:playerJoinedFaction')
-AddEventHandler('lsv:playerJoinedFaction', function(player, faction)
-	if faction ~= Settings.faction.Neutral and player ~= Player.ServerId() then
-		Gui.DisplayNotification(Gui.GetPlayerName(player)..' has become '..Settings.factionNames[faction]..'.')
-	end
-end)
-
 Citizen.CreateThread(function()
 	local eventTimer = Timer.New()
 
@@ -181,8 +163,18 @@ Citizen.CreateThread(function()
 
 		RemoveMultiplayerBankCash()
 		RemoveMultiplayerHudCash()
+	end
+end)
 
-		if IsControlPressed(0, 20) then
+AddEventHandler('lsv:init', function()
+	while true do
+		Citizen.Wait(0)
+
+		if Player.Settings.disableCrosshair then
+			HideHudComponentThisFrame(14)
+		end
+
+		if not WarMenu.IsAnyMenuOpened() and IsControlPressed(0, 20) then
 			Scoreboard.DisplayThisFrame()
 		elseif IsPlayerDead(PlayerId()) and DeathTimer then
 			if IsControlJustReleased(0, 24) then
@@ -285,10 +277,10 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if _lastEventTime then
+		if not Player.Settings.disableEventTimer and _lastEventTime then
 			if Player.IsInFreeroam() then
 				local timePassed = Settings.event.interval - _lastEventTime
-				if timePassed > 0 then
+				if timePassed > 0 and timePassed <= 120000 then
 					Gui.DrawTimerBar('NEXT EVENT IN', timePassed, 1)
 				end
 			end
@@ -297,25 +289,18 @@ AddEventHandler('lsv:init', function()
 end)
 
 AddEventHandler('lsv:cashUpdated', function(cash, killDetails)
-	_lastKillDetails = nil
-
-	if cash > 0 then
-		_cashGained = _cashGained + cash
-	else
-		_cashGained = cash
+	local backgroundColor = nil
+	if cash < 0 then
+		backgroundColor = 6
 	end
 
+	Gui.DisplayPersonalNotification('<C> $'..math.abs(cash)..'</C>', nil, nil, nil, nil, backgroundColor)
+
+	_lastKillDetails = nil
 	if killDetails and #killDetails ~= 0 then
 		_lastKillDetails = table.concat(killDetails, '\n')
+		_killDetailsTimer:restart()
 	end
-
-	_gainedTimer:restart()
-end)
-
-AddEventHandler('lsv:experienceUpdated', function(exp)
-	_expGained = _expGained + exp
-
-	_gainedTimer:restart()
 end)
 
 AddEventHandler('lsv:showExperience', function(exp)
@@ -345,41 +330,17 @@ AddEventHandler('lsv:rankUp', function(rank)
 end)
 
 AddEventHandler('lsv:init', function()
-	_gainedTimer:restart()
+	_killDetailsTimer:restart()
 	_lastKillTimer:restart()
 
 	while true do
 		Citizen.Wait(0)
 
-		if _cashGained ~= 0 or _expGained ~= 0 or _lastKillDetails then
-			if Player.IsActive() and _gainedTimer:elapsed() < Settings.rewardNotificationTime then
-				if _cashGained ~= 0 then
-					local cash = tostring(_cashGained)
-					if _cashGained > 0 then
-						cash = '+'..cash
-					end
-
-					Gui.SetTextParams(0, Color.GREEN, 0.5, true, true)
-					Gui.DrawText(cash, { x = 0.525, y = 0.445 })
-				end
-
-				if _expGained ~= 0 then
-					local exp = tostring(_expGained)
-					if _expGained > 0 then
-						exp = '+'..exp
-					end
-
-					Gui.SetTextParams(0, Color.BLUE, 0.5, true, true)
-					Gui.DrawText(exp, { x = 0.525, y = 0.475 })
-				end
-
-				if _lastKillDetails then
-					Gui.SetTextParams(0, Color.WHITE, 0.25, true, true)
-					Gui.DrawText(_lastKillDetails, { x = 0.585, y = 0.45 })
-				end
+		if _lastKillDetails then
+			if Player.IsActive() and _killDetailsTimer:elapsed() < Settings.rewardNotificationTime then
+				Gui.SetTextParams(0, Color.WHITE, 0.25, true, true, true)
+				Gui.DrawText(_lastKillDetails, { x = 0.5, y = 0.65 })
 			else
-				_cashGained = 0
-				_expGained = 0
 				_lastKillDetails = nil
 			end
 		end
@@ -387,22 +348,19 @@ AddEventHandler('lsv:init', function()
 end)
 
 AddEventHandler('lsv:init', function()
+	if Player.Settings.disableTips then
+		return
+	end
+
 	--https://pastebin.com/amtjjcHb
 	local tips = {
 		'Your Armour will slowly regenerate after a few seconds since last damage.',
 		'Performing Missions and taking out enemy players will give you cash and experience.',
-		'Get extra reward for killing players who are doing a Mission.',
-		'Challenges allows you to compete with other players to prove your skills.',
-		'Press ~INPUT_INTERACTION_MENU~ to open Interaction menu.',
-		'Join any Faction to get extra reward for killing opposite faction players.',
 		'Visit ~BLIP_GUN_SHOP~ to purchase Special Weapons ammunition.',
-		'Press ~INPUT_MP_TEXT_CHAT_TEAM~ to open Personal Vehicle menu.',
 		'Press ~INPUT_ENTER_CHEAT_CODE~ to enlarge the Radar.',
 		'Press ~INPUT_DUCK~ to enter stealth mode and hide from the Radar.',
 		'Visit ~BLIP_CLOTHES_STORE~ to change your character appearance.',
-		'Use Interaction Menu to manage your Crew.',
-		'Use Report Player option from Interaction menu to improve your overall game experience.',
-		'Use Prestige option from Interaction menu to reset your progress and get Prestige badge.',
+		'Use Interaction Menu to manage Crew.',
 	}
 
 	table.iforeach(tips, function(tip)
@@ -414,68 +372,49 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if Player.PatreonTier == 0 and _discordUrl then
+		if Player.PatreonTier == 0 and _discordUrl and not Player.Settings.disableTips then
 			Gui.SetTextParams(4, { r = 255, g = 255, b = 255, a = 255 }, 0.45, true)
 			Gui.DrawText(_discordUrl, { x = SafeZone.Left() + 0.785, y = SafeZone.Top() }, 1.0)
+
+			Gui.SetTextParams(4, { r = 255, g = 255, b = 255, a = 255 }, 0.45, true)
+			Gui.DrawText('~c~Use ~w~/help~c~ command to learn more', { x = SafeZone.Left() + 0.785, y = SafeZone.Top() + 0.025 }, 1.0)
+		end
+
+		local statusText = '~b~EXP~w~ '..math.floor(Player.Experience)..' / '..math.floor(Rank.GetRequiredExperience(Player.Rank + 1))..'	~g~$~w~ '..math.floor(Player.Cash)
+
+		local playerPed = PlayerPedId()
+		if IsPedInAnyVehicle(playerPed, true) then
+			local speed = math.floor(GetEntitySpeed(GetVehiclePedIsUsing(playerPed)) * 2.236936) --mph
+			statusText = statusText..'	'..string.format('%d MPH', speed)
 		end
 
 		Gui.SetTextParams(4, Color.WHITE, 0.3, true, true, false)
-		Gui.DrawText('~b~EXP~w~ '..Player.Experience..' / '..Rank.GetRequiredExperience(Player.Rank + 1)..'	~g~$~w~ '..Player.Cash..'	'.._factionColors[Player.Faction]..Settings.factionNames[Player.Faction],
-			{ x = SafeZone.Left(), y = SafeZone.Bottom() - 0.004 })
+		Gui.DrawText(statusText, { x = SafeZone.Left(), y = SafeZone.Bottom() - 0.004 })
 	end
 end)
 
 AddEventHandler('lsv:init', function()
-	local scaleform = Scaleform.NewAsync('MP_BIG_MESSAGE_FREEMODE')
-	local instructionalButtonsScaleform = Scaleform.NewAsync('INSTRUCTIONAL_BUTTONS')
-
-	RequestScriptAudioBank('MP_WASTED', 0)
+	local scaleform = Scaleform.NewAsync('INSTRUCTIONAL_BUTTONS')
+	local needToResetScaleform = true
 
 	while true do
 		Citizen.Wait(0)
 
-		instructionalButtonsScaleform:call('CLEAR_ALL')
-
-		if IsPlayerDead(PlayerId()) then
-			StartScreenEffect('DeathFailOut', 0, true)
-			ShakeGameplayCam('DEATH_FAIL_IN_EFFECT_SHAKE', 1.0)
-			PlaySoundFrontend(-1, 'MP_Flash', 'WastedSounds', 1)
-
-			local deathDetails = ''
-			local killer, weaponHash = NetworkGetEntityKillerOfPlayer(PlayerId())
-			if killer > 0 and killer ~= PlayerPedId() then
-				deathDetails = string.format('Distance: %d m', math.floor(Player.DistanceTo(GetEntityCoords(killer))))
-				if weaponHash and weaponHash ~= 0 then
-					local weaponName = WeaponUtility.GetNameByHash(weaponHash)
-					if weaponName then
-						local tint = GetPedWeaponTintIndex(killer, weaponHash)
-						local tintName = Settings.weaponTintNames[tint]
-						if tintName then
-							weaponName = weaponName..' ('..tintName..')'
-						end
-						deathDetails = 'Killed with '..weaponName..'\n'..deathDetails
-					end
+		if not Player.Settings.disableTips then
+			if Player.IsActive() and not WarMenu.IsAnyMenuOpened() then
+				if needToResetScaleform then
+					scaleform:call('CLEAR_ALL')
+					scaleform:call('SET_DATA_SLOT', 0, '~INPUT_MP_TEXT_CHAT_TEAM~', 'Personal Vehicle Menu')
+					scaleform:call('SET_DATA_SLOT', 1, '~INPUT_INTERACTION_MENU~', 'Interaction Menu')
+					scaleform:call('SET_DATA_SLOT', 2, '~INPUT_REPLAY_STARTPOINT~', Player.Moderator and 'Moderator Menu' or 'Report Player')
+					scaleform:call('DRAW_INSTRUCTIONAL_BUTTONS')
+					needToResetScaleform = false
 				end
-			end
 
-			scaleform:call('SHOW_SHARD_WASTED_MP_MESSAGE', '~r~WASTED', deathDetails)
-
-			instructionalButtonsScaleform:call('SET_DATA_SLOT', 0, '~INPUT_ATTACK~', 'Respawn Faster')
-			instructionalButtonsScaleform:call('DRAW_INSTRUCTIONAL_BUTTONS')
-
-			while IsPlayerDead(PlayerId()) do
 				scaleform:renderFullscreen()
-				instructionalButtonsScaleform:renderFullscreen()
-				Citizen.Wait(0)
+			elseif not needToResetScaleform then
+				needToResetScaleform = true
 			end
-
-			StopScreenEffect('DeathFailOut')
-			StopGameplayCamShaking(true)
-		elseif Player.IsActive() and not WarMenu.IsAnyMenuOpened() then
-			instructionalButtonsScaleform:call('SET_DATA_SLOT', 0, '~INPUT_MP_TEXT_CHAT_TEAM~', 'Personal Vehicle Menu')
-			instructionalButtonsScaleform:call('SET_DATA_SLOT', 1, '~INPUT_INTERACTION_MENU~', 'Interaction Menu')
-			instructionalButtonsScaleform:call('DRAW_INSTRUCTIONAL_BUTTONS')
-			instructionalButtonsScaleform:renderFullscreen()
 		end
 	end
 end)

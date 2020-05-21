@@ -11,6 +11,10 @@ function PlayerData.IsExists(player)
 	return _playerData[player]
 end
 
+function PlayerData.GetName(player)
+	return _playerData[player].name
+end
+
 function PlayerData.GetPatreonTier(player)
 	return _playerData[player].patreonTier
 end
@@ -23,8 +27,8 @@ function PlayerData.GetKillstreak(player)
 	return _playerData[player].killstreak
 end
 
-function PlayerData.GetFaction(player)
-	return _playerData[player].faction
+function PlayerData.GetDeathstreak(player)
+	return _playerData[player].deathstreak
 end
 
 RegisterNetEvent('lsv:initPlayerData')

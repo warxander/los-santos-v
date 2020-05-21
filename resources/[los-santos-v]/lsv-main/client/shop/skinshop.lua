@@ -15,8 +15,23 @@ local _skinshops = {
 	{ x = 11.053486824036, y = 6514.693359375, z = 31.877849578857 },
 }
 
+local _components = {
+	{ id = 0, name = 'Head' },
+	{ id = 1, name = 'Mask' },
+	{ id = 2, name = 'Hair' },
+	{ id = 3, name = 'Torso' },
+	{ id = 4, name = 'Legs' },
+	{ id = 5, name = 'Bags and Parachutes' },
+	{ id = 6, name = 'Shoes' },
+	{ id = 7, name = 'Accessories' },
+	{ id = 8, name = 'Accessories' },
+	{ id = 9, name = 'Accessories' },
+	{ id = 10, name = 'Decals' },
+	{ id = 11, name = 'Tops' },
+}
+
 local function getSkinRequirements(skin)
-	if skin.id == Player.Skin then
+	if skin.model == Player.SkinModel.model then
 		return 'Used'
 	end
 
@@ -32,9 +47,10 @@ local function getSkinRequirements(skin)
 end
 
 RegisterNetEvent('lsv:playerSkinUpdated')
-AddEventHandler('lsv:playerSkinUpdated', function(id)
-	if id then
-		Player.SetModel(id)
+AddEventHandler('lsv:playerSkinUpdated', function(skinModel)
+	if skinModel then
+		Player.SetModelAsync(skinModel)
+		WarMenu.CloseMenu()
 	else
 		Gui.DisplayPersonalNotification('You can\'t use this skin.')
 	end
@@ -43,19 +59,24 @@ AddEventHandler('lsv:playerSkinUpdated', function(id)
 end)
 
 AddEventHandler('lsv:init', function()
-	local selectedCategory = nil
-
 	table.iforeach(_skinshops, function(skinshop)
 		Map.CreatePlaceBlip(Blip.CLOTHING_STORE, skinshop.x, skinshop.y, skinshop.z)
 	end)
 
-	WarMenu.CreateMenu('skinshop', '')
+	Gui.CreateMenu('skinshop', '')
 	WarMenu.SetSubTitle('skinshop', 'Select Skin Category')
 	WarMenu.SetTitleBackgroundColor('skinshop', Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, Color.WHITE.a)
 	WarMenu.SetTitleBackgroundSprite('skinshop', 'shopui_title_lowendfashion', 'shopui_title_lowendfashion')
 
 	WarMenu.CreateSubMenu('skinshop_skins', 'skinshop')
-	WarMenu.SetMenuButtonPressedSound('skinshop_skins', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+
+	WarMenu.CreateSubMenu('skinshop_skin_components', 'skinshop_skins', 'Skin Customization')
+	WarMenu.CreateSubMenu('skinshop_skin_customize_component', 'skinshop_skin_components', '')
+
+	local selectedCategory = nil
+	local selectedSkinIndex = nil
+	local selectedComponent = nil
+	local playerPed = nil
 
 	while true do
 		Citizen.Wait(0)
@@ -71,17 +92,53 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('skinshop_skins') then
 			table.iforeach(Settings.skins[selectedCategory], function(skin, skinIndex)
-				if WarMenu.Button(skin.name, getSkinRequirements(skin)) then
+				if WarMenu.MenuButton(skin.name, 'skinshop_skin_components', getSkinRequirements(skin)) then
 					if skin.rank and skin.rank > Player.Rank then
 						Gui.DisplayPersonalNotification('Your Rank is too low.')
+						WarMenu.OpenMenu('skinshop_skins')
 					elseif skin.prestige and skin.prestige > Player.Prestige then
 						Gui.DisplayPersonalNotification('Your Prestige is too low.')
+						WarMenu.OpenMenu('skinshop_skins')
 					else
-						TriggerServerEvent('lsv:updatePlayerSkin', skinIndex, selectedCategory)
-						Prompt.ShowAsync()
+						local skinModel = skin.model == Player.SkinModel.model and Player.SkinModel or skin
+						Player.SetModelAsync(skinModel, true)
+						selectedSkinIndex = skinIndex
+						playerPed = PlayerPedId()
 					end
 				end
 			end)
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('skinshop_skin_components') then
+			if WarMenu.Button('~r~Confirm') then
+				TriggerServerEvent('lsv:updatePlayerSkin', Player.GetModel(), selectedSkinIndex, selectedCategory)
+				Prompt.ShowAsync()
+			else
+				table.iforeach(_components, function(component)
+					if GetNumberOfPedDrawableVariations(playerPed, component.id) > 1 then
+						if WarMenu.MenuButton(component.name, 'skinshop_skin_customize_component') then
+							selectedComponent = component.id
+							WarMenu.SetSubTitle('skinshop_skin_customize_component', 'Customize '..component.name)
+						end
+					end
+				end)
+			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('skinshop_skin_customize_component') then
+			local drawableId = GetPedDrawableVariation(playerPed, selectedComponent)
+			local textureId = GetPedTextureVariation(playerPed, selectedComponent)
+			local paletteId = 0
+
+			if WarMenu.Button('Model', drawableId) then
+				drawableId = (drawableId + 1) % GetNumberOfPedDrawableVariations(playerPed, selectedComponent)
+				textureId = 0
+			elseif WarMenu.Button('Texture', textureId) then
+				textureId = (textureId + 1) % GetNumberOfPedTextureVariations(playerPed, selectedComponent, drawableId)
+			end
+
+			SetPedPreloadVariationData(playerPed, selectedComponent, drawableId, textureId)
+			SetPedComponentVariation(playerPed, selectedComponent, drawableId, textureId, paletteId)
 
 			WarMenu.Display()
 		end
@@ -101,16 +158,22 @@ AddEventHandler('lsv:init', function()
 
 				if Player.DistanceTo(skinshop, true) < Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
-						Gui.DisplayHelpText('Press ~INPUT_PICKUP~ to browse characters.')
+						Gui.DisplayHelpText('Press ~INPUT_TALK~ to browse characters.')
 
-						if IsControlJustReleased(0, 38) then
+						if IsControlJustReleased(0, 46) then
 							skinshopOpenedMenuIndex = skinshopIndex
 							Gui.OpenMenu('skinshop')
 						end
 					end
-				elseif WarMenu.IsMenuOpened('skinshop') and skinshopIndex == skinshopOpenedMenuIndex then
-					WarMenu.CloseMenu()
-					Prompt.Hide()
+				elseif skinshopIndex == skinshopOpenedMenuIndex then
+					Player.ResetModelAsync()
+					skinshopOpenedMenuIndex = nil
+
+					if WarMenu.IsMenuOpened('skinshop') or WarMenu.IsMenuOpened('skinshop_skins') or WarMenu.IsMenuOpened('skinshop_skin_components') or WarMenu.IsMenuOpened('skinshop_skin_customize_component') then
+						ReleasePedPreloadVariationData(PlayerPedId())
+						WarMenu.CloseMenu()
+						Prompt.Hide()
+					end
 				end
 			end)
 		end

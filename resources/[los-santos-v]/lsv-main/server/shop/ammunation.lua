@@ -63,24 +63,6 @@ AddEventHandler('lsv:purchaseWeapon', function(id, category)
 	end
 end)
 
-RegisterNetEvent('lsv:sellWeapon')
-AddEventHandler('lsv:sellWeapon', function(id)
-	local player = source
-
-	if not PlayerData.IsExists(player) then
-		return
-	end
-
-	local weapon = Weapon[id]
-	if not weapon or not weapon.cash then
-		return
-	end
-
-	local sellPrice = math.floor(weapon.cash * Settings.sellWeaponRatio)
-	PlayerData.UpdateCash(player, sellPrice)
-	TriggerClientEvent('lsv:weaponSold', player, id)
-end)
-
 RegisterNetEvent('lsv:refillAmmo')
 AddEventHandler('lsv:refillAmmo', function(ammoType, weapon, ammoClipCount)
 	local player = source

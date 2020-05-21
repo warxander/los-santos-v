@@ -1,3 +1,13 @@
+function table.range(n, begin)
+	local t = { }
+
+	for i = begin or 0, n do
+		table.insert(t, i)
+	end
+
+	return t
+end
+
 function table.length(t)
 	local length = 0
 
@@ -85,6 +95,24 @@ function table.random(t)
 	return t[i], i
 end
 
+function table.irandom_n(t, n)
+	local result = { }
+
+	local keys = { }
+	local count = #t
+
+	while #result ~= n do
+		local k = math.random(count)
+		if not keys[k] then
+			table.insert(result, t[k])
+			keys[k] = true
+		end
+	end
+
+	return result
+end
+
+
 function table.find(t, value)
 	for k, v in pairs(t) do
 		if v == value then
@@ -141,6 +169,18 @@ function table.filter(t, func)
 	table.foreach(t, function(v, k)
 		if func(v, k) then
 			result[k] = v
+		end
+	end)
+
+	return result
+end
+
+function table.ifilter(t, func)
+	local result = { }
+
+	table.iforeach(t, function(v, k)
+		if func(v, k) then
+			table.insert(result, v)
 		end
 	end)
 

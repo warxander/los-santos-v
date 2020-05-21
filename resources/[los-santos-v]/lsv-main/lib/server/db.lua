@@ -21,12 +21,24 @@ function Db.UpdateTimePlayed(player, timePlayed)
 	setValue(player, 'TimePlayed', timePlayed)
 end
 
-function Db.UpdateSkinModel(player, skin, callback)
-	setValue(player, 'SkinModel', toDbString(skin), callback)
+function Db.UpdateSkinModel(player, skinModel, callback)
+	setValue(player, 'SkinModel', toDbString(json.encode(skinModel)), callback)
 end
 
 function Db.UpdateWeapons(player, weapons)
 	setValue(player, 'Weapons', toDbString(json.encode(weapons)))
+end
+
+function Db.UpdateGarages(player, garages)
+	setValue(player, 'Garages', toDbString(json.encode(garages)))
+end
+
+function Db.UpdateVehicles(player, vehicles)
+	setValue(player, 'Vehicles', toDbString(json.encode(vehicles)))
+end
+
+function Db.UpdateSettings(player, settings)
+	setValue(player, 'Settings', toDbString(json.encode(settings)))
 end
 
 function Db.UpdateCash(player, cash)
@@ -38,7 +50,7 @@ function Db.UpdateExperience(player, experience)
 end
 
 function Db.UpdatePrestige(player, callback)
-	vSql.Async.execute('UPDATE Players SET SkinModel=DEFAULT, Weapons=DEFAULT, Cash=DEFAULT, Experience=DEFAULT, Prestige=Prestige + 1 WHERE PlayerID=@playerId',
+	vSql.Async.execute('UPDATE Players SET SkinModel=DEFAULT, Weapons=DEFAULT, Cash=DEFAULT, Experience=DEFAULT, Vehicles=DEFAULT, Garages=DEFAULT, Prestige=Prestige + 1 WHERE PlayerID=@playerId',
 			{ ['@playerId'] = PlayerData.GetIdentifier(player) }, function()
 				if callback then
 					callback()
@@ -58,6 +70,10 @@ function Db.UpdateLoginTime(player, time)
 	setValue(player, 'LoginTime', time)
 end
 
+function Db.UpdateMoneyWasted(player, cash)
+	setValue(player, 'MoneyWasted', 'MoneyWasted + '..cash)
+end
+
 function Db.UpdateKills(player, kills)
 	setValue(player, 'Kills', kills)
 end
@@ -66,8 +82,16 @@ function Db.UpdateHeadshots(player, headshots)
 	setValue(player, 'Headshots', headshots)
 end
 
+function Db.UpdateVehicleKills(player, vehicleKills)
+	setValue(player, 'VehicleKills', vehicleKills)
+end
+
 function Db.UpdateMaxKillstreak(player, maxKillstreak)
 	setValue(player, 'MaxKillstreak', maxKillstreak)
+end
+
+function Db.UpdateLongestKillDistance(player, killDistance)
+	setValue(player, 'LongestKillDistance', killDistance)
 end
 
 function Db.UpdateDeaths(player, deaths)
@@ -88,10 +112,10 @@ function Db.FindPlayer(player, callback)
 	end)
 end
 
-function Db.GetFields(player, fields, callback)
+function Db.GetFields(playerId, fields, callback)
 	local fieldString = table.concat(fields, ',')
 
-	vSql.Async.fetchAll('SELECT '..fieldString..' FROM Players WHERE PlayerID=@playerId', { ['@playerId'] = PlayerData.GetIdentifier(player) }, function(data)
+	vSql.Async.fetchAll('SELECT '..fieldString..' FROM Players WHERE PlayerID=@playerId', { ['@playerId'] = playerId }, function(data)
 		callback(data[1])
 	end)
 end

@@ -10,5 +10,5 @@ AddEventHandler('lsv:heistFinished', function(take)
 	PlayerData.UpdateCash(player, take)
 	PlayerData.UpdateExperience(player, exp)
 
-	TriggerClientEvent('lsv:heistFinished', player, true, '')
+	TriggerClientEvent('lsv:heistFinished', player, true, '+ $'..take..'\n+ '..exp..' Exp')
 end)

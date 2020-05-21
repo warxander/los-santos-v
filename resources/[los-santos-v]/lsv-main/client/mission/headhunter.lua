@@ -1,74 +1,100 @@
-local _targetPed = nil
-local _targetBlip = nil
-local _targetAreaBlip = nil
+local _targets = nil
 
-local _helpHandler = nil
+local function removeTarget(index)
+	local data = _targets[index]
 
-local function removeTargetBlip()
-	if not _targetBlip then
-		return
+	RemoveBlip(data.blip)
+	World.MarkPedToDelete(data.ped, 5000)
+
+	if data.vehicle then
+		World.MarkVehicleToDelete(data.vehicle, 5000)
 	end
+end
 
-	RemoveBlip(_targetBlip)
-	RemoveBlip(_targetAreaBlip)
-	_targetBlip = nil
-	_targetAreaBlip = nil
+local function finishMission(success, reason)
+	local targetsLeft = #_targets
+
+	if success or targetsLeft < Settings.headhunter.count then
+		TriggerServerEvent('lsv:headhunterFinished', Settings.headhunter.count - targetsLeft)
+	else
+		TriggerEvent('lsv:headhunterFinished', false, reason or '')
+	end
 end
 
 RegisterNetEvent('lsv:headhunterFinished')
 AddEventHandler('lsv:headhunterFinished', function(success, reason)
-	if _helpHandler then
-		_helpHandler:cancel()
-	end
-
 	MissionManager.FinishMission(success)
 
 	World.EnableWanted(false)
 
-	if DoesEntityExist(_targetPed) then
-		RemovePedElegantly(_targetPed)
-	end
-
-	removeTargetBlip()
+	table.iforeach(_targets, function(_, index)
+		removeTarget(index)
+	end)
+	_targets = nil
 
 	Gui.FinishMission('Headhunter', success, reason)
 end)
 
 AddEventHandler('lsv:startHeadhunter', function()
-	local target = table.random(Settings.headhunter.targets)
+	_targets = table.irandom_n(Settings.headhunter.locations, Settings.headhunter.count)
+
+	table.iforeach(_targets, function(target)
+		local model = table.random(Settings.headhunter.models)
+		Streaming.RequestModelAsync(model)
+
+		local modelHash = GetHashKey(model)
+		local ped = CreatePed(11, modelHash, target.x, target.y, target.z, GetRandomFloatInRange(0.0, 360.0), false, true)
+		SetPedRandomComponentVariation(ped, false)
+		SetModelAsNoLongerNeeded(modelHash)
+
+		local vehicle = nil
+		if target.inVehicle then
+			local vehicleModel = table.random(Settings.headhunter.vehicles)
+			local vehicleModelHash = GetHashKey(vehicleModel)
+			Streaming.RequestModelAsync(vehicleModel)
+			vehicle = CreateVehicle(vehicleModelHash, target.x, target.y, target.z, target.heading, false, true)
+			SetVehicleDoorsLockedForAllPlayers(vehicle, true)
+			SetVehicleModKit(vehicle, 0)
+			SetVehicleMod(vehicle, 16, 4)
+			SetVehicleTyresCanBurst(vehicle, false)
+			SetModelAsNoLongerNeeded(vehicleModelHash)
+
+			SetPedCombatAttributes(ped, 3, false)
+			SetPedCombatAttributes(ped, 52, true)
+			TaskWarpPedIntoVehicle(ped, vehicle, -1)
+		end
+
+		local weaponHash = GetHashKey(vehicle and 'WEAPON_MINISMG' or table.random(Settings.headhunter.weapons))
+		GiveWeaponToPed(ped, weaponHash, 99999, false)
+		SetPedInfiniteAmmo(ped, true, weaponHash)
+
+		SetEntityHealth(ped, 200)
+		SetPedArmour(ped, 100)
+		SetPedDropsWeaponsWhenDead(ped, false)
+		SetPedFleeAttributes(ped, 0, false)
+		SetPedCombatRange(ped, 2)
+		SetPedCombatMovement(ped, 2)
+		SetPedCombatAttributes(ped, 46, true)
+		SetPedCombatAttributes(ped, 20, true)
+		SetPedCombatAbility(ped, 2)
+		SetPedAsEnemy(ped, true)
+		SetPedRelationshipGroupHash(ped, `HATES_PLAYER`)
+
+		local blip = AddBlipForEntity(ped)
+		SetBlipSprite(blip, Blip.HEADHUNTER_TARGET)
+		SetBlipColour(blip, Color.BLIP_RED)
+		SetBlipAsShortRange(blip, false)
+		Map.SetBlipText(blip, 'Target')
+		Map.SetBlipFlashes(blip)
+
+		target.ped = ped
+		target.blip = blip
+		target.vehicle = vehicle
+	end)
+
+	Gui.StartMission('Headhunter', 'Assassinate all targets before the time runs out.')
 
 	local missionTimer = Timer.New()
-	local loseTheCopsStage = false
-	local loseTheCopsStageStartTime = nil
-	local isTargetBlipHided = false
-	local isTargetWandering = false
-	local isInMissionArea = false
-	local isTargetDead = false
-
-	Streaming.RequestModelAsync(target.pedModel)
-	local targetPedModelHash = GetHashKey(target.pedModel)
-	_targetPed = CreatePed(26, targetPedModelHash, target.location.x, target.location.y, target.location.z, GetRandomFloatInRange(0.0, 360.0), true, true)
-	SetPedArmour(_targetPed, 5000)
-	SetEntityHealth(_targetPed, 5000)
-	GiveDelayedWeaponToPed(_targetPed, GetHashKey(table.random(Settings.headhunter.weapons)), 25000, false)
-	SetPedDropsWeaponsWhenDead(_targetPed, false)
-	SetPedHearingRange(_targetPed, 1500.)
-	SetPedSeeingRange(_targetPed, 1500.)
-	SetPedRelationshipGroupHash(_targetPed, `HATES_PLAYER`)
-	SetModelAsNoLongerNeeded(targetPedModelHash)
-
-	_targetBlip = AddBlipForCoord(target.location.x, target.location.y, target.location.z)
-	SetBlipScale(_targetBlip, 0.85)
-	SetBlipColour(_targetBlip, Color.BLIP_RED)
-	SetBlipHighDetail(_targetBlip, true)
-	SetBlipColour(_targetBlip, Color.BLIP_RED)
-	SetBlipRouteColour(_targetBlip, Color.BLIP_RED)
-	SetBlipRoute(_targetBlip, true)
-	Map.SetBlipFlashes(_targetBlip)
-
-	_targetAreaBlip = Map.CreateRadiusBlip(target.location.x, target.location.y, target.location.z, Settings.headhunter.radius, Color.BLIP_RED)
-
-	Gui.StartMission('Headhunter', 'Find and assassinate the target.')
 
 	World.EnableWanted(true)
 
@@ -80,33 +106,10 @@ AddEventHandler('lsv:startHeadhunter', function()
 				return
 			end
 
-			if isTargetDead then
-				removeTargetBlip()
-
-				if not loseTheCopsStage then
-					World.SetWantedLevel(Settings.headhunter.wantedLevel)
-					Gui.DisplayPersonalNotification('You have assassinated a target.')
-					_helpHandler = HelpQueue.PushFront('Lose the cops faster to get extra reward.')
-					loseTheCopsStage = true
-					loseTheCopsStageStartTime = GetGameTimer()
-				end
-			else
-				SetBlipAlpha(_targetAreaBlip, isInMissionArea and 96 or 0)
-				SetBlipAlpha(_targetBlip, isInMissionArea and 0 or 255)
-			end
-
-			if isInMissionArea and not isTargetBlipHided then
-				SetBlipRoute(_targetBlip, false)
-				isTargetBlipHided = true
-				_helpHandler = HelpQueue.PushFront('Use distance meter at the bottom right corner to locate the target.')
-			end
-
 			if Player.IsActive() then
-				local missionText = isInMissionArea and 'Find and assassinate the ~r~target~w~.' or 'Go to the ~r~marked area~w~.'
-				if isTargetDead then
-					missionText = 'Lose the cops.'
-				end
-				Gui.DisplayObjectiveText(missionText)
+				Gui.DrawTimerBar('MISSION TIME', Settings.headhunter.time - missionTimer:elapsed(), 1)
+				Gui.DrawBar('TARGETS REMAINING', #_targets, 2)
+				Gui.DisplayObjectiveText('Assassinate the ~r~targets~w~.')
 			end
 		end
 	end)
@@ -115,44 +118,41 @@ AddEventHandler('lsv:startHeadhunter', function()
 		Citizen.Wait(0)
 
 		if not MissionManager.Mission then
-			TriggerEvent('lsv:headhunterFinished', false)
+			finishMission(false)
 			return
 		end
 
-		if missionTimer:elapsed() < Settings.headhunter.time then
-			Gui.DrawTimerBar('MISSION TIME', Settings.headhunter.time - missionTimer:elapsed(), 1)
+		if missionTimer:elapsed() >= Settings.headhunter.time then
+			finishMission(false, 'Time is over.')
+			return
+		end
 
-			isTargetDead = IsEntityDead(_targetPed)
-			isInMissionArea = Player.DistanceTo(target.location) < Settings.headhunter.radius
+		local playerPosition = Player.Position()
+		for i = #_targets, 1, -1 do
+			local data = _targets[i]
 
-			if not isTargetWandering then
-				if not IsEntityWaitingForWorldCollision(_targetPed) and HasCollisionLoadedAroundEntity(_targetPed) then
-					TaskWanderStandard(_targetPed, 10., 10)
-					isTargetWandering = true
+			if IsPedDeadOrDying(data.ped) then
+				Gui.DisplayPersonalNotification('You have assassinated a target.')
+				removeTarget(i)
+				table.remove(_targets, i)
+			elseif not data.wasTaskActivated and World.GetDistance(playerPosition, data) < Settings.headhunter.taskActivateDistance then
+				NetworkRegisterEntityAsNetworked(data.ped)
+				SetNetworkIdExistsOnAllMachines(PedToNet(data.ped), true)
+
+				if data.vehicle then
+					NetworkRegisterEntityAsNetworked(data.vehicle)
+					SetNetworkIdExistsOnAllMachines(VehToNet(data.vehicle), true)
+					TaskVehicleDriveWander(data.ped, data.vehicle, 20., 319)
+				else
+					TaskWanderStandard(data.ped, 10., 10)
 				end
-			end
 
-			if not isTargetDead then
-				local targetPosition = GetEntityCoords(_targetPed, true)
-				if GetDistanceBetweenCoords(targetPosition.x, targetPosition.y, targetPosition.z, target.location.x, target.location.y, target.location.z, false) > Settings.headhunter.radius then
-					TriggerEvent('lsv:headhunterFinished', false, 'Target has left the area.')
-					return
-				elseif isInMissionArea and Player.IsActive() then
-					Gui.DrawProgressBar('TARGET DISTANCE', 1.0 - Player.DistanceTo(targetPosition) / Settings.headhunter.radius, 2, Color.RED)
-				end
+				data.wasTaskActivated = true
 			end
+		end
 
-			if loseTheCopsStage and IsPlayerDead(PlayerId()) then
-				TriggerEvent('lsv:headhunterFinished', false)
-				return
-			end
-
-			if loseTheCopsStage and GetPlayerWantedLevel(PlayerId()) == 0 then
-				TriggerServerEvent('lsv:headhunterFinished', missionTimer._startTime, loseTheCopsStageStartTime, GetGameTimer())
-				return
-			end
-		else
-			TriggerEvent('lsv:headhunterFinished', false, 'Time is over.')
+		if #_targets == 0 then
+			TriggerServerEvent('lsv:headhunterFinished', 0)
 			return
 		end
 	end

@@ -5,7 +5,8 @@ local logger = Logger.New('Discord')
 
 local _discordBotToken = nil
 local _discordGuildId = nil
-local _discordReportWebhook = nil
+
+local _discordWebhooks = { }
 
 local function buildReportMessage(reporter, target, reason)
 	return '**'..GetPlayerName(reporter)..'** ||('..PlayerData.GetIdentifier(reporter)..', '..GetPlayerPing(reporter)..' ms)|| reported'..
@@ -29,6 +30,14 @@ local function buildBanMessage(target, moderator, reason, duration)
 	else
 		return '**'..GetPlayerName(target)..'** ||('..PlayerData.GetIdentifier(target)..', '..GetPlayerPing(target)..' ms)|| has been permanently banned from the server by moderator **'..GetPlayerName(moderator)..'** ||('..PlayerData.GetIdentifier(moderator)..')|| for **'..reason..'**'
 	end
+end
+
+local function buildTimeTrialRecordMessage(player, trialName, time)
+	return '**'..GetPlayerName(player)..'** ||('..PlayerData.GetIdentifier(player)..')|| set a new **'..trialName..'** server record of **'..time..'**'
+end
+
+local function buildSurvivalRecordMessage(player, survivalName, waves)
+	return '**'..GetPlayerName(player)..'** ||('..PlayerData.GetIdentifier(player)..')|| set a new **'..survivalName..'** server record of **'..waves..' Waves**'
 end
 
 local function performDiscordRequest(method, endPoint, data, callback)
@@ -57,16 +66,16 @@ local function performDiscordRequest(method, endPoint, data, callback)
 	end, method, data, { ['Content-Type'] = 'application/json', ['Authorization'] = 'Bot '.._discordBotToken})
 end
 
-local function performDiscordReport(message)
-	if not _discordReportWebhook then
-		_discordReportWebhook = GetConvar('discord_reportWebhook', '')
+local function performDiscordReport(message, webhook)
+	if not _discordWebhooks[webhook] then
+		_discordWebhooks[webhook] = GetConvar(webhook, '')
 	end
 
-	if string.len(_discordReportWebhook) == 0 then
+	if string.len(_discordWebhooks[webhook]) == 0 then
 		return
 	end
 
-	performDiscordRequest('POST', _discordReportWebhook, message)
+	performDiscordRequest('POST', _discordWebhooks[webhook], message)
 end
 
 function Discord.GetIdentifier(player)
@@ -107,19 +116,27 @@ function Discord.GetRolesById(id, callback)
 	end)
 end
 
+function Discord.ReportNewTimeTrialRecord(player, trialName, time)
+	performDiscordReport(buildTimeTrialRecordMessage(player, trialName, time), 'discord_timeTrialWebhook')
+end
+
+function Discord.ReportNewSurvivalRecord(player, survivalName, waves)
+	performDiscordReport(buildSurvivalRecordMessage(player, survivalName, waves), 'discord_survivalWebhook')
+end
+
 function Discord.ReportPlayer(reporter, target, reason)
-	performDiscordReport(buildReportMessage(reporter, target, reason))
+	performDiscordReport(buildReportMessage(reporter, target, reason), 'discord_reportWebhook')
 end
 
 function Discord.ReportKickedPlayer(target, moderator, reason)
-	performDiscordReport(buildKickMessage(target, moderator, reason))
+	performDiscordReport(buildKickMessage(target, moderator, reason), 'discord_reportWebhook')
 end
 
 function Discord.ReportBanPlayer(target, moderator, reason, duration)
-	performDiscordReport(buildBanMessage(target, moderator, reason, duration))
+	performDiscordReport(buildBanMessage(target, moderator, reason, duration), 'discord_reportWebhook')
 end
 
 function Discord.ReportAutoBanPlayer(target, reason)
 	local message = '**'..GetPlayerName(target)..'** ||('..PlayerData.GetIdentifier(target)..')|| has been permanently banned from the server for **'..reason..'**'
-	performDiscordReport(message)
+	performDiscordReport(message, 'discord_reportWebhook')
 end

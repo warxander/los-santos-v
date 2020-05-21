@@ -3,7 +3,7 @@ local logger = Logger.New('HotProperty')
 local _propertyData = nil
 
 local function getPlayerIndexById(id)
-	local _, index = table.find_if(_propertyData.players, function(player)
+	local _, index = table.ifind_if(_propertyData.players, function(player)
 		return player.id == id
 	end)
 
@@ -78,7 +78,7 @@ AddEventHandler('lsv:startHotProperty', function()
 	_propertyData.eventStartTimer = Timer.New()
 
 	local place = Settings.property.places[_propertyData.placeIndex]
-	_propertyData.initialPosition = { place.x, place.y, place.z }
+	_propertyData.initialPosition = place
 	_propertyData.position = _propertyData.initialPosition
 
 	logger:info('Start { '.._propertyData.placeIndex..' }')
@@ -144,7 +144,7 @@ AddEventHandler('lsv:onPlayerDied', function(_, position)
 	TriggerClientEvent('lsv:hotPropertyDropped', -1, player, position)
 end)
 
-AddEventHandler('lsv:onPlayerKilled', function(_, data)
+AddEventHandler('lsv:onPlayerKilled', function(killData)
 	local player = source
 	if not _propertyData or not _propertyData.currentPlayer or _propertyData.currentPlayer ~= player then
 		return
@@ -153,9 +153,9 @@ AddEventHandler('lsv:onPlayerKilled', function(_, data)
 	logger:info('Dropped { '..player..' }')
 
 	_propertyData.currentPlayer = nil
-	_propertyData.position = data.killerpos
+	_propertyData.position = killData.killerPosition
 
-	TriggerClientEvent('lsv:hotPropertyDropped', -1, player, data.killerpos)
+	TriggerClientEvent('lsv:hotPropertyDropped', -1, player, killData.killerPosition)
 end)
 
 AddSignalHandler('lsv:playerConnected', function(player)

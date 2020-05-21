@@ -8,7 +8,7 @@ Player.TimePlayed = 0
 Player.InPassiveMode = false
 Player.Kills = 0
 Player.Deaths = 0
-Player.Skin = nil
+Player.SkinModel = nil
 Player.Moderator = nil
 
 Player.Killstreak = 0
@@ -24,17 +24,24 @@ Player.Experience = 0
 Player.Rank = 1
 Player.Prestige = 0
 
+Player.MoneyWasted = 0
 Player.Headshots = 0
+Player.VehicleKills = 0
 Player.MaxKillstreak = 0
+Player.LongestKillDistance = 0
 Player.MissionsDone = 0
 Player.EventsWon = 0
 
-Player.Faction = Settings.faction.Neutral
+Player.Garages = { }
+Player.Vehicles = { }
 
+Player.CrewLeader = nil
 Player.CrewMembers = { }
 
+Player.Settings = { }
+
 local _serverId = nil
-local _prevSkinId = nil
+local _prevSkinModel = nil
 
 local function setSkillStats(stats)
 	StatSetInt(`MP0_STRENGTH`, stats.strength, true)
@@ -50,13 +57,18 @@ function Player.Init(playerData)
 	_serverId = GetPlayerServerId(PlayerId())
 
 	Player.TimePlayed = playerData.TimePlayed
+	Player.MoneyWasted = playerData.MoneyWasted
 
 	Player.Kills = playerData.Kills
 	Player.Headshots = playerData.Headshots
+	Player.VehicleKills = playerData.VehicleKills
 	Player.MaxKillstreak = playerData.MaxKillstreak
+	Player.LongestKillDistance = playerData.LongestKillDistance
 	Player.Deaths = playerData.Deaths
 	Player.PatreonTier = playerData.PatreonTier
 	Player.Moderator = playerData.Moderator
+
+	Player.Settings = playerData.Settings
 
 	Player.Cash = playerData.Cash
 	Player.Experience = playerData.Experience
@@ -66,13 +78,16 @@ function Player.Init(playerData)
 	Player.MissionsDone = playerData.MissionsDone
 	Player.EventsWon = playerData.EventsWon
 
+	Player.Garages = playerData.Garages
+	Player.Vehicles = playerData.Vehicles
+
 	setSkillStats(playerData.SkillStats)
 
 	SetPlayerMaxArmour(PlayerId(), Settings.armour.max)
 end
 
 function Player.IsActive()
-	return not IsPlayerDead(PlayerId()) and not Player.InPassiveMode and not IsPlayerSwitchInProgress() and not GetIsLoadingScreenActive()
+	return Player.Loaded and not IsPlayerDead(PlayerId())
 end
 
 function Player.IsOnMission()
@@ -83,12 +98,34 @@ function Player.IsInFreeroam()
 	return Player.IsActive() and not MissionManager.Mission and not World.ChallengingPlayer
 end
 
+function Player.HasGarage(garage)
+	return Player.Garages[garage]
+end
+
+function Player.GetGaragesCapacity()
+	local capacity = 0
+
+	table.foreach(Player.Garages, function(_, garage)
+		capacity = capacity + Settings.garages[garage].capacity
+	end)
+
+	return capacity
+end
+
 function Player.ServerId()
 	return _serverId
 end
 
-function Player.IsCrewMember(id)
-	return table.ifind(Player.CrewMembers, id)
+function Player.IsInCrew()
+	return Player.CrewLeader or Player.CrewMembers[Player.ServerId()]
+end
+
+function Player.IsACrewLeader()
+	return Player.CrewLeader == Player.ServerId()
+end
+
+function Player.GetWaypoint()
+	return GetFirstBlipInfoId(8)
 end
 
 function Player.GetPlayerWeapons()
@@ -132,7 +169,6 @@ function Player.GetPlayerWeapons()
 	return result
 end
 
-
 function Player.GiveWeapons(weapons)
 	local player = PlayerPedId()
 
@@ -166,8 +202,7 @@ function Player.Position(alive)
 end
 
 function Player.DistanceTo(position, useZ)
-	local playerPosition = Player.Position()
-	return Vdist(playerPosition.x, playerPosition.y, playerPosition.z, position.x, position.y, position.z, useZ)
+	return World.GetDistance(Player.Position(), position, useZ)
 end
 
 function Player.Teleport(position)
@@ -190,11 +225,13 @@ function Player.SetPassiveMode(passive, allowMovement)
 	local playerId = PlayerId()
 
 	if passive then
-		FreezeEntityPosition(playerPedId, not allowMovement)
 		SetEntityCollision(playerPedId, allowMovement)
+		FreezeEntityPosition(playerPedId, not allowMovement)
 	else
+		if not IsPedInAnyVehicle(playerPedId) then
+			SetEntityCollision(playerPedId, true)
+		end
 		FreezeEntityPosition(playerPedId, false)
-		SetEntityCollision(playerPedId, true)
 	end
 
 	World.EnablePvp(not passive)
@@ -205,81 +242,140 @@ function Player.SetPassiveMode(passive, allowMovement)
 	Player.InPassiveMode = passive
 end
 
-function Player.SetModel(id, isTemp)
-	if not id or Player.Skin == id then
+function Player.SetModelAsync(skinModel, isTemp)
+	if not skinModel then
 		return
 	end
 
-	ResetPedMovementClipset(PlayerPedId(), 0.0)
+	local weapons = nil
+	local health = nil
+	local armour = nil
+	local hasParachute = nil
+	local playerPed = nil
 
-	local model = GetHashKey(id)
-
-	Streaming.RequestModelAsync(id)
-
-	local weapons = Player.GetPlayerWeapons()
-	local health = GetEntityHealth(PlayerPedId())
-	local armor = GetPedArmour(PlayerPedId())
-	local hasParachute = HasPedGotWeapon(PlayerPedId(), `GADGET_PARACHUTE`, false)
-
-	SetPlayerModel(PlayerId(), model)
-	SetPedRandomComponentVariation(PlayerPedId())
-
-	if isTemp then
-		_prevSkinId = Player.Skin
-	else
-		_prevSkinId = nil
+	if Player.Loaded then
+		weapons = Player.GetPlayerWeapons()
+		playerPed = PlayerPedId()
+		health = GetEntityHealth(playerPed)
+		armour = GetPedArmour(playerPed)
+		hasParachute = HasPedGotWeapon(playerPed, `GADGET_PARACHUTE`, false)
 	end
 
-	Player.Skin = id
+	local modelHash = nil
+	if not Player.Loaded or skinModel.model ~= Player.SkinModel.model then
+		modelHash = GetHashKey(skinModel.model)
+		Streaming.RequestModelAsync(skinModel.model)
+		SetPlayerModel(PlayerId(), modelHash)
+	end
 
-	SetPedArmour(PlayerPedId(), armor)
-	SetEntityHealth(PlayerPedId(), health)
+	playerPed = PlayerPedId()
 
-	if Settings.giveParachuteAtSpawn then
+	if Player.Loaded then
+		ClearPedEnvDirt(playerPed)
+		ClearPedBloodDamage(playerPed)
+		ClearPedWetness(playerPed)
+	end
+
+	if skinModel.components then
+		table.foreach(skinModel.components, function(componentData, componentId)
+			SetPedPreloadVariationData(playerPed, tonumber(componentId), componentData[1], componentData[2])
+			SetPedComponentVariation(playerPed, tonumber(componentId), componentData[1], componentData[2], 0)
+		end)
+	else
+		skinModel.components = { }
+	end
+
+	_prevSkinModel = isTemp and Player.SkinModel or nil
+	Player.SkinModel = skinModel
+
+	if Player.Loaded then
+		SetPedArmour(playerPed, armour)
+		SetEntityHealth(playerPed, health)
+
 		if hasParachute then
-			GiveWeaponToPed(PlayerPedId(), `GADGET_PARACHUTE`, 1, false, false)
+			GiveWeaponToPed(playerPed, `GADGET_PARACHUTE`, 1, false, false)
+		end
+
+		Player.GiveWeapons(weapons)
+		SetPedDropsWeaponsWhenDead(playerPed, false)
+	end
+
+	if modelHash then
+		SetModelAsNoLongerNeeded(modelHash)
+	end
+
+	ReleasePedPreloadVariationData(playerPed)
+end
+
+function Player.GetModel()
+	local skinModel = { }
+
+	skinModel.model = Player.SkinModel.model
+	skinModel.components = { }
+
+	local playerPed = PlayerPedId()
+	for componentId = 0, 11 do
+		local drawableId = GetPedDrawableVariation(playerPed, componentId)
+		local textureId = GetPedTextureVariation(playerPed, componentId)
+
+		if drawableId ~= 0 or textureId ~= 0 then
+			skinModel.components[componentId] = { drawableId, textureId }
 		end
 	end
 
-	Player.GiveWeapons(weapons)
-	SetPedDropsWeaponsWhenDead(PlayerPedId(), false)
-
-	SetModelAsNoLongerNeeded(model)
+	return skinModel
 end
 
-function Player.ResetModel()
-	Player.SetModel(_prevSkinId)
+function Player.ResetModelAsync()
+	Player.SetModelAsync(_prevSkinModel)
+	_prevSkinModel = nil
 end
 
 function Player.Kill()
 	SetEntityHealth(PlayerPedId(), 0)
 end
 
-function Player.ExplodePersonalVehicle()
-	if not Player.VehicleHandle then
-		return false
-	end
+function Player.GetVehicleName(vehicleIndex)
+	local vehicle = Player.Vehicles[vehicleIndex]
+	return vehicle.userName or vehicle.name
+end
 
-	local explodeTimer = Timer.New()
+function Player.LeaveVehicle(vehicle, exitFlag)
+	if not vehicle then
+		vehicle = Player.VehicleHandle
 
-	NetworkRequestControlOfEntity(Player.VehicleHandle)
-	while not NetworkHasControlOfEntity(Player.VehicleHandle) do
-		Citizen.Wait(0)
-		if explodeTimer:elapsed() >= 1000 then
-			Gui.DisplayPersonalNotification('Unable to get control of Personal Vehicle.')
-			return false
+		if not vehicle then
+			return
 		end
 	end
 
-	NetworkExplodeVehicle(Player.VehicleHandle, true, false, false)
-	SetEntityAsNoLongerNeeded(Player.VehicleHandle)
+	local playerPed = PlayerPedId()
+	if DoesEntityExist(vehicle) and IsPedInVehicle(playerPed, vehicle, false) then
+		TaskLeaveVehicle(playerPed, vehicle, exitFlag or 0)
+	end
+end
 
-	return true
+function Player.DestroyPersonalVehicle()
+	if not Player.VehicleHandle then
+		return
+	end
+
+	local blip = GetBlipFromEntity(Player.VehicleHandle)
+	if DoesBlipExist(blip) then
+		RemoveBlip(blip)
+	end
+
+	World.MarkVehicleToDelete(Player.VehicleHandle)
+	Player.VehicleHandle = nil
 end
 
 RegisterNetEvent('lsv:cashUpdated')
 AddEventHandler('lsv:cashUpdated', function(cashDiff)
 	Player.Cash = Player.Cash + cashDiff
+
+	if cashDiff < 0 then
+		Player.MoneyWasted = Player.MoneyWasted + math.abs(cashDiff)
+	end
 end)
 
 RegisterNetEvent('lsv:maxKillstreakUpdated')
@@ -287,9 +383,19 @@ AddEventHandler('lsv:maxKillstreakUpdated', function(maxKillstreak)
 	Player.MaxKillstreak = maxKillstreak
 end)
 
+RegisterNetEvent('lsv:longestKillDistanceUpdated')
+AddEventHandler('lsv:longestKillDistanceUpdated', function(killDistance)
+	Player.LongestKillDistance = killDistance
+end)
+
 RegisterNetEvent('lsv:headshotsUpdated')
 AddEventHandler('lsv:headshotsUpdated', function(headshots)
 	Player.Headshots = headshots
+end)
+
+RegisterNetEvent('lsv:vehicleKillsUpdated')
+AddEventHandler('lsv:vehicleKillsUpdated', function(vehicleKills)
+	Player.VehicleKills = vehicleKills
 end)
 
 RegisterNetEvent('lsv:missionsDoneUpdated')
@@ -318,11 +424,29 @@ AddEventHandler('lsv:playerRankChanged', function(rank, skillStats)
 	setSkillStats(skillStats)
 end)
 
-RegisterNetEvent('lsv:playerJoinedFaction')
-AddEventHandler('lsv:playerJoinedFaction', function(player, faction)
-	if player == Player.ServerId() then
-		Player.Faction = faction
-	end
+RegisterNetEvent('lsv:garageUpdated')
+AddEventHandler('lsv:garageUpdated', function(garage)
+	Player.Garages[garage] = true
+end)
+
+RegisterNetEvent('lsv:vehicleAdded')
+AddEventHandler('lsv:vehicleAdded', function(vehicle)
+	table.insert(Player.Vehicles, vehicle)
+end)
+
+RegisterNetEvent('lsv:vehicleReplaced')
+AddEventHandler('lsv:vehicleReplaced', function(vehicleIndex, vehicle)
+	Player.Vehicles[vehicleIndex] = vehicle
+end)
+
+RegisterNetEvent('lsv:vehicleRemoved')
+AddEventHandler('lsv:vehicleRemoved', function(vehicleIndex)
+	table.remove(Player.Vehicles, vehicleIndex)
+end)
+
+RegisterNetEvent('lsv:settingUpdated')
+AddEventHandler('lsv:settingUpdated', function(key, value)
+	Player.Settings[key] = value
 end)
 
 RegisterNetEvent('lsv:savePlayer')

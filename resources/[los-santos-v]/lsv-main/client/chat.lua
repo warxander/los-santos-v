@@ -9,7 +9,7 @@ end
 
 RegisterNetEvent('lsv:addCrewMessage')
 AddEventHandler('lsv:addCrewMessage', function(message)
-	if #Player.CrewMembers == 0 then
+	if not Player.IsInCrew() then
 		return
 	end
 
@@ -93,18 +93,18 @@ AddEventHandler('lsv:init', function()
 	registerEmoteSuggestion('/mute') -- Not an emote at all
 	registerEmoteSuggestion('/unmute') -- Not an emote at all
 
+	registerEmoteSuggestion('/id') -- Not an emote at all
 	registerEmoteSuggestion('/ping') -- Not an emote at all
 
 	registerEmoteSuggestion('/help', true) -- Not an emote at all
 	registerEmoteSuggestion('/ammo', true) -- Not an emote at all
 	registerEmoteSuggestion('/report', true) -- Not an emote at all
 	registerEmoteSuggestion('/skin', true) -- Not an emote at all
-	registerEmoteSuggestion('/cash', true) -- Not an emote at all
-	registerEmoteSuggestion('/quit', true) -- Not an emote at all
+	registerEmoteSuggestion('/money', true) -- Not an emote at all
 	registerEmoteSuggestion('/vehicle', true) -- Not an emote at all
-	registerEmoteSuggestion('/faction', true) -- Not an emote at all
-
-	registerEmoteSuggestion('/id', true) -- Not an emote at all
+	registerEmoteSuggestion('/missions', true) -- Not an emote at all
+	registerEmoteSuggestion('/passive', true) -- Not an emote at all
+	registerEmoteSuggestion('/weapons', true) -- Not an emote at all
 end)
 
 AddEventHandler('lsv:setupHud', function(hud)

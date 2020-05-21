@@ -123,7 +123,10 @@ AddSignalHandler('lsv:playerDropped', function(player)
 		return
 	end
 
-	local _, playerIndex = table.ifind_if(_stockData.players, function(player) return player.id == player end)
+	local _, playerIndex = table.ifind_if(_stockData.players, function(playerData)
+		return playerData.id == player
+	end)
+
 	if not playerIndex then
 		return
 	end
