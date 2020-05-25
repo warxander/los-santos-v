@@ -77,23 +77,11 @@ function Decor.AddPedHandler(decorName, expectedValue, handlerFunc)
 end
 
 AddEventHandler('lsv:init', function()
-	Decor.AddVehicleHandler('LSV_DELETE_VEHICLE', true, function(vehicle)
-		SetEntityAsMissionEntity(vehicle, true, true)
-		DeleteVehicle(vehicle)
-	end)
-
-	Decor.AddPedHandler('LSV_DELETE_PED', true, function(ped)
-		SetEntityAsMissionEntity(ped, true, true)
-		DeletePed(ped)
-	end)
-end)
-
-AddEventHandler('lsv:init', function()
 	World.AddVehicleHandler(function(vehicle)
 		table.foreach(_vehicleHandlers, function(handlerData, decorName)
 			if DecorExistOn(vehicle, decorName) then
 				local value = _decorGetters[handlerData.decorType](vehicle, decorName)
-				if value == handlerData.expectedValue and NetworkHasControlOfEntity(vehicle) then
+				if value == handlerData.expectedValue then
 					table.iforeach(handlerData.handlers, function(handlerFunc)
 						handlerFunc(vehicle)
 					end)
@@ -106,7 +94,7 @@ AddEventHandler('lsv:init', function()
 		table.foreach(_pedHandlers, function(handlerData, decorName)
 			if DecorExistOn(ped, decorName) then
 				local value = _decorGetters[handlerData.decorType](ped, decorName)
-				if value == handlerData.expectedValue and NetworkHasControlOfEntity(ped) then
+				if value == handlerData.expectedValue then
 					table.iforeach(handlerData.handlers, function(handlerFunc)
 						handlerFunc(ped)
 					end)

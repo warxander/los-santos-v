@@ -33,7 +33,7 @@ end)
 AddEventHandler('lsv:startVelocity', function()
 	local location = table.random(Settings.velocity.locations)
 
-	Streaming.RequestModelAsync('voltic2')
+	Streaming.RequestModelAsync(`voltic2`)
 	_vehicle = CreateVehicle(`voltic2`, location.x, location.y, location.z, location.heading, false, true)
 	SetVehicleModKit(_vehicle, 0)
 	SetVehicleMod(_vehicle, 16, 4)

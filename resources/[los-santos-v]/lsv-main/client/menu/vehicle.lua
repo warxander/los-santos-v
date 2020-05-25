@@ -4,19 +4,19 @@ local _vehiclePosition = { }
 
 local _vehicleIndex = nil
 
-local function updateDoorsLock()
-	SetVehicleDoorsLockedForAllPlayers(Player.VehicleHandle, _vehicleAccessCurrentIndex ~= 3)
+local function updateDoorsLock(vehicle)
+	SetVehicleDoorsLockedForAllPlayers(vehicle, _vehicleAccessCurrentIndex ~= 3)
 	if _vehicleAccessCurrentIndex == 2 then
 		table.foreach(Player.CrewMembers, function(_, member)
-			SetVehicleDoorsLockedForPlayer(Player.VehicleHandle, GetPlayerFromServerId(member), false)
+			SetVehicleDoorsLockedForPlayer(vehicle, GetPlayerFromServerId(member), false)
 		end)
 	end
 
-	SetVehicleDoorsLockedForPlayer(Player.VehicleHandle, PlayerId(), false)
+	SetVehicleDoorsLockedForPlayer(vehicle, PlayerId(), false)
 end
 
-local function updateVehicle()
-	updateDoorsLock()
+local function updateVehicle(vehicle)
+	updateDoorsLock(vehicle)
 end
 
 local function getRerollColorsPrice()
@@ -27,17 +27,21 @@ end
 local function requestVehicle(vehicleData)
 	Player.DestroyPersonalVehicle()
 
-	Streaming.RequestModelAsync(vehicleData.model)
-	Player.VehicleHandle = CreateVehicle(GetHashKey(vehicleData.model), _vehiclePosition.position.x, _vehiclePosition.position.y, _vehiclePosition.position.z, _vehiclePosition.heading, true, true)
+	Player.VehicleHandle = Network.CreateVehicleAsync(GetHashKey(vehicleData.model), _vehiclePosition.position, _vehiclePosition.heading)
+	if not Player.VehicleHandle then
+		return --TODO:
+	end
 
-	Vehicle.ApplyMods(Player.VehicleHandle, vehicleData)
-	updateVehicle()
-	SetVehicleNumberPlateText(Player.VehicleHandle, GetPlayerName(PlayerId()))
-	SetVehicleMod(Player.VehicleHandle, 16, 1) -- Armor 40%
-	SetVehicleTyresCanBurst(Player.VehicleHandle, false)
-	SetVehicleOnGroundProperly(Player.VehicleHandle)
+	local vehicle = NetToVeh(Player.VehicleHandle)
 
-	local vehicleBlip = AddBlipForEntity(Player.VehicleHandle)
+	Vehicle.ApplyMods(vehicle, vehicleData)
+	updateVehicle(vehicle)
+	SetVehicleNumberPlateText(vehicle, GetPlayerName(PlayerId()))
+	SetVehicleMod(vehicle, 16, 1) -- Armor 40%
+	SetVehicleTyresCanBurst(vehicle, false)
+	SetVehicleOnGroundProperly(vehicle)
+
+	local vehicleBlip = AddBlipForEntity(vehicle)
 	SetBlipSprite(vehicleBlip, Blip.CAR)
 	SetBlipHighDetail(vehicleBlip, true)
 	Map.SetBlipText(vehicleBlip, 'Personal Vehicle')
@@ -50,14 +54,14 @@ local function requestVehicle(vehicleData)
 		while true do
 			Citizen.Wait(250)
 
-			if not DoesEntityExist(vehicleHandle) or not IsVehicleDriveable(vehicleHandle) then
+			local vehicle = NetToVeh(vehicleHandle)
+
+			if not DoesEntityExist(vehicle) or not IsVehicleDriveable(vehicle) then
 				if DoesBlipExist(vehicleBlip) then
 					RemoveBlip(vehicleBlip)
 				end
 
-				if DoesEntityExist(vehicleHandle) then
-					World.MarkVehicleToDelete(vehicleHandle)
-				end
+				Network.DeleteVehicle(vehicleHandle)
 
 				if Player.VehicleHandle == vehicleHandle then
 					Gui.DisplayPersonalNotification('Your Personal Vehicle has been destroyed.')
@@ -66,7 +70,7 @@ local function requestVehicle(vehicleData)
 
 				return
 			else
-				local isPlayerInVehicle = IsPedInVehicle(PlayerPedId(), vehicleHandle)
+				local isPlayerInVehicle = IsPedInVehicle(PlayerPedId(), vehicle)
 				SetBlipAlpha(vehicleBlip, isPlayerInVehicle and 0 or 255)
 			end
 		end
@@ -98,7 +102,7 @@ AddEventHandler('lsv:rerollVehicleColors', function(vehicleIndex)
 
 	if vehicleIndex then
 		if Player.VehicleHandle and _vehicleIndex == vehicleIndex then
-			Vehicle.ApplyMods(Player.VehicleHandle, Player.Vehicles[vehicleIndex])
+			Vehicle.ApplyMods(NetToVeh(Player.VehicleHandle), Player.Vehicles[vehicleIndex])
 		end
 	else
 		Gui.DisplayPersonalNotification('You don\'t have enough cash.')

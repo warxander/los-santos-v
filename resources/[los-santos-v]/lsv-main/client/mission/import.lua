@@ -13,6 +13,7 @@ local _missionName = 'Vehicle Import'
 local _placeIndex = nil
 
 local _vehicle = nil
+local _vehicleNet = nil
 local _vehicleBlip = nil
 local _vehicleData = nil
 
@@ -70,9 +71,15 @@ AddEventHandler('lsv:vehicleImportFinished', function(success, reason)
 
 	World.EnableWanted(false)
 
-	Player.LeaveVehicle(_vehicle)
-	SetVehicleDoorsLockedForAllPlayers(_vehicle, true)
-	World.MarkVehicleToDelete(_vehicle, 5000)
+	if _vehicleNet then
+		_vehicle = NetToVeh(_vehicleNet)
+		Player.LeaveVehicle(_vehicle)
+		SetVehicleDoorsLockedForAllPlayers(_vehicle, true)
+		Network.DeleteVehicle(_vehicleNet, 5000)
+	else
+		World.DeleteEntity(_vehicle)
+	end
+	_vehicleNet = nil
 	_vehicle = nil
 
 	_vehicleData = nil
@@ -104,9 +111,8 @@ AddEventHandler('lsv:vehicleImportPurchased', function(vehicle, isBike)
 end)
 
 AddEventHandler('lsv:startVehicleImport', function(vehicle, isBike)
-	Streaming.RequestModelAsync(vehicle.model)
 	local modelHash = GetHashKey(vehicle.model)
-
+	Streaming.RequestModelAsync(modelHash)
 	_vehicle = CreateVehicle(modelHash, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.heading, false, true)
 	SetModelAsNoLongerNeeded(modelHash)
 
@@ -150,6 +156,10 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle, isBike)
 				return
 			end
 
+			if _vehicleNet then
+				_vehicle = NetToVeh(_vehicleNet)
+			end
+
 			SetBlipAlpha(_vehicleBlip, isInVehicle and 0 or 255)
 			SetBlipAlpha(_garageData.blip, isInVehicle and 255 or 0)
 
@@ -175,6 +185,10 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle, isBike)
 			return
 		end
 
+		if _vehicleNet then
+			_vehicle = NetToVeh(_vehicleNet)
+		end
+
 		if missionTimer:elapsed() < Settings.vehicleImport.time then
 			if not DoesEntityExist(_vehicle) or not IsVehicleDriveable(_vehicle, false) or (GetEntityHealth(_vehicle) / GetEntityMaxHealth(_vehicle)) < Settings.vehicleImport.minVehicleHealthRatio then
 				TriggerEvent('lsv:vehicleImportFinished', false, 'A vehicle has been destroyed.')
@@ -184,10 +198,13 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle, isBike)
 			isInVehicle = IsPedInVehicle(PlayerPedId(), _vehicle, false)
 
 			if isInVehicle then
-				if not NetworkGetEntityIsNetworked(_vehicle) then
-					NetworkRegisterEntityAsNetworked(_vehicle)
-					Gui.DisplayPersonalNotification('You have collected '..vehicle.name..'.')
-					_helpHandler = HelpQueue.PushFront('Avoid vehicle damage to complete mission successfully.')
+				if not _vehicleNet then
+					_vehicleNet = Network.RegisterVehicle(_vehicle)
+					if _vehicleNet then
+						_vehicle = NetToVeh(_vehicleNet)
+						Gui.DisplayPersonalNotification('You have collected '..vehicle.name..'.')
+						_helpHandler = HelpQueue.PushFront('Avoid vehicle damage to complete mission successfully.')
+					end
 				end
 
 				if routeBlip ~= _garageData.blip then

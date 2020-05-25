@@ -35,6 +35,7 @@ server_scripts {
 	'lib/server/missionmanager.lua',
 	'lib/server/challengemanager.lua',
 	'lib/server/crew.lua',
+	'lib/server/network.lua',
 }
 
 server_scripts {
@@ -111,6 +112,7 @@ client_scripts {
 	'lib/client/missionmanager.lua',
 	'lib/client/challengemanager.lua',
 	'lib/client/vehicle.lua',
+	'lib/client/network.lua',
 	'lib/client/decor.lua',
 }
 

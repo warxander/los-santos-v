@@ -4,10 +4,19 @@ local function removeTarget(index)
 	local data = _targets[index]
 
 	RemoveBlip(data.blip)
-	World.MarkPedToDelete(data.ped, 5000)
+
+	if data.pedNet then
+		Network.DeletePed(data.pedNet, 5000)
+	else
+		World.DeleteEntity(data.ped)
+	end
 
 	if data.vehicle then
-		World.MarkVehicleToDelete(data.vehicle, 5000)
+		if data.vehicleNet then
+			Network.DeleteVehicle(data.vehicleNet, 5000)
+		else
+			World.DeleteEntity(data.vehicle)
+		end
 	end
 end
 
@@ -39,19 +48,16 @@ AddEventHandler('lsv:startHeadhunter', function()
 	_targets = table.irandom_n(Settings.headhunter.locations, Settings.headhunter.count)
 
 	table.iforeach(_targets, function(target)
-		local model = table.random(Settings.headhunter.models)
-		Streaming.RequestModelAsync(model)
-
-		local modelHash = GetHashKey(model)
+		local modelHash = table.random(Settings.headhunter.models)
+		Streaming.RequestModelAsync(modelHash)
 		local ped = CreatePed(11, modelHash, target.x, target.y, target.z, GetRandomFloatInRange(0.0, 360.0), false, true)
 		SetPedRandomComponentVariation(ped, false)
 		SetModelAsNoLongerNeeded(modelHash)
 
 		local vehicle = nil
 		if target.inVehicle then
-			local vehicleModel = table.random(Settings.headhunter.vehicles)
-			local vehicleModelHash = GetHashKey(vehicleModel)
-			Streaming.RequestModelAsync(vehicleModel)
+			local vehicleModelHash = table.random(Settings.headhunter.vehicles)
+			Streaming.RequestModelAsync(vehicleModelHash)
 			vehicle = CreateVehicle(vehicleModelHash, target.x, target.y, target.z, target.heading, false, true)
 			SetVehicleDoorsLockedForAllPlayers(vehicle, true)
 			SetVehicleModKit(vehicle, 0)
@@ -64,7 +70,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 			TaskWarpPedIntoVehicle(ped, vehicle, -1)
 		end
 
-		local weaponHash = GetHashKey(vehicle and 'WEAPON_MINISMG' or table.random(Settings.headhunter.weapons))
+		local weaponHash = vehicle and `WEAPON_MINISMG` or table.random(Settings.headhunter.weapons)
 		GiveWeaponToPed(ped, weaponHash, 99999, false)
 		SetPedInfiniteAmmo(ped, true, weaponHash)
 
@@ -131,23 +137,30 @@ AddEventHandler('lsv:startHeadhunter', function()
 		for i = #_targets, 1, -1 do
 			local data = _targets[i]
 
-			if IsPedDeadOrDying(data.ped) then
+			if data.pedNet and IsPedDeadOrDying(NetToPed(data.pedNet)) then
 				Gui.DisplayPersonalNotification('You have assassinated a target.')
 				removeTarget(i)
 				table.remove(_targets, i)
 			elseif not data.wasTaskActivated and World.GetDistance(playerPosition, data) < Settings.headhunter.taskActivateDistance then
-				NetworkRegisterEntityAsNetworked(data.ped)
-				SetNetworkIdExistsOnAllMachines(PedToNet(data.ped), true)
-
-				if data.vehicle then
-					NetworkRegisterEntityAsNetworked(data.vehicle)
-					SetNetworkIdExistsOnAllMachines(VehToNet(data.vehicle), true)
-					TaskVehicleDriveWander(data.ped, data.vehicle, 20., 319)
-				else
-					TaskWanderStandard(data.ped, 10., 10)
+				if not data.pedNet then
+					data.pedNet = Network.RegisterPed(data.ped)
 				end
 
-				data.wasTaskActivated = true
+				if data.pedNet and data.vehicle then
+					if not data.vehicleNet then
+						data.vehicleNet = Network.RegisterVehicle(data.vehicle)
+					end
+				end
+
+				if data.pedNet then
+					if not data.vehicle then
+						TaskWanderStandard(NetToPed(data.pedNet), 10., 10)
+						data.wasTaskActivated = true
+					elseif data.vehicleNet then
+						TaskVehicleDriveWander(NetToPed(data.pedNet), NetToVeh(data.vehicleNet), 20., 319)
+						data.wasTaskActivated = true
+					end
+				end
 			end
 		end
 

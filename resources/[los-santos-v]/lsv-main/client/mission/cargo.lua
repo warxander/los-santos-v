@@ -44,12 +44,11 @@ AddEventHandler('lsv:specialCargoFinished', function(success, reason)
 end)
 
 AddEventHandler('lsv:startSpecialCargo', function(cargo)
-	Streaming.RequestModelAsync(cargo.vehicle)
-	local vehicleHash = GetHashKey(cargo.vehicle)
-
 	_cargo = { }
-	_cargo.vehicle = CreateVehicle(vehicleHash, cargo.location.x, cargo.location.y, cargo.location.z, cargo.location.heading, false, true)
-	SetModelAsNoLongerNeeded(vehicleHash)
+
+	Streaming.RequestModelAsync(cargo.vehicle)
+	_cargo.vehicle = CreateVehicle(cargo.vehicle, cargo.location.x, cargo.location.y, cargo.location.z, cargo.location.heading, false, true)
+	SetModelAsNoLongerNeeded(cargo.vehicle)
 
 	local missionTimer = Timer.New()
 	local isInVehicle = false

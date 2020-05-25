@@ -984,7 +984,7 @@ Settings.survival = {
 				{ x = -1859.3570556641, y = -1198.33203125, z = 13.017113685608 },
 				{ x = -1841.5341796875, y = -1174.2681884766, z = 13.017238616943 },
 			},
-			pedModels = { 's_m_m_fiboffice_01', 's_m_m_fiboffice_02' },
+			pedModels = { `s_m_m_fiboffice_01`, `s_m_m_fiboffice_02` },
 		},
 
 		['boneyard'] = {
@@ -998,7 +998,7 @@ Settings.survival = {
 				{ x = 2371.2937011719, y = 3047.7802734375, z = 48.152400970459 },
 				{ x = 2396.5988769531, y = 3052.2856445312, z = 48.80778503418 },
 			},
-			pedModels = { 'a_m_m_hillbilly_01' },
+			pedModels = { `a_m_m_hillbilly_01` },
 		},
 
 		['industrialPlant'] = {
@@ -1010,7 +1010,7 @@ Settings.survival = {
 				{ x = 301.61053466797, y = 2814.2705078125, z = 43.436069488525 },
 				{ x = 281.68664550781, y = 2888.1027832031, z = 43.605697631836 },
 			},
-			pedModels = { 's_m_m_armoured_01', 's_m_m_armoured_02', 's_m_m_security_01' },
+			pedModels = { `s_m_m_armoured_01`, `s_m_m_armoured_02`, `s_m_m_security_01` },
 		},
 
 		['processed'] = {
@@ -1023,7 +1023,7 @@ Settings.survival = {
 				{ x = 1487.9365234375, y = -2152.4020996094, z = 76.963684082031 },
 				{ x = 1494.2650146484, y = -2077.9951171875, z = 77.190147399902 },
 			},
-			pedModels = { 's_m_m_armoured_01', 's_m_m_armoured_02', 's_m_m_security_01' },
+			pedModels = { `s_m_m_armoured_01`, `s_m_m_armoured_02`, `s_m_m_security_01` },
 		},
 
 		--
@@ -1037,7 +1037,7 @@ Settings.survival = {
 				{ x = 1124.6759033203, y = -2243.6569824219, z = 30.317899703979 },
 				{ x = 1099.3756103516, y = -2219.5349121094, z = 30.569871902466 },
 			},
-			pedModels = { 's_m_m_armoured_01', 's_m_m_armoured_02', 's_m_m_security_01' },
+			pedModels = { `s_m_m_armoured_01`, `s_m_m_armoured_02`, `s_m_m_security_01` },
 		},
 
 		['sandy'] = {
@@ -1049,7 +1049,7 @@ Settings.survival = {
 				{ x = 1921.9552001953, y = 3735.2009277344, z = 32.701507568359 },
 				{ x = 1928.3527832031, y = 3831.3879394531, z = 32.260299682617 },
 			},
-			pedModels = { 'a_m_m_hillbilly_02' },
+			pedModels = { `a_m_m_hillbilly_02` },
 		},
 	},
 	reward = {
@@ -1510,15 +1510,15 @@ Settings.cargo = {
 		{ name = '5 Crates', price = 12000, reward = { cash = 30000, exp = 4000 } },
 	},
 	vehicles = {
-		'speedo',
-		'speedo2',
-		'speedo4',
-		'pony',
-		'pony2',
-		'mule',
-		'mule2',
-		'mule3',
-		'mule4',
+		`speedo`,
+		`speedo2`,
+		`speedo4`,
+		`pony`,
+		`pony2`,
+		`mule`,
+		`mule2`,
+		`mule3`,
+		`mule4`,
 	},
 	locations = {
 		{ x = -1855.66015625, y = -623.87799072266, z = 10.66112613678, heading = 52.66089630127 },
@@ -1599,11 +1599,11 @@ Settings.assetRecovery = {
 	time = 1200000,
 	nearDistance = 2000.,
 	vehicles = {
-		'pigalle',
-		'dominator',
-		'comet2',
-		'feltzer3',
-		'blazer',
+		`pigalle`,
+		`dominator`,
+		`comet2`,
+		`feltzer3`,
+		`blazer`,
 	},
 	variants = {
 		{
@@ -1661,15 +1661,15 @@ Settings.headhunter = {
 		{ x = -722.82861328125, y = 30.727191925049, z = 41.764114379883, heading = 103.85273742676, inVehicle = true },
 		{ x = -1357.8287353516, y = -667.52966308594, z = 25.308952331543, heading = 211.10328674316, inVehicle = true },
 	},
-	models = { 'g_m_m_armboss_01', 'u_m_m_filmdirector', 's_m_m_highsec_01' },
+	models = { `g_m_m_armboss_01`, `u_m_m_filmdirector`, `s_m_m_highsec_01` },
 	weapons = {
-		'WEAPON_SPECIALCARBINE',
-		'WEAPON_ADVANCEDRIFLE',
-		'WEAPON_AUTOSHOTGUN',
-		'WEAPON_MINISMG',
-		'WEAPON_RPG',
+		`WEAPON_SPECIALCARBINE`,
+		`WEAPON_ADVANCEDRIFLE`,
+		`WEAPON_AUTOSHOTGUN`,
+		`WEAPON_MINISMG`,
+		`WEAPON_RPG`,
 	},
-	vehicles = { 'baller5', 'cog552' },
+	vehicles = { `baller5`, `cog552` },
 	reward = { cash = 6000, exp = 1500 },
 }
 

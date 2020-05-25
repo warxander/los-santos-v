@@ -1,4 +1,5 @@
 local _vehicle = nil
+local _vehicleNet = nil
 local _vehicleBlip = nil
 local _dropOffBlip = nil
 
@@ -14,10 +15,15 @@ AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
 
 	World.EnableWanted(false)
 
-	Player.LeaveVehicle(_vehicle)
-	SetVehicleDoorsLockedForAllPlayers(_vehicle, true)
-
-	World.MarkVehicleToDelete(_vehicle, 5000)
+	if _vehicleNet then
+		_vehicle = NetToVeh(_vehicleNet)
+		Player.LeaveVehicle(_vehicle)
+		SetVehicleDoorsLockedForAllPlayers(_vehicle, true)
+		Network.DeleteVehicle(_vehicleNet, 5000)
+	else
+		World.DeleteEntity(_vehicle)
+	end
+	_vehicleNet = nil
 	_vehicle = nil
 
 	RemoveBlip(_vehicleBlip)
@@ -31,10 +37,9 @@ end)
 
 AddEventHandler('lsv:startAssetRecovery', function()
 	local variant = table.random(Settings.assetRecovery.variants)
-	local vehicleModel = table.random(Settings.assetRecovery.vehicles)
+	local vehicleHash = table.random(Settings.assetRecovery.vehicles)
 
-	Streaming.RequestModelAsync(vehicleModel)
-	local vehicleHash = GetHashKey(vehicleModel)
+	Streaming.RequestModelAsync(vehicleHash)
 	_vehicle = CreateVehicle(vehicleHash, variant.vehicleLocation.x, variant.vehicleLocation.y, variant.vehicleLocation.z, variant.vehicleLocation.heading, false, true)
 	SetVehicleModKit(_vehicle, 0)
 	SetVehicleMod(_vehicle, 16, 4)
@@ -69,6 +74,10 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 			if not MissionManager.Mission then
 				return
+			end
+
+			if _vehicleNet then
+				_vehicle = NetToVeh(_vehicleNet)
 			end
 
 			SetBlipAlpha(_vehicleBlip, isInVehicle and 0 or 255)
@@ -111,6 +120,10 @@ AddEventHandler('lsv:startAssetRecovery', function()
 			return
 		end
 
+		if _vehicleNet then
+			_vehicle = NetToVeh(_vehicleNet)
+		end
+
 		if missionTimer:elapsed() < Settings.assetRecovery.time then
 			if not DoesEntityExist(_vehicle) or not IsVehicleDriveable(_vehicle, false) then
 				TriggerEvent('lsv:assetRecoveryFinished', false, 'A vehicle has been destroyed.')
@@ -122,11 +135,14 @@ AddEventHandler('lsv:startAssetRecovery', function()
 			if isInVehicle then
 				Gui.DrawPlaceMarker(variant.dropOffLocation, Color.YELLOW)
 
-				if not NetworkGetEntityIsNetworked(_vehicle) then
-					NetworkRegisterEntityAsNetworked(_vehicle)
-					World.SetWantedLevel(4, 5, true)
-					Gui.DisplayPersonalNotification('You have stolen a vehicle.')
-					_helpHandler = HelpQueue.PushFront('Minimize the vehicle damage to get extra reward.')
+				if not _vehicleNet then
+					_vehicleNet = Network.RegisterVehicle(_vehicle)
+					if _vehicleNet then
+						_vehicle = NetToVeh(_vehicleNet)
+						World.SetWantedLevel(4, 5, true)
+						Gui.DisplayPersonalNotification('You have stolen a vehicle.')
+						_helpHandler = HelpQueue.PushFront('Minimize the vehicle damage to get extra reward.')
+					end
 				end
 
 				if routeBlip ~= _dropOffBlip then

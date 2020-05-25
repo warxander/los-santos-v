@@ -26,7 +26,11 @@ end)
 Citizen.CreateThread(function()
 	World.AddVehicleHandler(function(vehicle)
 		if table.ifind(Settings.world.blacklistVehicles, GetEntityModel(vehicle)) then
-			World.MarkVehicleToDelete(vehicle)
+			if NetworkGetEntityIsNetworked(vehicle) then
+				Network.DeleteVehicle(VehToNet(vehicle))
+			else
+				World.DeleteEntity(vehicle)
+			end
 		end
 	end)
 end)

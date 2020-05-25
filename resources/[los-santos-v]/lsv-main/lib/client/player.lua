@@ -264,7 +264,7 @@ function Player.SetModelAsync(skinModel, isTemp)
 	local modelHash = nil
 	if not Player.Loaded or skinModel.model ~= Player.SkinModel.model then
 		modelHash = GetHashKey(skinModel.model)
-		Streaming.RequestModelAsync(skinModel.model)
+		Streaming.RequestModelAsync(modelHash)
 		SetPlayerModel(PlayerId(), modelHash)
 	end
 
@@ -342,7 +342,9 @@ end
 
 function Player.LeaveVehicle(vehicle, exitFlag)
 	if not vehicle then
-		vehicle = Player.VehicleHandle
+		if Player.VehicleHandle then
+			vehicle = NetToVeh(Player.VehicleHandle)
+		end
 
 		if not vehicle then
 			return
@@ -360,12 +362,12 @@ function Player.DestroyPersonalVehicle()
 		return
 	end
 
-	local blip = GetBlipFromEntity(Player.VehicleHandle)
+	local blip = GetBlipFromEntity(NetToVeh(Player.VehicleHandle))
 	if DoesBlipExist(blip) then
 		RemoveBlip(blip)
 	end
 
-	World.MarkVehicleToDelete(Player.VehicleHandle)
+	Network.DeleteVehicle(Player.VehicleHandle)
 	Player.VehicleHandle = nil
 end
 

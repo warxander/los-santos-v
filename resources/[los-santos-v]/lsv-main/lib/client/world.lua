@@ -93,16 +93,15 @@ function World.SetWantedLevel(level, maxLevel, permanent)
 	SetMaxWantedLevel(maxLevel)
 end
 
-function World.MarkVehicleToDelete(vehicle, timeout)
-	SetTimeout(timeout or 0, function()
-		Decor.SetToVehicle(vehicle, 'LSV_DELETE_VEHICLE', true)
-	end)
-end
+function World.DeleteEntity(entity)
+	if not DoesEntityExist(entity) then
+		return
+	end
 
-function World.MarkPedToDelete(ped, timeout)
-	SetTimeout(timeout or 0, function()
-		Decor.SetToPed(ped, 'LSV_DELETE_PED', true)
-	end)
+	if not IsEntityAMissionEntity(entity) then
+		SetEntityAsMissionEntity(entity, false, true)
+	end
+	DeleteEntity(entity)
 end
 
 function World.AddPedHandler(handlerFunc)

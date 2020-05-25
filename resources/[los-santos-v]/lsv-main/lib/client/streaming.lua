@@ -10,12 +10,10 @@ function Streaming.RequestAnimSet(animSet)
 	end
 end
 
-function Streaming.RequestModelAsync(model)
-	local hash = GetHashKey(model)
-
-	if not HasModelLoaded(hash) then
-		RequestModel(hash)
-		while not HasModelLoaded(hash) do
+function Streaming.RequestModelAsync(modelHash)
+	if not HasModelLoaded(modelHash) then
+		RequestModel(modelHash)
+		while not HasModelLoaded(modelHash) do
 			Citizen.Wait(0)
 		end
 	end

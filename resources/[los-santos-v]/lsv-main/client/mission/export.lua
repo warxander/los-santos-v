@@ -1,5 +1,5 @@
 local _vehicleIndex = nil
-local _vehicle = nil
+local _vehicleNet = nil
 local _vehicleName = nil
 local _vehicleTier = nil
 local _vehicleBlip = nil
@@ -15,10 +15,13 @@ AddEventHandler('lsv:vehicleExportFinished', function(success, reason)
 
 	_vehicleIndex = nil
 
-	Player.LeaveVehicle(_vehicle)
-	SetVehicleDoorsLockedForAllPlayers(_vehicle, true)
-	World.MarkVehicleToDelete(_vehicle, 5000)
-	_vehicle = nil
+	if _vehicleNet then
+		local vehicle = NetToVeh(_vehicleNet)
+		Player.LeaveVehicle(vehicle)
+		SetVehicleDoorsLockedForAllPlayers(vehicle, true)
+		Network.DeleteVehicle(_vehicleNet, 5000)
+	end
+	_vehicleNet = nil
 
 	_vehicleTier = nil
 
@@ -29,7 +32,6 @@ AddEventHandler('lsv:vehicleExportFinished', function(success, reason)
 
 	RemoveBlip(_buyerBlip)
 	_buyerBlip = nil
-
 
 	Player.DestroyPersonalVehicle()
 
@@ -46,23 +48,24 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 	_vehicleIndex = vehicleIndex
 	_vehicleTier = vehicleTier
 
-	local vehicle = Player.Vehicles[vehicleIndex]
-
-	Streaming.RequestModelAsync(vehicle.model)
-	local modelHash = GetHashKey(vehicle.model)
-
+	local vehicleMods = Player.Vehicles[vehicleIndex]
 	local position = Settings.garages[garageId].exportPos
-	_vehicle = CreateVehicle(modelHash, position.x, position.y, position.z, position.heading, true, true)
-	SetModelAsNoLongerNeeded(modelHash)
 
-	Vehicle.ApplyMods(_vehicle, vehicle)
+	_vehicleNet = Network.CreateVehicleAsync(GetHashKey(vehicleMods.model), position, position.heading)
+	if not _vehicleNet then
+		return --TODO:
+	end
 
-	SetVehicleMod(_vehicle, 16, 2)
-	SetVehicleTyresCanBurst(_vehicle, false)
+	local vehicle = NetToVeh(_vehicleNet)
 
-	_vehicleName = vehicle.name
+	Vehicle.ApplyMods(vehicle, vehicleMods)
 
-	_vehicleBlip = AddBlipForEntity(_vehicle)
+	SetVehicleMod(vehicle, 16, 2)
+	SetVehicleTyresCanBurst(vehicle, false)
+
+	_vehicleName = vehicleMods.name
+
+	_vehicleBlip = AddBlipForEntity(vehicle)
 	SetBlipHighDetail(_vehicleBlip, true)
 	SetBlipSprite(_vehicleBlip, Blip.IMPORT_CAR)
 	SetBlipColour(_vehicleBlip, Color.BLIP_BLUE)
@@ -93,6 +96,8 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 				return
 			end
 
+			vehicle = NetToVeh(_vehicleNet)
+
 			SetBlipAlpha(_vehicleBlip, isInVehicle and 0 or 255)
 			SetBlipAlpha(_buyerBlip, isInVehicle and 255 or 0)
 
@@ -103,11 +108,11 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 				elseif GetPlayerWantedLevel(PlayerId()) ~= 0 then
 					objectiveText = 'Lose the cops.'
 				else
-					objectiveText = 'Deliver the '..vehicle.name..' to the ~y~Buyer~w~.'
+					objectiveText = 'Deliver the '.._vehicleName..' to the ~y~Buyer~w~.'
 				end
 				Gui.DisplayObjectiveText(objectiveText)
 
-				Gui.DrawBar('SELL PRICE', '$'..math.floor(Settings.vehicleExport.rewards[_vehicleTier].cash * GetEntityHealth(_vehicle) / GetEntityMaxHealth(_vehicle)), 2)
+				Gui.DrawBar('SELL PRICE', '$'..math.floor(Settings.vehicleExport.rewards[_vehicleTier].cash * GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle)), 2)
 				Gui.DrawTimerBar('TIME TO DELIVER', Settings.vehicleExport.time - missionTimer:elapsed(), 1)
 			end
 		end
@@ -123,13 +128,15 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 			return
 		end
 
+		vehicle = NetToVeh(_vehicleNet)
+
 		if missionTimer:elapsed() < Settings.vehicleExport.time then
-			if not DoesEntityExist(_vehicle) or not IsVehicleDriveable(_vehicle, false) then
+			if not DoesEntityExist(vehicle) or not IsVehicleDriveable(vehicle, false) then
 				TriggerServerEvent('lsv:vehicleExportFinished', false, _vehicleIndex)
 				return
 			end
 
-			isInVehicle = IsPedInVehicle(PlayerPedId(), _vehicle, false)
+			isInVehicle = IsPedInVehicle(PlayerPedId(), vehicle, false)
 
 			if isInVehicle then
 				Gui.DrawPlaceMarker(_buyerLocation, Color.YELLOW)
@@ -140,7 +147,7 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 				end
 
 				if Player.DistanceTo(_buyerLocation, true) < Settings.vehicleExport.dropRadius and GetPlayerWantedLevel(PlayerId()) == 0 then
-					TriggerServerEvent('lsv:vehicleExportFinished', true, _vehicleIndex, _vehicleTier, GetEntityHealth(_vehicle) / GetEntityMaxHealth(_vehicle))
+					TriggerServerEvent('lsv:vehicleExportFinished', true, _vehicleIndex, _vehicleTier, GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle))
 					return
 				end
 			elseif routeBlip ~= _vehicleBlip then

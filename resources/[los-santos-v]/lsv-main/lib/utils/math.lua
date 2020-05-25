@@ -9,5 +9,5 @@ function math.average(t)
 end
 
 function math.is_integer(value)
-	return type(value) == 'number' and not string.find(value, '%.')
+	return type(value) == 'number' and math.tointeger(value)
 end

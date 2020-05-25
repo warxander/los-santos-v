@@ -68,11 +68,11 @@ AddEventHandler('lsv:survivalFinished', function(success, reason)
 	MissionManager.FinishMission(success)
 
 	table.iforeach(_location.pedModels, function(model)
-		SetModelAsNoLongerNeeded(GetHashKey(model))
+		SetModelAsNoLongerNeeded(model)
 	end)
 
-	table.iforeach(_location.enemies, function(enemy)
-		World.MarkPedToDelete(enemy)
+	table.iforeach(_location.enemies, function(pedNet)
+		Network.DeletePed(pedNet)
 	end)
 
 	_survivalId = nil
@@ -162,46 +162,62 @@ AddEventHandler('lsv:startSurvival', function(id, location)
 
 				_location.totalEnemyCount = waveData.count + _endlessWaveBoost.count * waveBoostLevel
 				_location.enemiesLeft = _location.totalEnemyCount
+
+				if _location.enemies and #_location.enemies ~= 0 then
+					table.iforeach(_location.enemies, function(pedNet)
+						Network.DeletePed(pedNet)
+					end)
+				end
+
 				_location.enemies = { }
 
-				for i = 1, _location.totalEnemyCount do
+				while #_location.enemies ~= _location.totalEnemyCount do
 					Citizen.Wait(0)
 
-					local location = table.random(_location.spawnPoints)
-					local model = table.random(_location.pedModels)
-					local ped = CreatePed(11, GetHashKey(model), location.x, location.y, location.z, 0., true, true)
-					SetNetworkIdExistsOnAllMachines(PedToNet(ped), true)
-					SetPedRandomComponentVariation(ped, false)
-					PlaceObjectOnGroundProperly(ped)
-
-					local weaponHash = table.random(waveData.weapons)
-					GiveWeaponToPed(ped, weaponHash, 99999, false, true)
-					SetPedInfiniteAmmo(ped, true, weaponHash)
-					SetPedArmour(ped, _endlessWaveBoost.armour * waveBoostLevel)
-					SetPedDropsWeaponsWhenDead(ped, false)
-					SetPedFleeAttributes(ped, 0, false)
-					SetPedCombatRange(ped, 2)
-					SetPedCombatMovement(ped, 2)
-					SetPedCombatAttributes(ped, 46, true)
-					SetPedCombatAttributes(ped, 20, true)
-					SetPedCombatAbility(ped, waveData.ability)
-
-					SetPedAsEnemy(ped, true)
-					SetPedRelationshipGroupHash(ped, `HATES_PLAYER`)
-
-					local blip = AddBlipForEntity(ped)
-					SetBlipColour(blip, Color.BLIP_RED)
-					SetBlipScale(blip, 0.65)
-					Map.SetBlipText(blip, 'Enemy')
-
-					local playerPed = PlayerPedId()
-					TaskCombatPed(ped, playerPed, 0, 16)
-					if IsPedInAnyVehicle(playerPed, false) then
-						AddVehicleSubtaskAttackPed(ped, playerPed)
+					if not MissionManager.Mission then
+						return
 					end
-					SetPedKeepTask(ped, true)
 
-					table.insert(_location.enemies, ped)
+					local location = table.random(_location.spawnPoints)
+					local modelHash = table.random(_location.pedModels)
+
+					local netId = Network.CreatePedAsync(11, modelHash, location)
+
+					if netId then
+						local ped = NetToPed(netId)
+
+						SetPedRandomComponentVariation(ped, false)
+						PlaceObjectOnGroundProperly(ped)
+
+						local weaponHash = table.random(waveData.weapons)
+						GiveWeaponToPed(ped, weaponHash, 99999, false, true)
+						SetPedInfiniteAmmo(ped, true, weaponHash)
+						SetPedArmour(ped, _endlessWaveBoost.armour * waveBoostLevel)
+						SetPedDropsWeaponsWhenDead(ped, false)
+						SetPedFleeAttributes(ped, 0, false)
+						SetPedCombatRange(ped, 2)
+						SetPedCombatMovement(ped, 2)
+						SetPedCombatAttributes(ped, 46, true)
+						SetPedCombatAttributes(ped, 20, true)
+						SetPedCombatAbility(ped, waveData.ability)
+
+						SetPedAsEnemy(ped, true)
+						SetPedRelationshipGroupHash(ped, `HATES_PLAYER`)
+
+						local blip = AddBlipForEntity(ped)
+						SetBlipColour(blip, Color.BLIP_RED)
+						SetBlipScale(blip, 0.65)
+						Map.SetBlipText(blip, 'Enemy')
+
+						local playerPed = PlayerPedId()
+						TaskCombatPed(ped, playerPed, 0, 16)
+						if IsPedInAnyVehicle(playerPed, false) then
+							AddVehicleSubtaskAttackPed(ped, playerPed)
+						end
+						SetPedKeepTask(ped, true)
+
+						table.insert(_location.enemies, netId)
+					end
 				end
 
 				Gui.DisplayPersonalNotification('Wave '..tostring(_location.waveIndex))
@@ -211,21 +227,22 @@ AddEventHandler('lsv:startSurvival', function(id, location)
 		end
 
 		if enemyWaveSpawned then
-			_location.enemies = table.ifilter(_location.enemies, function(enemy)
-				local isDead = IsPedDeadOrDying(enemy, true)
+			local enemyCount = table.icount_if(_location.enemies, function(pedNet)
+				local ped = NetToPed(pedNet)
+
+				local isDead = IsPedDeadOrDying(ped, true)
 
 				if isDead then
-					local blip = GetBlipFromEntity(enemy)
+					local blip = GetBlipFromEntity(ped)
 					if DoesBlipExist(blip) then
 						RemoveBlip(blip)
 					end
-
-					World.MarkPedToDelete(enemy, 5000)
 				end
 
 				return not isDead
 			end)
-			_location.enemiesLeft = #_location.enemies
+
+			_location.enemiesLeft = enemyCount
 
 			if _location.enemiesLeft == 0 then
 				_location.waveIndex = _location.waveIndex + 1
