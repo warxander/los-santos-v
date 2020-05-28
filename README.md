@@ -7,7 +7,7 @@ FiveM Freeroam Deathmatch game mode
 2. Install [MySQL](https://www.mysql.com/)
 3. Create database and run `resources/[los-santos-v]/deploy_db.sql`
 4. Use [FiveM Documentation](http://docs.fivem.net/server-manual/setting-up-a-server/) to install FiveM server.
-5. Configure `server.cfg`
+5. Rename `server.cfg.dist` to `server.cfg` and configure it
 
 ## Links
 * [Discord](https://discord.gg/32NhU6B)
