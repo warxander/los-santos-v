@@ -19,6 +19,7 @@ server_scripts {
 	'lib/utils/timer.lua',
 
 	'lib/settings.lua',
+	'localsettings.lua',  -- If file exists, is used to override settings in lib/settings.lua
 	'lib/logger.lua',
 	'lib/weapon.lua',
 	'lib/blip.lua',

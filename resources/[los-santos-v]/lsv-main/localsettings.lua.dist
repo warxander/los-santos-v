@@ -1,0 +1,25 @@
+--[[
+  Copy and rename this file to localsettings.lua and use it to change server settings.
+  You can then pull the latest GIT version without getting a conflict.
+
+  Add changed settings below this comment block to take effect
+
+  -- Example: Change the afkTimeout
+    Settings.afkTimeout = 300000
+
+  -- Example: Change server to only restart two times a day
+  Settings.serverRestart.times = {
+    { hour = 8, min = 0 },
+    { hour = 24, min = 0 },
+  }
+
+  -- Example: Change Gun Game 2nd place cash reward
+  Settings.gun.rewards.top[2].cash = 12500
+
+  -- Example: Add new fast-travel exit (Note: Coordinates does not work ;)
+  table.insert(Settings.travel.places, {
+    name = 'Local Settings PD',
+    inPosition = { x = 0, y = 0, z = 0 },
+    outPosition = { x = 1, y = 1, z = 1 },
+  })
+]]--
