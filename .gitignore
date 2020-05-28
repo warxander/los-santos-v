@@ -9,4 +9,5 @@ CitizenMP.Server.exe
 CitizenMP.Server.exe.config
 NLog.config
 /cache/
+server.cfg
 resources/\[los-santos-v\]/lsv-main/localsettings.lua
