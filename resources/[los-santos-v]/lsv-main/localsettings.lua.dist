@@ -2,10 +2,12 @@
   Copy and rename this file to localsettings.lua and use it to change server settings.
   You can then pull the latest GIT version without getting a conflict.
 
+  Take a look at resources/[los-santos-v]/lsv-main/lib/settings.lua to see what settings you can change.
+
   Add changed settings below this comment block to take effect
 
-  -- Example: Change the afkTimeout
-    Settings.afkTimeout = 300000
+  -- Example: Change the afkTimeout to 30 minutes
+  Settings.afkTimeout = 1800
 
   -- Example: Change server to only restart two times a day
   Settings.serverRestart.times = {
