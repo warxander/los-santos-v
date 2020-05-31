@@ -96,6 +96,9 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 
 	PlayerData.Add(player, playerStats)
 
+	-- Keep playename in DB updated
+	Db.UpdatePlayerName(player, playerName)
+
 	TriggerClientEvent('lsv:playerLoaded', player, playerStats, isRegistered)
 end
 

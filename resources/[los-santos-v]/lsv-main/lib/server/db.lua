@@ -17,6 +17,10 @@ local function toDbString(value)
 	return '\''..tostring(value)..'\''
 end
 
+function Db.UpdatePlayerName(player, playerName)
+	setValue(player, 'PlayerName', toDbString(playerName))
+end
+
 function Db.UpdateTimePlayed(player, timePlayed)
 	setValue(player, 'TimePlayed', timePlayed)
 end

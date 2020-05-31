@@ -16,19 +16,6 @@ local _trialBlips = { }
 local _trialId = nil
 local _trialCheckpoint = nil
 
-local function getTrialRecord(trialId)
-	local record = 'Server Record: '
-
-	local recordData = _trialRecords[trialId]
-	if recordData then
-		record = record..recordData.PlayerName..' ('..string.from_ms(recordData.Time, true)..')'
-	else
-		record = record..'-'
-	end
-
-	return record
-end
-
 local function clearCheckpoint()
 	if not _trialCheckpoint then
 		return
@@ -78,12 +65,12 @@ AddEventHandler('lsv:initTimeTrialRecords', function(records)
 end)
 
 RegisterNetEvent('lsv:updateTimeTrialRecord')
-AddEventHandler('lsv:updateTimeTrialRecord', function(trialId, data)
-	_trialRecords[trialId] = data
+AddEventHandler('lsv:updateTimeTrialRecord', function(trialId, vehicleClass, data)
+	_trialRecords[trialId][vehicleClass].records = data
 end)
 
 RegisterNetEvent('lsv:timeTrialFinished')
-AddEventHandler('lsv:timeTrialFinished', function(success, reason)
+AddEventHandler('lsv:timeTrialFinished', function(success, reason, trialId, vehicleClass, trialTime)
 	MissionManager.FinishMission(success)
 
 	clearCheckpoint()
@@ -92,10 +79,15 @@ AddEventHandler('lsv:timeTrialFinished', function(success, reason)
 		AnimpostfxPlay('SuccessMichael', 0, false)
 	end
 
+	-- If its a personal best, update local records
+	if trialTime ~= nil then
+		_trialRecords[trialId][vehicleClass].personalBest = trialTime
+	end
+
 	Gui.FinishMission(_missionName, success, reason)
 end)
 
-AddEventHandler('lsv:startTimeTrial', function(trialId)
+AddEventHandler('lsv:startTimeTrial', function(trialId, vehicleClassName)
 	_trialId = trialId
 
 	local startingPosition = Settings.timeTrial.tracks[trialId].position
@@ -162,10 +154,17 @@ AddEventHandler('lsv:startTimeTrial', function(trialId)
 							end
 
 							if Player.IsActive() then
-								if _trialRecords[trialId] then
-									Gui.DrawTimerBar('SERVER RECORD', _trialRecords[trialId].Time, 2, false, Color.WHITE, true)
+								-- Server record
+								if _trialRecords[trialId][vehicleClassName].records[1] ~= nil then
+									Gui.DrawTimerBar('SERVER RECORD', _trialRecords[trialId][vehicleClassName].records[1].time , 3, false, Color.WHITE, true)
 								end
 
+								-- Personal best
+								if _trialRecords[trialId][vehicleClassName].personalBest ~= nil then
+									Gui.DrawTimerBar('PERSONAL RECORD', _trialRecords[trialId][vehicleClassName].personalBest , 2, false, Color.GREY, true)
+								end
+
+								-- Current time elapsed
 								Gui.DrawTimerBar('TIME', missionTimer:elapsed(), 1, false, Color.WHITE, true)
 							end
 						end
@@ -191,7 +190,7 @@ AddEventHandler('lsv:startTimeTrial', function(trialId)
 
 			if World.GetDistance(playerPosition, checkpoints[checkpointIndex], true) < _checkpointRadius + _checkpointThreshold then
 				if checkpointIndex == #checkpoints then
-					TriggerServerEvent('lsv:finishTimeTrial', _trialId, missionTimer:elapsed())
+					TriggerServerEvent('lsv:finishTimeTrial', _trialId, Settings.timeTrial.vehicleClassNames[GetVehicleClass(GetVehiclePedIsIn(PlayerPedId())) + 1], missionTimer:elapsed())
 					return
 				else
 					PlaySoundFrontend(-1, 'CHECKPOINT_NORMAL', 'HUD_MINI_GAME_SOUNDSET', true)
@@ -227,11 +226,14 @@ AddEventHandler('lsv:init', function()
 						if not IsPedInAnyVehicle(playerPed) or IsPedInAnyHeli(playerPed) or IsPedInAnyPlane(playerPed) then
 							Gui.DisplayHelpText('You need to be in a suitable vehicle to start the Time Trial.')
 						else
-							Gui.DisplayHelpText('Press ~INPUT_TALK~ to start ~p~'..track.name..'~w~ '.._missionName..'.\n'..getTrialRecord(trialId))
+							local vehicleClassName = Settings.timeTrial.vehicleClassNames[GetVehicleClass(GetVehiclePedIsIn(playerPed)) + 1]
+
+							Gui.DisplayHelpText('Press ~INPUT_TALK~ to start ~p~'..track.name..'~w~ '.._missionName)
+							ScoreboardTT.DisplayThisFrame(track.name, vehicleClassName, _trialRecords[trialId][vehicleClassName])
 
 							if IsControlJustReleased(0, 46) then
 								MissionManager.StartMission('timeTrial', _missionName)
-								TriggerEvent('lsv:startTimeTrial', trialId)
+								TriggerEvent('lsv:startTimeTrial', trialId, vehicleClassName)
 							end
 						end
 					end

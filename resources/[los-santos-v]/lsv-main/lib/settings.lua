@@ -1440,8 +1440,34 @@ Settings.timeTrial = {
 			},
 		},
 	},
+	showTopRecordCount = 3,	-- How many records are sent to players scoreboard
+	serverRecordReward = { cash = 25000, exp = 5000 },
+	personalRecordReward = { cash = 10000, exp = 2000 },
 	reward = { cash = 2500, exp = 1000 },
-	recordReward = { cash = 25000, exp = 5000 },
+	vehicleClassNames = {	-- These are used on both server and client, and remember GetVehicleClass return value is 0 based, remember to add 1 to convert
+	  [1] = "Compacts",
+	  [2] = "Sedans",
+	  [3] = "SUVs",
+	  [4] = "Coupes",
+	  [5] = "Muscle",
+	  [6] = "Sports Classics",
+	  [7] = "Sports",
+	  [8] = "Super",
+	  [9] = "Motorcycles",
+	  [10] = "Off-road",
+	  [11] = "Industrial",
+	  [12] = "Utility",
+	  [13] = "Vans",
+	  [14] = "Cycles",
+	  [15] = "Boats",
+	  [16] = "Helicopters",
+	  [17] = "Planes",
+	  [18] = "Service",
+	  [19] = "Emergency",
+	  [20] = "Military",
+	  [21] = "Commercial",
+	  [22] = "Trains",
+	}
 }
 
 -- Vehicle Export Mission

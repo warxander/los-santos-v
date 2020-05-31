@@ -32,8 +32,8 @@ local function buildBanMessage(target, moderator, reason, duration)
 	end
 end
 
-local function buildTimeTrialRecordMessage(player, trialName, time)
-	return '**'..GetPlayerName(player)..'** ||('..PlayerData.GetIdentifier(player)..')|| set a new **'..trialName..'** server record of **'..time..'**'
+local function buildTimeTrialRecordMessage(player, trialName, vehicleClass, time)
+	return '**'..GetPlayerName(player)..'** ||('..PlayerData.GetIdentifier(player)..')|| set a new **'..trialName..'** server record of **'..time..'** in a **'..string.lower(vehicleClass)..'** class vehicle'
 end
 
 local function buildSurvivalRecordMessage(player, survivalName, waves)
@@ -116,8 +116,8 @@ function Discord.GetRolesById(id, callback)
 	end)
 end
 
-function Discord.ReportNewTimeTrialRecord(player, trialName, time)
-	performDiscordReport(buildTimeTrialRecordMessage(player, trialName, time), 'discord_timeTrialWebhook')
+function Discord.ReportNewTimeTrialRecord(player, trialName, vehicleClass, time)
+	performDiscordReport(buildTimeTrialRecordMessage(player, trialName, vehicleClass, time), 'discord_timeTrialWebhook')
 end
 
 function Discord.ReportNewSurvivalRecord(player, survivalName, waves)
