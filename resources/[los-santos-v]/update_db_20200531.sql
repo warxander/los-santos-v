@@ -29,9 +29,9 @@ CREATE TABLE `TrackRecords` (
 	PRIMARY KEY (`tid`, `pid`, `vcid`) USING BTREE,
 	INDEX `FK_TrackRecords_Players` (`pid`) USING BTREE,
 	INDEX `FK_TrackRecords_VehicleClasses` (`vcid`) USING BTREE,
-	CONSTRAINT `FK_TrackRecords_Players` FOREIGN KEY (`pid`) REFERENCES `fivem_dev`.`Players` (`pid`) ON UPDATE RESTRICT ON DELETE RESTRICT,
-	CONSTRAINT `FK_TrackRecords_TrialTracks` FOREIGN KEY (`tid`) REFERENCES `fivem_dev`.`TrialTracks` (`tid`) ON UPDATE RESTRICT ON DELETE RESTRICT,
-	CONSTRAINT `FK_TrackRecords_VehicleClasses` FOREIGN KEY (`vcid`) REFERENCES `fivem_dev`.`VehicleClasses` (`vcid`) ON UPDATE RESTRICT ON DELETE RESTRICT
+	CONSTRAINT `FK_TrackRecords_Players` FOREIGN KEY (`pid`) REFERENCES `Players` (`pid`) ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT `FK_TrackRecords_TrialTracks` FOREIGN KEY (`tid`) REFERENCES `TrialTracks` (`tid`) ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT `FK_TrackRecords_VehicleClasses` FOREIGN KEY (`vcid`) REFERENCES `VehicleClasses` (`vcid`) ON UPDATE RESTRICT ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE TimeTrialRecords;
