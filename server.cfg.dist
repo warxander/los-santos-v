@@ -1,0 +1,53 @@
+ensure mapmanager
+ensure sessionmanager
+
+ensure chat
+ensure chat-theme-gtao
+
+ensure vSql
+ensure warmenu
+ensure warmoji
+
+ensure lsv-main
+ensure lsv-map
+
+set sv_authMaxVariance 1
+set sv_authMinTrust 5
+set sv_endpointprivacy true
+set sv_maxclients 32
+set con_disableNonTTYReads 1
+set steam_webApiKey "none"
+
+# EDIT VARIABLES BELOW
+## Mandatory
+set sv_hostname "Your Server name"
+set sv_licenseKey ""
+
+set mysql_connection_string "server=localhost;database=database_name;userid=user_id;password=password"
+
+## Optional
+### Server
+endpoint_add_tcp "0.0.0.0:30120"
+endpoint_add_udp "0.0.0.0:30120"
+
+load_server_icon logo.png
+
+### UI
+set discord_url ""
+set pause_menu_title ""
+
+### Discord Integration
+set discord_botToken "" # WARNING: Mandatory if using any of options below
+
+#### Role Automation
+set discord_guildId ""
+set discord_moderatorRoleId ""
+set discord_administatorRoleId ""
+set discord_patreon1RoleId ""
+set discord_patreon2RoleId ""
+set discord_patreon3RoleId ""
+
+#### Channel Bots
+set discord_reportWebhook "" # Player Reports channel
+set discord_timeTrialWebhook "" # Time Trial Records channel
+set discord_survivalWebhook "" # Survival Records channel

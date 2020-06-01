@@ -4,9 +4,26 @@ Discord.__index = Discord
 local logger = Logger.New('Discord')
 
 local _discordBotToken = nil
-local _discordGuildId = nil
 
-local _discordWebhooks = { }
+local _webhooks = { }
+
+local _discordGuildId = nil
+local _patreonRoles = { }
+local _moderatorRoles = { }
+
+local function readConvar(convarName)
+	local convar = GetConvar(convarName, '')
+	if convar ~= '' then
+		return convar
+	else
+		return nil
+	end
+end
+
+local function readConvarBool(convarName)
+	local convar = GetConvar(convarName, 'false')
+	return convar ~= 'false'
+end
 
 local function buildReportMessage(reporter, target, reason)
 	return '**'..GetPlayerName(reporter)..'** ||('..PlayerData.GetIdentifier(reporter)..', '..GetPlayerPing(reporter)..' ms)|| reported'..
@@ -41,17 +58,9 @@ local function buildSurvivalRecordMessage(player, survivalName, waves)
 end
 
 local function performDiscordRequest(method, endPoint, data, callback)
-	if string.len(endPoint) == 0 then
-		return
-	end
-
-	if not _discordBotToken then
-		_discordBotToken = GetConvar('discord_botToken', '')
-	end
-
 	data = data and json.encode({ content = data }) or ''
 
-	PerformHttpRequest('https://discordapp.com/api/'..endPoint, function(statusCode, data, headers)
+	PerformHttpRequest(endPoint, function(statusCode, data, headers)
 		if statusCode and statusCode >= 400 then
 			logger:warn('Unwanted status code '..statusCode..' for '..endPoint..' endpoint')
 		end
@@ -66,17 +75,34 @@ local function performDiscordRequest(method, endPoint, data, callback)
 	end, method, data, { ['Content-Type'] = 'application/json', ['Authorization'] = 'Bot '.._discordBotToken})
 end
 
-local function performDiscordReport(message, webhook)
-	if not _discordWebhooks[webhook] then
-		_discordWebhooks[webhook] = GetConvar(webhook, '')
-	end
-
-	if string.len(_discordWebhooks[webhook]) == 0 then
+local function performDiscordReport(message, webhookConvarName)
+	local webhook = _webhooks[webhookConvarName]
+	if not webhook then
 		return
 	end
 
-	performDiscordRequest('POST', _discordWebhooks[webhook], message)
+	performDiscordRequest('POST', webhook, message)
 end
+
+Citizen.CreateThread(function()
+	_discordBotToken = readConvar('discord_botToken')
+	if _discordBotToken then
+		_webhooks['discord_reportWebhook'] = readConvar('discord_reportWebhook')
+		_webhooks['discord_timeTrialWebhook'] = readConvar('discord_timeTrialWebhook')
+		_webhooks['discord_survivalWebhook'] = readConvar('discord_survivalWebhook')
+
+		_discordGuildId = readConvar('discord_guildId')
+
+		if _discordGuildId then
+			_patreonRoles[1] = readConvar('discord_patreon1RoleId')
+			_patreonRoles[2] = readConvar('discord_patreon2RoleId')
+			_patreonRoles[3] = readConvar('discord_patreon3RoleId')
+
+			_moderatorRoles[Settings.moderator.levels.Moderator] = readConvar('discord_moderatorRoleId')
+			_moderatorRoles[Settings.moderator.levels.Administrator] = readConvar('discord_administatorRoleId')
+		end
+	end
+end)
 
 function Discord.GetIdentifier(player)
 	local id = table.ifind_if(GetPlayerIdentifiers(player), function(id)
@@ -91,24 +117,37 @@ function Discord.GetIdentifier(player)
 end
 
 function Discord.GetRolesById(id, callback)
-	local roles = { }
-
-	if not _discordGuildId then
-		_discordGuildId = GetConvar('discord_guildId', '')
+	if not _discordBotToken or not _discordGuildId then
+		callback()
+		return
 	end
 
-	if string.len(_discordGuildId) == 0 or not id then
+	local roles = { }
+
+	if not id then
 		callback(roles)
 		return
 	end
 
-	local endPoint = string.format('guilds/%s/members/%s', _discordGuildId, id)
+	local endPoint = string.format('https://discordapp.com/api/guilds/%s/members/%s', _discordGuildId, id)
 	performDiscordRequest('GET', endPoint, nil, function(response)
 		if response.statusCode == 200 then
 			local data = json.decode(response.data)
 
 			if data.roles then
-				roles = data.roles
+				for moderatorLevel, moderatorRole in pairs(_moderatorRoles) do
+					if table.ifind(data.roles, moderatorRole) then
+						roles.Moderator = moderatorLevel
+						break
+					end
+				end
+
+				for patreonTier, patreonRole in pairs(_patreonRoles) do
+					if table.ifind(data.roles, patreonRole) then
+						roles.PatreonTier = patreonTier
+						break
+					end
+				end
 			end
 		end
 
@@ -117,26 +156,38 @@ function Discord.GetRolesById(id, callback)
 end
 
 function Discord.ReportNewTimeTrialRecord(player, trialName, time)
-	performDiscordReport(buildTimeTrialRecordMessage(player, trialName, time), 'discord_timeTrialWebhook')
+	if _discordBotToken then
+		performDiscordReport(buildTimeTrialRecordMessage(player, trialName, time), 'discord_timeTrialWebhook')
+	end
 end
 
 function Discord.ReportNewSurvivalRecord(player, survivalName, waves)
-	performDiscordReport(buildSurvivalRecordMessage(player, survivalName, waves), 'discord_survivalWebhook')
+	if _discordBotToken then
+		performDiscordReport(buildSurvivalRecordMessage(player, survivalName, waves), 'discord_survivalWebhook')
+	end
 end
 
 function Discord.ReportPlayer(reporter, target, reason)
-	performDiscordReport(buildReportMessage(reporter, target, reason), 'discord_reportWebhook')
+	if _discordBotToken then
+		performDiscordReport(buildReportMessage(reporter, target, reason), 'discord_reportWebhook')
+	end
 end
 
 function Discord.ReportKickedPlayer(target, moderator, reason)
-	performDiscordReport(buildKickMessage(target, moderator, reason), 'discord_reportWebhook')
+	if _discordBotToken then
+		performDiscordReport(buildKickMessage(target, moderator, reason), 'discord_reportWebhook')
+	end
 end
 
 function Discord.ReportBanPlayer(target, moderator, reason, duration)
-	performDiscordReport(buildBanMessage(target, moderator, reason, duration), 'discord_reportWebhook')
+	if _discordBotToken then
+		performDiscordReport(buildBanMessage(target, moderator, reason, duration), 'discord_reportWebhook')
+	end
 end
 
 function Discord.ReportAutoBanPlayer(target, reason)
-	local message = '**'..GetPlayerName(target)..'** ||('..PlayerData.GetIdentifier(target)..')|| has been permanently banned from the server for **'..reason..'**'
-	performDiscordReport(message, 'discord_reportWebhook')
+	if _discordBotToken then
+		local message = '**'..GetPlayerName(target)..'** ||('..PlayerData.GetIdentifier(target)..')|| has been permanently banned from the server for **'..reason..'**'
+		performDiscordReport(message, 'discord_reportWebhook')
+	end
 end

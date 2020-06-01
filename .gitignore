@@ -1,11 +1,7 @@
-*.lnk
 *.bat
-*.sh
 *.config
-TODO
-log
-errors
-CitizenMP.Server.exe
-CitizenMP.Server.exe.config
-NLog.config
+*.lnk
+*.sh
 /cache/
+resources/\[los-santos-v\]/lsv-main/mysettings.lua
+server.cfg
