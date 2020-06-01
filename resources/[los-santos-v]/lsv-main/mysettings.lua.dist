@@ -1,0 +1,29 @@
+--[[
+Copy and rename it to `mysettings.lua` to override default game mode settings
+
+WARNING: DO NOT FORGET TO TRACK ALL ORIGINAL `SETTINGS.LUA` CHANGES TO KEEP THIS ONE IN WORKING STATE
+
+EXAMPLES
+1. Adding more player spawn points
+table.insert(Settings.spawn.points, { x = -1206.2694091797, y = -1308.7628173828, z = 4.8130288124084 })
+table.insert(Settings.spawn.points, { x = -1463.2197265625, y = -371.50479125977, z = 39.337921142578 })
+
+2. Adding new Time Trial
+Settings.timeTrial.tracks['myTrack'] = {
+	name = 'My Track Name',
+	position = { x = -2522.0732421875, y = 3259.833984375, z = 32.20064163208, heading = 240.08741760254 },
+	checkpoints = {
+		{ type = 15, x = -2293.9926757812, y = 3136.9899902344, z = 32.197498321533 },
+		{ type = 15, x = -2118.8654785156, y = 3075.6335449219, z = 32.192966461182 },
+		{ type = 16, x = -1922.9372558594, y = 2947.8576660156, z = 32.193450927734 },
+		{ type = 16, x = -1969.5397949219, y = 2858.5942382812, z = 32.194000244141 },
+		{ type = 15, x = -2235.6137695312, y = 2991.0412597656, z = 32.194049835205 },
+		{ type = 15, x = -2520.5336914062, y = 3153.2783203125, z = 32.20491027832 },
+		{ type = 17, x = -2681.189453125, y = 3306.2021484375, z = 32.194755554199 },
+		{ x = -2522.0732421875, y = 3259.833984375, z = 32.20064163208 },
+	},
+}
+
+3. Changing Hot Property rewards
+Settings.property.rewards.top[1] = { cash = 16000, exp = 4000 }
+]]--

@@ -32,6 +32,7 @@ function PlayerData.Add(player, playerStats)
 	}
 
 	local localData = {
+		identifier = PlayerData.GetIdentifier(player),
 		loginTime = playerStats.LoginTime,
 		loginTimer = Timer.New(),
 		timePlayed = playerStats.TimePlayed,
@@ -84,9 +85,15 @@ function PlayerData.IsExists(player)
 end
 
 function PlayerData.GetIdentifier(player)
-	return table.ifind_if(GetPlayerIdentifiers(player), function(id)
-		return string.find(id, 'license')
-	end)
+	local playerData = _playerLocalData[player]
+
+	if not playerData then
+		return table.ifind_if(GetPlayerIdentifiers(player), function(id)
+			return string.find(id, 'license')
+		end)
+	else
+		return playerData.identifier
+	end
 end
 
 function PlayerData.GetRandom()

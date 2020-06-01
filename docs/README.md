@@ -8,16 +8,24 @@
 	1. [Module](#module)
 	2. [Class](#class)
 	3. [Script](#script)
+5. [Networking Entities](#networking-entities)
+6. [World Object Handling](#world-object-handling)
 
 ## Project Structure
+Game mode resource is called `lsv-main` and located in `resources/[los-santos-v]` directory.
+
 * `client/` contains client **scripts**
 * `server/` contains server **scripts**
 * `lib/` contains shared **modules** and **classes**
 * `lib/client/` contains client **modules** and **classes**
 * `lib/server/` contains server **modules** and **classes**
 
+You can customize a plenty of game variables through `lib/settings.lua` file.
+
 ## Player Initialization
-`lsv:loadPlayer` -> `lsv:playerLoaded` -> `lsv:playerInitialized` -> `lsv:playerConnected` -> `lsv:init`
+TriggerServerEvent(`lsv:loadPlayer`) ->
+TriggerClientEvent(`lsv:playerLoaded`) ->
+TriggerEvent(`lsv:init`), TriggerServerEvent(`lsv:playerInitialized`)
 
 ## Signals
 Signals are the same thing as FiveM resource events except their handlers will be executed in synchronous mode.
@@ -128,3 +136,29 @@ end)
 
 -- Signal handlers
 ```
+
+### Networking Entities
+*WIP module*
+
+**Files**: `lib/client/network.lua`, `lib/server/network.lua`
+
+Use `Network.CreatePedAsync`/`Network.CreateVehicleAsync` to create network entities.
+Also, you can attach additional shared data to them (see function signatures).
+These entities will be handled by server and shared across all game clients.
+You need to use `NetToPed`/`NetToVeh` to work with them like with local entities.
+
+Use `Network.DeletePed`/`Network.DeleteVehicle` to delete network entities.
+You don't need to remove them manually after their creator was disconnected - it will be done by server (make it configurable?).
+
+Use `Network.RegisterPed`/`Network.RegisterVehicle` to register local entities as networked.
+I'm using them for freeroam missions to avoid object collisions and reduce network load.
+
+### World Object Handling
+**File**: `lib/client/world.lua`
+
+Use `World.AddPedHandler`/`World.AddVehicleHandler` to do something with entities, which are available for your game client.
+**Avoid doing heavy job in your handler, as it will affect game performance a lot!**
+
+Use `World.DeleteEntity` to delete local entities.
+
+You don't need to call `DoesEntityExist` while working with entities by using this module.

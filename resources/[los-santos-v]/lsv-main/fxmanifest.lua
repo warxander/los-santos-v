@@ -19,6 +19,7 @@ server_scripts {
 	'lib/utils/timer.lua',
 
 	'lib/settings.lua',
+	'mysettings.lua',
 	'lib/logger.lua',
 	'lib/weapon.lua',
 	'lib/blip.lua',
@@ -89,6 +90,7 @@ client_scripts {
 	'lib/utils/timer.lua',
 
 	'lib/settings.lua',
+	'mysettings.lua',
 	'lib/logger.lua',
 	'lib/weapon.lua',
 	'lib/blip.lua',

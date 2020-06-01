@@ -67,10 +67,6 @@ Settings.moderator = {
 		['Moderator'] = 1,
 		['Administrator'] = 2,
 	},
-	roleIds = {
-		'', -- Moderator
-		'', -- Administrator
-	},
 }
 
 -- GTA2 Cam
@@ -268,11 +264,6 @@ Settings.armour = {
 
 -- Patreon
 Settings.patreon = {
-	roleIds = {
-		'533680930888482827', -- Patreon 1 Supporter
-		'660789741587005453', -- Patreon 2 Supporter
-		'660789804560023552', -- Patreon 3 Supporter
-	},
 	reward = { 1.20, 1.35, 1.50 },
 	rent = { 0.80, 0.65, 0.50 },
 	daily = {

@@ -201,35 +201,22 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 		end
 
 		Discord.GetRolesById(playerDiscordId, function(roles)
-			logger:info('Roles { '..playerName..', '..tostring(playerDiscordId)..', '..#roles..' }')
+			if roles then
+				logger:info('Roles { '..playerName..', '..tostring(playerDiscordId)..', '..table.length(roles)..' }')
 
-			local newPatreonTier = nil
-			local newModeratorLevel = nil
+				if patreonTier ~= roles.PatreonTier then
+					patreonTier = roles.PatreonTier
+					Db.UpdatePatreonTierById(playerId, patreonTier)
+				end
 
-			if #roles ~= 0 then
-				table.iforeach(Settings.patreon.roleIds, function(roleId, roleIndex)
-					if table.ifind(roles, roleId) then
-						newPatreonTier = roleIndex
-					end
-				end)
-
-				table.iforeach(Settings.moderator.roleIds, function(roleId, roleIndex)
-					if table.ifind(roles, roleId) then
-						newModeratorLevel = roleIndex
-					end
-				end)
+				if moderatorLevel ~= roles.Moderator then
+					moderatorLevel = roles.Moderator
+					Db.UpdateModeratorById(playerId, moderatorLevel)
+				end
 			end
 
 			if needToBeUnbanned then
 				Db.UnbanPlayerById(playerId)
-			end
-
-			if patreonTier ~= newPatreonTier then
-				Db.UpdatePatreonTierById(playerId, newPatreonTier)
-			end
-
-			if moderatorLevel ~= newModeratorLevel then
-				Db.UpdateModeratorById(playerId, newModeratorLevel)
 			end
 
 			if PlayerData.GetCount() >= _maxPlayersCount then

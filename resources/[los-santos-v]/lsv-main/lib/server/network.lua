@@ -5,13 +5,23 @@ local logger = Logger.New('Network')
 
 local _netIds = { }
 
+local _warned = false
+local _netIdCountToWarn = 150
+
 RegisterNetEvent('lsv:netIdCreated')
 AddEventHandler('lsv:netIdCreated', function(netId, netData)
 	local player = source
 
 	if not _netIds[netId] then
-		logger:info('Created '..netId..' net id by '..player)
 		_netIds[netId] = netData
+
+		if not _warned then
+			if table.length(_netIds) > _netIdCountToWarn then
+				logger:warn('Too many network ids, there\'s probably a leak!')
+				_warned = true
+			end
+		end
+
 		TriggerClientEvent('lsv:netIdCreated', -1, netId, netData)
 	end
 end)
@@ -19,7 +29,6 @@ end)
 RegisterNetEvent('lsv:netIdRemoved')
 AddEventHandler('lsv:netIdRemoved', function(netId)
 	if _netIds[netId] then
-		logger:info('Net id '..netId..' was removed')
 		_netIds[netId] = nil
 		TriggerClientEvent('lsv:netIdsRemoved', -1, { netId })
 	end
