@@ -20,8 +20,6 @@ Game mode resource is called `lsv-main` and located in `resources/[los-santos-v]
 * `lib/client/` contains client **modules** and **classes**
 * `lib/server/` contains server **modules** and **classes**
 
-You can customize a plenty of game variables through `lib/settings.lua` file.
-
 ## Player Initialization
 TriggerServerEvent(`lsv:loadPlayer`) ->
 TriggerClientEvent(`lsv:playerLoaded`) ->
@@ -143,7 +141,7 @@ end)
 **Files**: `lib/client/network.lua`, `lib/server/network.lua`
 
 Use `Network.CreatePedAsync`/`Network.CreateVehicleAsync` to create network entities.
-Also, you can attach additional shared data to them (see function signatures).
+Also, you can attach additional shared data (`table`) to them.
 These entities will be handled by server and shared across all game clients.
 You need to use `NetToPed`/`NetToVeh` to work with them like with local entities.
 

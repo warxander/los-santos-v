@@ -25,6 +25,7 @@ AddEventHandler('lsv:init', function()
 				local isPlayerCrewMember = false
 				local isPlayerBeast = false
 				local isPlayerHotProperty = false
+				local isPlayerKingOfTheCastle = false
 				local isPlayerHasBounty = false
 				local isPlayerOnMission = false
 				local isHealthBarVisible = false
@@ -33,10 +34,13 @@ AddEventHandler('lsv:init', function()
 				local isPlayerInHeli = false
 				local patreonTier = 0
 
+				local playerWeapon = 0
+
 				if isPlayerActive then
 					isPlayerCrewMember = Player.CrewMembers[serverId]
 					isPlayerBeast = serverId == World.BeastPlayer
 					isPlayerHotProperty = serverId == World.HotPropertyPlayer
+					isPlayerKingOfTheCastle = serverId == World.KingOfTheCastlePlayer
 					isPlayerHasBounty = PlayerData.GetKillstreak(serverId) >= Settings.bounty.killstreak
 					isPlayerOnMission = MissionManager.IsPlayerOnMission(serverId)
 					isHealthBarVisible = not isPlayerDead and (IsPlayerFreeAimingAtEntity(PlayerId(), ped) or isPlayerCrewMember or isPlayerCrewMemberAimingAt(ped))
@@ -51,6 +55,8 @@ AddEventHandler('lsv:init', function()
 					if GetEntityLodDist(ped) ~= 0xFFFF then
 						SetEntityLodDist(ped, 0xFFFF)
 					end
+
+					playerWeapon = GetSelectedPedWeapon(ped)
 				end
 
 				if not _gamerTags[id] or _gamerTags[id].ped ~= ped or not IsMpGamerTagActive(_gamerTags[id].tag) then
@@ -69,7 +75,7 @@ AddEventHandler('lsv:init', function()
 				local color = 0
 				if isPlayerCrewMember then
 					color = 10
-				elseif isPlayerHotProperty or isPlayerBeast or isChallengingPlayer or isPlayerHasBounty or isPlayerOnMission then
+				elseif isPlayerHotProperty or isPlayerBeast or isPlayerKingOfTheCastle or isPlayerHasBounty or isPlayerOnMission then
 					color = 6
 				elseif patreonTier ~= 0 then
 					color = 15
@@ -108,8 +114,9 @@ AddEventHandler('lsv:init', function()
 					local blipSprite = Blip.STANDARD
 					if isPlayerDead then
 						blipSprite = Blip.PLAYER_DEAD
-					elseif not isChallengingPlayer then
+					else
 						if isPlayerHotProperty then blipSprite = Blip.HOT_PROPERTY
+						elseif isPlayerKingOfTheCastle then blipSprite = Blip.CASTLE_KING
 						elseif isPlayerBeast then blipSprite = Blip.BEAST
 						elseif isPlayerOnMission then blipSprite = Blip.PLAYER_ON_MISSION
 						elseif isPlayerHasBounty then blipSprite = Blip.BOUNTY_HIT
@@ -128,9 +135,7 @@ AddEventHandler('lsv:init', function()
 					-- SetBlipSquaredRotation(blip, rotation)
 
 					local scale = 0.7
-					if isChallengingPlayer then
-						scale = 0.8
-					elseif isPlayerHotProperty or isPlayerOnMission or isPlayerBeast or isPlayerHasBounty then
+					if isPlayerHotProperty or isPlayerKingOfTheCastle or isPlayerOnMission or isPlayerBeast or isPlayerHasBounty then
 						scale = 0.9
 					elseif isPlayerInPlane or isPlayerInHeli then
 						scale = 0.9
@@ -140,14 +145,14 @@ AddEventHandler('lsv:init', function()
 					local blipColor = Color.BLIP_WHITE
 					if isPlayerCrewMember then
 						blipColor = Color.BLIP_BLUE
-					elseif isPlayerHotProperty or isPlayerBeast or isChallengingPlayer or isPlayerHasBounty or isPlayerOnMission then
+					elseif isPlayerHotProperty or isPlayerKingOfTheCastle or isPlayerBeast or isPlayerHasBounty or isPlayerOnMission then
 						blipColor = Color.BLIP_RED
 					end
 					SetBlipColour(blip, blipColor)
 
 					local blipAlpha = isPlayerActive and 255 or 0
 					if not isPlayerCrewMember then
-						if not isPlayerHotProperty and not isPlayerBeast and not isPlayerHasBounty and not isPlayerOnMission then
+						if not isPlayerHotProperty and not isPlayerBeast and not isPlayerKingOfTheCastle and not isPlayerHasBounty and not isPlayerOnMission and GetWeapontypeGroup(playerWeapon) ~= -1212426201 then
 							if GetPedStealthMovement(ped) or GetPlayerInvincible(id) then
 								blipAlpha = 25
 							end

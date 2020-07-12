@@ -17,13 +17,14 @@ local function sortPlayersByPoints(l, r)
 	return l.points > r.points
 end
 
-RegisterNetEvent('lsv:castleAddPoint')
-AddEventHandler('lsv:castleAddPoint', function()
-	if not _castleData then
+RegisterNetEvent('lsv:castleAddPointToKing')
+AddEventHandler('lsv:castleAddPointToKing', function()
+	local player = source
+
+	if not _castleData or _castleData.king ~= player then
 		return
 	end
 
-	local player = source
 	local playerIndex = getPlayerIndexById(player)
 
 	if not playerIndex then
@@ -36,10 +37,35 @@ AddEventHandler('lsv:castleAddPoint', function()
 	TriggerClientEvent('lsv:updateCastlePlayers', -1, _castleData.players)
 end)
 
+RegisterNetEvent('lsv:playerInCastleArea')
+AddEventHandler('lsv:playerInCastleArea', function()
+	local player = source
+
+	if not _castleData then
+		return
+	end
+
+	if not _castleData.king then
+		_castleData.king = player
+		TriggerClientEvent('lsv:updateCastleKing', -1, _castleData.king)
+	end
+end)
+
+RegisterNetEvent('lsv:kingLeftCastleArea')
+AddEventHandler('lsv:kingLeftCastleArea', function()
+	local player = source
+
+	if _castleData and _castleData.king == player then
+		_castleData.king = nil
+		TriggerClientEvent('lsv:updateCastleKing', -1, nil)
+	end
+end)
+
 AddEventHandler('lsv:startCastle', function()
 	_castleData = { }
 
 	_castleData.players = { }
+	_castleData.king = nil
 	_castleData.placeIndex = math.random(#Settings.castle.places)
 	_castleData.eventStartTimer = Timer.New()
 
@@ -109,6 +135,11 @@ AddSignalHandler('lsv:playerDropped', function(player)
 		_castleData = nil
 		EventScheduler.StopEvent()
 		return
+	end
+
+	if _castleData.king == player then
+		_castleData.king = nil
+		TriggerClientEvent('lsv:updateCastleKing', -1, nil)
 	end
 
 	local playerIndex = getPlayerIndexById(player)

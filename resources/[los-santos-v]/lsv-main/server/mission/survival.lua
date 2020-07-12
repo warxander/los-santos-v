@@ -16,6 +16,14 @@ AddEventHandler('lsv:survivalFinished', function(survivalId, extraWaveCount, las
 
 	local rewardMessage = ''
 	if extraWaveCount ~= 0 then
+		local playerRecord = PlayerData.GetRecord(player, survivalId)
+		if not playerRecord or lastWaveIndex > playerRecord then
+			reward.cash = reward.cash + Settings.survival.personalReward.cash
+			reward.exp = reward.exp + Settings.survival.personalReward.exp
+			PlayerData.UpdateRecord(player, survivalId, lastWaveIndex)
+			rewardMessage = 'New Personal Best: '
+		end
+
 		if not _survivalRecords[survivalId] or lastWaveIndex > _survivalRecords[survivalId].Waves then
 			_survivalRecords[survivalId] = { }
 			_survivalRecords[survivalId].PlayerName = PlayerData.GetName(player)
@@ -29,7 +37,7 @@ AddEventHandler('lsv:survivalFinished', function(survivalId, extraWaveCount, las
 
 			reward.cash = reward.cash + Settings.survival.recordReward.cash
 			reward.exp = reward.exp + Settings.survival.recordReward.exp
-			rewardMessage = 'New Server Record: '
+			rewardMessage = 'New Server Best: '
 
 			logger:info('New record { '..survivalId..', '..recordData.PlayerName..', '..recordData.Waves..' }')
 		end

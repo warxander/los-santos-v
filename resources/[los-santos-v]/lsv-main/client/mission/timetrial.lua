@@ -16,17 +16,46 @@ local _trialBlips = { }
 local _trialId = nil
 local _trialCheckpoint = nil
 
-local function getTrialRecord(trialId)
-	local record = 'Server Record: '
+local _places = {
+	{ title = 'GOLD', color = Color.YELLOW },
+	{ title = 'SILVER', color = Color.GREY },
+	{ title = 'BRONZE', color = Color.BROWN },
+}
 
-	local recordData = _trialRecords[trialId]
-	if recordData then
-		record = record..recordData.PlayerName..' ('..string.from_ms(recordData.Time, true)..')'
-	else
-		record = record..'-'
+local function getTrialPlace(time)
+	local places = Settings.timeTrial.tracks[_trialId].time
+
+	for place = 1, 2 do
+		if time <= places[place] then
+			return place
+		end
 	end
 
-	return record
+	return 3
+end
+
+local function drawMissionTimeBar(time)
+	local place = getTrialPlace(time)
+	Gui.DrawTimerBar(_places[place].title, time, 1, false, _places[place].color, true)
+end
+
+local function getTrialRecord(trialId)
+	local recordData = _trialRecords[trialId]
+	if recordData then
+		return recordData.PlayerName..' | '..string.from_ms(recordData.Time, true)
+	else
+		return '-'
+	end
+end
+
+local function getPlayerTrialBest(trialId)
+	local record = Player.Records[trialId]
+
+	if record then
+		return string.from_ms(record, true)
+	else
+		return '-'
+	end
 end
 
 local function clearCheckpoint()
@@ -106,6 +135,7 @@ AddEventHandler('lsv:startTimeTrial', function(trialId)
 	SetEntityHeading(vehicle, startingPosition.heading)
 
 	local checkpoints = Settings.timeTrial.tracks[trialId].checkpoints
+	local totalCheckpoints = #checkpoints
 
 	local checkpointIndex = 1
 
@@ -162,11 +192,20 @@ AddEventHandler('lsv:startTimeTrial', function(trialId)
 							end
 
 							if Player.IsActive() then
-								if _trialRecords[trialId] then
-									Gui.DrawTimerBar('SERVER RECORD', _trialRecords[trialId].Time, 2, false, Color.WHITE, true)
+								local barIndex = 3
+
+								if Player.Records[trialId] then
+									Gui.DrawTimerBar('PERSONAL BEST', Player.Records[trialId], barIndex, false, Color.WHITE, true)
+									barIndex = barIndex + 1
 								end
 
-								Gui.DrawTimerBar('TIME', missionTimer:elapsed(), 1, false, Color.WHITE, true)
+								if _trialRecords[trialId] then
+									Gui.DrawTimerBar('SERVER BEST', _trialRecords[trialId].Time, barIndex, false, Color.WHITE, true)
+									barIndex = barIndex + 1
+								end
+
+								Gui.DrawBar('TOTAL CHECKPOINTS', tostring(checkpointIndex - 1)..'/'..totalCheckpoints, 2)
+								drawMissionTimeBar(missionTimer:elapsed())
 							end
 						end
 					end)
@@ -191,7 +230,7 @@ AddEventHandler('lsv:startTimeTrial', function(trialId)
 
 			if World.GetDistance(playerPosition, checkpoints[checkpointIndex], true) < _checkpointRadius + _checkpointThreshold then
 				if checkpointIndex == #checkpoints then
-					TriggerServerEvent('lsv:finishTimeTrial', _trialId, missionTimer:elapsed())
+					TriggerServerEvent('lsv:finishTimeTrial', _trialId, missionTimer:elapsed(), getTrialPlace(missionTimer:elapsed()))
 					return
 				else
 					PlaySoundFrontend(-1, 'CHECKPOINT_NORMAL', 'HUD_MINI_GAME_SOUNDSET', true)
@@ -204,6 +243,11 @@ AddEventHandler('lsv:startTimeTrial', function(trialId)
 end)
 
 AddEventHandler('lsv:init', function()
+	local _timeTrialMenuId = nil
+
+	Gui.CreateMenu('timeTrial', 'Time Trial')
+	WarMenu.SetTitleBackgroundColor('timeTrial', Color.PURPLE.r, Color.PURPLE.g, Color.PURPLE.b, Color.PURPLE.a)
+
 	table.foreach(Settings.timeTrial.tracks, function(track, id)
 		_trialBlips[id] = Map.CreatePlaceBlip(Blip.TIME_TRIAL, track.position.x,  track.position.y,  track.position.z, _missionName, Color.BLIP_PURPLE)
 	end)
@@ -227,16 +271,34 @@ AddEventHandler('lsv:init', function()
 						if not IsPedInAnyVehicle(playerPed) or IsPedInAnyHeli(playerPed) or IsPedInAnyPlane(playerPed) then
 							Gui.DisplayHelpText('You need to be in a suitable vehicle to start the Time Trial.')
 						else
-							Gui.DisplayHelpText('Press ~INPUT_TALK~ to start ~p~'..track.name..'~w~ '.._missionName..'.\n'..getTrialRecord(trialId))
+							local vehicle = GetVehiclePedIsIn(playerPed)
+							if GetPedInVehicleSeat(vehicle, -1) == playerPed then
+								Gui.DisplayHelpText('Press ~INPUT_TALK~ to start '.._missionName..'.')
 
-							if IsControlJustReleased(0, 46) then
-								MissionManager.StartMission('timeTrial', _missionName)
-								TriggerEvent('lsv:startTimeTrial', trialId)
+								if IsControlJustReleased(0, 46) then
+									_timeTrialMenuId = trialId
+									WarMenu.SetSubTitle('timeTrial', track.name)
+									Gui.OpenMenu('timeTrial')
+								end
 							end
 						end
 					end
+				elseif WarMenu.IsMenuOpened('timeTrial') and _timeTrialMenuId == trialId then
+					WarMenu.CloseMenu()
 				end
 			end
 		end)
+
+		if WarMenu.IsMenuOpened('timeTrial') then
+			if WarMenu.Button('Start') then
+				WarMenu.CloseMenu()
+				MissionManager.StartMission('timeTrial', _missionName)
+				TriggerEvent('lsv:startTimeTrial', _timeTrialMenuId)
+			elseif WarMenu.Button('Server Best', getTrialRecord(_timeTrialMenuId)) then
+			elseif WarMenu.Button('Personal Best', getPlayerTrialBest(_timeTrialMenuId)) then
+			end
+
+			WarMenu.Display()
+		end
 	end
 end)

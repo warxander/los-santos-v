@@ -11,3 +11,11 @@ function string.from_ms(ms, highAccuracy)
 
 	return result
 end
+
+function string.to_speed(speed)
+	if Player.Settings.useMetricSystem then
+		return string.format('%d KM/H', math.floor(speed * 3.6))
+	else
+		return string.format('%d MP/H', math.floor(speed * 2.236936))
+	end
+end

@@ -8,18 +8,17 @@ local _headerTableSpacing = 0.0075
 
 local _tableSpacing = 0.001875
 local _tableHeight = 0.02625
-local _tablePositionWidth = 0.13125
-local _tableCashWidth = 0.075
-local _tableKdRatioWidth = 0.075
-local _tableKillsWidth = 0.075
-local _tableTextHorizontalMargin = 0.00225
+local _tablePositionWidth = 0.175
+local _tableCashWidth = 0.095
+local _tableKdRatioWidth = 0.095
+local _tableKillsWidth = 0.095
 local _tableTextVerticalMargin = 0.00245
-local _playerStatusWidth = 0.00225
-local _rankWidth = 0.0175
+local _playerStatusWidth = 0.00325
+local _rankWidth = 0.0190
 local _rankHeight = 0.0325
 
 local _voiceIndicatorWidth = 0.004
-local _playerNameMargin = 0.006
+local _playerNameMargin = 0.00225
 if Settings.enableVoiceChat then
 	_voiceIndicatorWidth = 0.01
 	_playerNameMargin = 0.0125
@@ -27,8 +26,9 @@ end
 
 local _tableWidth = _tablePositionWidth + _tableCashWidth + _tableKdRatioWidth + _tableKillsWidth
 
-local _headerScale = 0.2625
+local _headerScale = 0.2675
 local _positionScale = 0.375
+local _idScale = 0.2725
 local _rankScale = 0.325
 local _cashScale = 0.2625
 local _kdRatioScale = 0.2625
@@ -39,30 +39,21 @@ local _tableHeaderColor = { ['r'] = 25, ['g'] = 118, ['b'] = 210, ['a'] = 255 }
 local _tableHeaderTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 
 local _tablePositionTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
+local _tableRowColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
 
-local _tableCashColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
 local _tableCashTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
-
-local _tableKdRatioColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
 local _tableKdRatioTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
-
-local _tableKillsColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
 local _tableKillsTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 
 local _activeVoiceIndicatorColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 local _inactiveVoiceIndicatorColor = { ['r'] = 10, ['g'] = 10, ['b'] = 10, ['a'] = 255 }
 
-local _prestigeColor = { ['r'] = 240, ['g'] = 200, ['b'] = 80, ['a'] = 255 }
-local _maxPrestigeColor = { ['r'] = 224, ['g'] = 50, ['b'] = 50, ['a'] = 255 }
-local _prestigeBlendColor = {
-	['r'] = math.floor((_maxPrestigeColor.r - _prestigeColor.r) / Settings.maxPrestige),
-	['g'] = math.floor((_maxPrestigeColor.g - _prestigeColor.g) / Settings.maxPrestige),
-	['b'] = math.floor((_maxPrestigeColor.b - _prestigeColor.b) / Settings.maxPrestige),
-	['a'] = 255,
-}
-
 local _rankColor = { ['r'] = 44, ['g'] = 109, ['b'] = 184, ['a'] = 255 }
+local _rankBackgroundColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 255 }
 local _rankTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
+
+local _prestigeColor = { ['r'] = 240, ['g'] = 200, ['b'] = 80, ['a'] = 255 }
+local _prestigeTextColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 255 }
 
 function Scoreboard.DisplayThisFrame()
 	if _needUpdate then
@@ -143,38 +134,37 @@ function Scoreboard.DisplayThisFrame()
 		local avatarPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth / 2, ['y'] = tablePosition.y }
 		local playerPosition = { ['x'] = avatarPosition.x + _tablePositionWidth / 2, ['y'] = tablePosition.y }
 		local voiceIndicatorPosition = { ['x'] = (scoreboardPosition.x + tableAvatarPositionWidth / 2) + 0.015, ['y'] = tablePosition.y }
-		local rankPosition = { ['x'] = (scoreboardPosition.x + tableAvatarPositionWidth / 2 + _voiceIndicatorWidth) + 0.015, ['y'] = tablePosition.y + 0.001 }
-		local playerNamePosition = { ['x'] = (avatarPosition.x + _tablePositionWidth / 2 + _rankWidth / 2) + _playerNameMargin, ['y'] = tablePosition.y }
 		local playerStatusPosition = { ['x'] = avatarPosition.x + tableAvatarPositionWidth / 2 + _playerStatusWidth / 2, ['y'] = tablePosition.y }
+		local playerNamePosition = { ['x'] = playerStatusPosition.x + _playerStatusWidth / 2 + _playerNameMargin, ['y'] = tablePosition.y }
 		local cashPosition = { ['x'] = tableCashHeader.x, ['y'] = tablePosition.y }
 		local kdRatioPosition = { ['x'] = tableKdRatioHeader.x, ['y'] = tablePosition.y }
 		local killsPosition = { ['x'] = tableKillsHeader.x, ['y'] = tablePosition.y }
+		local rankPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth + _tablePositionWidth - _rankWidth - _playerNameMargin * 2, ['y'] = tablePosition.y + 0.001 }
+		local prestigePosition = { ['x'] = rankPosition.x - _rankWidth / 2 - _playerNameMargin * 2, ['y'] = rankPosition.y }
 		local tableText = { ['y'] = tablePosition.y - _tableHeight / 2 }
 
 		-- Draw player id
-		Gui.DrawRect(avatarPosition, tableAvatarPositionWidth, _tableHeight, _tableCashColor)
+		Gui.DrawRect(avatarPosition, tableAvatarPositionWidth, _tableHeight, _tableRowColor)
 
 		local idColor = Color.WHITE
 		if player.moderator then idColor = Color.PURPLE end
-		Gui.SetTextParams(0, idColor, _cashScale, false, false, true)
+		Gui.SetTextParams(0, idColor, _idScale, false, false, true)
 		Gui.DrawNumeric(player.id, { ['x'] = avatarPosition.x, ['y'] = tableText.y + _tableTextVerticalMargin })
 
 		-- Draw player name
 		local isPatron = player.patreonTier ~= 0
+		local isCrewMember = Player.CrewMembers[player.id] ~= nil
+		local isMe = player.id == Player.ServerId()
+
 		local playerColor = Color.DARK_BLUE
-		if Player.CrewMembers[player.id] then
-			playerColor = Color.LIGHT_BLUE
-		elseif isPatron then
+		if isPatron then
 			playerColor = Color.ORANGE
-		elseif player.id == Player.ServerId() then
-			playerColor = Color.BLUE
 		end
-		local tablePositionColor = { ['r'] = playerColor.r, ['g'] = playerColor.g, ['b'] = playerColor.b, ['a'] = isPatron and 228 or 160 }
+		local tablePositionColor = { ['r'] = playerColor.r, ['g'] = playerColor.g, ['b'] = playerColor.b, ['a'] = 160 }
 
 		Gui.DrawRect(playerPosition, _tablePositionWidth - tableAvatarPositionWidth, _tableHeight, tablePositionColor)
 		Gui.SetTextParams(4, _tablePositionTextColor, _positionScale, false, isPatron)
-		Gui.DrawText(player.name, { ['x'] = playerNamePosition.x - (_tablePositionWidth - tableAvatarPositionWidth) / 2 + _playerStatusWidth + _tableTextHorizontalMargin,
-			['y'] = tableText.y })
+		Gui.DrawText(player.name, { ['x'] = playerNamePosition.x, ['y'] = tableText.y })
 
 		-- Draw voice chat indicator
 		if Settings.enableVoiceChat then
@@ -185,28 +175,34 @@ function Scoreboard.DisplayThisFrame()
 		end
 
 		-- Draw rank
-		local playerRankColor = _rankColor
-		if player.prestige ~= 0 then playerRankColor = {
-			r = _prestigeColor.r + _prestigeBlendColor.r * player.prestige,
-			g = _prestigeColor.g + _prestigeBlendColor.g * player.prestige,
-			b = _prestigeColor.b + _prestigeBlendColor.b * player.prestige,
-			a = _prestigeBlendColor.a }
-		end
-		DrawSprite('mprankbadge', 'rankglobe_21x21_colour', rankPosition.x, rankPosition.y, _rankWidth, _rankHeight, 0.0, playerRankColor.r, playerRankColor.g, playerRankColor.b, playerRankColor.a)
+		DrawSprite('mprankbadge', 'globe_bg', rankPosition.x, rankPosition.y, _rankWidth, _rankHeight, 0.0, _rankBackgroundColor.r, _rankBackgroundColor.g, _rankBackgroundColor.b, _rankBackgroundColor.a)
+		DrawSprite('mprankbadge', 'globe', rankPosition.x, rankPosition.y, _rankWidth, _rankHeight, 0.0, _rankColor.r, _rankColor.g, _rankColor.b, _rankColor.a)
 		Gui.SetTextParams(4, _rankTextColor, _rankScale, false, false, true)
-		Gui.DrawNumeric(player.rank, { ['x'] = rankPosition.x, ['y'] = tableText.y + _tableTextVerticalMargin / 1.25 })
+		Gui.DrawNumeric(player.rank, { ['x'] = rankPosition.x, ['y'] = tableText.y + 0.002 })
+
+		-- Draw prestige
+		if player.prestige ~= 0 then
+			DrawSprite('mpleaderboard', 'leaderboard_bikers_icon', prestigePosition.x, prestigePosition.y, _rankWidth, _rankHeight, 0.0, _prestigeColor.r, _prestigeColor.g, _prestigeColor.b, _prestigeColor.a)
+			Gui.SetTextParams(4, _prestigeTextColor, _rankScale, false, false, true)
+			Gui.DrawNumeric(player.prestige, { ['x'] = prestigePosition.x, ['y'] = tableText.y + 0.002 })
+		end
 
 		-- Draw player status
-		local playerStatusColor = Color.WHITE
+		local playerStatusColor = Color.DARK_BLUE
+		if isCrewMember or isMe then
+			playerStatusColor = Color.BLUE
+		elseif isPatron then
+			playerStatusColor = Color.ORANGE
+		end
 		Gui.DrawRect(playerStatusPosition, _playerStatusWidth, _tableHeight, playerStatusColor)
 
 		-- Draw cash
-		Gui.DrawRect(cashPosition, _tableCashWidth, _tableHeight, _tableCashColor)
+		Gui.DrawRect(cashPosition, _tableCashWidth, _tableHeight, _tableRowColor)
 		Gui.SetTextParams(0, _tableCashTextColor, _cashScale, false, false, true)
 		Gui.DrawTextEntry('MONEY_ENTRY', { ['x'] = tableCashHeader.x, ['y'] = tableText.y + _tableTextVerticalMargin }, player.cash)
 
 		-- Draw kdRatio
-		Gui.DrawRect(kdRatioPosition, _tableKdRatioWidth, _tableHeight, _tableKdRatioColor)
+		Gui.DrawRect(kdRatioPosition, _tableKdRatioWidth, _tableHeight, _tableRowColor)
 		Gui.SetTextParams(0, _tableKdRatioTextColor, _kdRatioScale, false, false, true)
 		local kdRatio = '-'
 		if player.kdRatio then
@@ -215,7 +211,7 @@ function Scoreboard.DisplayThisFrame()
 		Gui.DrawText(kdRatio, { ['x'] = tableKdRatioHeader.x, ['y'] = tableText.y + _tableTextVerticalMargin })
 
 		-- Draw kills
-		Gui.DrawRect(killsPosition, _tableKillsWidth, _tableHeight, _tableKillsColor)
+		Gui.DrawRect(killsPosition, _tableKillsWidth, _tableHeight, _tableRowColor)
 		Gui.SetTextParams(0, _tableKillsTextColor, _killsScale, false, false, true)
 		Gui.DrawNumeric(player.kills, { ['x'] = tableKillsHeader.x, ['y'] = tableText.y + _tableTextVerticalMargin })
 

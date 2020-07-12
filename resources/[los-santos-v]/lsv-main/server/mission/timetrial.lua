@@ -3,13 +3,22 @@ local logger = Logger.New('TimeTrial')
 local _trialRecords = { }
 
 RegisterNetEvent('lsv:finishTimeTrial')
-AddEventHandler('lsv:finishTimeTrial', function(trialId, time)
+AddEventHandler('lsv:finishTimeTrial', function(trialId, time, place)
 	local player = source
 	if not PlayerData.IsExists(player) or not Settings.timeTrial.tracks[trialId] then
 		return
 	end
 
 	local isNewRecord = false
+	local isNewPersonal = false
+	local rewardMessage = 'Time: '
+
+	local currentRecord = PlayerData.GetRecord(player, trialId)
+	if not currentRecord or time < currentRecord then
+		isNewPersonal = true
+		PlayerData.UpdateRecord(player, trialId, time)
+		rewardMessage = 'New Personal Best: '
+	end
 
 	if not _trialRecords[trialId] or time < _trialRecords[trialId].Time then
 		isNewRecord = true
@@ -27,16 +36,24 @@ AddEventHandler('lsv:finishTimeTrial', function(trialId, time)
 		logger:info('New record { '..trialId..', '..recordData.PlayerName..', '..recordData.Time..' }')
 	end
 
-	local cash = isNewRecord and Settings.timeTrial.recordReward.cash or Settings.timeTrial.reward.cash
-	local exp = isNewRecord and Settings.timeTrial.recordReward.exp or Settings.timeTrial.reward.exp
+	local cash = isNewRecord and Settings.timeTrial.recordReward.cash or Settings.timeTrial.reward[place].cash
+	local exp = isNewRecord and Settings.timeTrial.recordReward.exp or Settings.timeTrial.reward[place].exp
+
+	if isNewPersonal then
+		cash = cash + Settings.timeTrial.personalReward.cash
+		exp = exp + Settings.timeTrial.personalReward.exp
+	end
 
 	PlayerData.UpdateCash(player, cash)
 	PlayerData.UpdateExperience(player, exp)
 
-	local message = isNewRecord and 'New Server Record: ' or 'Time: '
-	message = message..string.from_ms(time, true)
+	if isNewRecord then
+		rewardMessage = 'New Server Best: '
+	end
 
-	TriggerClientEvent('lsv:timeTrialFinished', player, true, message)
+	rewardMessage = rewardMessage..string.from_ms(time, true)
+
+	TriggerClientEvent('lsv:timeTrialFinished', player, true, rewardMessage)
 end)
 
 Citizen.CreateThread(function()

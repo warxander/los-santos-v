@@ -88,6 +88,12 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 		playerStats.Vehicles = json.decode(playerStats.Vehicles)
 	end
 
+	if not playerStats.Records then
+		playerStats.Records = { }
+	else
+		playerStats.Records = json.decode(playerStats.Records)
+	end
+
 	if not playerStats.Settings then
 		playerStats.Settings = { }
 	else

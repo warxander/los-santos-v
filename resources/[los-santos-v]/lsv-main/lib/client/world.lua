@@ -3,7 +3,7 @@ World.__index = World
 
 World.HotPropertyPlayer = nil
 World.BeastPlayer = nil
-World.ChallengingPlayer = nil
+World.KingOfTheCastlePlayer = nil
 
 local _wantedEnabled = true
 

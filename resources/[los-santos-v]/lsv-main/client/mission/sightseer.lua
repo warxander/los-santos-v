@@ -91,7 +91,7 @@ AddEventHandler('lsv:startSightseer', function()
 				if distance < Settings.sightseer.radius then
 					if not data.pickup.id then
 						data.pickup.id = CreatePickupRotate(`PICKUP_MONEY_CASE`, data.pickup.x, data.pickup.y, data.pickup.z, 0.0, 0.0, 0.0, 8, 1)
-					elseif HasPickupBeenCollected(data.pickup.id) then
+					elseif not DoesPickupExist(data.pickup.id) or HasPickupBeenCollected(data.pickup.id) then
 						Gui.DisplayPersonalNotification('You have collected the package.')
 						removePackage(i)
 						table.remove(_sightseer, i)

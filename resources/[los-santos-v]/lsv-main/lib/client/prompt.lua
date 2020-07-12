@@ -18,6 +18,10 @@ function Prompt.ShowAsync(message, type)
 	end
 end
 
+function Prompt.IsDisplaying()
+	return _isDisplaying
+end
+
 function Prompt.Hide()
 	_isDisplaying = false
 	RemoveLoadingPrompt()

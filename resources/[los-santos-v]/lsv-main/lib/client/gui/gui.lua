@@ -12,7 +12,7 @@ function Gui.GetPlayerName(serverId, color, lowercase)
 		if not color then
 			if Player.CrewMembers[serverId] then
 				color = '~b~'
-			elseif serverId == World.ChallengingPlayer or serverId == World.BeastPlayer or serverId == World.HotPropertyPlayer or MissionManager.IsPlayerOnMission(serverId) then
+			elseif serverId == World.BeastPlayer or serverId == World.HotPropertyPlayer or serverId == World.KingOfTheCastlePlayer or MissionManager.IsPlayerOnMission(serverId) then
 				color = '~r~'
 			else
 				color = '~w~'
@@ -154,7 +154,7 @@ end
 
 function Gui.DisplayObjectiveText(text)
 	BeginTextCommandPrint('STRING')
-	Gui.AddText(text)
+	Gui.AddText('<C>'..text..'</C>')
 	EndTextCommandPrint(1, true)
 end
 
@@ -182,16 +182,6 @@ function Gui.StartEvent(name, message)
 	end)
 
 	FlashMinimapDisplay()
-end
-
-function Gui.StartChallenge(name)
-	PlaySoundFrontend(-1, 'EVENT_START_TEXT', 'GTAO_FM_EVENTS_SOUNDSET', true)
-
-	Citizen.CreateThread(function()
-		local scaleform = Scaleform.NewAsync('MIDSIZED_MESSAGE')
-		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', name, '')
-		scaleform:renderFullscreenTimed(10000)
-	end)
 end
 
 function Gui.StartMission(name, message)
@@ -234,32 +224,5 @@ function Gui.FinishMission(name, success, reason)
 		message = message..reason
 
 		Gui.DisplayPersonalNotification(message)
-	end
-end
-
-function Gui.FinishChallenge(winner, looser, challengeName)
-	if not winner then
-		return
-	end
-
-	if winner ~= Player.ServerId() and looser ~= Player.ServerId() then
-		Gui.DisplayNotification(Gui.GetPlayerName(winner)..' has defeated '..Gui.GetPlayerName(looser)..' in '..challengeName..'.')
-		return
-	end
-
-	local isWinner = winner == Player.ServerId()
-
-	if isWinner then
-		PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
-	else
-		PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true)
-	end
-
-	if Player.IsActive() then
-		local scaleform = Scaleform.NewAsync('MIDSIZED_MESSAGE')
-		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', isWinner and 'WINNER' or 'LOOSER', '')
-		scaleform:renderFullscreenTimed(7000)
-	else
-		Gui.DisplayPersonalNotification(isWinner and 'You have won '..challengeName..'.' or 'You have lost '..challengeName..'.')
 	end
 end

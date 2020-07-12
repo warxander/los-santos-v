@@ -1,7 +1,6 @@
 local _players = { }
 local _prohibitedWeapons = {
 	'WEAPON_RAILGUN',
-	'WEAPON_BULLPUPRIFLE',
 	'WEAPON_GUSENBERG',
 }
 

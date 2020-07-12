@@ -5,13 +5,16 @@ local logger = Logger.New('EventScheduler')
 
 local _events = {
 	{ id = 'GunGame', name = 'Gun Game' },
-	{ id = 'HuntTheBeast', name = 'Hunt the Beast' },
+	-- { id = 'HuntTheBeast', name = 'Hunt the Beast' },
 	{ id = 'Castle', name = 'King of the Castle' },
 	{ id = 'StockPiling', name = 'Stockpiling' },
 	{ id = 'SharpShooter', name = 'Sharpshooter' },
 	{ id = 'HotProperty', name = 'Hot Property' },
 	{ id = 'PennedIn', name = 'Penned In' },
+	{ id = 'Highway', name = 'Highway' },
 }
+
+table.shuffle(_events)
 
 local _lastEventTimer = nil
 local _isEventInProgress = false

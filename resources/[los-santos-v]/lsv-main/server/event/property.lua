@@ -153,9 +153,9 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 	logger:info('Dropped { '..player..' }')
 
 	_propertyData.currentPlayer = nil
-	_propertyData.position = killData.killerPosition
+	_propertyData.position = killData.position
 
-	TriggerClientEvent('lsv:hotPropertyDropped', -1, player, killData.killerPosition)
+	TriggerClientEvent('lsv:hotPropertyDropped', -1, player, _propertyData.position)
 end)
 
 AddSignalHandler('lsv:playerConnected', function(player)

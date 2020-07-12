@@ -14,37 +14,57 @@ AddEventHandler('lsv:vehicleImportFinished', function(vehicle)
 end)
 
 RegisterNetEvent('lsv:purchaseVehicleImport')
-AddEventHandler('lsv:purchaseVehicleImport', function(tierIndex, isBike)
+AddEventHandler('lsv:purchaseVehicleImport', function(tierIndex, model)
 	local player = source
 	if MissionManager.IsPlayerOnMission(player) then
 		return
 	end
 
+	local vehicleData = Settings.vehicleImport.tiers[tierIndex].models[model]
+	if vehicleData.prestige and PlayerData.GetPrestige(player) < vehicleData.prestige then
+		return
+	end
+
 	local price = Settings.vehicleImport.tiers[tierIndex].price
+
 	if PlayerData.GetCash(player) >= price then
 		PlayerData.UpdateCash(player, -price)
 
 		local vehicle = { }
+
 		vehicle.tierIndex = tierIndex
-		local vehicleData = nil
+		vehicle.model = model
+		vehicle.isBike = vehicleData.isBike
+		vehicle.name =  vehicleData.name
 
-		local models = Settings.vehicleImport.tiers[tierIndex].models
-		if isBike then
-			models = table.filter(models, function(data)
-				return data.isBike
-			end)
-		end
-
-		vehicleData, vehicle.model = table.random(models)
-		vehicle.name = vehicleData.name
+		vehicle.isMaxedOut = Settings.vehicleImport.tiers[tierIndex].isMaxedOut
 		vehicle.location = table.random(Settings.vehicleImport.locations)
 		vehicle.plate = table.random(Settings.vehicleImport.plates)
 
 		_players[player] = vehicle
 
-		TriggerClientEvent('lsv:vehicleImportPurchased', player, vehicle, isBike)
+		TriggerClientEvent('lsv:vehicleImportPurchased', player, vehicle)
 	else
 		TriggerClientEvent('lsv:vehicleImportPurchased', player, nil)
+	end
+end)
+
+AddSignalHandler('lsv:playerConnected', function(player)
+	local vehiclesToRemove = { }
+
+	table.iforeach(PlayerData.GetVehicles(player), function(vehicle, index)
+		for model, cash in pairs(Settings.vehicleImport.removedVehicles) do
+			if vehicle.model == model then
+				table.insert(vehiclesToRemove, { index = index, cash = cash })
+				break
+			end
+		end
+	end)
+
+	for i = #vehiclesToRemove, 1, -1 do
+		local data = vehiclesToRemove[i]
+		PlayerData.RemoveVehicle(player, data.index)
+		PlayerData.UpdateCash(player, data.cash)
 	end
 end)
 

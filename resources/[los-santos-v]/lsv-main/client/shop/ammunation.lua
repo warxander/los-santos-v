@@ -127,7 +127,7 @@ AddEventHandler('lsv:init', function()
 
 	WarMenu.CreateSubMenu('ammunation_special_ammunition', 'ammunation_special', 'Ammunition')
 
-	WarMenu.CreateSubMenu('ammunation_special_ammo', 'ammunation_special', '')
+	WarMenu.CreateSubMenu('ammunation_special_ammo', 'ammunation_special_ammunition', '')
 	WarMenu.SetMenuButtonPressedSound('ammunation_special_ammo', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	while true do

@@ -46,6 +46,7 @@ function PlayerData.Add(player, playerStats)
 		longestKillDistance = playerStats.LongestKillDistance,
 		garages = playerStats.Garages,
 		vehicles = playerStats.Vehicles,
+		records = playerStats.Records,
 		settings = playerStats.Settings,
 	}
 
@@ -140,6 +141,25 @@ function PlayerData.GetKills(player)
 	return _playerSharedData[player].kills
 end
 
+function PlayerData.GetRecord(player, id)
+	return _playerLocalData[player].records[id]
+end
+
+function PlayerData.UpdateRecord(player, id, record)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local playerData = _playerLocalData[player]
+
+	local currentRecord = playerData.records[id] or 0
+	if record ~= currentRecord then
+		playerData.records[id] = record
+		Db.UpdateRecords(player, playerData.records)
+		TriggerClientEvent('lsv:recordUpdated', player, id, record)
+	end
+end
+
 function PlayerData.HasGarage(player, garage)
 	return _playerLocalData[player].garages[garage]
 end
@@ -212,7 +232,7 @@ function PlayerData.RemoveVehicle(player, vehicleIndex)
 	TriggerClientEvent('lsv:vehicleRemoved', player, vehicleIndex)
 end
 
-function PlayerData.UpdateCash(player, cash, killDetails)
+function PlayerData.UpdateCash(player, cash, killDetails, notPayToLeader)
 	if not PlayerData.IsExists(player) then
 		return
 	end
@@ -230,13 +250,11 @@ function PlayerData.UpdateCash(player, cash, killDetails)
 			cash = cash + math.floor(basicCash * prestige * Settings.prestigeBonus)
 		end
 
-		if Crew.IsCrewLeader(player) then
-			local crewCash = math.floor(basicCash * Settings.crew.rewardBonus.cash)
-			Crew.ForEachMember(player, function(member)
-				if member ~= player and PlayerData.IsExists(member) then
-					PlayerData.UpdateCash(member, crewCash)
-				end
-			end)
+		if not notPayToLeader then
+			local crewLeader = Crew.GetLeader(player)
+			if crewLeader and crewLeader ~= player then
+				PlayerData.UpdateCash(crewLeader, math.floor(basicCash * Settings.crew.rewardBonus.cash))
+			end
 		end
 	elseif cash < 0 then
 		cash = -math.min(PlayerData.GetCash(player), math.abs(cash))
@@ -252,7 +270,7 @@ function PlayerData.UpdateCash(player, cash, killDetails)
 	end
 end
 
-function PlayerData.UpdateExperience(player, experience)
+function PlayerData.UpdateExperience(player, experience, notPayToLeader)
 	if not PlayerData.IsExists(player) then
 		return
 	end
@@ -270,13 +288,11 @@ function PlayerData.UpdateExperience(player, experience)
 	end
 
 	if experience ~= 0 then
-		if Crew.IsCrewLeader(player) then
-			local crewExp = math.floor(basicExperience * Settings.crew.rewardBonus.exp)
-			Crew.ForEachMember(player, function(member)
-				if member ~= player and PlayerData.IsExists(member) then
-					PlayerData.UpdateExperience(member, crewExp)
-				end
-			end)
+		if not notPayToLeader then
+			local crewLeader = Crew.GetLeader(player)
+			if crewLeader and crewLeader ~= player then
+				PlayerData.UpdateExperience(crewLeader, math.floor(basicExperience * Settings.crew.rewardBonus.exp))
+			end
 		end
 
 		local playerData = _playerSharedData[player]

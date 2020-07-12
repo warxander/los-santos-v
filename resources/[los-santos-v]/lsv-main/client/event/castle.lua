@@ -60,8 +60,17 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 			SetBlipAlpha(_castleData.zoneBlip, isPlayerInFreeroam and 128 or 0)
 
 			if isPlayerInFreeroam then
-				Gui.DisplayObjectiveText(Player.DistanceTo(_castleData.place, true) <= Settings.castle.radius and
-					'Defend the ~p~Castle area~w~.' or 'Enter the ~p~Castle area~w~ to become the King.')
+				local objectiveText = ''
+				if not World.KingOfTheCastlePlayer then
+					objectiveText = 'Enter the ~p~Castle area~w~ to become the King.'
+				else
+					if World.KingOfTheCastlePlayer == Player.ServerId() then
+						objectiveText = 'Defend the ~p~Castle area~w~.'
+					else
+						objectiveText = Gui.GetPlayerName(World.KingOfTheCastlePlayer, '~w~')..'<C> is the ~r~King~w~. Take him out.</C>'
+					end
+				end
+				Gui.DisplayObjectiveText(objectiveText)
 
 				Gui.DrawTimerBar('EVENT END', math.max(0, Settings.castle.duration - GetGameTimer() + _castleData.startTime), 1)
 				Gui.DrawBar('YOUR SCORE', getPlayerPoints() or 0, 2)
@@ -81,6 +90,7 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 	-- Logic
 	Citizen.CreateThread(function()
 		local pointTimer = nil
+		local isInCastleArea = false
 
 		while true do
 			Citizen.Wait(0)
@@ -89,14 +99,25 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 				return
 			end
 
-			if Player.IsActive() then
-				if Player.DistanceTo(_castleData.place, true) <= Settings.castle.radius then
+			if Player.DistanceTo(_castleData.place, true) <= Settings.castle.radius and not IsPlayerDead(PlayerId()) then
+				if World.KingOfTheCastlePlayer == Player.ServerId() then
 					if not pointTimer then
 						pointTimer = Timer.New()
 					elseif pointTimer:elapsed() >= 1000 then
-						TriggerServerEvent('lsv:castleAddPoint')
+						TriggerServerEvent('lsv:castleAddPointToKing')
 						pointTimer:restart()
 					end
+				elseif not isInCastleArea then
+					TriggerServerEvent('lsv:playerInCastleArea')
+					isInCastleArea = true
+				end
+			else
+				isInCastleArea = false
+				if World.KingOfTheCastlePlayer == Player.ServerId() then
+					World.KingOfTheCastlePlayer = nil
+					_castleData.king = nil
+					pointTimer = nil
+					TriggerServerEvent('lsv:kingLeftCastleArea')
 				end
 			end
 		end
@@ -110,6 +131,18 @@ AddEventHandler('lsv:updateCastlePlayers', function(players)
 	end
 end)
 
+RegisterNetEvent('lsv:updateCastleKing')
+AddEventHandler('lsv:updateCastleKing', function(king)
+	if _castleData then
+		_castleData.king = king
+		World.KingOfTheCastlePlayer = king
+
+		if not king and Player.DistanceTo(_castleData.place, true) <= Settings.castle.radius then
+			TriggerServerEvent('lsv:playerInCastleArea')
+		end
+	end
+end)
+
 RegisterNetEvent('lsv:finishCastle')
 AddEventHandler('lsv:finishCastle', function(winners)
 	if not _castleData then
@@ -118,6 +151,8 @@ AddEventHandler('lsv:finishCastle', function(winners)
 
 	RemoveBlip(_castleData.blip)
 	RemoveBlip(_castleData.zoneBlip)
+
+	World.KingOfTheCastlePlayer = nil
 
 	if not winners then
 		_castleData = nil

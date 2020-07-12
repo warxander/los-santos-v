@@ -23,7 +23,20 @@ function spawnPlayer(spawnPoint)
 	if spawnPoint then
 		spawnPoint.z = spawnPoint.z - 1.0
 	else
-		local playerPosition = Player.Position()
+		local playerPos = Player.Position()
+		local startingPosition = nil
+
+		if Player.CrewLeader and Player.CrewLeader ~= Player.ServerId() then
+			local leaderCoords = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(Player.CrewLeader)))
+			if World.GetDistance(playerPos, leaderCoords, true) <= Settings.crew.spawnDistance then
+				startingPosition = leaderCoords
+			end
+		end
+
+		if not startingPosition then
+			startingPosition = playerPos
+		end
+
 		local radius = Settings.spawn.radius.min
 		local z = 1500.
 		local tryCount = 0
@@ -47,8 +60,8 @@ function spawnPlayer(spawnPoint)
 				yDiff = math.min(-radius, yDiff)
 			end
 
-			local x = playerPosition.x + xDiff
-			local y = playerPosition.y + yDiff
+			local x = startingPosition.x + xDiff
+			local y = startingPosition.y + yDiff
 
 			local _, groundZ = GetGroundZFor_3dCoord(x, y, z)
 			local validCoords, coords = GetSafeCoordForPed(x, y, groundZ + 1., false, 16)

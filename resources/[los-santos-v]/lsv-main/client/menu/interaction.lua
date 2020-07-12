@@ -71,7 +71,11 @@ local function weaponPrice(weapon)
 		return 'Prestige '..weapon.prestige
 	end
 
-	return '$'..weapon.cash
+	if weapon.cash then
+		return '$'..weapon.cash
+	end
+
+	return nil
 end
 
 local function weaponAmmoPrice(ammoType, ammo, maxAmmo)
@@ -243,8 +247,6 @@ AddEventHandler('lsv:init', function()
 	local selectedWeaponComponent = nil
 	local selectedAmmoType = nil
 
-	local challengeTarget = nil
-
 	Gui.CreateMenu('interaction', GetPlayerName(PlayerId()))
 	WarMenu.SetTitleColor('interaction', 255, 255, 255)
 	WarMenu.SetTitleBackgroundColor('interaction', Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, Color.WHITE.a)
@@ -285,9 +287,6 @@ AddEventHandler('lsv:init', function()
 	WarMenu.CreateSubMenu('ammunation_removeUpgradeConfirm', 'ammunation_weaponUpgrades', '')
 	WarMenu.SetMenuButtonPressedSound('ammunation_weaponUpgrades', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
-	WarMenu.CreateSubMenu('challenges', 'interaction', 'Select player to compete')
-	WarMenu.CreateSubMenu('challenges_list', 'challenges', 'Select challenge')
-
 	while true do
 		if WarMenu.IsMenuOpened('interaction') then
 			local killYourselfLeft = Settings.killYourselfInterval - killYourselfTimer:elapsed()
@@ -300,7 +299,6 @@ AddEventHandler('lsv:init', function()
 				ClearPedTasks(PlayerPedId())
 				WarMenu.CloseMenu()
 			elseif not IsPedActiveInScenario(PlayerPedId()) and WarMenu.MenuButton('Actions', 'actions') then
-			elseif Player.IsInFreeroam() and WarMenu.MenuButton('Challenges', 'challenges') then
 			elseif Player.IsACrewLeader() and WarMenu.MenuButton('Manage Crew', 'manageCrew') then
 			elseif Player.IsInCrew() and not Player.IsACrewLeader() and WarMenu.Button('Leave Crew') then
 				TriggerServerEvent('lsv:leaveCrew')
@@ -413,7 +411,8 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_weapons') then
 			table.foreach(Settings.ammuNationWeapons[selectedWeaponCategory], function(weapon)
-				if Weapon[weapon].cash and WarMenu.MenuButton(Weapon[weapon].name, 'ammunation_discard', weaponPrice(weapon)) then
+				local price = weaponPrice(weapon)
+				if price and WarMenu.MenuButton(Weapon[weapon].name, 'ammunation_discard', price) then
 					if not HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) then
 						WarMenu.OpenMenu('ammunation_weapons')
 						if Weapon[weapon].rank and Weapon[weapon].rank > Player.Rank then
@@ -537,23 +536,6 @@ AddEventHandler('lsv:init', function()
 				RemoveWeaponComponentFromPed(PlayerPedId(), selectedWeaponHash, selectedWeaponComponent)
 				Player.SaveWeapons()
 			elseif WarMenu.MenuButton('No', 'ammunation_weaponUpgrades') then
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('challenges') then
-			for _, i in ipairs(GetActivePlayers()) do
-				if i ~= PlayerId() then
-					if WarMenu.MenuButton(GetPlayerName(i), 'challenges_list') then
-						challengeTarget = GetPlayerServerId(i)
-					end
-				end
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('challenges_list') then
-			if WarMenu.Button('One on One Deathmatch') then
-				TriggerServerEvent('lsv:requestDuel', challengeTarget)
-				WarMenu.CloseMenu()
 			end
 
 			WarMenu.Display()

@@ -48,6 +48,7 @@ AddEventHandler('lsv:startHeist', function()
 				elseif not loseTheCopsStage then
 					SetBlipAlpha(_placeBlip, 0)
 					SetBlipAlpha(_placeAreaBlip, 128)
+					Gui.DrawBar('MAX TAKE', '$'..Settings.heist.take.rate.cash.limit, 3)
 					Gui.DrawBar('TAKE', '$'..take, 2)
 					Gui.DisplayObjectiveText('Stay in the ~y~store~w~ to steal as much as possible.')
 				else

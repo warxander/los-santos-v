@@ -65,6 +65,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 			SetVehicleTyresCanBurst(vehicle, false)
 			SetModelAsNoLongerNeeded(vehicleModelHash)
 
+			SetRagdollBlockingFlags(ped, 1)
 			SetPedCombatAttributes(ped, 3, false)
 			SetPedCombatAttributes(ped, 52, true)
 			TaskWarpPedIntoVehicle(ped, vehicle, -1)

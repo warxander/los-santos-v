@@ -135,15 +135,15 @@ function Discord.GetRolesById(id, callback)
 			local data = json.decode(response.data)
 
 			if data.roles then
-				for moderatorLevel, moderatorRole in pairs(_moderatorRoles) do
-					if table.ifind(data.roles, moderatorRole) then
+				for moderatorLevel = #_moderatorRoles, 1, -1 do
+					if table.ifind(data.roles, _moderatorRoles[moderatorLevel]) then
 						roles.Moderator = moderatorLevel
 						break
 					end
 				end
 
-				for patreonTier, patreonRole in pairs(_patreonRoles) do
-					if table.ifind(data.roles, patreonRole) then
+				for patreonTier = #_patreonRoles, 1, -1 do
+					if table.ifind(data.roles, _patreonRoles[patreonTier]) then
 						roles.PatreonTier = patreonTier
 						break
 					end

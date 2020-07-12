@@ -33,6 +33,10 @@ function Db.UpdateGarages(player, garages)
 	setValue(player, 'Garages', toDbString(json.encode(garages)))
 end
 
+function Db.UpdateRecords(player, records)
+	setValue(player, 'Records', toDbString(json.encode(records)))
+end
+
 function Db.UpdateVehicles(player, vehicles)
 	setValue(player, 'Vehicles', toDbString(json.encode(vehicles)))
 end

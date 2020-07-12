@@ -4,6 +4,8 @@ local _killstreak = 0
 local _lastKillTimer = Timer.New()
 
 local _killDetailsTimer = Timer.New()
+local _killDetailsScale = Animated.New(0.30, 250, 0.55)
+local _killDetailsAlpha = Animated.New(255, 250)
 local _lastKillDetails = nil
 
 local _lastEventTime = nil
@@ -143,6 +145,13 @@ AddEventHandler('lsv:bountyWasSet', function(player)
 	end
 end)
 
+RegisterNetEvent('lsv:tebexPackagePurchased')
+AddEventHandler('lsv:tebexPackagePurchased', function()
+	FlashMinimapDisplay()
+	PlaySoundFrontend(-1, 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET', true)
+	Gui.DisplayNotification('Thank You For Your Purchase!', 'CHAR_SOCIAL_CLUB', 'Los Santos V', 'Tebex Webstore', 4)
+end)
+
 Citizen.CreateThread(function()
 	local eventTimer = Timer.New()
 
@@ -182,7 +191,7 @@ AddEventHandler('lsv:init', function()
 				PlaySoundFrontend(-1, DeathTimer > 0 and 'Faster_Click' or 'Faster_Bar_Full', 'RESPAWN_ONLINE_SOUNDSET', true)
 			end
 
-			Gui.DrawProgressBar('RESPAWNING', GetTimeDifference(GetGameTimer(), DeathTimer) / TimeToRespawn, 0, Color.RED)
+			Gui.DrawProgressBar('RESPAWNING', GetTimeDifference(GetGameTimer(), DeathTimer) / TimeToRespawn, 2, Color.RED)
 		else
 			if HasHudScaleformLoaded(19) then
 				BeginScaleformMovieMethodHudComponent(19, 'OVERRIDE_ANIMATION_SPEED')
@@ -205,7 +214,7 @@ AddEventHandler('lsv:init', function(playerData)
 		local serverRestartIn = math.abs(serverRestartTimer:elapsed())
 
 		if serverRestartIn <= Settings.serverRestart.warnBeforeMs then
-			Gui.DrawTimerBar('SERVER RESTART IN', serverRestartIn, 16)
+			Gui.DrawTimerBar('SERVER RESTART IN', serverRestartIn, 17)
 		end
 	end
 end)
@@ -300,6 +309,8 @@ AddEventHandler('lsv:cashUpdated', function(cash, killDetails)
 	if killDetails and #killDetails ~= 0 then
 		_lastKillDetails = table.concat(killDetails, '\n')
 		_killDetailsTimer:restart()
+		_killDetailsAlpha:restart()
+		_killDetailsScale:restart()
 	end
 end)
 
@@ -330,16 +341,13 @@ AddEventHandler('lsv:rankUp', function(rank)
 end)
 
 AddEventHandler('lsv:init', function()
-	_killDetailsTimer:restart()
-	_lastKillTimer:restart()
-
 	while true do
 		Citizen.Wait(0)
 
 		if _lastKillDetails then
 			if Player.IsActive() and _killDetailsTimer:elapsed() < Settings.rewardNotificationTime then
-				Gui.SetTextParams(0, Color.WHITE, 0.25, true, true, true)
-				Gui.DrawText(_lastKillDetails, { x = 0.5, y = 0.65 })
+				Gui.SetTextParams(0, { r = Color.WHITE.r, g = Color.WHITE.g, b = Color.WHITE.b, a = _killDetailsAlpha:get() }, _killDetailsScale:get(), true, true, true)
+				Gui.DrawText(_lastKillDetails, { x = 0.5, y = 0.60 })
 			else
 				_lastKillDetails = nil
 			end
@@ -374,18 +382,17 @@ AddEventHandler('lsv:init', function()
 
 		if Player.PatreonTier == 0 and _discordUrl and not Player.Settings.disableTips then
 			Gui.SetTextParams(4, { r = 255, g = 255, b = 255, a = 255 }, 0.45, true)
-			Gui.DrawText(_discordUrl, { x = SafeZone.Left() + 0.785, y = SafeZone.Top() }, 1.0)
+			Gui.DrawText(_discordUrl, { x = SafeZone.Left() + 0.85, y = SafeZone.Top() }, 1.0)
 
 			Gui.SetTextParams(4, { r = 255, g = 255, b = 255, a = 255 }, 0.45, true)
-			Gui.DrawText('~c~Use ~w~/help~c~ command to learn more', { x = SafeZone.Left() + 0.785, y = SafeZone.Top() + 0.025 }, 1.0)
+			Gui.DrawText('~c~Use ~w~/help~c~ command to learn more', { x = SafeZone.Left() + 0.85, y = SafeZone.Top() + 0.025 }, 1.0)
 		end
 
 		local statusText = '~b~EXP~w~ '..math.floor(Player.Experience)..' / '..math.floor(Rank.GetRequiredExperience(Player.Rank + 1))..'	~g~$~w~ '..math.floor(Player.Cash)
 
 		local playerPed = PlayerPedId()
 		if IsPedInAnyVehicle(playerPed, true) then
-			local speed = math.floor(GetEntitySpeed(GetVehiclePedIsUsing(playerPed)) * 2.236936) --mph
-			statusText = statusText..'	'..string.format('%d MPH', speed)
+			statusText = statusText..'	'..string.to_speed(GetEntitySpeed(GetVehiclePedIsUsing(playerPed)))
 		end
 
 		Gui.SetTextParams(4, Color.WHITE, 0.3, true, true, false)

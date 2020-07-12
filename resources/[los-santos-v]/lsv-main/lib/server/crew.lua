@@ -5,6 +5,7 @@ local _crews = { }
 local _crewMembers = { }
 
 local _crewRaces = { }
+local _crewSalaries = { }
 
 local function addToCrew(player, leader)
 	_crewMembers[player] = leader
@@ -18,6 +19,7 @@ local function disbandCrew(leader)
 	end)
 	_crews[leader] = nil
 	_crewRaces[leader] = nil
+	_crewSalaries[leader] = nil
 end
 
 local function leaveCrew(player, disconnected)
@@ -35,6 +37,10 @@ end
 
 function Crew.IsCrewLeader(player)
 	return _crews[player]
+end
+
+function Crew.GetLeader(player)
+	return _crewMembers[player]
 end
 
 function Crew.ForEachMember(leader, func)
@@ -75,6 +81,7 @@ AddEventHandler('lsv:formCrew', function()
 	local player = source
 	if not _crews[player] and not _crewMembers[player] then
 		_crews[player] = { }
+		_crewSalaries[player] = Timer.New()
 		addToCrew(player, player)
 		TriggerClientEvent('lsv:crewFormed', player)
 	end
@@ -99,7 +106,7 @@ end)
 RegisterServerEvent('lsv:inviteToCrew')
 AddEventHandler('lsv:inviteToCrew', function(player)
 	local leader = source
-	if _crewMembers[player] then
+	if _crewMembers[player] or table.length(_crews[leader]) == Settings.crew.memberLimit then
 		TriggerClientEvent('lsv:crewInvitationDeclined', leader, player)
 		return
 	end
@@ -124,6 +131,24 @@ AddEventHandler('lsv:acceptCrewInvitation', function(leader)
 
 		addToCrew(player, leader)
 		TriggerClientEvent('lsv:crewInvitationAccepted', player, leader, crewMembers)
+	end
+end)
+
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(1000)
+
+		table.foreach(_crewSalaries, function(timer, leader)
+			if timer:elapsed() >= Settings.crew.salary.timeout then
+				Crew.ForEachMember(leader, function(member)
+					if member ~= leader then
+						PlayerData.UpdateCash(member, Settings.crew.salary.cash, nil, true)
+						PlayerData.UpdateExperience(member, Settings.crew.salary.exp, true)
+					end
+				end)
+				timer:restart()
+			end
+		end)
 	end
 end)
 

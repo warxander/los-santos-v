@@ -38,6 +38,8 @@ Player.Vehicles = { }
 Player.CrewLeader = nil
 Player.CrewMembers = { }
 
+Player.Records = { }
+
 Player.Settings = { }
 
 local _serverId = nil
@@ -78,6 +80,8 @@ function Player.Init(playerData)
 	Player.MissionsDone = playerData.MissionsDone
 	Player.EventsWon = playerData.EventsWon
 
+	Player.Records = playerData.Records
+
 	Player.Garages = playerData.Garages
 	Player.Vehicles = playerData.Vehicles
 
@@ -95,7 +99,7 @@ function Player.IsOnMission()
 end
 
 function Player.IsInFreeroam()
-	return Player.IsActive() and not MissionManager.Mission and not World.ChallengingPlayer
+	return Player.IsActive() and not MissionManager.Mission
 end
 
 function Player.HasGarage(garage)
@@ -429,6 +433,11 @@ end)
 RegisterNetEvent('lsv:garageUpdated')
 AddEventHandler('lsv:garageUpdated', function(garage)
 	Player.Garages[garage] = true
+end)
+
+RegisterNetEvent('lsv:recordUpdated')
+AddEventHandler('lsv:recordUpdated', function(id, record)
+	Player.Records[id] = record
 end)
 
 RegisterNetEvent('lsv:vehicleAdded')

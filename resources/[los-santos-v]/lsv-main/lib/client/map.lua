@@ -31,7 +31,7 @@ function Map.CreateRadiusBlip(x, y, z, radius, color)
 	SetBlipHighDetail(blip, true)
 	SetBlipSprite(blip, Blip.BIG_CIRCLE)
 	SetBlipColour(blip, color)
-	SetBlipAlpha(blip, 128)
+	SetBlipAlpha(blip, 96)
 
 	return blip
 end

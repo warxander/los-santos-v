@@ -33,6 +33,7 @@ local _vehicleMods = {
 			[0] = 'Street (2 of 4)',
 			[1] = 'Sports (3 of 4)',
 			[2] = 'Race (4 of 4)',
+			[3] = 'Super',
 		},
 	},
 
@@ -46,16 +47,12 @@ local _vehicleMods = {
 	},
 }
 
-local function getVehicleTier(vehicleModel)
-	for _, tierData in ipairs(Settings.vehicleImport.tiers) do
-		for model, _ in pairs(tierData.models) do
-			if model == vehicleModel then
-				return tierData.name
-			end
-		end
+local function getGarageType(capacity)
+	if capacity == 2 then
+		return 'Low-End'
+	elseif capacity == 6 then
+		return 'Medium'
 	end
-
-	return nil
 end
 
 RegisterNetEvent('lsv:garageUpdated')
@@ -93,7 +90,7 @@ AddEventHandler('lsv:init', function(playerData)
 	table.foreach(Settings.garages, function(garage, id)
 		local isOwnedGarage = Player.HasGarage(id)
 		local blip = isOwnedGarage and _ownedGarage.blip or _lockedGarage.blip
-		local blipText = isOwnedGarage and _ownedGarage.text or _lockedGarage.text
+		local blipText = isOwnedGarage and _ownedGarage.text or getGarageType(garage.capacity)..' '.._lockedGarage.text
 		_garageBlips[id] = Map.CreatePlaceBlip(blip, garage.location.x, garage.location.y, garage.location.z, blipText)
 		if isOwnedGarage then
 			SetBlipColour(_garageBlips[id], _ownedGarage.blipColour)
@@ -103,7 +100,6 @@ end)
 
 AddEventHandler('lsv:init', function()
 	Gui.CreateMenu('garage')
-	WarMenu.SetSubTitle('garage', 'Select Vehicle')
 	WarMenu.SetTitleBackgroundColor('garage', Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, Color.WHITE.a)
 	WarMenu.SetTitleBackgroundSprite('garage', 'shopui_title_carmod2', 'shopui_title_carmod2')
 
@@ -128,7 +124,7 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('garage_vehicle') then
 			local vehicle = Player.Vehicles[selectedVehicleIndex]
-			local vehicleTier = getVehicleTier(vehicle.model)
+			local vehicleTier = Vehicle.GetTier(vehicle.model)
 
 			if WarMenu.Button('Export', '$'..Settings.vehicleExport.rewards[vehicleTier].cash) then
 				WarMenu.CloseMenu()
@@ -211,6 +207,7 @@ AddEventHandler('lsv:init', function()
 							_garageId = id
 
 							if isOwnedGarage then
+								WarMenu.SetSubTitle('garage', table.length(Player.Vehicles)..' of '..Player.GetGaragesCapacity()..' garage slots used')
 								Gui.OpenMenu('garage')
 							else
 								WarMenu.SetSubTitle('garage_purchase', '('..garage.capacity..'-Car) '..garage.name)

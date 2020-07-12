@@ -75,7 +75,7 @@ AddEventHandler('lsv:init', function()
 		table.iforeach(Settings.travel.places, function(place, travelIndex)
 			SetBlipAlpha(_travelBlips[travelIndex], isPlayerInFreeroam and 255 or 0)
 
-			if isPlayerInFreeroam then
+			if isPlayerInFreeroam and World.HotPropertyPlayer ~= Player.ServerId() and World.BeastPlayer ~= Player.ServerId() and World.KingOfTheCastlePlayer ~= Player.ServerId() then
 				Gui.DrawPlaceMarker(place.inPosition, fastTravelColor)
 
 				if World.GetDistance(playerPosition, place.inPosition, true) < Settings.placeMarker.radius then

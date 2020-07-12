@@ -11,7 +11,7 @@ Settings.discordNotificationInterval = 900000
 Settings.minKillstreakNotification = 10
 Settings.serverTimeZone = '(UTC+1)'
 Settings.maxMenuOptionCount = 7
-Settings.spawnProtectionTime = 3000
+Settings.spawnProtectionTime = 1500
 Settings.killYourselfInterval = 60000
 
 -- Density Multipliers
@@ -42,6 +42,7 @@ Settings.player = {
 	['disableKillFeed'] = 'Disable Kill Feed',
 	['disableTips'] = 'Disable Tips',
 	['disableEventTimer'] = 'Disable Event Timer',
+	['useMetricSystem'] = 'Use Metric System',
 }
 
 -- Killstreak
@@ -54,8 +55,15 @@ Settings.prestigeBonus = 0.035
 
 -- Crew
 Settings.crew = {
-	rewardBonus = { cash = 0.1, exp = 0.05 },
+	rewardBonus = { cash = 0.25, exp = 0.25 },
+	salary = {
+		timeout = 300000,
+		cash = 5000,
+		exp = 500,
+	},
+	memberLimit = 8,
 	invitationTimeout = 10000,
+	spawnDistance = 100.,
 }
 
 -- Vehicle restriction
@@ -215,6 +223,7 @@ Settings.world.blacklistVehicles = {
 	`rhino`,
 	`khanjali`,
 	`hydra`,
+	`lazer`,
 	`hunter`,
 	`cargoplane`,
 }
@@ -267,9 +276,9 @@ Settings.patreon = {
 	reward = { 1.20, 1.35, 1.50 },
 	rent = { 0.80, 0.65, 0.50 },
 	daily = {
-		{ cash = 3000, exp = 1500 },
-		{ cash = 4000, exp = 2500 },
-		{ cash = 5000, exp = 3500 },
+		{ cash = 10000, exp = 4000 },
+		{ cash = 15000, exp = 6000 },
+		{ cash = 25000, exp = 10000 },
 	},
 }
 
@@ -277,25 +286,25 @@ Settings.patreon = {
 Settings.rewardNotificationTime = 5000
 
 Settings.cashPerKill = 50
-Settings.cashPerKillstreak = 25
-Settings.maxCashPerKillstreak = 500
-Settings.cashPerHeadshot = 25
-Settings.cashPerMission = 50
-Settings.cashPerMelee = 25
+Settings.cashPerKillstreak = 35
+Settings.maxCashPerKillstreak = 750
+Settings.cashPerHeadshot = 35
+Settings.cashPerMission = 75
+Settings.cashPerMelee = 100
 
 -- Experience
-Settings.expPerKill = 75
-Settings.expPerKillstreak = 25
-Settings.maxExpPerKillstreak = 500
-Settings.expPerHeadshot = 25
-Settings.expPerMission = 75
-Settings.expPerMelee = 25
+Settings.expPerKill = 100
+Settings.expPerKillstreak = 50
+Settings.maxExpPerKillstreak = 1000
+Settings.expPerHeadshot = 50
+Settings.expPerMission = 200
+Settings.expPerMelee = 500
 
 -- Bounty
 Settings.bounty = {
 	killstreak = 5,
 	reward = {
-		cash = 50,
+		cash = 100,
 		exp = 75,
 	},
 }
@@ -354,25 +363,18 @@ Settings.travel = {
 	},
 }
 
--- Challenges
-Settings.challenge = {
-	requestTimeout = 10000,
-}
-
--- Duel
-Settings.duel = {
-	targetScore = 5,
-	reward = {
-		exp = 1500,
-		cash = 3000,
-	},
-}
-
 -- Personal Vehicles
 Settings.personalVehicle = {
 	maxDistance = 50.0,
-	rentPrice = 100,
+	rentPrice = {
+		['Low'] = 100,
+		['Medium'] = 200,
+		['High'] = 300,
+		['Classic'] = 500,
+		['Prestige'] = 1500,
+	},
 	rerollColorsPrice = { base = 2500, perRoll = 500 },
+	rentTimeout = 15000,
 }
 
 -- Events
@@ -387,9 +389,9 @@ Settings.gun = {
 	categories = { 'Handguns', 'Shotguns', 'Submachine & Lightmachine Guns', 'Assault Rifles' },
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 5000 },
-			{ cash = 10000, exp = 4000 },
-			{ cash = 5000, exp = 3000 },
+			{ cash = 15000, exp = 10000 },
+			{ cash = 10000, exp = 6000 },
+			{ cash = 5000, exp = 4000 },
 		},
 		point = { cash = 100, exp = 60 },
 	},
@@ -503,9 +505,9 @@ Settings.stockPiling = {
 	radius = 2.0,
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 5000 },
-			{ cash = 10000, exp = 4000 },
-			{ cash = 5000, exp = 3000 },
+			{ cash = 15000, exp = 10000 },
+			{ cash = 10000, exp = 6000 },
+			{ cash = 5000, exp = 4000 },
 		},
 		point = { cash = 100, exp = 60 },
 	},
@@ -516,9 +518,9 @@ Settings.sharpShooter = {
 	duration = 900000,
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 5000 },
-			{ cash = 10000, exp = 4000 },
-			{ cash = 5000, exp = 3000 },
+			{ cash = 15000, exp = 10000 },
+			{ cash = 10000, exp = 6000 },
+			{ cash = 5000, exp = 4000 },
 		},
 		point = { cash = 100, exp = 60 },
 	},
@@ -547,11 +549,11 @@ Settings.castle = {
 	radius = 50.0,
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 5000 },
-			{ cash = 10000, exp = 4000 },
-			{ cash = 5000, exp = 3000 },
+			{ cash = 15000, exp = 10000 },
+			{ cash = 10000, exp = 6000 },
+			{ cash = 5000, exp = 4000 },
 		},
-		point = { cash = 50, exp = 30 },
+		point = { cash = 100, exp = 60 },
 	},
 }
 
@@ -560,11 +562,21 @@ Settings.penned = {
 	duration = 900000,
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 5000 },
-			{ cash = 10000, exp = 4000 },
-			{ cash = 5000, exp = 3000 },
+			{ cash = 15000, exp = 10000 },
+			{ cash = 10000, exp = 6000 },
+			{ cash = 5000, exp = 4000 },
 		},
 		point = { cash = 100, exp = 60 },
+	},
+}
+
+-- Highway
+Settings.highway = {
+	duration = 900000,
+	rewards = {
+		{ cash = 15000, exp = 10000 },
+		{ cash = 10000, exp = 6000 },
+		{ cash = 5000, exp = 4000 },
 	},
 }
 
@@ -590,11 +602,11 @@ Settings.property = {
 	},
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 5000 },
-			{ cash = 10000, exp = 4000 },
-			{ cash = 5000, exp = 3000 },
+			{ cash = 15000, exp = 10000 },
+			{ cash = 10000, exp = 6000 },
+			{ cash = 5000, exp = 4000 },
 		},
-		point = { cash = 50, exp = 30 },
+		point = { cash = 100, exp = 60 },
 	},
 }
 
@@ -648,17 +660,19 @@ Settings.huntTheBeast = {
 	radius = 2.0,
 	rewards = {
 		beast = {
-			landmark = { cash = 1500, exp = 500 },
+			landmark = { cash = 1500, exp = 1000 },
 		},
-		killer = { cash = 1000, exp = 600 },
+		killer = { cash = 1000, exp = 500 },
 	},
 }
 
 -- AmmuNation weapons
 Settings.ammuNationWeapons = {
 	['Handguns'] = {
+		'WEAPON_PISTOL',
 		'WEAPON_COMBATPISTOL',
 		'WEAPON_APPISTOL',
+		'WEAPON_HEAVYPISTOL',
 		'WEAPON_FLAREGUN',
 		'WEAPON_STUNGUN',
 		'WEAPON_PISTOL50',
@@ -669,22 +683,32 @@ Settings.ammuNationWeapons = {
 		'WEAPON_PUMPSHOTGUN',
 		'WEAPON_AUTOSHOTGUN',
 		'WEAPON_ASSAULTSHOTGUN',
+		'WEAPON_PUMPSHOTGUN_MK2',
 	},
 	['Submachine & Lightmachine Guns'] = {
 		'WEAPON_MICROSMG',
 		'WEAPON_SMG',
+		'WEAPON_MACHINEPISTOL',
 		'WEAPON_MG',
 		'WEAPON_COMBATMG',
+		'WEAPON_SMG_MK2',
+		'WEAPON_COMBATMG_MK2',
 	},
 	['Assault Rifles'] = {
 		'WEAPON_ASSAULTRIFLE',
 		'WEAPON_CARBINERIFLE',
 		'WEAPON_SPECIALCARBINE',
+		'WEAPON_BULLPUPRIFLE',
 		'WEAPON_ADVANCEDRIFLE',
 		'WEAPON_COMPACTRIFLE',
+		'WEAPON_ASSAULTRIFLE_MK2',
+		'WEAPON_CARBINERIFLE_MK2',
+		'WEAPON_BULLPUPRIFLE_MK2',
+		'WEAPON_SPECIALCARBINE_MK2',
 	},
 	['Sniper Rifles'] = {
 		'WEAPON_SNIPERRIFLE',
+		'WEAPON_HEAVYSNIPER_MK2',
 	},
 	['Thrown'] = {
 		'WEAPON_SMOKEGRENADE',
@@ -693,15 +717,9 @@ Settings.ammuNationWeapons = {
 		'WEAPON_STICKYBOMB',
 		'WEAPON_PROXMINE',
 	},
-	['Prestige'] = {
-		'WEAPON_RAYPISTOL',
-		'WEAPON_SMG_MK2',
-		'WEAPON_ASSAULTRIFLE_MK2',
-		'WEAPON_COMBATMG_MK2',
-		'WEAPON_SPECIALCARBINE_MK2',
-	},
 	['Special'] = {
 		'WEAPON_FIREWORK',
+		'WEAPON_RAYPISTOL',
 	},
 }
 
@@ -710,6 +728,11 @@ Settings.ammuNationRefillAmmo = {
 	['Pistol Rounds'] = {
 		weapons = {
 			'WEAPON_PISTOL',
+			'WEAPON_COMBATPISTOL',
+			'WEAPON_APPISTOL',
+			'WEAPON_HEAVYPISTOL',
+			'WEAPON_PISTOL50',
+			'WEAPON_DOUBLEACTION',
 		},
 		ammo = 24,
 		price = 0,
@@ -721,6 +744,7 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_AUTOSHOTGUN',
 			'WEAPON_PUMPSHOTGUN',
 			'WEAPON_SAWNOFFSHOTGUN',
+			'WEAPON_PUMPSHOTGUN_MK2',
 		},
 		ammo = 16,
 		price = 48,
@@ -730,6 +754,7 @@ Settings.ammuNationRefillAmmo = {
 		weapons = {
 			'WEAPON_SMG',
 			'WEAPON_MICROSMG',
+			'WEAPON_MACHINEPISTOL',
 			'WEAPON_COMPACTRIFLE',
 			'WEAPON_SMG_MK2',
 		},
@@ -752,9 +777,12 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_ASSAULTRIFLE',
 			'WEAPON_CARBINERIFLE',
 			'WEAPON_SPECIALCARBINE',
+			'WEAPON_BULLPUPRIFLE',
 			'WEAPON_ADVANCEDRIFLE',
 			'WEAPON_ASSAULTRIFLE_MK2',
 			'WEAPON_SPECIALCARBINE_MK2',
+			'WEAPON_BULLPUPRIFLE_MK2',
+			'WEAPON_CARBINERIFLE_MK2',
 		},
 		ammo = 60,
 		price = 216,
@@ -763,6 +791,7 @@ Settings.ammuNationRefillAmmo = {
 	['Sniper Rifle Rounds'] = {
 		weapons = {
 			'WEAPON_SNIPERRIFLE',
+			'WEAPON_HEAVYSNIPER_MK2',
 		},
 		ammo = 20,
 		price = 435,
@@ -852,20 +881,11 @@ Settings.ammuNationSpecialAmmo = {
 		price = 435,
 		type = 'Rounds',
 	},
-	['WEAPON_DOUBLEACTION'] = {
-		ammo = 6 * 3,
-		price = 0,
-		type = 'Rounds',
-	},
-	['WEAPON_PISTOL50'] = {
-		ammo = 9 * 2,
-		price = 0,
-		type = 'Rounds',
-	},
 }
 
 -- Garages
 Settings.garages = {
+	-- Low-end
 	['bighorn'] = { name = '12 Little Bighorn Avenue', location = { x = 724.84875488281, y = -1193.2897949219, z = 24.279363632202 }, exportPos = { x = 745.16888427734, y = -1186.9566650391, z = 23.862798690796, heading = 179.29594421387 }, capacity = 2, price = 25000 },
 	['popular'] = { name = 'Unit 124 Popular Street', location = { x = 850.49475097656, y = -1054.1494140625, z = 28.072996139526 }, exportPos = { x = 852.34204101562, y = -1067.7164306641, z = 27.638542175293, heading = 298.35974121094 }, capacity = 2, price = 25000 },
 	['strawberry'] = { name = '1 Strawberry Ave', location = { x = -243.27192687988, y = 6236.60546875, z = 31.489896774292 }, exportPos = { x = -236.02571105957, y = 6251.2338867188, z = 31.074998855591, heading = 180.44511413574 }, capacity = 2, price = 26000 },
@@ -878,6 +898,11 @@ Settings.garages = {
 	['perro'] = { name = '634 Boulevard Del Perro', location = { x = -1243.2457275391, y = -257.56817626953, z = 38.988910675049 }, exportPos = { x = -1254.8660888672, y = -264.32922363281, z = 38.547180175781, heading = 299.79345703125 }, capacity = 2, price = 33500 },
 	['mirror'] = { name = '0897 Mirror Park Boulevard', location = { x = 971.50524902344, y = -115.44449615479, z = 74.353134155273 }, exportPos = { x = 952.14764404297, y = -124.66337585449, z = 73.94783782959, heading = 227.5818939209 }, capacity = 2, price = 33500 },
 	['innocence'] = { name = 'Garage Innocence Boulevard', location = { x = -338.61236572266, y = -1464.3701171875, z = 30.57995223999 }, exportPos = { x = -336.50442504883, y = -1495.2662353516, z = 30.211177825928, heading = 1.8535748720169 }, capacity = 2, price = 34000 },
+
+	-- Medium
+	['lowenstein2'] = { name = '0552 Roy Lowenstein Boulevard', location = { x = 501.50500488281, y = -1497.0181884766, z = 29.2887134552 }, exportPos = { x = 504.46109008789, y = -1521.4616699219, z = 28.671909332275, heading = 48.719287872314 }, capacity = 6, price = 80000 },
+	['popular2'] = { name = 'Unit 14 Popular Street', location = { x = 892.61022949219, y = -887.27728271484, z = 26.992183685303 }, exportPos = { x = 861.90808105469, y = -885.46246337891, z = 24.955965042114, heading = 179.55696105957 }, capacity = 6, price = 77500 },
+	['route682'] = { name = '8754 Route 68', location = { x = -1133.1859130859, y = 2696.2443847656, z = 18.800424575806 }, exportPos = { x = -1147.6901855469, y = 2681.1328125, z = 17.476257324219, heading = 259.07339477539 }, capacity = 6, price = 65000 },
 }
 
 -- Missions
@@ -906,7 +931,7 @@ Settings.sightseer = {
 	time = 1200000,
 	count = 3,
 	radius = 150.,
-	reward = { cash = 7000, exp = 1500 },
+	reward = { cash = 8000, exp = 4000 },
 	locations = {
 		{
 			pickup = { x = -599.75555419922, y = 2092.7365722656, z = 131.34963989258 },
@@ -1017,7 +1042,6 @@ Settings.survival = {
 			pedModels = { `s_m_m_armoured_01`, `s_m_m_armoured_02`, `s_m_m_security_01` },
 		},
 
-		--
 		['railyard'] = {
 			name = 'Railyard',
 			position = { x = 1092.7104492188, y = -2295.0122070312, z = 30.121719360352 },
@@ -1042,12 +1066,41 @@ Settings.survival = {
 			},
 			pedModels = { `a_m_m_hillbilly_02` },
 		},
+
+		['farmhouse'] = {
+			name = 'Farmhouse',
+			position = { x = 2439.3093261719, y = 4970.5356445312, z = 46.825611114502 },
+			spawnPoints = {
+				{ x = 2412.2314453125, y = 5004.736328125, z = 46.619197845459 },
+				{ x = 2425.2802734375, y = 5016.2529296875, z = 46.738616943359 },
+				{ x = 2435.9274902344, y = 5013.0639648438, z = 46.890449523926 },
+				{ x = 2494.0275878906, y = 4967.0395507812, z = 44.63484954834 },
+				{ x = 2485.0385742188, y = 4957.9506835938, z = 44.899726867676 },
+				{ x = 2432.5437011719, y = 4908.1303710938, z = 41.560020446777 },
+			},
+			pedModels = { `a_m_m_hillbilly_01`, `a_m_m_hillbilly_02` },
+		},
+
+		['humaneLabs'] = {
+			name = 'Humane Labs And Research',
+			position = { x = 3519.0922851562, y = 3675.5209960938, z = 33.888694763184 },
+			spawnPoints = {
+				{ x = 3501.73046875, y = 3647.1701660156, z = 41.34029006958 },
+				{ x = 3558.8024902344, y = 3647.0881347656, z = 41.340343475342 },
+				{ x = 3537.9184570312, y = 3626.435546875, z = 41.34033203125 },
+				{ x = 3517.9624023438, y = 3629.8852539062, z = 41.340293884277 },
+				{ x = 3477.5869140625, y = 3700.1665039062, z = 33.888427734375 },
+				{ x = 3585.0666503906, y = 3690.2839355469, z = 40.808391571045 },
+			},
+			pedModels = { `s_m_m_chemsec_01`, `g_m_m_chemwork_01` },
+		},
 	},
 	reward = {
-		cash = 15000, exp = 7000,
+		cash = 25000, exp = 15000,
 		cashPerWave = 2000, expPerWave = 1000,
 	},
-	recordReward = { cash = 15000, exp = 5000 },
+	personalReward = { cash = 5000, exp = 2500 },
+	recordReward = { cash = 15000, exp = 10000 },
 }
 
 -- Vehicle Import Mission
@@ -1071,6 +1124,23 @@ Settings.vehicleImport = {
 		'W4LT3R',
 		'W4S1L',
 		'T0KY0',
+	},
+	removedVehicles = {
+		['fmj'] = 15000,
+		['sheava'] = 15000,
+		['jester'] =  10000,
+		['jester2'] = 10000,
+		['viseris'] = 15000,
+		['xls2'] = 15000,
+		['baller5'] = 15000,
+		['schafter2'] = 15000,
+		['cog552'] = 15000,
+		['insurgent2'] = 15000,
+		['nightshark'] = 15000,
+		['insurgent'] = 15000,
+		['boxville5'] = 15000,
+		['kuruma2'] = 15000,
+		['barrage'] = 15000,
 	},
 	tiers = {
 		{
@@ -1133,8 +1203,6 @@ Settings.vehicleImport = {
 				['feltzer2'] = { name = 'Benefactor Feltzer' },
 				['rapidgt'] = { name = 'Dewbauchee Rapid GT' },
 				['coquette'] = { name = 'Invetero Coquette' },
-				['jester'] = { name = 'Dinka Jester' },
-				['jester2'] = { name = 'Dinka Jester' },
 				['massacro2'] = { name = 'Dewbauchee Massacro' },
 				['massacro'] = { name = 'Dewbauchee Massacro' },
 				['voltic'] = { name = 'Coil Voltic' },
@@ -1176,6 +1244,8 @@ Settings.vehicleImport = {
 				['vortex'] = { name = 'Pegassi Vortex', isBike= true },
 				['zombiea'] = { name = 'Western Zombie Bobber', isBike= true },
 				['zombieb'] = { name = 'Western Zombie Chopper', isBike= true },
+				['blazer4'] = { name = 'Nagasaki Street Blazer', isBike = true },
+				['raptor'] = { name = 'BF Raptor', isBike = true },
 			},
 		},
 
@@ -1200,16 +1270,15 @@ Settings.vehicleImport = {
 				['nero'] = { name = 'Truffade Nero' },
 				['nero2'] = { name = 'Truffade Nero' },
 				['pariah'] = { name = 'Ocelot Pariah' },
-				['sheava'] = { name = 'Emperor ETR1' },
 				['toros'] = { name = 'Pegassi Toros' },
 				['cyclone'] = { name = 'Coil Cyclone' },
 				['turismo2'] = { name = 'Turismo Classic' },
 				['neon'] = { name = 'Pfister Neon' },
 				['t20'] = { name = 'Progen T20' },
 				['xa21'] = { name = 'Ocelot XA-21' },
-				['fmj'] = { name = 'Vapid FMJ' },
 				['gp1'] = { name = 'Progen GP1' },
 				['tezeract'] = { name = 'Pegassi Tezeract' },
+
 
 				['bati'] = { name = 'Pegassi Bati 801', isBike = true },
 				['bati2'] = { name = 'Pegassi Bati 801RR', isBike = true },
@@ -1219,10 +1288,46 @@ Settings.vehicleImport = {
 				['chimera'] = { name = 'Nagasaki Chimera', isBike = true },
 				['bf400'] = { name = 'Nagasaki BF400', isBike = true },
 				['gargoyle'] = { name = 'Western Gargoyle', isBike = true },
-				['raptor'] = { name = 'BF Raptor', isBike = true },
 				['cliffhanger'] = { name = 'Western Cliffhanger', isBike = true },
-				['blazer4'] = { name = 'Nagasaki Street Blazer', isBike = true },
 				['fcr2'] = { name = 'Pegassi FCR1000 Custom', isBike = true },
+			},
+		},
+
+		{
+			name = 'Classic',
+			price = 50000,
+			isMaxedOut = true,
+			models = {
+				['casco'] = { name = 'Lampadati Casco' },
+				['cheburek'] = { name = 'RUNE Cheburek' },
+				['btype2'] = { name = 'Albany Fränken Stange' },
+				['gt500'] = { name = 'Grotti GT500' },
+				['mamba'] = { name = 'Mamba' },
+				['michelli'] = { name = 'Lampadati Michelli GT' },
+				['btype3'] = { name = 'Albany Roosevelt Valor' },
+				['stinger'] = { name = 'Stinger' },
+				['stingergt'] = { name = 'Grotti Stinger GT' },
+				['feltzer3'] = { name = 'Benefactor Stirling GT' },
+				['swinger'] = { name = 'Ocelot Swinger' },
+				['tornado6'] = { name = 'Tornado Rat Rod' },
+				['ztype'] = { name = 'Z-Type' },
+			},
+		},
+
+		{
+			name = 'Prestige',
+			price = 100000,
+			models = {
+				['ardent'] = { name = 'Ocelot Ardent', prestige = 1 },
+				['voltic2'] = { name = 'Coil Rocket Voltic', prestige = 2 },
+				['shotaro'] = { name = 'Nagasaki Shotaro', prestige = 3, isBike = true },
+				['dune3'] = { name = 'Dune FAV', prestige = 4 },
+				['dune4'] = { name = 'BF Ramp Buggy', prestige = 5 },
+				['jb700'] = { name = 'Dewbauchee JB 700', prestige = 6 },
+				['thruster'] = { name = 'Mammoth Thruster', prestige = 7 },
+				['vigilante'] = { name = 'Grotti Vigilante', prestige = 8 },
+				['phantom2'] = { name = 'Jobuilt Phantom Wedge', prestige = 9 },
+				['oppressor'] = { name = 'Pegassi Oppressor', prestige = 10, isBike = true },
 			},
 		},
 	},
@@ -1265,6 +1370,7 @@ Settings.timeTrial = {
 				{ type = 17, x = -2681.189453125, y = 3306.2021484375, z = 32.194755554199 },
 				{ x = -2522.0732421875, y = 3259.833984375, z = 32.20064163208 },
 			},
+			time = { 60000, 90000, 120000 },
 		},
 
 		['beforeItWasCool'] = {
@@ -1289,6 +1395,7 @@ Settings.timeTrial = {
 				{ type = 16, x = 970.42694091797, y = -287.25823974609, z = 66.403961181641 },
 				{ x = 1018.3796386719, y = -320.44540405273, z = 66.615844726562 },
 			},
+			time = { 60000, 90000, 120000 },
 		},
 
 		['dippingIn'] = {
@@ -1333,6 +1440,7 @@ Settings.timeTrial = {
 				{ type = 15, x = 1010.2782592773, y = 472.65078735352, z = 95.80534362793 },
 				{ x = 891.80639648438, y = 291.97918701172, z = 86.505249023438 },
 			},
+			time = { 150000, 180000, 210000 },
 		},
 
 		['downtownUnderground'] = {
@@ -1360,6 +1468,7 @@ Settings.timeTrial = {
 				{ type = 16, x = -61.810863494873, y = -551.70281982422, z = 39.167121887207 },
 				{ x = -96.678184509277, y = -625.59497070312, z = 35.650379180908 },
 			},
+			time = { 90000, 120000, 150000 },
 		},
 
 		['dockyard'] = {
@@ -1396,6 +1505,7 @@ Settings.timeTrial = {
 				{ type = 15, x = 725.95513916016, y = -2584.9577636719, z = 18.050830841064 },
 				{ x = 727.67541503906, y = -2827.5346679688, z = 5.6210932731628 },
 			},
+			time = { 90000, 120000, 150000 },
 		},
 
 		['stadiumTour'] = {
@@ -1429,10 +1539,16 @@ Settings.timeTrial = {
 				{ type = 15, x = -955.64813232422, y = -2409.9240722656, z = 13.283555030823 },
 				{ x = -1000.4892578125, y = -2489.0034179688, z = 13.277319908142 },
 			},
+			time = { 90000, 120000, 150000 },
 		},
 	},
-	reward = { cash = 2500, exp = 1000 },
-	recordReward = { cash = 25000, exp = 5000 },
+	reward = {
+		{ cash = 10000, exp = 2500 },
+		{ cash = 7000, exp = 1500 },
+		{ cash = 5000, exp = 1000 },
+	},
+	personalReward = { cash = 5000, exp = 1000 },
+	recordReward = { cash = 25000, exp = 10000 },
 }
 
 -- Vehicle Export Mission
@@ -1441,9 +1557,11 @@ Settings.vehicleExport = {
 	time = 1200000,
 	dropRadius = 10.,
 	rewards = {
-		['Low'] = { cash = 15000, exp = 2000 },
-		['Medium'] = { cash = 35000, exp = 3000 },
-		['High'] = { cash = 50000, exp = 4000 },
+		['Low'] = { cash = 20000, exp = 13000 },
+		['Medium'] = { cash = 30000, exp = 14000 },
+		['High'] = { cash = 40000, exp = 15000 },
+		['Classic'] = { cash = 75000, exp = 15000 },
+		['Prestige'] = { cash = 125000, exp = 15000 },
 	},
 	locations = {
 		-- Private
@@ -1479,7 +1597,7 @@ Settings.cargo = {
 	missionName = 'Special Cargo',
 	time = 1200000,
 	wantedLevel = 4,
-	rewardPerPlayer = { cash = 500, exp = 200 },
+	rewardPerPlayer = { cash = 1000, exp = 500 },
 	deliveryRadius = 15.,
 	goods = {
 		'Animal Materials',
@@ -1495,10 +1613,10 @@ Settings.cargo = {
 		'Weapons & Ammo',
 	},
 	crates = {
-		{ name = '1 Crate', price = 2000, reward = { cash = 5000, exp = 1000 } },
-		{ name = '2 Crates', price = 4000, reward = { cash = 10000, exp = 2000 } },
-		{ name = '3 Crates', price = 8000, reward = { cash = 20000, exp = 3000 } },
-		{ name = '5 Crates', price = 12000, reward = { cash = 30000, exp = 4000 } },
+		{ name = '1 Crate', price = 2000, reward = { cash = 5000, exp = 2000 } },
+		{ name = '2 Crates', price = 4000, reward = { cash = 10000, exp = 4000 } },
+		{ name = '3 Crates', price = 8000, reward = { cash = 20000, exp = 6000 } },
+		{ name = '5 Crates', price = 12000, reward = { cash = 30000, exp = 8000 } },
 	},
 	vehicles = {
 		`speedo`,
@@ -1551,14 +1669,14 @@ Settings.heist = {
 		interval = 3000,
 		rate = {
 			cash = { min = 250, max = 500, limit = 25000 },
-			exp = 0.35,
+			exp = 0.6,
 		},
 	},
 }
 
 -- Velocity Mission
 Settings.velocity = {
-	enterVehicleTime = 600000,
+	enterVehicleTime = 900000,
 	preparationTime = 10000,
 	driveTime = 300000,
 	detonationTime = 5000,
@@ -1569,10 +1687,10 @@ Settings.velocity = {
 		{ x = -1330.0638427734, y = -228.81066894531, z = 42.231548309326, heading = 306.03131103516 },
 		{ x = -1215.8439941406, y = -1346.943359375, z = 3.6422889232635, heading = 293.01425170898 },
 	},
-	minSpeed = 60,
+	minSpeed = 26.8225,
 	rewards = {
 		cash = { min = 15000, max = 25000, perAboutToDetonate = 1000 },
-		exp = { min = 5000, max = 7000, perAboutToDetonate = 200 },
+		exp = { min = 13000, max = 15000, perAboutToDetonate = 200 },
 	},
 }
 
@@ -1581,7 +1699,7 @@ Settings.mostWanted = {
 	time = 480000,
 	rewards = {
 		maxCash = 25000,
-		maxExp = 7000,
+		maxExp = 15000,
 	},
 }
 
@@ -1625,7 +1743,7 @@ Settings.assetRecovery = {
 	dropRadius = 10.,
 	rewards = {
 		cash = { min = 15000, max = 25000 },
-		exp = { min = 5000, max = 7000 },
+		exp = { min = 13000, max = 15000 },
 	},
 }
 
@@ -1661,7 +1779,7 @@ Settings.headhunter = {
 		`WEAPON_RPG`,
 	},
 	vehicles = { `baller5`, `cog552` },
-	reward = { cash = 6000, exp = 1500 },
+	reward = { cash = 6000, exp = 3750 },
 }
 
 -- Crates
@@ -1669,7 +1787,7 @@ Settings.crate = {
 	cash = 15000,
 	nthRank = 10,
 	reward = {
-		exp = 2500,
+		exp = 5000,
 		cash = 10000,
 	},
 	radius = 200.,

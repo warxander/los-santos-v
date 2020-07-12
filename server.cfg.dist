@@ -32,6 +32,16 @@ endpoint_add_udp "0.0.0.0:30120"
 
 load_server_icon logo.png
 
+### Tebex
+sv_tebexSecret ""
+
+#### Booster Packs
+#### Tebex command format: boost {hexid} {packageId} {purchaseQuantity}
+#### Booster Pack JSON format: { \"packageId\": 1, \"exp\": 100, \"cash\": 500 }
+set tebex_smallBoosterPack  ""
+set tebex_mediumBoosterPack ""
+set tebex_largeBoosterPack  ""
+
 ### UI
 set discord_url ""
 set pause_menu_title ""

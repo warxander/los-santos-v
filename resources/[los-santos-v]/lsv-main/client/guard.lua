@@ -47,11 +47,6 @@ Citizen.CreateThread(function()
 			ResetEntityAlpha(PlayerPedId())
 		end
 
-		-- Disable weapon firing
-		if Player.InPassiveMode then
-			DisablePlayerFiring(PlayerId())
-		end
-
 		-- Infinite ammo
 		SetPedInfiniteAmmoClip(PlayerPedId(), false)
 	end

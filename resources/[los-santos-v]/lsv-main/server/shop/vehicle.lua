@@ -27,13 +27,13 @@ AddEventHandler('lsv:rerollVehicleColors', function(vehicleIndex)
 end)
 
 RegisterNetEvent('lsv:rentVehicle')
-AddEventHandler('lsv:rentVehicle', function(vehicleIndex)
+AddEventHandler('lsv:rentVehicle', function(vehicleIndex, vehicleTier)
 	local player = source
 	if not PlayerData.IsExists(player) or vehicleIndex > table.length(PlayerData.GetVehicles(player)) then
 		return
 	end
 
-	local rentPrice = Settings.personalVehicle.rentPrice
+	local rentPrice = Settings.personalVehicle.rentPrice[vehicleTier]
 
 	local patreonTier = PlayerData.GetPatreonTier(player)
 	if patreonTier ~= 0 then

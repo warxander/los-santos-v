@@ -86,6 +86,15 @@ AddEventHandler('lsv:removeNetIds', function(netIds)
 	end)
 end)
 
+function Network.IsRegistered(netId)
+	local netData = _netIds[netId]
+	return netData and not netData.delete
+end
+
+function Network.GetData(netId, dataKey)
+	return _netIds[netId][dataKey]
+end
+
 function Network.RegisterVehicle(vehicle, data)
 	return registerEntity(vehicle, VehToNet, data)
 end

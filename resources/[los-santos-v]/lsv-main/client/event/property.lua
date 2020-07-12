@@ -123,10 +123,11 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 			end
 
 			if World.HotPropertyPlayer == Player.ServerId() then
-				if IsPedInAnyVehicle(PlayerPedId(), false) then
+				local playerPed = PlayerPedId()
+
+				if IsPedInAnyPlane(playerPed) or IsPedInAnyHeli(playerPed) then
 					TriggerServerEvent('lsv:hotPropertyDropped', Player.Position())
 					World.HotPropertyPlayer = nil
-					Gui.DisplayHelpText('Keep walking on foot to hold the briefcase.')
 				else
 					if not pointTimer then
 						pointTimer = Timer.New()

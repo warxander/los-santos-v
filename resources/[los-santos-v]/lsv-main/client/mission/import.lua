@@ -3,9 +3,9 @@ local _missionPlaces = {
 	{ x = -355.33285522461, y = -127.68566131592, z = 39.430629730225 },
 	{ x = 1188.1120605469, y = 2648.0578613281, z = 37.850742340088 },
 	{ x = 120.55924224854, y = 6625.4282226562, z = 31.956226348877 },
-	{ x = -1485.5867919922, y = -909.01232910156, z = 10.023587226868, isBike = true },
-	{ x = 998.70379638672, y = -1486.9389648438, z = 31.389440536499, isBike = true },
-	{ x = 1394.8724365234, y = 3625.0979003906, z = 35.011951446533, isBike = true },
+	{ x = -1485.5867919922, y = -909.01232910156, z = 10.023587226868 },
+	{ x = 998.70379638672, y = -1486.9389648438, z = 31.389440536499 },
+	{ x = 1394.8724365234, y = 3625.0979003906, z = 35.011951446533 },
 }
 
 local _missionName = 'Vehicle Import'
@@ -21,44 +21,12 @@ local _garageData = nil
 
 local _helpHandler = nil
 
-local function generateRandomVehicleMods(vehicle, model, isBike)
-	SetVehicleModKit(vehicle, 0)
-
-	local vehicleMods = { }
-	vehicleMods.model = model
-
-	vehicleMods.mods = { }
-	for modType = 0, 49 do
-		if modType ~= 16 then
-			local modNum = GetNumVehicleMods(vehicle, modType)
-			if modNum ~= 0 then
-				local modIndex = GetRandomIntInRange(0, modNum)
-				vehicleMods.mods[tostring(modType)] = modIndex
-			end
-		end
+local function getModelRequirements(modelData)
+	if modelData.prestige and Player.Prestige < modelData.prestige then
+		return 'Prestige '..modelData.prestige
 	end
 
-	if isBike then
-		local wheelType = vehicleMods.mods['23'] or vehicleMods.mods['24'] -- Front or Back Wheels
-		if wheelType then
-			vehicleMods.mods['23'] = wheelType
-			vehicleMods.mods['24'] = wheelType
-		end
-	end
-
-	vehicleMods.colors = { }
-	vehicleMods.colors.primary = Color.GetRandomRgb()
-	vehicleMods.colors.secondary = Color.GetRandomRgb()
-	vehicleMods.colors.tyreSmoke = Color.GetRandomRgb()
-
-	if GetRandomIntInRange(0, 2) ~= 0 then
-		vehicleMods.neons = true
-	end
-	if vehicleMods.neons then
-		vehicleMods.colors.neon = Color.GetRandomRgb()
-	end
-
-	return vehicleMods
+	return nil
 end
 
 RegisterNetEvent('lsv:vehicleImportFinished')
@@ -98,25 +66,25 @@ AddEventHandler('lsv:vehicleImportFinished', function(success, reason)
 end)
 
 RegisterNetEvent('lsv:vehicleImportPurchased')
-AddEventHandler('lsv:vehicleImportPurchased', function(vehicle, isBike)
+AddEventHandler('lsv:vehicleImportPurchased', function(vehicle)
 	Prompt.Hide()
 
 	if vehicle then
 		WarMenu.CloseMenu()
 		MissionManager.StartMission('vehicleImport', _missionName)
-		TriggerEvent('lsv:startVehicleImport', vehicle, isBike)
+		TriggerEvent('lsv:startVehicleImport', vehicle)
 	else
 		Gui.DisplayPersonalNotification('You don\'t have enough cash.')
 	end
 end)
 
-AddEventHandler('lsv:startVehicleImport', function(vehicle, isBike)
+AddEventHandler('lsv:startVehicleImport', function(vehicle)
 	local modelHash = GetHashKey(vehicle.model)
 	Streaming.RequestModelAsync(modelHash)
 	_vehicle = CreateVehicle(modelHash, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.heading, false, true)
 	SetModelAsNoLongerNeeded(modelHash)
 
-	_vehicleData = generateRandomVehicleMods(_vehicle, vehicle.model, isBike)
+	_vehicleData = Vehicle.GenerateRandomMods(_vehicle, vehicle.model, vehicle.isBike, vehicle.isMaxedOut)
 	_vehicleData.name = vehicle.name
 	_vehicleData.plate = vehicle.plate
 	Vehicle.ApplyMods(_vehicle, _vehicleData)
@@ -126,7 +94,7 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle, isBike)
 
 	_vehicleBlip = AddBlipForEntity(_vehicle)
 	SetBlipHighDetail(_vehicleBlip, true)
-	SetBlipSprite(_vehicleBlip, isBike and Blip.IMPORT_BIKE or Blip.IMPORT_CAR)
+	SetBlipSprite(_vehicleBlip, vehicle.isBike and Blip.IMPORT_BIKE or Blip.IMPORT_CAR)
 	SetBlipColour(_vehicleBlip, Color.BLIP_BLUE)
 	SetBlipRouteColour(_vehicleBlip, Color.BLIP_BLUE)
 	SetBlipAlpha(_vehicleBlip, 0)
@@ -164,7 +132,7 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle, isBike)
 			SetBlipAlpha(_garageData.blip, isInVehicle and 255 or 0)
 
 			if Player.IsActive() then
-				Gui.DisplayObjectiveText(isInVehicle and 'Deliver the '..vehicle.name..' to the ~y~Garage~w~.' or 'Collect the ~b~vehicle~w~.')
+				Gui.DisplayObjectiveText(isInVehicle and 'Deliver the '..vehicle.name..' to the ~y~Garage~w~.' or 'Collect the ~b~'..vehicle.name..'~w~.')
 				Gui.DrawTimerBar('MISSION TIME', Settings.vehicleImport.time - missionTimer:elapsed(), 1)
 
 				if isInVehicle then
@@ -236,14 +204,32 @@ AddEventHandler('lsv:init', function()
 	WarMenu.SetSubTitle('vehicle_import', 'Select Vehicle Tier')
 	WarMenu.SetTitleBackgroundColor('vehicle_import', Color.LIME.r, Color.LIME.g, Color.LIME.b, Color.LIME.a)
 
+	WarMenu.CreateSubMenu('vehicle_import_list', 'vehicle_import')
+	WarMenu.SetMenuButtonPressedSound('vehicle_import_list', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+
+	local _tierIndex = nil
+
 	while true do
 		Citizen.Wait(0)
 
 		if WarMenu.IsMenuOpened('vehicle_import') then
-			table.foreach(Settings.vehicleImport.tiers, function(tier, tierIndex)
-				if WarMenu.Button(tier.name, '$'..tier.price) then
-					TriggerServerEvent('lsv:purchaseVehicleImport', tierIndex, _missionPlaces[_placeIndex].isBike)
-					Prompt.ShowAsync()
+			table.iforeach(Settings.vehicleImport.tiers, function(tier, tierIndex)
+				if WarMenu.MenuButton(tier.name, 'vehicle_import_list', '$'..tier.price) then
+					_tierIndex = tierIndex
+					WarMenu.SetSubTitle('vehicle_import_list', tier.name..' Vehicles')
+				end
+			end)
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('vehicle_import_list') then
+			table.foreach(Settings.vehicleImport.tiers[_tierIndex].models, function(data, model)
+				if WarMenu.Button(data.name, getModelRequirements(data)) then
+					if data.prestige and Player.Prestige < data.prestige then
+						Gui.DisplayPersonalNotification('Your Prestige is too low.')
+					else
+						TriggerServerEvent('lsv:purchaseVehicleImport', _tierIndex, model)
+						Prompt.ShowAsync()
+					end
 				end
 			end)
 
@@ -254,8 +240,7 @@ end)
 
 AddEventHandler('lsv:init', function()
 	table.iforeach(_missionPlaces, function(place)
-		local blipSprite = place.isBike and Blip.VEHICLE_IMPORT_BIKE or Blip.VEHICLE_IMPORT_CAR
-		place.blip = Map.CreatePlaceBlip(blipSprite, place.x, place.y, place.z, _missionName, Color.BLIP_LIME)
+		place.blip = Map.CreatePlaceBlip(Blip.VEHICLE_IMPORT, place.x, place.y, place.z, _missionName, Color.BLIP_LIME)
 	end)
 
 	while true do
@@ -285,7 +270,7 @@ AddEventHandler('lsv:init', function()
 							end
 						end
 					end
-				elseif WarMenu.IsMenuOpened('vehicle_import') and _placeIndex == placeIndex then
+				elseif (WarMenu.IsMenuOpened('vehicle_import') or WarMenu.IsMenuOpened('vehicle_import_list')) and _placeIndex == placeIndex then
 					WarMenu.CloseMenu()
 					Prompt.Hide()
 				end

@@ -34,7 +34,6 @@ server_scripts {
 	'lib/server/playerdata.lua',
 	'lib/server/eventscheduler.lua',
 	'lib/server/missionmanager.lua',
-	'lib/server/challengemanager.lua',
 	'lib/server/crew.lua',
 	'lib/server/network.lua',
 }
@@ -53,6 +52,7 @@ server_scripts {
 	'server/pingkick.lua',
 	'server/travel.lua',
 	'server/garage.lua',
+	'server/tebex.lua',
 
 	'server/event/castle.lua',
 	'server/event/gun.lua',
@@ -61,6 +61,7 @@ server_scripts {
 	'server/event/stockpiling.lua',
 	'server/event/sharpshooter.lua',
 	'server/event/penned.lua',
+	'server/event/highway.lua',
 
 	'server/shop/ammunation.lua',
 	'server/shop/skinshop.lua',
@@ -77,8 +78,6 @@ server_scripts {
 	'server/mission/sightseer.lua',
 	'server/mission/survival.lua',
 	'server/mission/timetrial.lua',
-
-	'server/challenge/duel.lua',
 }
 
 -- Client files
@@ -100,6 +99,7 @@ client_scripts {
 	'lib/client/prompt.lua',
 
 	'lib/client/gui/safezone.lua',
+	'lib/client/gui/animated.lua',
 	'lib/client/gui/gui.lua',
 	'lib/client/gui/bar.lua',
 	'lib/client/gui/helpqueue.lua',
@@ -112,7 +112,6 @@ client_scripts {
 	'lib/client/map.lua',
 	'lib/client/playerdata.lua',
 	'lib/client/missionmanager.lua',
-	'lib/client/challengemanager.lua',
 	'lib/client/vehicle.lua',
 	'lib/client/network.lua',
 	'lib/client/decor.lua',
@@ -141,6 +140,7 @@ client_scripts {
 	'client/event/stockpiling.lua',
 	'client/event/sharpshooter.lua',
 	'client/event/penned.lua',
+	'client/event/highway.lua',
 
 	'client/menu/interaction.lua',
 	'client/menu/moderator.lua',
@@ -160,6 +160,4 @@ client_scripts {
 	'client/mission/sightseer.lua',
 	'client/mission/survival.lua',
 	'client/mission/timetrial.lua',
-
-	'client/challenge/duel.lua',
 }
