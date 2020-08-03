@@ -83,6 +83,8 @@ function Vehicle.ApplyMods(vehicle, vehicleMods)
 		SetVehicleMod(vehicle, tonumber(modType), modIndex)
 	end)
 
+	SetVehicleMod(vehicle, 10, -1) -- Weapons?
+
 	SetVehicleCustomPrimaryColour(vehicle, Color.UnpackRgb(vehicleMods.colors.primary))
 	SetVehicleCustomSecondaryColour(vehicle, Color.UnpackRgb(vehicleMods.colors.secondary))
 

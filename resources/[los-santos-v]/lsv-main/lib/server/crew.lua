@@ -17,6 +17,7 @@ local function disbandCrew(leader)
 		_crewMembers[member] = nil
 		TriggerClientEvent('lsv:crewDisbanded', member)
 	end)
+	TriggerSignal('lsv:crewDisbanded', leader)
 	_crews[leader] = nil
 	_crewRaces[leader] = nil
 	_crewSalaries[leader] = nil
@@ -72,7 +73,7 @@ AddEventHandler('lsv:finishCrewRace', function()
 
 	_crewRaces[leader] = nil
 	table.iforeach(_crews[leader], function(member)
-		TriggerClientEvent('lsv:crewRaceFinished', member, player)
+		TriggerClientEvent('lsv:finishCrewRace', member, player)
 	end)
 end)
 

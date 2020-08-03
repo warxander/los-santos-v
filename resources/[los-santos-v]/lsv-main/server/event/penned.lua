@@ -41,25 +41,26 @@ AddEventHandler('lsv:startPennedIn', function()
 
 			if #_pennedData.players ~= 0 then
 				winners = { }
+				local pointCash = nil
+				local pointExp = nil
 
-				for i = 1, #Settings.penned.rewards.top do
-					if _pennedData.players[i] then
-						logger:info('Winner { '.._pennedData.players[i].id..', '.._pennedData.players[i].points..' }')
+				table.iforeach(_pennedData.players, function(playerData, index)
+					if index < 4 then
+						logger:info('Winner { '..playerData.id..', '..index..' }')
 
-						PlayerData.UpdateCash(_pennedData.players[i].id, Settings.penned.rewards.top[i].cash)
-						PlayerData.UpdateExperience(_pennedData.players[i].id, Settings.penned.rewards.top[i].exp)
-						PlayerData.UpdateEventsWon(_pennedData.players[i].id)
+						PlayerData.UpdateCash(playerData.id, Settings.penned.rewards.top[index].cash)
+						PlayerData.UpdateExperience(playerData.id, Settings.penned.rewards.top[index].exp)
+						PlayerData.GiveDrugBusinessSupply(playerData.id)
+						PlayerData.UpdateEventsWon(playerData.id)
 
-						table.insert(winners, _pennedData.players[i].id)
+						table.insert(winners, playerData.id)
+						pointCash = math.floor(Settings.penned.rewards.top[index].cash / playerData.points)
+						pointExp = math.floor(Settings.penned.rewards.top[index].exp / playerData.points)
 					else
-						break
+						PlayerData.UpdateCash(playerData.id, playerData.points * pointCash)
+						PlayerData.UpdateExperience(playerData.id, playerData.points * pointExp)
 					end
-				end
-
-				for i = 4, #_pennedData.players do
-					PlayerData.UpdateCash(_pennedData.players[i].id, math.min(Settings.penned.rewards.point.cash * _pennedData.players[i].points, Settings.penned.rewards.top[3].cash))
-					PlayerData.UpdateExperience(_pennedData.players[i].id, math.min(Settings.penned.rewards.point.exp * _pennedData.players[i].points, Settings.penned.rewards.top[3].exp))
-				end
+				end)
 			else
 				logger:info('No winners')
 			end

@@ -75,14 +75,14 @@ end
 
 local function finishMission(success, reason)
 	if success or _location.waveIndex > _location.waveCount then
-		TriggerServerEvent('lsv:survivalFinished', _survivalId, math.max(0, _location.waveIndex - _location.waveCount - 1), _location.waveIndex - 1)
+		TriggerServerEvent('lsv:finishSurvival', _survivalId, math.max(0, _location.waveIndex - _location.waveCount - 1), _location.waveIndex - 1)
 	else
-		TriggerEvent('lsv:survivalFinished', false, reason or '')
+		TriggerEvent('lsv:finishSurvival', false, reason or '')
 	end
 end
 
-RegisterNetEvent('lsv:survivalFinished')
-AddEventHandler('lsv:survivalFinished', function(success, reason)
+RegisterNetEvent('lsv:finishSurvival')
+AddEventHandler('lsv:finishSurvival', function(success, reason)
 	MissionManager.FinishMission(success)
 
 	table.iforeach(_location.pedModels, function(model)
@@ -224,45 +224,43 @@ AddEventHandler('lsv:startSurvival', function(id)
 
 					local netId = Network.CreatePedAsync(11, modelHash, location, nil, { survival = true, isBoss = isBoss })
 
-					if netId then
-						local ped = NetToPed(netId)
+					local ped = NetToPed(netId)
 
-						SetPedRandomComponentVariation(ped, false)
-						PlaceObjectOnGroundProperly(ped)
+					SetPedRandomComponentVariation(ped, false)
+					PlaceObjectOnGroundProperly(ped)
 
-						local weaponHash = table.random(isBoss and _bossSettings.weapons or waveData.weapons)
-						GiveWeaponToPed(ped, weaponHash, 99999, false, true)
-						SetPedInfiniteAmmo(ped, true, weaponHash)
+					local weaponHash = table.random(isBoss and _bossSettings.weapons or waveData.weapons)
+					GiveWeaponToPed(ped, weaponHash, 99999, false, true)
+					SetPedInfiniteAmmo(ped, true, weaponHash)
 
-						local armour = _endlessWaveBoost.armour * waveBoostLevel
-						if isBoss then
-							armour = armour + _bossSettings.armour
-						end
-						SetPedArmour(ped, armour)
+					local armour = _endlessWaveBoost.armour * waveBoostLevel
+					if isBoss then
+						armour = armour + _bossSettings.armour
+					end
+					SetPedArmour(ped, armour)
 
-						SetPedDropsWeaponsWhenDead(ped, false)
-						SetPedFleeAttributes(ped, 0, false)
-						SetPedCombatRange(ped, 2)
-						SetPedCombatMovement(ped, 2)
-						SetPedCombatAttributes(ped, 46, true)
-						SetPedCombatAttributes(ped, 20, true)
-						SetPedCombatAbility(ped, isBoss and 2 or waveData.ability)
-						SetRagdollBlockingFlags(ped, 1)
+					SetPedDropsWeaponsWhenDead(ped, false)
+					SetPedFleeAttributes(ped, 0, false)
+					SetPedCombatRange(ped, 2)
+					SetPedCombatMovement(ped, 2)
+					SetPedCombatAttributes(ped, 46, true)
+					SetPedCombatAttributes(ped, 20, true)
+					SetPedCombatAbility(ped, isBoss and 2 or waveData.ability)
+					SetRagdollBlockingFlags(ped, 1)
 
-						SetPedAsEnemy(ped, true)
-						SetPedRelationshipGroupHash(ped, `HATES_PLAYER`)
+					SetPedAsEnemy(ped, true)
+					SetPedRelationshipGroupHash(ped, `HATES_PLAYER`)
 
-						local playerPed = PlayerPedId()
-						TaskCombatPed(ped, playerPed, 0, 16)
-						if IsPedInAnyVehicle(playerPed, false) then
-							AddVehicleSubtaskAttackPed(ped, playerPed)
-						end
-						SetPedKeepTask(ped, true)
+					local playerPed = PlayerPedId()
+					TaskCombatPed(ped, playerPed, 0, 16)
+					if IsPedInAnyVehicle(playerPed, false) then
+						AddVehicleSubtaskAttackPed(ped, playerPed)
+					end
+					SetPedKeepTask(ped, true)
 
-						table.insert(_location.enemies, netId)
-						if isBoss then
-							bossCount = bossCount + 1
-						end
+					table.insert(_location.enemies, netId)
+					if isBoss then
+						bossCount = bossCount + 1
 					end
 				end
 
@@ -329,7 +327,7 @@ AddEventHandler('lsv:init', function()
 		if WarMenu.IsMenuOpened('survival') then
 			if WarMenu.Button('Start') then
 				WarMenu.CloseMenu()
-				MissionManager.StartMission('survival', 'Survival')
+				MissionManager.StartMission('Survival', 'Survival')
 				TriggerEvent('lsv:startSurvival', _survivalMenuId)
 			elseif WarMenu.Button('Server Best', getSurvivalRecord(_survivalMenuId)) then
 			elseif WarMenu.Button('Personal Best', getPlayerSurvivalBest(_survivalMenuId)) then

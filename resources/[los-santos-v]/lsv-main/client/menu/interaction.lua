@@ -148,8 +148,8 @@ AddEventHandler('lsv:ammoRefilled', function(weapon, amount, fullAmmo)
 	Prompt.Hide()
 end)
 
-RegisterNetEvent('lsv:crewRaceFinished')
-AddEventHandler('lsv:crewRaceFinished', function(winner)
+RegisterNetEvent('lsv:finishCrewRace')
+AddEventHandler('lsv:finishCrewRace', function(winner)
 	if not Player.IsInCrew() then
 		return
 	end
@@ -177,7 +177,6 @@ AddEventHandler('lsv:crewRaceStarted', function(finishCoords)
 
 	_crewRace.blip = Map.CreatePlaceBlip(Blip.CREW_RACE_FINISH, finishCoords.x, finishCoords.y, finishCoords.z)
 	SetBlipAsShortRange(_crewRace.blip, false)
-	SetBlipRouteColour(_crewRace.blip, Color.BLIP_YELLOW)
 	SetBlipRoute(_crewRace.blip, true)
 	Map.SetBlipFlashes(_crewRace.blip)
 
@@ -232,12 +231,6 @@ AddEventHandler('lsv:crewDisbanded', function()
 	resetCrewRace()
 end)
 
---TODO: Use signals (?)
-RegisterNetEvent('lsv:settingUpdated')
-AddEventHandler('lsv:settingUpdated', function()
-	Prompt.Hide()
-end)
-
 AddEventHandler('lsv:init', function()
 	local killYourselfTimer = Timer.New()
 
@@ -260,32 +253,29 @@ AddEventHandler('lsv:init', function()
 	WarMenu.CreateSubMenu('inviteToCrew', 'manageCrew', 'Invite to Crew')
 
 	WarMenu.CreateSubMenu('stats', 'interaction', 'Statistics')
+	WarMenu.CreateSubMenu('stats_drug_business', 'stats', 'Drug Business (Supplies/Stock)')
 
 	WarMenu.CreateSubMenu('settings', 'interaction', 'Player Settings')
 
+	WarMenu.CreateSubMenu('ammunition', 'interaction', 'Ammunition')
+	WarMenu.SetTitleColor('ammunition', 0, 0, 0, 0)
+	WarMenu.SetTitleBackgroundSprite('ammunition', 'shopui_title_gr_gunmod', 'shopui_title_gr_gunmod')
+
+	WarMenu.CreateSubMenu('ammunition_ammo', 'ammunition', 'Ammunition')
+	WarMenu.SetMenuButtonPressedSound('ammunition_ammo', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+
 	WarMenu.CreateSubMenu('ammunation', 'interaction', 'Ammu-Nation')
 	WarMenu.SetTitleColor('ammunation', 0, 0, 0, 0)
-	WarMenu.SetTitleBackgroundSprite('ammunation', 'shopui_title_gr_gunmod', 'shopui_title_gr_gunmod')
+	WarMenu.SetTitleBackgroundSprite('ammunation', 'shopui_title_gunclub', 'shopui_title_gunclub')
 
-	WarMenu.CreateSubMenu('ammunation_weaponCategories', 'ammunation', 'Weapons')
-
-	WarMenu.CreateSubMenu('ammunation_weapons', 'ammunation_weaponCategories', '')
-	WarMenu.SetMenuButtonPressedSound('ammunation_weapons', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+	WarMenu.CreateSubMenu('ammunation_weapons', 'ammunation', '')
 
 	WarMenu.CreateSubMenu('ammunation_discard', 'ammunation_weapons')
-
-	WarMenu.CreateSubMenu('ammunation_ammunition', 'ammunation', 'Ammunition')
-
-	WarMenu.CreateSubMenu('ammunation_ammunition_ammo', 'ammunation_ammunition', 'Ammunition')
-	WarMenu.SetMenuButtonPressedSound('ammunation_ammunition_ammo', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
-
-	WarMenu.CreateSubMenu('ammunation_upgradeWeapons', 'ammunation', 'Weapon Upgrades')
-
-	WarMenu.CreateSubMenu('ammunation_weaponUpgrades', 'ammunation_upgradeWeapons', '')
+	WarMenu.CreateSubMenu('ammunation_weaponUpgrades', 'ammunation_weapons', '')
 	WarMenu.SetMenuButtonPressedSound('ammunation_weaponUpgrades', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	WarMenu.CreateSubMenu('ammunation_removeUpgradeConfirm', 'ammunation_weaponUpgrades', '')
-	WarMenu.SetMenuButtonPressedSound('ammunation_weaponUpgrades', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+	WarMenu.SetMenuButtonPressedSound('ammunation_removeUpgradeConfirm', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	while true do
 		if WarMenu.IsMenuOpened('interaction') then
@@ -294,6 +284,7 @@ AddEventHandler('lsv:init', function()
 			if IsPlayerDead(PlayerId()) then
 				WarMenu.CloseMenu()
 				Prompt.Hide()
+			elseif WarMenu.MenuButton('Ammunition', 'ammunition') then
 			elseif WarMenu.MenuButton('Ammu-Nation', 'ammunation') then
 			elseif IsPedActiveInScenario(PlayerPedId()) and WarMenu.Button('Cancel Action') then
 				ClearPedTasks(PlayerPedId())
@@ -316,8 +307,8 @@ AddEventHandler('lsv:init', function()
 					killYourselfTimer:restart()
 				end
 			elseif Player.Rank >= Settings.minPrestigeRank and Player.Prestige < Settings.maxPrestige and WarMenu.MenuButton('~y~Up Prestige To Level '..(Player.Prestige + 1), 'interaction_confirm') then
-			elseif MissionManager.Mission and WarMenu.Button('~r~Finish Mission') then
-				MissionManager.FinishMission()
+			elseif MissionManager.Mission and WarMenu.Button('~r~Abort Mission') then
+				MissionManager.AbortMission()
 				WarMenu.CloseMenu()
 			end
 
@@ -370,7 +361,8 @@ AddEventHandler('lsv:init', function()
 		elseif WarMenu.IsMenuOpened('stats') then
 			local timePlayedMin = Player.TimePlayed / (1000 * 60);
 
-			if WarMenu.Button('Time Played', string.format('%02d:%02d', math.floor(timePlayedMin / 60), math.floor(timePlayedMin % 60))) then
+			if WarMenu.MenuButton('Drug Business', 'stats_drug_business') then
+			elseif WarMenu.Button('Time Played', string.format('%02d:%02d', math.floor(timePlayedMin / 60), math.floor(timePlayedMin % 60))) then
 			elseif WarMenu.Button('Money Wasted', '$'..Player.MoneyWasted) then
 			elseif WarMenu.Button('Kills', Player.Kills) then
 			elseif WarMenu.Button('Deaths', Player.Deaths) then
@@ -383,6 +375,17 @@ AddEventHandler('lsv:init', function()
 			end
 
 			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('stats_drug_business') then
+			table.foreach(Settings.drugBusiness.types, function(data, type)
+				if not Player.HasDrugBusiness(type) then
+					return
+				end
+
+				if WarMenu.Button(data.name, Player.DrugBusiness[type].supplies..'/'..Player.DrugBusiness[type].stock) then
+				end
+			end)
+
+			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('settings') then
 			table.foreach(Settings.player, function(name, id)
 				local value = Player.Settings[id]
@@ -393,68 +396,24 @@ AddEventHandler('lsv:init', function()
 			end)
 
 			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation') then
-			if WarMenu.MenuButton('Weapons', 'ammunation_weaponCategories') then
-			elseif WarMenu.MenuButton('Ammunition', 'ammunation_ammunition') then
-			elseif WarMenu.MenuButton('Weapon Upgrades', 'ammunation_upgradeWeapons') then
-			end
+		elseif WarMenu.IsMenuOpened('ammunition') then
+			local playerPed = PlayerPedId()
 
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_weaponCategories') then
-			table.foreach(Settings.ammuNationWeapons, function(_, weaponCategory)
-				if WarMenu.MenuButton(weaponCategory, 'ammunation_weapons') then
-					WarMenu.SetSubTitle('ammunation_weapons', weaponCategory)
-					selectedWeaponCategory = weaponCategory
-				end
-			end)
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_weapons') then
-			table.foreach(Settings.ammuNationWeapons[selectedWeaponCategory], function(weapon)
-				local price = weaponPrice(weapon)
-				if price and WarMenu.MenuButton(Weapon[weapon].name, 'ammunation_discard', price) then
-					if not HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false) then
-						WarMenu.OpenMenu('ammunation_weapons')
-						if Weapon[weapon].rank and Weapon[weapon].rank > Player.Rank then
-							Gui.DisplayPersonalNotification('Your Rank is too low.')
-						elseif Weapon[weapon].prestige and Weapon[weapon].prestige > Player.Prestige then
-							Gui.DisplayPersonalNotification('Your Prestige is too low.')
-						else
-							TriggerServerEvent('lsv:purchaseWeapon', weapon, selectedWeaponCategory)
-							Prompt.ShowAsync()
-						end
-					else
-						selectedWeapon = weapon
-						WarMenu.SetSubTitle('ammunation_discard', 'Do you want to discard '..Weapon[weapon].name..'?')
-					end
-				end
-			end)
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_discard') then
-			if WarMenu.MenuButton('Yes', 'ammunation_weapons') then
-				RemoveWeaponFromPed(PlayerPedId(), GetHashKey(selectedWeapon))
-				Player.SaveWeapons()
-			elseif WarMenu.MenuButton('No', 'ammunation_weapons') then
-			end
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_ammunition') then
 			table.foreach(Settings.ammuNationRefillAmmo, function(data, ammoType)
-				local playerWeaponByAmmoType = table.find_if(data.weapons, function(weapon)
-					return HasPedGotWeapon(PlayerPedId(), GetHashKey(weapon), false)
+				local playerWeaponByAmmoType = table.ifind_if(data.weapons, function(weapon)
+					return HasPedGotWeapon(playerPed, GetHashKey(weapon), false)
 				end)
 
-				if playerWeaponByAmmoType and WarMenu.MenuButton(ammoType, 'ammunation_ammunition_ammo') then
-					WarMenu.SetSubTitle('ammunation_ammunition_ammo', ammoType)
+				if playerWeaponByAmmoType and WarMenu.MenuButton(ammoType, 'ammunition_ammo') then
+					WarMenu.SetSubTitle('ammunition_ammo', ammoType)
 					selectedWeapon = playerWeaponByAmmoType
 					selectedAmmoType = ammoType
-					SetCurrentPedWeapon(PlayerPedId(), selectedWeapon, true)
+					SetCurrentPedWeapon(playerPed, selectedWeapon, true)
 				end
 			end)
 
 			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_ammunition_ammo') then
+		elseif WarMenu.IsMenuOpened('ammunition_ammo') then
 			local weaponHash = GetHashKey(selectedWeapon)
 			local _, maxAmmo = GetMaxAmmo(PlayerPedId(), weaponHash)
 			local weaponAmmoType = GetPedAmmoTypeFromWeapon(PlayerPedId(), weaponHash)
@@ -483,51 +442,88 @@ AddEventHandler('lsv:init', function()
 			end
 
 			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('ammunation_upgradeWeapons') then
-			local playerWeapons = Player.GetPlayerWeapons()
+		elseif WarMenu.IsMenuOpened('ammunation') then
+			table.foreach(Settings.ammuNationWeapons, function(_, weaponCategory)
+				if WarMenu.MenuButton(weaponCategory, 'ammunation_weapons') then
+					WarMenu.SetSubTitle('ammunation_weapons', weaponCategory)
+					selectedWeaponCategory = weaponCategory
+				end
+			end)
 
-			table.foreach(playerWeapons, function(weapon)
-				local weaponName = Weapon[weapon.id].name
-				if WarMenu.MenuButton(weaponName, 'ammunation_weaponUpgrades') then
-					WarMenu.SetSubTitle('ammunation_weaponUpgrades', weaponName..' UPGRADES')
-					SetCurrentPedWeapon(PlayerPedId(), GetHashKey(weapon.id), true)
-					selectedWeapon = weapon.id
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('ammunation_weapons') then
+			local playerPed = PlayerPedId()
+
+			table.iforeach(Settings.ammuNationWeapons[selectedWeaponCategory], function(weapon)
+				local weaponData = Weapon[weapon]
+				local weaponHash = GetHashKey(weapon)
+				if HasPedGotWeapon(playerPed, weaponHash, false) then
+					if WarMenu.MenuButton(weaponData.name, 'ammunation_weaponUpgrades') then
+						WarMenu.SetSubTitle('ammunation_weaponUpgrades', weaponData.name..' UPGRADES')
+						SetCurrentPedWeapon(playerPed, weaponHash, true)
+						selectedWeapon = weapon
+						selectedWeaponHash = weaponHash
+					end
+				else
+					local price = weaponPrice(weapon)
+					if price and WarMenu.Button(weaponData.name, price) then
+						if weaponData.rank and weaponData.rank > Player.Rank then
+							Gui.DisplayPersonalNotification('Your Rank is too low.')
+						elseif weaponData.prestige and weaponData.prestige > Player.Prestige then
+							Gui.DisplayPersonalNotification('Your Prestige is too low.')
+						else
+							TriggerServerEvent('lsv:purchaseWeapon', weapon, selectedWeaponCategory)
+							Prompt.ShowAsync()
+						end
+					end
 				end
 			end)
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_weaponUpgrades') then
-			selectedWeaponHash = GetHashKey(selectedWeapon)
+			if WarMenu.MenuButton('~r~Discard', 'ammunation_discard') then
+				WarMenu.SetSubTitle('ammunation_discard', 'Do you want to discard '..Weapon[selectedWeapon].name..'?')
+			else
+				local playerPed = PlayerPedId()
 
-			table.foreach(Weapon[selectedWeapon].components, function(component, componentIndex)
-				if HasPedGotWeaponComponent(PlayerPedId(), selectedWeaponHash, component.hash) then
-					if WarMenu.MenuButton(component.name, 'ammunation_removeUpgradeConfirm') then
-						selectedWeaponComponent = component.hash
-						WarMenu.SetSubTitle('ammunation_removeUpgradeConfirm', 'Remove '..component.name..'?')
-					end
-				elseif WarMenu.Button(component.name, weaponComponentPrice(componentIndex, selectedWeapon, component.hash)) then
-					if component.rank and component.rank > Player.Rank then
-						Gui.DisplayPersonalNotification('Your Rank is too low.')
-					else
-						TriggerServerEvent('lsv:updateWeaponComponent', selectedWeapon, componentIndex)
-						Prompt.ShowAsync()
-					end
-				end
-			end)
-
-			if GetWeaponTintCount(selectedWeaponHash) == table.length(Settings.weaponTints) then
-				table.iforeach(Settings.weaponTints, function(tint, tintIndex)
-					if WarMenu.Button(tint.name or Settings.weaponTintNames[tint.index], weaponTintPrice(tint, selectedWeaponHash)) then
-						if GetPedWeaponTintIndex(PlayerPedId(), selectedWeaponHash) == tint.index then
-							Gui.DisplayPersonalNotification('You already use this tint.')
-						elseif tint.kills > Player.Kills then
-							Gui.DisplayPersonalNotification('You don\'t have enough kills.')
+				table.iforeach(Weapon[selectedWeapon].components, function(component, componentIndex)
+					if HasPedGotWeaponComponent(playerPed, selectedWeaponHash, component.hash) then
+						if WarMenu.MenuButton(component.name, 'ammunation_removeUpgradeConfirm') then
+							selectedWeaponComponent = component.hash
+							WarMenu.SetSubTitle('ammunation_removeUpgradeConfirm', 'Remove '..component.name..'?')
+						end
+					elseif WarMenu.Button(component.name, weaponComponentPrice(componentIndex, selectedWeapon, component.hash)) then
+						if component.rank and component.rank > Player.Rank then
+							Gui.DisplayPersonalNotification('Your Rank is too low.')
 						else
-							TriggerServerEvent('lsv:updateWeaponTint', selectedWeaponHash, tintIndex)
+							TriggerServerEvent('lsv:updateWeaponComponent', selectedWeapon, componentIndex)
 							Prompt.ShowAsync()
 						end
 					end
 				end)
+
+				if GetWeaponTintCount(selectedWeaponHash) == table.length(Settings.weaponTints) then
+					table.iforeach(Settings.weaponTints, function(tint, tintIndex)
+						if WarMenu.Button(tint.name or Settings.weaponTintNames[tint.index], weaponTintPrice(tint, selectedWeaponHash)) then
+							if GetPedWeaponTintIndex(playerPed, selectedWeaponHash) == tint.index then
+								Gui.DisplayPersonalNotification('You already use this tint.')
+							elseif tint.kills > Player.Kills then
+								Gui.DisplayPersonalNotification('You don\'t have enough kills.')
+							else
+								TriggerServerEvent('lsv:updateWeaponTint', selectedWeaponHash, tintIndex)
+								Prompt.ShowAsync()
+							end
+						end
+					end)
+				end
+			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('ammunation_discard') then
+			if WarMenu.MenuButton('Yes', 'ammunation_weapons') then
+				RemoveWeaponFromPed(PlayerPedId(), selectedWeaponHash)
+				Player.SaveWeapons()
+			elseif WarMenu.MenuButton('No', 'ammunation_weapons') then
 			end
 
 			WarMenu.Display()
@@ -566,4 +562,8 @@ AddEventHandler('lsv:init', function()
 			Gui.OpenMenu('interaction')
 		end
 	end
+end)
+
+AddSignalHandler('lsv:settingUpdated', function()
+		Prompt.Hide()
 end)

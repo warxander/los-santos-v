@@ -5,21 +5,24 @@ local logger = Logger.New('MissionManager')
 
 local _players = { }
 
-local _missionNames = { 'Most Wanted', 'Headhunter', 'Velocity', 'Asset Recovery', 'Heist', 'Sightseer' }
+local _missionIds = { 'MostWanted', 'Headhunter', 'Velocity', 'AssetRecovery', 'Heist', 'Sightseer' }
+
 local _missions = Settings.mission.places
 
 function MissionManager.IsPlayerOnMission(player)
-	return table.ifind(_players, player)
+	return _players[player]
 end
 
 RegisterNetEvent('lsv:missionStarted')
-AddEventHandler('lsv:missionStarted', function(missionName)
+AddEventHandler('lsv:missionStarted', function(id, name)
 	local player = source
-
-	if not _players[player] then
-		_players[player] = missionName
-		TriggerClientEvent('lsv:missionStarted', -1, player, missionName)
+	if _players[player] then
+		return
 	end
+
+	_players[player] = id
+	logger:info('Start { '..player..', '..id..' }')
+	TriggerClientEvent('lsv:missionStarted', -1, player, id, name)
 end)
 
 RegisterNetEvent('lsv:missionFinished')
@@ -29,38 +32,35 @@ AddEventHandler('lsv:missionFinished', function(success)
 		return
 	end
 
-	local missionName = nil
 	if success then
-		missionName = _players[player]
 		PlayerData.UpdateMissionsDone(player)
 	end
 
+	logger:info('Finish { '..player..', '.._players[player]..', '..tostring(success)..' }')
 	_players[player] = nil
-	TriggerClientEvent('lsv:missionFinished', -1, player, missionName)
+	TriggerClientEvent('lsv:missionFinished', -1, player)
 end)
 
 Citizen.CreateThread(function()
+	local missions = { }
+	table.iforeach(_missionIds, function(mission)
+		table.insert(missions, mission)
+	end)
+
+	table.iforeach(_missions, function(mission)
+		if #missions ~= 0 then
+			local id, index = table.random(missions)
+			table.remove(missions, index)
+			mission.id = id
+		else
+			mission.id = table.random(_missionIds)
+		end
+	end)
+
 	while true do
-		logger:info('Reset missions')
-
-		local missionNames = { }
-		table.iforeach(_missionNames, function(name)
-			table.insert(missionNames, name)
-		end)
-
-		table.iforeach(_missions, function(mission)
-			if #missionNames ~= 0 then
-				local name, index = table.random(missionNames)
-				table.remove(missionNames, index)
-				mission.name = name
-			else
-				mission.name = table.random(_missionNames)
-			end
-		end)
-
-		TriggerClientEvent('lsv:updateMissions', -1, _missions)
-
 		Citizen.Wait(Settings.mission.resetTimeInterval)
+		logger:info('Reset')
+		TriggerClientEvent('lsv:resetMissions', -1)
 	end
 end)
 

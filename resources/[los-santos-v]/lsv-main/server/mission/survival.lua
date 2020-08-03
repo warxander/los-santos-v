@@ -2,10 +2,10 @@ local logger = Logger.New('Survival')
 
 local _survivalRecords = { }
 
-RegisterNetEvent('lsv:survivalFinished')
-AddEventHandler('lsv:survivalFinished', function(survivalId, extraWaveCount, lastWaveIndex)
+RegisterNetEvent('lsv:finishSurvival')
+AddEventHandler('lsv:finishSurvival', function(survivalId, extraWaveCount, lastWaveIndex)
 	local player = source
-	if not PlayerData.IsExists(player) or not Settings.survival.places[survivalId] then
+	if not MissionManager.IsPlayerOnMission(player) or not Settings.survival.places[survivalId] then
 		return
 	end
 
@@ -48,7 +48,7 @@ AddEventHandler('lsv:survivalFinished', function(survivalId, extraWaveCount, las
 	PlayerData.UpdateCash(player, reward.cash)
 	PlayerData.UpdateExperience(player, reward.exp)
 
-	TriggerClientEvent('lsv:survivalFinished', player, true, rewardMessage)
+	TriggerClientEvent('lsv:finishSurvival', player, true, rewardMessage)
 end)
 
 Citizen.CreateThread(function()

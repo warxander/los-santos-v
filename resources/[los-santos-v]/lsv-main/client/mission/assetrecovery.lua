@@ -5,8 +5,8 @@ local _dropOffBlip = nil
 
 local _helpHandler = nil
 
-RegisterNetEvent('lsv:assetRecoveryFinished')
-AddEventHandler('lsv:assetRecoveryFinished', function(success, reason)
+RegisterNetEvent('lsv:finishAssetRecovery')
+AddEventHandler('lsv:finishAssetRecovery', function(success, reason)
 	if _helpHandler then
 		_helpHandler:cancel()
 	end
@@ -51,19 +51,12 @@ AddEventHandler('lsv:startAssetRecovery', function()
 	local loseTheCops = false
 	local routeBlip = nil
 
-	_vehicleBlip = AddBlipForEntity(_vehicle)
-	SetBlipHighDetail(_vehicleBlip, true)
-	SetBlipSprite(_vehicleBlip, Blip.CAR)
-	SetBlipColour(_vehicleBlip, Color.BLIP_GREEN)
-	SetBlipRouteColour(_vehicleBlip, Color.BLIP_GREEN)
+	_vehicleBlip = Map.CreateEntityBlip(_vehicle, Blip.CAR, 'Vehicle', Color.BLIP_GREEN)
 	SetBlipAlpha(_vehicleBlip, 0)
-	Map.SetBlipText(_vehicleBlip, 'Vehicle')
 	Map.SetBlipFlashes(_vehicleBlip)
 
-	_dropOffBlip = AddBlipForCoord(variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z)
-	SetBlipColour(_dropOffBlip, Color.BLIP_YELLOW)
-	SetBlipRouteColour(_dropOffBlip, Color.BLIP_YELLOW)
-	SetBlipHighDetail(_dropOffBlip, true)
+	_dropOffBlip = Map.CreatePlaceBlip(nil, variant.dropOffLocation.x, variant.dropOffLocation.y, variant.dropOffLocation.z, nil, Color.BLIP_YELLOW)
+	SetBlipAsShortRange(blip, false)
 	SetBlipAlpha(_dropOffBlip, 0)
 
 	Gui.StartMission('Asset Recovery', 'Steal the vehicle and deliver it to the drop-off location.')
@@ -116,7 +109,6 @@ AddEventHandler('lsv:startAssetRecovery', function()
 		Citizen.Wait(0)
 
 		if not MissionManager.Mission then
-			TriggerEvent('lsv:assetRecoveryFinished', false)
 			return
 		end
 
@@ -126,7 +118,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 
 		if missionTimer:elapsed() < Settings.assetRecovery.time then
 			if not DoesEntityExist(_vehicle) or not IsVehicleDriveable(_vehicle, false) then
-				TriggerEvent('lsv:assetRecoveryFinished', false, 'A vehicle has been destroyed.')
+				TriggerEvent('lsv:finishAssetRecovery', false, 'A vehicle has been destroyed.')
 				return
 			end
 
@@ -151,7 +143,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 				end
 
 				if Player.DistanceTo(variant.dropOffLocation, true) < Settings.assetRecovery.dropRadius and GetPlayerWantedLevel(PlayerId()) == 0 then
-					TriggerServerEvent('lsv:assetRecoveryFinished', GetEntityHealth(_vehicle) / GetEntityMaxHealth(_vehicle))
+					TriggerServerEvent('lsv:finishAssetRecovery', GetEntityHealth(_vehicle) / GetEntityMaxHealth(_vehicle))
 					return
 				elseif not loseTheCops and Player.DistanceTo(variant.dropOffLocation, true) < Settings.assetRecovery.nearDistance then
 					_helpHandler = HelpQueue.PushFront('You are nearing the drop-off location. Lose your Wanted Level before delivering the vehicle.')
@@ -163,7 +155,7 @@ AddEventHandler('lsv:startAssetRecovery', function()
 				routeBlip = _vehicleBlip
 			end
 		else
-			TriggerEvent('lsv:assetRecoveryFinished', false, 'Time is over.')
+			TriggerEvent('lsv:finishAssetRecovery', false, 'Time is over.')
 			return
 		end
 	end

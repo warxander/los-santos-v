@@ -7,8 +7,8 @@ local _vehicleBlip = nil
 local _buyerLocation = nil
 local _buyerBlip = nil
 
-RegisterNetEvent('lsv:vehicleExportFinished')
-AddEventHandler('lsv:vehicleExportFinished', function(success, reason)
+RegisterNetEvent('lsv:finishVehicleExport')
+AddEventHandler('lsv:finishVehicleExport', function(success, reason)
 	MissionManager.FinishMission(success)
 
 	World.EnableWanted(false)
@@ -52,9 +52,6 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 	local position = Settings.garages[garageId].exportPos
 
 	_vehicleNet = Network.CreateVehicleAsync(GetHashKey(vehicleMods.model), position, position.heading)
-	if not _vehicleNet then
-		return --TODO:
-	end
 
 	local vehicle = NetToVeh(_vehicleNet)
 
@@ -65,22 +62,15 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 
 	_vehicleName = vehicleMods.name
 
-	_vehicleBlip = AddBlipForEntity(vehicle)
-	SetBlipHighDetail(_vehicleBlip, true)
-	SetBlipSprite(_vehicleBlip, Blip.IMPORT_CAR)
-	SetBlipColour(_vehicleBlip, Color.BLIP_BLUE)
-	SetBlipRouteColour(_vehicleBlip, Color.BLIP_BLUE)
+	_vehicleBlip = Map.CreateEntityBlip(vehicle, Blip.IMPORT_CAR, 'Vehicle', Color.BLIP_BLUE)
 	SetBlipAlpha(_vehicleBlip, 0)
-	Map.SetBlipText(_vehicleBlip, 'Vehicle')
 	Map.SetBlipFlashes(_vehicleBlip)
 
 	_buyerLocation = table.random(Settings.vehicleExport.locations)
-	_buyerBlip = AddBlipForCoord(_buyerLocation.x, _buyerLocation.y, _buyerLocation.z)
-	SetBlipColour(_buyerBlip, Color.BLIP_YELLOW)
-	SetBlipRouteColour(_buyerBlip, Color.BLIP_YELLOW)
-	SetBlipHighDetail(_buyerBlip, true)
+
+	_buyerBlip = Map.CreatePlaceBlip(nil, _buyerLocation.x, _buyerLocation.y, _buyerLocation.z, 'Buyer', Color.BLIP_YELLOW)
+	SetBlipAsShortRange(_buyerBlip, false)
 	SetBlipAlpha(_buyerBlip, 0)
-	Map.SetBlipText(_buyerBlip, 'Buyer')
 
 	Gui.StartMission(Settings.vehicleExport.missionName, 'Deliver the vehicle to the Buyer.')
 
@@ -124,7 +114,6 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 		Citizen.Wait(0)
 
 		if not MissionManager.Mission then
-			TriggerEvent('lsv:vehicleExportFinished', false)
 			return
 		end
 
@@ -132,7 +121,7 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 
 		if missionTimer:elapsed() < Settings.vehicleExport.time then
 			if not DoesEntityExist(vehicle) or not IsVehicleDriveable(vehicle, false) then
-				TriggerServerEvent('lsv:vehicleExportFinished', false, _vehicleIndex)
+				TriggerServerEvent('lsv:finishVehicleExport', false, _vehicleIndex)
 				return
 			end
 
@@ -147,7 +136,7 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 				end
 
 				if Player.DistanceTo(_buyerLocation, true) < Settings.vehicleExport.dropRadius and GetPlayerWantedLevel(PlayerId()) == 0 then
-					TriggerServerEvent('lsv:vehicleExportFinished', true, _vehicleIndex, _vehicleTier, GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle))
+					TriggerServerEvent('lsv:finishVehicleExport', true, _vehicleIndex, _vehicleTier, GetEntityHealth(vehicle) / GetEntityMaxHealth(vehicle))
 					return
 				end
 			elseif routeBlip ~= _vehicleBlip then
@@ -155,7 +144,7 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 				routeBlip = _vehicleBlip
 			end
 		else
-			TriggerEvent('lsv:vehicleExportFinished', false, 'Time is over.')
+			TriggerEvent('lsv:finishVehicleExport', false, 'Time is over.')
 			return
 		end
 	end

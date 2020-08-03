@@ -35,6 +35,8 @@ Player.EventsWon = 0
 Player.Garages = { }
 Player.Vehicles = { }
 
+Player.DrugBusiness = { }
+
 Player.CrewLeader = nil
 Player.CrewMembers = { }
 
@@ -85,6 +87,8 @@ function Player.Init(playerData)
 	Player.Garages = playerData.Garages
 	Player.Vehicles = playerData.Vehicles
 
+	Player.DrugBusiness = playerData.DrugBusiness
+
 	setSkillStats(playerData.SkillStats)
 
 	SetPlayerMaxArmour(PlayerId(), Settings.armour.max)
@@ -103,7 +107,7 @@ function Player.IsInFreeroam()
 end
 
 function Player.HasGarage(garage)
-	return Player.Garages[garage]
+	return Player.Garages[garage] ~= nil
 end
 
 function Player.GetGaragesCapacity()
@@ -114,6 +118,10 @@ function Player.GetGaragesCapacity()
 	end)
 
 	return capacity
+end
+
+function Player.HasDrugBusiness(type)
+	return Player.DrugBusiness[type] ~= nil
 end
 
 function Player.ServerId()
@@ -158,7 +166,7 @@ function Player.GetPlayerWeapons()
 			end
 
 			playerWeapon.components = { }
-			table.foreach(weapon.components, function(component)
+			table.iforeach(weapon.components, function(component)
 				if HasPedGotWeaponComponent(player, weaponHash, component.hash) then
 					table.insert(playerWeapon.components, component.hash)
 				end
@@ -435,6 +443,11 @@ AddEventHandler('lsv:garageUpdated', function(garage)
 	Player.Garages[garage] = true
 end)
 
+RegisterNetEvent('lsv:drugBusinessUpdated')
+AddEventHandler('lsv:drugBusinessUpdated', function(type, data)
+	Player.DrugBusiness[type] = data
+end)
+
 RegisterNetEvent('lsv:recordUpdated')
 AddEventHandler('lsv:recordUpdated', function(id, record)
 	Player.Records[id] = record
@@ -458,6 +471,7 @@ end)
 RegisterNetEvent('lsv:settingUpdated')
 AddEventHandler('lsv:settingUpdated', function(key, value)
 	Player.Settings[key] = value
+	TriggerSignal('lsv:settingUpdated', key, value)
 end)
 
 RegisterNetEvent('lsv:savePlayer')

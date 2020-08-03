@@ -5,8 +5,8 @@ local _detonationSound = nil
 
 local _helpHandler = nil
 
-RegisterNetEvent('lsv:velocityFinished')
-AddEventHandler('lsv:velocityFinished', function(success, reason)
+RegisterNetEvent('lsv:finishVelocity')
+AddEventHandler('lsv:finishVelocity', function(success, reason)
 	if _helpHandler then
 		_helpHandler:cancel()
 	end
@@ -62,11 +62,7 @@ AddEventHandler('lsv:startVelocity', function()
 	local startPreparationStageTime = GetGameTimer()
 	local almostDetonated = 0
 
-	_vehicleBlip = AddBlipForEntity(_vehicle)
-	SetBlipHighDetail(_vehicleBlip, true)
-	SetBlipSprite(_vehicleBlip, Blip.ROCKET_VOLTIC)
-	SetBlipColour(_vehicleBlip, Color.BLIP_GREEN)
-	SetBlipRouteColour(_vehicleBlip, Color.BLIP_GREEN)
+	_vehicleBlip = Map.CreateEntityBlip(_vehicle, Blip.ROCKET_VOLTIC, nil, Color.BLIP_GREEN)
 	SetBlipRoute(_vehicleBlip, true)
 	Map.SetBlipFlashes(_vehicleBlip)
 
@@ -118,12 +114,11 @@ AddEventHandler('lsv:startVelocity', function()
 		Citizen.Wait(0)
 
 		if not MissionManager.Mission then
-			TriggerEvent('lsv:velocityFinished', false)
 			return
 		end
 
 		if not DoesEntityExist(_vehicle) or not IsVehicleDriveable(_vehicle, false) then
-			TriggerEvent('lsv:velocityFinished', false, 'A vehicle has been destroyed.')
+			TriggerEvent('lsv:finishVelocity', false, 'A vehicle has been destroyed.')
 			return
 		end
 
@@ -161,7 +156,7 @@ AddEventHandler('lsv:startVelocity', function()
 							NetworkExplodeVehicle(_vehicle, true, false, false)
 							Network.DeleteVehicle(_vehicleNet, 5000)
 
-							TriggerEvent('lsv:velocityFinished', false, 'The bomb has detonated.')
+							TriggerEvent('lsv:finishVelocity', false, 'The bomb has detonated.')
 							return
 						end
 					elseif detonationStage then
@@ -169,18 +164,18 @@ AddEventHandler('lsv:startVelocity', function()
 						detonationStage = false
 					end
 				else
-					TriggerServerEvent('lsv:velocityFinished')
+					TriggerServerEvent('lsv:finishVelocity')
 					return
 				end
 			end
 		else
 			if _vehicleNet then
-				TriggerEvent('lsv:velocityFinished', false, 'You have left the vehicle.')
+				TriggerEvent('lsv:finishVelocity', false, 'You have left the vehicle.')
 				return
 			end
 
 			if GetTimeDifference(GetGameTimer(), missionTimer) >= Settings.velocity.enterVehicleTime then
-				TriggerEvent('lsv:velocityFinished', false, 'Time is over.')
+				TriggerEvent('lsv:finishVelocity', false, 'Time is over.')
 				return
 			end
 		end

@@ -2,6 +2,8 @@ Settings = { }
 Settings.__index = Settings
 
 -- General
+Settings.worldModifierDistance = 500.
+Settings.allowMultipleAccounts = false
 Settings.afkTimeout = 300 -- in seconds
 Settings.autoSavingInterval = 180000
 Settings.pingThreshold = 250
@@ -16,8 +18,8 @@ Settings.killYourselfInterval = 60000
 
 -- Density Multipliers
 Settings.density = {
-	ped = 0.55,
-	vehicle = 0.25,
+	ped = 0.45,
+	vehicle = 0.35,
 }
 
 -- Server restart
@@ -51,7 +53,7 @@ Settings.killstreakTimeout = 5000
 -- Prestige
 Settings.minPrestigeRank = 100
 Settings.maxPrestige = 10
-Settings.prestigeBonus = 0.035
+Settings.prestigeBonus = 0.02
 
 -- Crew
 Settings.crew = {
@@ -109,7 +111,7 @@ Settings.spawn = {
 	timeout = 30000,
 	respawnFasterPerControlPressed = 350, -- holy
 	tryCount = 150,
-	radius = { min = 100., increment = 25., minDistanceToPlayer = 50. },
+	radius = { min = 100., increment = 25., minDistanceToPlayer = 75. },
 }
 
 -- Ranking
@@ -255,7 +257,7 @@ Settings.defaultPlayerModel = {
 }
 Settings.stats = {
 	strength = { min = 75, max = 80 },
-	shooting = { min = 40, max = 60 },
+	shooting = { min = 60, max = 80 },
 	flying = { min = 60, max = 80 },
 	driving = { min = 60, max = 80 },
 	lung = { min = 60 , max = 80 },
@@ -285,12 +287,12 @@ Settings.patreon = {
 -- Cash
 Settings.rewardNotificationTime = 5000
 
-Settings.cashPerKill = 50
-Settings.cashPerKillstreak = 35
-Settings.maxCashPerKillstreak = 750
-Settings.cashPerHeadshot = 35
-Settings.cashPerMission = 75
-Settings.cashPerMelee = 100
+Settings.cashPerKill = 175
+Settings.cashPerKillstreak = 25
+Settings.maxCashPerKillstreak = 500
+Settings.cashPerHeadshot = 25
+Settings.cashPerMission = 125
+Settings.cashPerMelee = 200
 
 -- Experience
 Settings.expPerKill = 100
@@ -304,8 +306,8 @@ Settings.expPerMelee = 500
 Settings.bounty = {
 	killstreak = 5,
 	reward = {
-		cash = 100,
-		exp = 75,
+		cash = 250,
+		exp = 125,
 	},
 }
 
@@ -373,14 +375,53 @@ Settings.personalVehicle = {
 		['Classic'] = 500,
 		['Prestige'] = 1500,
 	},
+	customizePricePerMod = 2500,
 	rerollColorsPrice = { base = 2500, perRoll = 500 },
 	rentTimeout = 15000,
 }
 
 -- Events
 Settings.event = {
-	interval = 900000,
+	interval = 600000,
 	minPlayers = 3,
+}
+
+-- Gang Wars
+Settings.gangWars = {
+	duration = 1200000,
+	rewards = {
+		top = {
+			{ cash = 30000, exp = 15000 },
+			{ cash = 20000, exp = 10000 },
+			{ cash = 10000, exp = 5000 },
+		},
+	},
+}
+
+-- Simeon Export
+Settings.simeon = {
+	duration = 1200000,
+	vehicles = {
+		{ hash = `bagger`, name = 'Bagger' },
+		{ hash = `penumbra`, name = 'Maibatsu Penumbra' },
+		{ hash = `prairie`, name = 'Bollokan Prairie' },
+		{ hash = `bjxl`, name = 'Karin BeeJay XL' },
+		{ hash = `buccaneer`, name = 'Buccaneer' },
+		{ hash = `gresley`, name = 'Bravado Gresley' },
+		{ hash = `dominator`, name = 'Vapid Dominator' },
+		{ hash = `fusilade`, name = 'Schyster Fusilade' },
+		{ hash = `surge`, name = 'Cheval Surge' },
+		{ hash = `habanero`, name = 'Emperor Habanero' },
+		{ hash = `fq2`, name = 'Fathom FQ 2' },
+		{ hash = `patriot`, name = 'Patriot' },
+		{ hash = `tailgater`, name = 'Obey Tailgater' },
+		{ hash = `landstalker`, name = 'Landstalker' },
+		{ hash = `sentinel`, name = 'Sentinel XS' },
+	},
+	vehiclesCount = 3,
+	rewards = { cash = 10000, exp = 5000 },
+	dropRadius = 1.5,
+	location = { x = 1204.4508056641, y = -3116.7836914062, z = 5.5403265953064 },
 }
 
 -- Gun Game
@@ -389,11 +430,10 @@ Settings.gun = {
 	categories = { 'Handguns', 'Shotguns', 'Submachine & Lightmachine Guns', 'Assault Rifles' },
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 10000 },
-			{ cash = 10000, exp = 6000 },
-			{ cash = 5000, exp = 4000 },
+			{ cash = 30000, exp = 15000 },
+			{ cash = 20000, exp = 10000 },
+			{ cash = 10000, exp = 5000 },
 		},
-		point = { cash = 100, exp = 60 },
 	},
 }
 
@@ -505,11 +545,10 @@ Settings.stockPiling = {
 	radius = 2.0,
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 10000 },
-			{ cash = 10000, exp = 6000 },
-			{ cash = 5000, exp = 4000 },
+			{ cash = 30000, exp = 15000 },
+			{ cash = 20000, exp = 10000 },
+			{ cash = 10000, exp = 5000 },
 		},
-		point = { cash = 100, exp = 60 },
 	},
 }
 
@@ -518,11 +557,10 @@ Settings.sharpShooter = {
 	duration = 900000,
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 10000 },
-			{ cash = 10000, exp = 6000 },
-			{ cash = 5000, exp = 4000 },
+			{ cash = 30000, exp = 15000 },
+			{ cash = 20000, exp = 10000 },
+			{ cash = 10000, exp = 5000 },
 		},
-		point = { cash = 100, exp = 60 },
 	},
 }
 
@@ -549,11 +587,10 @@ Settings.castle = {
 	radius = 50.0,
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 10000 },
-			{ cash = 10000, exp = 6000 },
-			{ cash = 5000, exp = 4000 },
+			{ cash = 30000, exp = 15000 },
+			{ cash = 20000, exp = 10000 },
+			{ cash = 10000, exp = 5000 },
 		},
-		point = { cash = 100, exp = 60 },
 	},
 }
 
@@ -562,11 +599,10 @@ Settings.penned = {
 	duration = 900000,
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 10000 },
-			{ cash = 10000, exp = 6000 },
-			{ cash = 5000, exp = 4000 },
+			{ cash = 30000, exp = 15000 },
+			{ cash = 20000, exp = 10000 },
+			{ cash = 10000, exp = 5000 },
 		},
-		point = { cash = 100, exp = 60 },
 	},
 }
 
@@ -574,9 +610,9 @@ Settings.penned = {
 Settings.highway = {
 	duration = 900000,
 	rewards = {
-		{ cash = 15000, exp = 10000 },
-		{ cash = 10000, exp = 6000 },
-		{ cash = 5000, exp = 4000 },
+		{ cash = 30000, exp = 15000 },
+		{ cash = 20000, exp = 10000 },
+		{ cash = 10000, exp = 5000 },
 	},
 }
 
@@ -602,11 +638,10 @@ Settings.property = {
 	},
 	rewards = {
 		top = {
-			{ cash = 15000, exp = 10000 },
-			{ cash = 10000, exp = 6000 },
-			{ cash = 5000, exp = 4000 },
+			{ cash = 30000, exp = 15000 },
+			{ cash = 20000, exp = 10000 },
+			{ cash = 10000, exp = 5000 },
 		},
-		point = { cash = 100, exp = 60 },
 	},
 }
 
@@ -660,9 +695,9 @@ Settings.huntTheBeast = {
 	radius = 2.0,
 	rewards = {
 		beast = {
-			landmark = { cash = 1500, exp = 1000 },
+			landmark = { cash = 3000, exp = 1500 },
 		},
-		killer = { cash = 1000, exp = 500 },
+		killer = { cash = 6000, exp = 3000 },
 	},
 }
 
@@ -677,6 +712,7 @@ Settings.ammuNationWeapons = {
 		'WEAPON_STUNGUN',
 		'WEAPON_PISTOL50',
 		'WEAPON_DOUBLEACTION',
+		'WEAPON_PISTOL_MK2',
 	},
 	['Shotguns'] = {
 		'WEAPON_SAWNOFFSHOTGUN',
@@ -708,6 +744,7 @@ Settings.ammuNationWeapons = {
 	},
 	['Sniper Rifles'] = {
 		'WEAPON_SNIPERRIFLE',
+		'WEAPON_HEAVYSNIPER',
 		'WEAPON_HEAVYSNIPER_MK2',
 	},
 	['Thrown'] = {
@@ -719,7 +756,6 @@ Settings.ammuNationWeapons = {
 	},
 	['Special'] = {
 		'WEAPON_FIREWORK',
-		'WEAPON_RAYPISTOL',
 	},
 }
 
@@ -733,6 +769,7 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_HEAVYPISTOL',
 			'WEAPON_PISTOL50',
 			'WEAPON_DOUBLEACTION',
+			'WEAPON_PISTOL_MK2',
 		},
 		ammo = 24,
 		price = 0,
@@ -746,8 +783,8 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_SAWNOFFSHOTGUN',
 			'WEAPON_PUMPSHOTGUN_MK2',
 		},
-		ammo = 16,
-		price = 48,
+		ammo = 8,
+		price = 54,
 	},
 
 	['SMG Rounds'] = {
@@ -759,7 +796,7 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_SMG_MK2',
 		},
 		ammo = 30,
-		price = 113,
+		price = 169,
 	},
 
 	['MG Rounds'] = {
@@ -769,7 +806,7 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_COMBATMG_MK2',
 		},
 		ammo = 100,
-		price = 276,
+		price = 345,
 	},
 
 	['Assault Rifle Rounds'] = {
@@ -785,16 +822,17 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_CARBINERIFLE_MK2',
 		},
 		ammo = 60,
-		price = 216,
+		price = 243,
 	},
 
 	['Sniper Rifle Rounds'] = {
 		weapons = {
 			'WEAPON_SNIPERRIFLE',
+			'WEAPON_HEAVYSNIPER',
 			'WEAPON_HEAVYSNIPER_MK2',
 		},
 		ammo = 20,
-		price = 435,
+		price = 670,
 	},
 
 	['Tear Gas Units'] = {
@@ -842,7 +880,7 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_FLAREGUN',
 		},
 		ammo = 2,
-		price = 100,
+		price = 150,
 	},
 
 	['Fireworks'] = {
@@ -850,7 +888,7 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_FIREWORK',
 		},
 		ammo = 2,
-		price = 300,
+		price = 450,
 	},
 }
 
@@ -858,7 +896,7 @@ Settings.ammuNationRefillAmmo = {
 Settings.ammuNationSpecialAmmo = {
 	['WEAPON_GRENADELAUNCHER'] = {
 		ammo = 1 * 2,
-		price = 250,
+		price = 500,
 		type = 'Grenades',
 	},
 	['WEAPON_RPG'] = {
@@ -874,11 +912,6 @@ Settings.ammuNationSpecialAmmo = {
 	['WEAPON_MINIGUN'] = {
 		ammo = 1 * 150,
 		price = 1000,
-		type = 'Rounds',
-	},
-	['WEAPON_HEAVYSNIPER'] = {
-		ammo = 10 * 2,
-		price = 435,
 		type = 'Rounds',
 	},
 }
@@ -905,9 +938,133 @@ Settings.garages = {
 	['route682'] = { name = '8754 Route 68', location = { x = -1133.1859130859, y = 2696.2443847656, z = 18.800424575806 }, exportPos = { x = -1147.6901855469, y = 2681.1328125, z = 17.476257324219, heading = 259.07339477539 }, capacity = 6, price = 65000 },
 }
 
+-- Drug Business
+Settings.drugBusiness = {
+	types = {
+		['weed'] = {
+			name = 'Weed Farm',
+			productName = 'Weed',
+			price = {
+				supply = 3240, -- 0.4 from default
+				default = 8100,
+				upgraded = 12150, -- 1.5 from default
+			},
+			time = {
+				default = 126000,
+				upgraded = 90000,
+			},
+		},
+		['cocaine'] = {
+			name = 'Cocaine Lockup',
+			productName = 'Cocaine',
+			price = {
+				supply = 4320,
+				default = 10800,
+				upgraded = 16200,
+			},
+			time = {
+				default = 168000,
+				upgraded = 120000,
+			},
+		},
+		['meth'] = {
+			name = 'Meth Lab',
+			productName = 'Meth',
+			price = {
+				supply = 6480,
+				default = 16200,
+				upgraded = 24300,
+			},
+			time = {
+				default = 252000,
+				upgraded = 180000,
+			},
+		},
+	},
+
+	limits = {
+		stock = 10,
+		supplies = 10,
+	},
+
+	businesses = {
+		['weed_chianski'] = {
+			type = 'weed',
+			price = 715000,
+			location = { x = 2856.5283203125, y = 4459.6982421875, z = 48.498035430908 },
+			vehicleLocation = { x = 2870.0515136719, y = 4470.06640625, z = 48.200050354004, heading = 47.266815185547 },
+		},
+		['weed_chiliad'] = {
+			type = 'weed',
+			price = 805200,
+			location = { x = 417.62976074219, y = 6520.7631835938, z = 27.717031478882 },
+			vehicleLocation = { x = 435.55755615234, y = 6526.6489257812, z = 27.723098754883, heading = 40.130340576172 },
+		},
+		['weed_elysian'] = {
+			type = 'weed',
+			price = 1072500,
+			location = { x = 137.66839599609, y = -2473.3046875, z = 5.9999890327454 },
+			vehicleLocation = { x = 146.44578552246, y = -2476.8327636719, z = 5.7800230979919, heading = 169.13246154785 },
+		},
+		['weed_downtown'] = {
+			type = 'weed',
+			price = 1358500,
+			location = { x = 163.40872192383, y = 151.35762023926, z = 105.17762756348 },
+			vehicleLocation = { x = 144.10664367676, y = 151.73318481445, z = 104.39183807373, heading = 247.93951416016 },
+		},
+	},
+
+	upgrades = {
+		['security'] = {-- Remove cops from missions
+			name = 'Security Upgrade',
+			prices = {
+				['weed'] = 627000,
+				['cocaine'] = 1026000,
+				['meth'] = 1140000,
+			},
+		},
+		['staff'] = { -- Increase value of product
+			name = 'Staff Upgrade',
+			prices = {
+				['weed'] = 546000,
+				['cocaine'] = 663000,
+				['meth'] = 780000,
+			},
+		},
+		['equip'] = { -- Increase production rate
+			name = 'Equipment Upgrade',
+			prices = {
+				['weed'] = 935000,
+				['cocaine'] = 990000,
+				['meth'] = 1100000,
+			},
+		},
+	},
+
+	export = {
+		missionName = 'Drug Export',
+		time = 1200000,
+		dropRadius = 10.,
+		expRate = 0.15,
+		locations = {
+			{ x = -1055.5090332031, y = -2017.0299072266, z = 13.161571502686 },
+			{ x = -306.30072021484, y = -2699.01953125, z = 6.0002951622009 },
+			{ x = 264.00634765625, y = -3020.0100097656, z = 5.7394118309021 },
+			{ x = 1006.5920410156, y = -2518.396484375, z = 28.303230285645 },
+			{ x = 1564.9898681641, y = -2149.2104492188, z = 77.581161499023 },
+			{ x = 1017.9209594727, y = -1861.7778320313, z = 30.889822006226 },
+		},
+		vehicles = {
+			['weed'] = { `pony`, `pony2` },
+			['cocaine'] = { `speedo`, `speedo2` },
+			['meth'] = { `boxville`, `boxville2`, `boxville3`, `boxville4` },
+		},
+	},
+}
+
 -- Missions
 Settings.mission = {
-	resetTimeInterval = 10800000,
+	resetTimeInterval = 900000,
 	places = {
 		{ x = -57.338516235352, y = -2448.7080078125, z = 7.2357640266418 },
 		{ x = 1013.4348754883, y = -2150.8464355469, z = 31.533414840698 },
@@ -1097,10 +1254,10 @@ Settings.survival = {
 	},
 	reward = {
 		cash = 25000, exp = 15000,
-		cashPerWave = 2000, expPerWave = 1000,
+		cashPerWave = 5000, expPerWave = 3000,
 	},
-	personalReward = { cash = 5000, exp = 2500 },
-	recordReward = { cash = 15000, exp = 10000 },
+	personalReward = { cash = 5000, exp = 1500 },
+	recordReward = { cash = 25000, exp = 10000 },
 }
 
 -- Vehicle Import Mission
@@ -1109,11 +1266,8 @@ Settings.vehicleImport = {
 	minVehicleHealthRatio = 0.5,
 	dropRadius = 10.,
 	plates = {
-		'4X3R0L',
 		'PR0BOZ',
-		'KW4KUN',
 		'X4ND3R',
-		'R1FL3',
 		'P4NP00L',
 		'SW34TZ',
 		'N3KR0Z',
@@ -1138,9 +1292,9 @@ Settings.vehicleImport = {
 		['insurgent2'] = 15000,
 		['nightshark'] = 15000,
 		['insurgent'] = 15000,
-		['boxville5'] = 15000,
 		['kuruma2'] = 15000,
 		['barrage'] = 15000,
+		['jb700'] = 25000,
 	},
 	tiers = {
 		{
@@ -1323,7 +1477,7 @@ Settings.vehicleImport = {
 				['shotaro'] = { name = 'Nagasaki Shotaro', prestige = 3, isBike = true },
 				['dune3'] = { name = 'Dune FAV', prestige = 4 },
 				['dune4'] = { name = 'BF Ramp Buggy', prestige = 5 },
-				['jb700'] = { name = 'Dewbauchee JB 700', prestige = 6 },
+				['boxville5'] = { name = 'Armored Boxville', prestige = 6 },
 				['thruster'] = { name = 'Mammoth Thruster', prestige = 7 },
 				['vigilante'] = { name = 'Grotti Vigilante', prestige = 8 },
 				['phantom2'] = { name = 'Jobuilt Phantom Wedge', prestige = 9 },
@@ -1543,11 +1697,11 @@ Settings.timeTrial = {
 		},
 	},
 	reward = {
-		{ cash = 10000, exp = 2500 },
-		{ cash = 7000, exp = 1500 },
-		{ cash = 5000, exp = 1000 },
+		{ cash = 7500, exp = 2500 },
+		{ cash = 5000, exp = 1500 },
+		{ cash = 2500, exp = 1000 },
 	},
-	personalReward = { cash = 5000, exp = 1000 },
+	personalReward = { cash = 5000, exp = 1500 },
 	recordReward = { cash = 25000, exp = 10000 },
 }
 
@@ -1589,63 +1743,6 @@ Settings.vehicleExport = {
 		{ x = -72.888473510742, y = 900.69403076172, z = 234.94180297852 },
 		{ x = 216.56733703613, y = 757.58081054688, z = 204.0071105957 },
 		{ x = -1788.8603515625, y = 456.27008056641, z = 127.64682006836 },
-	},
-}
-
--- Special Cargo Mission
-Settings.cargo = {
-	missionName = 'Special Cargo',
-	time = 1200000,
-	wantedLevel = 4,
-	rewardPerPlayer = { cash = 1000, exp = 500 },
-	deliveryRadius = 15.,
-	goods = {
-		'Animal Materials',
-		'Art & Antiques',
-		'Bullion',
-		'Counterfeit Goods',
-		'Electronic Goods',
-		'Gemstones',
-		'Jewelry',
-		'Medical Supplies',
-		'Narcotics',
-		'Tobacco & Alcohol',
-		'Weapons & Ammo',
-	},
-	crates = {
-		{ name = '1 Crate', price = 2000, reward = { cash = 5000, exp = 2000 } },
-		{ name = '2 Crates', price = 4000, reward = { cash = 10000, exp = 4000 } },
-		{ name = '3 Crates', price = 8000, reward = { cash = 20000, exp = 6000 } },
-		{ name = '5 Crates', price = 12000, reward = { cash = 30000, exp = 8000 } },
-	},
-	vehicles = {
-		`speedo`,
-		`speedo2`,
-		`speedo4`,
-		`pony`,
-		`pony2`,
-		`mule`,
-		`mule2`,
-		`mule3`,
-		`mule4`,
-	},
-	locations = {
-		{ x = -1855.66015625, y = -623.87799072266, z = 10.66112613678, heading = 52.66089630127 },
-		{ x = 485.94470214844, y = -33.960357666016, z = 77.183700561523, heading = 238.90773010254, wanted = true },
-		{ x = 302.98361206055, y = -904.38739013672, z = 28.770977020264, heading = 65.957633972168 },
-		{ x = 2789.0783691406, y = -725.70349121094, z = 5.5673732757568, heading = 58.563903808594 },
-		{ x = -1118.9647216797, y = -859.21893310547, z = 13.015306472778, heading = 33.661144256592, wanted = true },
-		{ x = -388.58044433594, y = 1194.1137695313, z = 325.11770629883, heading = 95.027435302734 },
-		{ x = -1388.2515869141, y = 39.06311416626, z = 53.082649230957, heading = 131.15089416504 },
-		{ x = 398.35577392578, y = -1646.4820556641, z = 28.765869140625, heading = 323.18414306641, wanted = true },
-	},
-	warehouses = {
-		{ x = -1055.5090332031, y = -2017.0299072266, z = 13.161571502686 },
-		{ x = -306.30072021484, y = -2699.01953125, z = 6.0002951622009 },
-		{ x = 264.00634765625, y = -3020.0100097656, z = 5.7394118309021 },
-		{ x = 1006.5920410156, y = -2518.396484375, z = 28.303230285645 },
-		{ x = 1564.9898681641, y = -2149.2104492188, z = 77.581161499023 },
-		{ x = 1017.9209594727, y = -1861.7778320313, z = 30.889822006226 },
 	},
 }
 
@@ -1751,7 +1848,6 @@ Settings.assetRecovery = {
 -- Headhunter Mission
 Settings.headhunter = {
 	time = 1200000,
-	taskActivateDistance = 500.,
 	count = 4,
 	locations = {
 		{ x = -40.054077148438, y = -2701.1606445312, z = 6.1575679779053 },
@@ -1759,7 +1855,6 @@ Settings.headhunter = {
 		{ x = -516.50421142578, y = -1712.9973144531, z = 19.319555282593 },
 		{ x = -1631.5915527344, y = -1095.9350585938, z = 13.024022102356 },
 		{ x = 898.22930908203, y = -1055.4468994141, z = 32.827968597412 },
-		{ x = 452.01345825195, y = -902.2587890625, z = 28.474830627441 },
 		{ x = -1228.4931640625, y = -188.05059814453, z = 39.194133758545 },
 		{ x = 1100.2220458984, y = -418.21313476562, z = 67.154083251953 },
 		{ x = -91.623016357422, y = 836.25329589844, z = 235.72288513184 },

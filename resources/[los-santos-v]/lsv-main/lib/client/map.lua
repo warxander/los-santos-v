@@ -1,18 +1,12 @@
 Map = { }
 Map.__index = Map
 
-function Map.SetBlipText(blip, text)
-	BeginTextCommandSetBlipName('STRING')
-	Gui.AddText(text)
-	EndTextCommandSetBlipName(blip)
-end
-
-function Map.CreatePlaceBlip(blipSprite, x, y, z, customName, color)
-	local blip = AddBlipForCoord(x, y, z)
-
-	SetBlipSprite(blip, blipSprite)
+local function setBlipProperties(blip, blipSprite, customName, color)
 	SetBlipHighDetail(blip, true)
-	SetBlipAsShortRange(blip, true)
+
+	if blipSprite then
+		SetBlipSprite(blip, blipSprite)
+	end
 
 	if customName then
 		Map.SetBlipText(blip, customName)
@@ -22,15 +16,36 @@ function Map.CreatePlaceBlip(blipSprite, x, y, z, customName, color)
 		SetBlipColour(blip, color)
 	end
 
+	SetBlipRouteColour(blip, color or GetBlipColour(blip))
+end
+
+function Map.SetBlipText(blip, text)
+	BeginTextCommandSetBlipName('STRING')
+	Gui.AddText(text)
+	EndTextCommandSetBlipName(blip)
+end
+
+function Map.CreateEntityBlip(entity, blipSprite, customName, color)
+	local blip = AddBlipForEntity(entity)
+
+	setBlipProperties(blip, blipSprite, customName, color)
+
+	return blip
+end
+
+function Map.CreatePlaceBlip(blipSprite, x, y, z, customName, color)
+	local blip = AddBlipForCoord(x, y, z)
+
+	setBlipProperties(blip, blipSprite, customName, color)
+	SetBlipAsShortRange(blip, true)
+
 	return blip
 end
 
 function Map.CreateRadiusBlip(x, y, z, radius, color)
 	local blip = AddBlipForRadius(x, y, z, radius)
 
-	SetBlipHighDetail(blip, true)
-	SetBlipSprite(blip, Blip.BIG_CIRCLE)
-	SetBlipColour(blip, color)
+	setBlipProperties(blip, Blip.BIG_CIRCLE, nil, color)
 	SetBlipAlpha(blip, 96)
 
 	return blip
@@ -39,51 +54,22 @@ end
 function Map.CreateEventBlip(blipSprite, x, y, z, customName, color)
 	local blip = AddBlipForCoord(x, y, z)
 
-	SetBlipSprite(blip, blipSprite)
-	SetBlipHighDetail(blip, true)
+	setBlipProperties(blip, blipSprite, customName, color)
 	SetBlipScale(blip, 1.1)
-
-	if customName then
-		Map.SetBlipText(blip, customName)
-	end
-
-	if color then
-		SetBlipColour(blip, color)
-	end
 
 	return blip
 end
 
-function Map.CreatePickupBlip(pickup, itemId, color, name)
-	local blipSprite = Blip[itemId]
-	local blip = nil
+function Map.CreatePickupBlip(pickup, blipSprite, customName, color)
+	local blip = AddBlipForPickup(pickup)
 
-	if blipSprite then
-		blip = AddBlipForPickup(pickup)
-
-		SetBlipSprite(blip, blipSprite)
-		SetBlipHighDetail(blip, true)
-		SetBlipAsShortRange(blip, true)
-
-		if color then
-			SetBlipColour(blip, color)
-		end
-	end
-
-	if name then
-		Map.SetBlipText(blip, name)
-	end
+	setBlipProperties(blip, blipSprite, customName, color)
+	SetBlipAsShortRange(blip, true)
 
 	return blip
 end
 
 function Map.SetBlipFlashes(blip, time)
-	if not blip or blip == 0 then
-		return
-	end
-
 	SetBlipFlashes(blip, true)
-	SetTimeout(time or 3000, function()
-		SetBlipFlashes(blip, false)
-	end)
+	SetBlipFlashTimer(blip, time or 5000)
 end

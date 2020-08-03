@@ -1,8 +1,8 @@
 local _placeBlip = nil
 local _placeAreaBlip = nil
 
-RegisterNetEvent('lsv:heistFinished')
-AddEventHandler('lsv:heistFinished', function(success, reason)
+RegisterNetEvent('lsv:finishHeist')
+AddEventHandler('lsv:finishHeist', function(success, reason)
 	MissionManager.FinishMission(success)
 
 	World.EnableWanted(false)
@@ -23,7 +23,6 @@ AddEventHandler('lsv:startHeist', function()
 
 	_placeBlip = Map.CreatePlaceBlip(Blip.STORE, location.x, location.y, location.z, 'Store', Color.BLIP_YELLOW)
 	SetBlipAsShortRange(_placeBlip, false)
-	SetBlipRouteColour(_placeBlip, Color.BLIP_YELLOW)
 	SetBlipRoute(_placeBlip, true)
 	Map.SetBlipFlashes(_placeBlip)
 
@@ -67,18 +66,17 @@ AddEventHandler('lsv:startHeist', function()
 		Citizen.Wait(0)
 
 		if not MissionManager.Mission then
-			TriggerEvent('lsv:heistFinished', false)
 			return
 		end
 
 		if missionTimer:elapsed() >= Settings.heist.time then
-			TriggerEvent('lsv:heistFinished', false, 'Time is over.')
+			TriggerEvent('lsv:finishHeist', false, 'Time is over.')
 			return
 		end
 
 		if stealTimer or loseTheCopsStage then
 			if IsPlayerDead(PlayerId()) then
-				TriggerServerEvent('lsv:heistFinished', math.floor(take * 0.5))
+				TriggerServerEvent('lsv:finishHeist', math.floor(take * 0.5))
 				return
 			end
 		end
@@ -103,7 +101,7 @@ AddEventHandler('lsv:startHeist', function()
 				end
 			end
 		elseif GetPlayerWantedLevel(PlayerId()) == 0 then
-			TriggerServerEvent('lsv:heistFinished', take)
+			TriggerServerEvent('lsv:finishHeist', take)
 			return
 		end
 	end

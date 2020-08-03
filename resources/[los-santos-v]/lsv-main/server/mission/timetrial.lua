@@ -5,7 +5,7 @@ local _trialRecords = { }
 RegisterNetEvent('lsv:finishTimeTrial')
 AddEventHandler('lsv:finishTimeTrial', function(trialId, time, place)
 	local player = source
-	if not PlayerData.IsExists(player) or not Settings.timeTrial.tracks[trialId] then
+	if not MissionManager.IsPlayerOnMission(player) or not Settings.timeTrial.tracks[trialId] then
 		return
 	end
 
@@ -53,7 +53,7 @@ AddEventHandler('lsv:finishTimeTrial', function(trialId, time, place)
 
 	rewardMessage = rewardMessage..string.from_ms(time, true)
 
-	TriggerClientEvent('lsv:timeTrialFinished', player, true, rewardMessage)
+	TriggerClientEvent('lsv:finishTimeTrial', player, true, rewardMessage)
 end)
 
 Citizen.CreateThread(function()

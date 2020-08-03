@@ -29,8 +29,8 @@ local function getModelRequirements(modelData)
 	return nil
 end
 
-RegisterNetEvent('lsv:vehicleImportFinished')
-AddEventHandler('lsv:vehicleImportFinished', function(success, reason)
+RegisterNetEvent('lsv:finishVehicleImport')
+AddEventHandler('lsv:finishVehicleImport', function(success, reason)
 	if _helpHandler then
 		_helpHandler:cancel()
 	end
@@ -71,7 +71,7 @@ AddEventHandler('lsv:vehicleImportPurchased', function(vehicle)
 
 	if vehicle then
 		WarMenu.CloseMenu()
-		MissionManager.StartMission('vehicleImport', _missionName)
+		MissionManager.StartMission('VehicleImport', _missionName)
 		TriggerEvent('lsv:startVehicleImport', vehicle)
 	else
 		Gui.DisplayPersonalNotification('You don\'t have enough cash.')
@@ -82,6 +82,9 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle)
 	local modelHash = GetHashKey(vehicle.model)
 	Streaming.RequestModelAsync(modelHash)
 	_vehicle = CreateVehicle(modelHash, vehicle.location.x, vehicle.location.y, vehicle.location.z, vehicle.location.heading, false, true)
+	if modelHash == `thruster` then
+		FreezeEntityPosition(_vehicle, true)
+	end
 	SetModelAsNoLongerNeeded(modelHash)
 
 	_vehicleData = Vehicle.GenerateRandomMods(_vehicle, vehicle.model, vehicle.isBike, vehicle.isMaxedOut)
@@ -92,22 +95,16 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle)
 	SetVehicleMod(_vehicle, 16, 2)
 	SetVehicleTyresCanBurst(_vehicle, false)
 
-	_vehicleBlip = AddBlipForEntity(_vehicle)
-	SetBlipHighDetail(_vehicleBlip, true)
-	SetBlipSprite(_vehicleBlip, vehicle.isBike and Blip.IMPORT_BIKE or Blip.IMPORT_CAR)
-	SetBlipColour(_vehicleBlip, Color.BLIP_BLUE)
-	SetBlipRouteColour(_vehicleBlip, Color.BLIP_BLUE)
+	_vehicleBlip = Map.CreateEntityBlip(_vehicle, vehicle.isBike and Blip.IMPORT_BIKE or Blip.IMPORT_CAR, 'Vehicle', Color.BLIP_BLUE)
 	SetBlipAlpha(_vehicleBlip, 0)
-	Map.SetBlipText(_vehicleBlip, 'Vehicle')
 	Map.SetBlipFlashes(_vehicleBlip)
 
 	_garageData = { }
 	local _, garage = table.random(Player.Garages)
 	_garageData.location = Settings.garages[garage].location
-	_garageData.blip = AddBlipForCoord(_garageData.location.x, _garageData.location.y, _garageData.location.z)
-	SetBlipColour(_garageData.blip, Color.BLIP_YELLOW)
-	SetBlipRouteColour(_garageData.blip, Color.BLIP_YELLOW)
-	SetBlipHighDetail(_garageData.blip, true)
+
+	_garageData.blip = Map.CreatePlaceBlip(nil, _garageData.location.x, _garageData.location.y, _garageData.location.z, nil, Color.BLIP_YELLOW)
+	SetBlipAsShortRange(_garageData.blip, false)
 	SetBlipAlpha(_garageData.blip, 0)
 
 	Gui.StartMission(_missionName, 'Collect the vehicle and deliver it to the Garage.')
@@ -149,7 +146,6 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle)
 		Citizen.Wait(0)
 
 		if not MissionManager.Mission then
-			TriggerEvent('lsv:vehicleImportFinished', false)
 			return
 		end
 
@@ -159,7 +155,7 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle)
 
 		if missionTimer:elapsed() < Settings.vehicleImport.time then
 			if not DoesEntityExist(_vehicle) or not IsVehicleDriveable(_vehicle, false) or (GetEntityHealth(_vehicle) / GetEntityMaxHealth(_vehicle)) < Settings.vehicleImport.minVehicleHealthRatio then
-				TriggerEvent('lsv:vehicleImportFinished', false, 'A vehicle has been destroyed.')
+				TriggerEvent('lsv:finishVehicleImport', false, 'A vehicle has been destroyed.')
 				return
 			end
 
@@ -170,6 +166,9 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle)
 					_vehicleNet = Network.RegisterVehicle(_vehicle)
 					if _vehicleNet then
 						_vehicle = NetToVeh(_vehicleNet)
+						if modelHash == `thruster` then
+							FreezeEntityPosition(_vehicle, false)
+						end
 						Gui.DisplayPersonalNotification('You have collected '..vehicle.name..'.')
 						_helpHandler = HelpQueue.PushFront('Avoid vehicle damage to complete mission successfully.')
 					end
@@ -184,7 +183,7 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle)
 				Gui.DrawPlaceMarker(_garageData.location, Color.YELLOW)
 
 				if Player.DistanceTo(_garageData.location, true) < Settings.vehicleImport.dropRadius then
-					TriggerServerEvent('lsv:vehicleImportFinished', _vehicleData)
+					TriggerServerEvent('lsv:finishVehicleImport', _vehicleData)
 					return
 				end
 			elseif routeBlip ~= _vehicleBlip then
@@ -193,7 +192,7 @@ AddEventHandler('lsv:startVehicleImport', function(vehicle)
 				routeBlip = _vehicleBlip
 			end
 		else
-			TriggerEvent('lsv:vehicleImportFinished', false, 'Time is over.')
+			TriggerEvent('lsv:finishVehicleImport', false, 'Time is over.')
 			return
 		end
 	end

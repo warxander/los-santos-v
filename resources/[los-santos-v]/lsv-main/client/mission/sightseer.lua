@@ -1,15 +1,5 @@
 local _sightseer = nil
 
-local function finishMission(success, reason)
-	local packagesLeft = #_sightseer
-
-	if success or packagesLeft < Settings.sightseer.count then
-		TriggerServerEvent('lsv:sightseerFinished', Settings.sightseer.count - packagesLeft)
-	else
-		TriggerEvent('lsv:sightseerFinished', false, reason or '')
-	end
-end
-
 local function removePackage(index)
 	local data = _sightseer[index]
 
@@ -18,9 +8,14 @@ local function removePackage(index)
 	RemoveBlip(data.areaBlip)
 end
 
-RegisterNetEvent('lsv:sightseerFinished')
-AddEventHandler('lsv:sightseerFinished', function(success, reason)
-	MissionManager.FinishMission(success)
+AddEventHandler('lsv:finishSightseer', function(success, reason)
+	local packagesLeft = #_sightseer
+
+	if success or packagesLeft < Settings.sightseer.count then
+		TriggerServerEvent('lsv:finishSightseer', Settings.sightseer.count - packagesLeft)
+	else
+		TriggerEvent('lsv:finishSightseer', false, reason or '')
+	end
 
 	World.EnableWanted(false)
 
@@ -28,7 +23,15 @@ AddEventHandler('lsv:sightseerFinished', function(success, reason)
 		removePackage(i)
 	end
 	_sightseer = nil
+end)
 
+RegisterNetEvent('lsv:sightseerFinished')
+AddEventHandler('lsv:sightseerFinished', function()
+	if not MissionManager.Mission then
+		return
+	end
+
+	MissionManager.FinishMission(success)
 	Gui.FinishMission('Sightseer', success, reason)
 end)
 
@@ -67,17 +70,16 @@ AddEventHandler('lsv:startSightseer', function()
 		Citizen.Wait(0)
 
 		if not MissionManager.Mission then
-			finishMission(false)
 			return
 		end
 
 		if IsPlayerDead(PlayerId()) then
-			finishMission(false)
+			TriggerEvent('lsv:finishSightseer', false)
 			return
 		end
 
 		if missionTimer:elapsed() >= Settings.heist.time then
-			finishMission(false, 'Time is over.')
+			TriggerEvent('lsv:finishSightseer', false, 'Time is over.')
 			return
 		end
 
@@ -103,7 +105,7 @@ AddEventHandler('lsv:startSightseer', function()
 			end
 
 			if #_sightseer == 0 then
-				finishMission(true)
+				TriggerEvent('lsv:finishSightseer', true)
 				return
 			end
 		end

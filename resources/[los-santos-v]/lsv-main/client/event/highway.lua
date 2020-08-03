@@ -6,15 +6,11 @@ local _playerPositions = { '1st: ', '2nd: ', '3rd: ' }
 local _highwayData = nil
 
 local function getPlayerSpeed()
-	local player = table.find_if(_highwayData.players, function(player)
+	local player = table.ifind_if(_highwayData.players, function(player)
 		return player.id == Player.ServerId()
 	end)
 
-	if not player then
-		return nil
-	end
-
-	return player.speed
+	return player and player.speed or nil
 end
 
 RegisterNetEvent('lsv:startHighway')
@@ -56,9 +52,9 @@ AddEventHandler('lsv:startHighway', function(data, passedTime)
 
 				local barPosition = 4
 				for i = barPosition - 1, 1, -1 do
-					if _highwayData.players[i] then
-						Gui.DrawBar(_playerPositions[i]..GetPlayerName(GetPlayerFromServerId(_highwayData.players[i].id)), string.to_speed(_highwayData.players[i].speed),
-							barPosition, _playerColors[i], true)
+					local data = _highwayData.players[i]
+					if data then
+						Gui.DrawBar(_playerPositions[i]..GetPlayerName(GetPlayerFromServerId(data.id)), string.to_speed(data.speed), barPosition, _playerColors[i], true)
 						barPosition = barPosition + 1
 					end
 				end
@@ -110,25 +106,25 @@ AddEventHandler('lsv:finishHighway', function(winners)
 	local playerSpeed = getPlayerSpeed()
 	_highwayData = nil
 
-	local isPlayerWinner = false
+	local playerPosition = nil
 	for i = 1, math.min(3, #winners) do
 		if winners[i] == Player.ServerId() then
-			isPlayerWinner = i
+			playerPosition = i
 			break
 		end
 	end
 
-	local messageText = isPlayerWinner and 'You have won Highway with a score of '..string.to_speed(playerSpeed) or Gui.GetPlayerName(winners[1], '~p~')..' has won Highway.'
+	local messageText = playerPosition and 'You have won Highway with a score of '..string.to_speed(playerSpeed) or Gui.GetPlayerName(winners[1], '~p~')..' has won Highway.'
 
 	if Player.IsInFreeroam() and playerSpeed then
-		if isPlayerWinner then
+		if playerPosition then
 			PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
 		else
 			PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true)
 		end
 
 		local scaleform = Scaleform.NewAsync('MIDSIZED_MESSAGE')
-		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and _titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
+		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', playerPosition and _titles[playerPosition] or 'YOU LOSE', messageText, 21)
 		scaleform:renderFullscreenTimed(10000)
 	else
 		Gui.DisplayNotification(messageText)

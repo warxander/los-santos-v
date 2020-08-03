@@ -33,12 +33,16 @@ function Db.UpdateGarages(player, garages)
 	setValue(player, 'Garages', toDbString(json.encode(garages)))
 end
 
-function Db.UpdateRecords(player, records)
-	setValue(player, 'Records', toDbString(json.encode(records)))
-end
-
 function Db.UpdateVehicles(player, vehicles)
 	setValue(player, 'Vehicles', toDbString(json.encode(vehicles)))
+end
+
+function Db.UpdateDrugBusiness(player, drugBusiness)
+	setValue(player, 'DrugBusiness', toDbString(json.encode(drugBusiness)))
+end
+
+function Db.UpdateRecords(player, records)
+	setValue(player, 'Records', toDbString(json.encode(records)))
 end
 
 function Db.UpdateSettings(player, settings)
@@ -54,7 +58,7 @@ function Db.UpdateExperience(player, experience)
 end
 
 function Db.UpdatePrestige(player, callback)
-	vSql.Async.execute('UPDATE Players SET SkinModel=DEFAULT, Weapons=DEFAULT, Cash=DEFAULT, Experience=DEFAULT, Vehicles=DEFAULT, Garages=DEFAULT, Prestige=Prestige + 1 WHERE PlayerID=@playerId',
+	vSql.Async.execute('UPDATE Players SET SkinModel=DEFAULT, Weapons=DEFAULT, Cash=DEFAULT, Experience=DEFAULT, Vehicles=DEFAULT, Garages=DEFAULT, DrugBusiness=DEFAULT, Prestige=Prestige + 1 WHERE PlayerID=@playerId',
 			{ ['@playerId'] = PlayerData.GetIdentifier(player) }, function()
 				if callback then
 					callback()

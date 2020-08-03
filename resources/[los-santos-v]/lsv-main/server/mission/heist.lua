@@ -1,7 +1,7 @@
-RegisterNetEvent('lsv:heistFinished')
-AddEventHandler('lsv:heistFinished', function(take)
+RegisterNetEvent('lsv:finishHeist')
+AddEventHandler('lsv:finishHeist', function(take)
 	local player = source
-	if not PlayerData.IsExists(player) then
+	if not MissionManager.IsPlayerOnMission(player) or take > Settings.heist.take.rate.cash.limit then
 		return
 	end
 
@@ -9,6 +9,7 @@ AddEventHandler('lsv:heistFinished', function(take)
 
 	PlayerData.UpdateCash(player, take)
 	PlayerData.UpdateExperience(player, exp)
+	PlayerData.GiveDrugBusinessSupply(player)
 
-	TriggerClientEvent('lsv:heistFinished', player, true, '+ $'..take..'\n+ '..exp..' Exp')
+	TriggerClientEvent('lsv:finishHeist', player, true, '+ $'..take..'\n+ '..exp..' Exp')
 end)

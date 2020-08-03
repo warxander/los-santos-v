@@ -18,7 +18,7 @@ local function tryDeleteEntity(entity, toNetFunc)
 	end
 
 	local netId = toNetFunc(entity)
-	if not _netIds[netId] or not _netIds[netId].delete or not NetworkDoesEntityExistWithNetworkId(netId) or not NetworkHasControlOfNetworkId(netId) then
+	if not _netIds[netId] or not _netIds[netId].delete or not NetworkDoesNetworkIdExist(netId) or not NetworkDoesEntityExistWithNetworkId(netId) or not NetworkHasControlOfNetworkId(netId) then
 		return
 	end
 
@@ -88,7 +88,7 @@ end)
 
 function Network.IsRegistered(netId)
 	local netData = _netIds[netId]
-	return netData and not netData.delete
+	return netData and not netData.delete and NetworkDoesNetworkIdExist(netId)
 end
 
 function Network.GetData(netId, dataKey)
@@ -111,12 +111,31 @@ function Network.CreatePedAsync(pedType, modelHash, position, heading, data)
 	end
 
 	local ped = CreatePed(pedType, modelHash, position.x, position.y, position.z, heading or GetRandomFloatInRange(0., 360.), true, true)
-	local netId = PedToNet(ped)
+	while not NetworkGetEntityIsNetworked(ped) do
+		Citizen.Wait(0)
+	end
 
-	if not NetworkDoesNetworkIdExist(netId) then
+	local netId = PedToNet(ped)
+	SetNetworkIdExistsOnAllMachines(netId, true)
+
+	TriggerServerEvent('lsv:netIdCreated', netId, makeNetData(netId, data))
+
+	return netId
+end
+
+function Network.CreatePedInsideVehicleAsync(vehicleNet, pedType, modelHash, seat, data)
+	Streaming.RequestModelAsync(modelHash)
+
+	if not CanRegisterMissionPeds(1) then
 		return nil
 	end
 
+	local ped = CreatePedInsideVehicle(NetToVeh(vehicleNet), pedType, modelHash, seat, true, true)
+	while not NetworkGetEntityIsNetworked(ped) do
+		Citizen.Wait(0)
+	end
+
+	local netId = PedToNet(ped)
 	SetNetworkIdExistsOnAllMachines(netId, true)
 
 	TriggerServerEvent('lsv:netIdCreated', netId, makeNetData(netId, data))
@@ -132,12 +151,11 @@ function Network.CreateVehicleAsync(modelHash, position, heading, data)
 	end
 
 	local vehicle = CreateVehicle(modelHash, position.x, position.y, position.z, heading or GetRandomFloatInRange(0., 360.), true, true)
-	local netId = VehToNet(vehicle)
-
-	if not NetworkDoesNetworkIdExist(netId) then
-		return nil
+	while not NetworkGetEntityIsNetworked(vehicle) do
+		Citizen.Wait(0)
 	end
 
+	local netId = VehToNet(vehicle)
 	SetNetworkIdExistsOnAllMachines(netId, true)
 	TriggerServerEvent('lsv:netIdCreated', netId, makeNetData(netId, data))
 

@@ -8,7 +8,9 @@ function TriggerSignal(name, ...)
 
 	local args = { ... }
 	table.iforeach(signalHandlers, function(handlerFunc)
-		handlerFunc(table.unpack(args))
+		xpcall(function() handlerFunc(table.unpack(args)) end, function(error)
+			print('SCRIPT ERROR: '..error)
+		end)
 	end)
 end
 

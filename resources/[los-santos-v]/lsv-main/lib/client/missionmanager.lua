@@ -3,6 +3,15 @@ MissionManager.__index = MissionManager
 
 MissionManager.Mission = nil
 
+local _missionNames = {
+	['MostWanted'] = 'Most Wanted',
+	['Headhunter'] = 'Headhunter',
+	['Velocity'] = 'Velocity',
+	['AssetRecovery'] = 'Asset Recovery',
+	['Heist'] = 'Heist',
+	['Sightseer'] = 'Sightseer',
+}
+
 local _missionPlaces = Settings.mission.places
 
 local _players = { }
@@ -22,7 +31,15 @@ function MissionManager.StartMission(id, name)
 	end
 
 	MissionManager.Mission = id
-	TriggerServerEvent('lsv:missionStarted', name or _missionPlaces[id].name)
+	TriggerServerEvent('lsv:missionStarted', id, name)
+end
+
+function MissionManager.AbortMission()
+	if not MissionManager.Mission then
+		return
+	end
+
+	TriggerEvent('lsv:finish'..MissionManager.Mission)
 end
 
 function MissionManager.FinishMission(success)
@@ -39,37 +56,28 @@ function MissionManager.IsPlayerOnMission(player)
 end
 
 RegisterNetEvent('lsv:missionStarted')
-AddEventHandler('lsv:missionStarted', function(player, missionName)
-	_players[player] = true
+AddEventHandler('lsv:missionStarted', function(player, id, name)
+	_players[player] = id
 
-	if Player.ServerId() ~= player then
+	if player ~= Player.ServerId() then
 		FlashMinimapDisplay()
+		local missionName = name or _missionNames[id]
 		Gui.DisplayNotification(Gui.GetPlayerName(player)..' has started '..missionName..'. Kill him to earn reward.')
 		Map.SetBlipFlashes(GetBlipFromEntity(GetPlayerPed(GetPlayerFromServerId(player))))
 	end
 end)
 
 RegisterNetEvent('lsv:missionFinished')
-AddEventHandler('lsv:missionFinished', function(player, missionName)
+AddEventHandler('lsv:missionFinished', function(player)
 	_players[player] = nil
-
-	if player ~= Player.ServerId() and missionName then
-		Gui.DisplayNotification(Gui.GetPlayerName(player)..' has finished '..missionName..'.')
-	end
 end)
 
 RegisterNetEvent('lsv:updateMissions')
 AddEventHandler('lsv:updateMissions', function(missions, players)
 	table.iforeach(_missionPlaces, function(mission, i)
-		mission.name = missions[i].name
+		mission.id = missions[i].id
+		mission.blip = Map.CreatePlaceBlip(Blip.MISSION, mission.x, mission.y, mission.z, _missionNames[mission.id], Color.BLIP_BLUE)
 		mission.finished = false
-
-		if not mission.blip then
-			mission.blip = Map.CreatePlaceBlip(Blip.MISSION, mission.x, mission.y, mission.z, mission.name, Color.BLIP_BLUE)
-		else
-			Map.SetBlipText(mission.blip, mission.name)
-			SetBlipColour(Color.BLIP_BLUE)
-		end
 	end)
 
 	if players then
@@ -77,6 +85,16 @@ AddEventHandler('lsv:updateMissions', function(missions, players)
 			_players[player] = true
 		end)
 	end
+end)
+
+RegisterNetEvent('lsv:resetMissions')
+AddEventHandler('lsv:resetMissions', function()
+	table.iforeach(_missionPlaces, function(mission)
+		if mission.finished then
+			mission.finished = false
+			SetBlipColour(mission.blip, Color.BLIP_BLUE)
+		end
+	end)
 end)
 
 AddEventHandler('lsv:init', function()
@@ -91,10 +109,10 @@ AddEventHandler('lsv:init', function()
 		local closestBlip = nil
 		local closestBlipDistance = nil
 
-		table.iforeach(_missionPlaces, function(mission, id)
+		table.iforeach(_missionPlaces, function(mission)
 			SetBlipAlpha(mission.blip, isPlayerInFreeroam and 255 or 0)
 
-			if mission.name and isPlayerInFreeroam and not mission.finished then
+			if isPlayerInFreeroam and not mission.finished then
 				local missionDistance = World.GetDistance(mission, playerPosition, true)
 
 				if not closestBlipDistance or missionDistance < closestBlipDistance then
@@ -105,14 +123,14 @@ AddEventHandler('lsv:init', function()
 				Gui.DrawPlaceMarker(mission, missionColor)
 
 				if missionDistance < Settings.placeMarker.radius then
-					Gui.DisplayHelpText('Press ~INPUT_TALK~ to start '..mission.name..'.')
+					Gui.DisplayHelpText('Press ~INPUT_TALK~ to start '.._missionNames[mission.id]..'.')
 
 					if IsControlJustReleased(0, 46) then
 						mission.finished = true
 						SetBlipColour(mission.blip, Color.BLIP_GREY)
 
-						MissionManager.StartMission(id)
-						TriggerEvent('lsv:start'..string.gsub(mission.name, '%s+', ''))
+						MissionManager.StartMission(mission.id)
+						TriggerEvent('lsv:start'..mission.id)
 					end
 				end
 			end

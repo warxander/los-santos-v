@@ -14,25 +14,26 @@ local function finishEvent()
 
 	if #_stockData.players ~= 0 then
 		winners = { }
+		local pointCash = nil
+		local pointExp = nil
 
-		for i = 1, #Settings.stockPiling.rewards.top do
-			if _stockData.players[i] then
-				logger:info('Winner { '.._stockData.players[i].id..', '.._stockData.players[i].points..' }')
+		table.iforeach(_stockData.players, function(playerData, index)
+			if index < 4 then
+				logger:info('Winner { '..playerData.id..', '..index..' }')
 
-				PlayerData.UpdateCash(_stockData.players[i].id, Settings.stockPiling.rewards.top[i].cash)
-				PlayerData.UpdateExperience(_stockData.players[i].id, Settings.stockPiling.rewards.top[i].exp)
-				PlayerData.UpdateEventsWon(_stockData.players[i].id)
+				PlayerData.UpdateCash(playerData.id, Settings.stockPiling.rewards.top[index].cash)
+				PlayerData.UpdateExperience(playerData.id, Settings.stockPiling.rewards.top[index].exp)
+				PlayerData.GiveDrugBusinessSupply(playerData.id)
+				PlayerData.UpdateEventsWon(playerData.id)
 
-				table.insert(winners, _stockData.players[i].id)
+				table.insert(winners, playerData.id)
+				pointCash = math.floor(Settings.stockPiling.rewards.top[index].cash / playerData.points)
+				pointExp = math.floor(Settings.stockPiling.rewards.top[index].exp / playerData.points)
 			else
-				break
+				PlayerData.UpdateCash(playerData.id, playerData.points * pointCash)
+				PlayerData.UpdateExperience(playerData.id, playerData.points * pointExp)
 			end
-		end
-
-		for i = 4, #_stockData.players do
-			PlayerData.UpdateCash(_stockData.players[i].id, math.min(Settings.stockPiling.rewards.point.cash * _stockData.players[i].points, Settings.stockPiling.rewards.top[3].cash))
-			PlayerData.UpdateExperience(_stockData.players[i].id, math.min(Settings.stockPiling.rewards.point.exp * _stockData.players[i].points, Settings.stockPiling.rewards.top[3].exp))
-		end
+		end)
 	else
 		logger:info('No winners')
 	end

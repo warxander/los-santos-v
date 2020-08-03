@@ -1,5 +1,5 @@
-RegisterNetEvent('lsv:mostWantedFinished')
-AddEventHandler('lsv:mostWantedFinished', function(success, reason)
+RegisterNetEvent('lsv:finishMostWanted')
+AddEventHandler('lsv:finishMostWanted', function(success, reason)
 	MissionManager.FinishMission(success)
 
 	World.EnableWanted(false)
@@ -35,17 +35,16 @@ AddEventHandler('lsv:startMostWanted', function()
 		Citizen.Wait(0)
 
 		if not MissionManager.Mission then
-			TriggerEvent('lsv:mostWantedFinished', false)
 			return
 		end
 
 		if missionTimer:elapsed() < Settings.mostWanted.time then
 			if IsPlayerDead(PlayerId()) or GetPlayerWantedLevel(PlayerId()) == 0 then
-				TriggerServerEvent('lsv:mostWantedFinished', missionTimer:elapsed())
+				TriggerServerEvent('lsv:finishMostWanted', missionTimer:elapsed())
 				return
 			end
 		else
-			TriggerServerEvent('lsv:mostWantedFinished', Settings.mostWanted.time)
+			TriggerServerEvent('lsv:finishMostWanted', Settings.mostWanted.time)
 			return
 		end
 	end

@@ -53,6 +53,7 @@ server_scripts {
 	'server/travel.lua',
 	'server/garage.lua',
 	'server/tebex.lua',
+	'server/drug.lua',
 
 	'server/event/castle.lua',
 	'server/event/gun.lua',
@@ -62,6 +63,8 @@ server_scripts {
 	'server/event/sharpshooter.lua',
 	'server/event/penned.lua',
 	'server/event/highway.lua',
+	'server/event/simeon.lua',
+	'server/event/gang.lua',
 
 	'server/shop/ammunation.lua',
 	'server/shop/skinshop.lua',
@@ -72,12 +75,12 @@ server_scripts {
 	'server/mission/heist.lua',
 	'server/mission/mostwanted.lua',
 	'server/mission/velocity.lua',
-	'server/mission/cargo.lua',
 	'server/mission/import.lua',
-	'server/mission/export.lua',
+	'server/mission/vehicleexport.lua',
 	'server/mission/sightseer.lua',
 	'server/mission/survival.lua',
 	'server/mission/timetrial.lua',
+	'server/mission/drugexport.lua',
 }
 
 -- Client files
@@ -132,6 +135,7 @@ client_scripts {
 	'client/crew.lua',
 	'client/travel.lua',
 	'client/garage.lua',
+	'client/drug.lua',
 
 	'client/event/castle.lua',
 	'client/event/gun.lua',
@@ -141,6 +145,8 @@ client_scripts {
 	'client/event/sharpshooter.lua',
 	'client/event/penned.lua',
 	'client/event/highway.lua',
+	'client/event/simeon.lua',
+	'client/event/gang.lua',
 
 	'client/menu/interaction.lua',
 	'client/menu/moderator.lua',
@@ -154,10 +160,10 @@ client_scripts {
 	'client/mission/heist.lua',
 	'client/mission/mostwanted.lua',
 	'client/mission/velocity.lua',
-	'client/mission/cargo.lua',
 	'client/mission/import.lua',
-	'client/mission/export.lua',
+	'client/mission/vehicleexport.lua',
 	'client/mission/sightseer.lua',
 	'client/mission/survival.lua',
 	'client/mission/timetrial.lua',
+	'client/mission/drugexport.lua',
 }

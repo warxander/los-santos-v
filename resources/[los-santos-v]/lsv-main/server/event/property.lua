@@ -97,25 +97,26 @@ AddEventHandler('lsv:startHotProperty', function()
 
 			if #_propertyData.players ~= 0 then
 				winners = { }
+				local pointCash = nil
+				local pointExp = nil
 
-				for i = 1, #Settings.property.rewards.top do
-					if _propertyData.players[i] then
-						logger:info('Winner { '.._propertyData.players[i].id..', '.._propertyData.players[i].points..' }')
+				table.iforeach(_propertyData.players, function(playerData, index)
+					if index < 4 then
+						logger:info('Winner { '..playerData.id..', '..index..' }')
 
-						PlayerData.UpdateCash(_propertyData.players[i].id, Settings.property.rewards.top[i].cash)
-						PlayerData.UpdateExperience(_propertyData.players[i].id, Settings.property.rewards.top[i].exp)
-						PlayerData.UpdateEventsWon(_propertyData.players[i].id)
+						PlayerData.UpdateCash(playerData.id, Settings.property.rewards.top[index].cash)
+						PlayerData.UpdateExperience(playerData.id, Settings.property.rewards.top[index].exp)
+						PlayerData.GiveDrugBusinessSupply(playerData.id)
+						PlayerData.UpdateEventsWon(playerData.id)
 
-						table.insert(winners, _propertyData.players[i].id)
+						table.insert(winners, playerData.id)
+						pointCash = math.floor(Settings.property.rewards.top[index].cash / playerData.points)
+						pointExp = math.floor(Settings.property.rewards.top[index].exp / playerData.points)
 					else
-						break
+						PlayerData.UpdateCash(playerData.id, playerData.points * pointCash)
+						PlayerData.UpdateExperience(playerData.id, playerData.points * pointExp)
 					end
-				end
-
-				for i = 4, #_propertyData.players do
-					PlayerData.UpdateCash(_propertyData.players[i].id, math.min(Settings.property.rewards.point.cash * _propertyData.players[i].points, Settings.property.rewards.top[3].cash))
-					PlayerData.UpdateExperience(_propertyData.players[i].id, math.min(Settings.property.rewards.point.exp * _propertyData.players[i].points, Settings.property.rewards.top[3].exp))
-				end
+				end)
 			else
 				logger:info('No winners')
 			end

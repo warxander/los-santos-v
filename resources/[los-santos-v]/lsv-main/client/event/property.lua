@@ -7,7 +7,7 @@ local _propertyData = nil
 
 local function createBriefcase(position)
 	_propertyData.pickup = CreatePickupRotate(`PICKUP_MONEY_CASE`, position.x, position.y, position.z, 0.0, 0.0, 0.0, 8, 1)
-	_propertyData.blip = Map.CreatePickupBlip(_propertyData.pickup, 'PICKUP_MONEY_CASE', Color.BLIP_GREEN)
+	_propertyData.blip = Map.CreatePickupBlip(_propertyData.pickup, Blip.PICKUP_MONEY_CASE, nil, Color.BLIP_GREEN)
 	SetBlipAsShortRange(_propertyData.blip, false)
 	SetBlipScale(_propertyData.blip, 1.1)
 end
@@ -23,15 +23,11 @@ local function removeBriefcase()
 end
 
 local function getPlayerPoints()
-	local player = table.find_if(_propertyData.players, function(player)
+	local player = table.ifind_if(_propertyData.players, function(player)
 		return player.id == Player.ServerId()
 	end)
 
-	if not player then
-		return nil
-	end
-
-	return player.points
+	return player and player.points or nil
 end
 
 RegisterNetEvent('lsv:startHotProperty')
@@ -96,9 +92,9 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 
 				local barPosition = 3
 				for i = barPosition, 1, -1 do
-					if _propertyData.players[i] then
-						Gui.DrawBar(_playerPositions[i]..GetPlayerName(GetPlayerFromServerId(_propertyData.players[i].id)), _propertyData.players[i].points,
-							barPosition, _playerColors[i], true)
+					local data = _propertyData.players[i]
+					if data then
+						Gui.DrawBar(_playerPositions[i]..GetPlayerName(GetPlayerFromServerId(data.id)), data.points, barPosition, _playerColors[i], true)
 						barPosition = barPosition + 1
 					end
 				end
@@ -195,28 +191,28 @@ AddEventHandler('lsv:finishHotProperty', function(winners)
 	local playerTime = getPlayerPoints()
 	_propertyData = nil
 
-	local isPlayerWinner = false
+	local playerPosition = nil
 	for i = 1, math.min(3, #winners) do
 		if winners[i] == Player.ServerId() then
-			isPlayerWinner = i
+			playerPosition = i
 			break
 		end
 	end
 
 	local messageText = Gui.GetPlayerName(winners[1], '~p~')..' has won Hot Property.'
-	if isPlayerWinner then
+	if playerPosition then
 		messageText = 'You have won Hot Property with a score of '..playerTime
 	end
 
 	if Player.IsInFreeroam() and playerTime then
-		if isPlayerWinner then
+		if playerPosition then
 			PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
 		else
 			PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true)
 		end
 
 		local scaleform = Scaleform.NewAsync('MIDSIZED_MESSAGE')
-		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and _titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
+		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', playerPosition and _titles[playerPosition] or 'YOU LOSE', messageText, 21)
 		scaleform:renderFullscreenTimed(10000)
 	else
 		Gui.DisplayNotification(messageText)

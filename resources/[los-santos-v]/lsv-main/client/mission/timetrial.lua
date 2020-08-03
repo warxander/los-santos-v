@@ -111,8 +111,8 @@ AddEventHandler('lsv:updateTimeTrialRecord', function(trialId, data)
 	_trialRecords[trialId] = data
 end)
 
-RegisterNetEvent('lsv:timeTrialFinished')
-AddEventHandler('lsv:timeTrialFinished', function(success, reason)
+RegisterNetEvent('lsv:finishTimeTrial')
+AddEventHandler('lsv:finishTimeTrial', function(success, reason)
 	MissionManager.FinishMission(success)
 
 	clearCheckpoint()
@@ -149,24 +149,28 @@ AddEventHandler('lsv:startTimeTrial', function(trialId)
 	while true do
 		Citizen.Wait(0)
 
-		if not MissionManager.Mission or IsPlayerDead(PlayerId()) then
-			TriggerEvent('lsv:timeTrialFinished', false)
+		if not MissionManager.Mission then
+			return
+		end
+
+		if IsPlayerDead(PlayerId()) then
+			TriggerEvent('lsv:finishTimeTrial', false)
 			return
 		end
 
 		if not IsPedInAnyVehicle(PlayerPedId()) then
-			TriggerEvent('lsv:timeTrialFinished', false, 'You have left the vehicle.')
+			TriggerEvent('lsv:finishTimeTrial', false, 'You have left the vehicle.')
 			return
 		end
 
 		if not IsVehicleDriveable(GetVehiclePedIsIn(PlayerPedId())) then
-			TriggerEvent('lsv:timeTrialFinished', false, 'A vehicle has been destroyed.')
+			TriggerEvent('lsv:finishTimeTrial', false, 'A vehicle has been destroyed.')
 			return
 		end
 
 		local playerPosition = Player.Position()
 		if not wasTrialStarted and World.GetDistance(playerPosition, startingPosition, true) > _markerRadius then
-			TriggerEvent('lsv:timeTrialFinished', false, 'You have left the starting position.')
+			TriggerEvent('lsv:finishTimeTrial', false, 'You have left the starting position.')
 			return
 		end
 
@@ -292,7 +296,7 @@ AddEventHandler('lsv:init', function()
 		if WarMenu.IsMenuOpened('timeTrial') then
 			if WarMenu.Button('Start') then
 				WarMenu.CloseMenu()
-				MissionManager.StartMission('timeTrial', _missionName)
+				MissionManager.StartMission('TimeTrial', _missionName)
 				TriggerEvent('lsv:startTimeTrial', _timeTrialMenuId)
 			elseif WarMenu.Button('Server Best', getTrialRecord(_timeTrialMenuId)) then
 			elseif WarMenu.Button('Personal Best', getPlayerTrialBest(_timeTrialMenuId)) then

@@ -225,9 +225,9 @@ Weapon.WEAPON_PISTOL = {
 	name = 'Pistol',
 	components = {
 		{ hash = 4275109233, name = 'Default Clip', cash = 0 },
-		{ hash = 3978713628, name = 'Extended Clip', cash = 9175, rank = 2 },
-		{ hash = 899381934,  name = 'Flashlight', cash = 1675, rank = 4 },
-		{ hash = 1709866683, name = 'Suppressor', cash = 12050, rank = 5 },
+		{ hash = 3978713628, name = 'Extended Clip', cash = 9175, rank = 1 },
+		{ hash = 899381934,  name = 'Flashlight', cash = 1675, rank = 2 },
+		{ hash = 1709866683, name = 'Suppressor', cash = 12050, rank = 3 },
 		{ hash = 3610841222, name = 'Yusuf Amir Luxury Finish', cash = 46500, rank = 95 },
 	},
 	cash = 0,
@@ -418,8 +418,8 @@ Weapon.WEAPON_MICROSMG = {
 		{ hash = 3410538224, name = 'Default Clip', cash = 0 },
 		{ hash = 283556395,  name = 'Extended Clip', cash = 9325, rank = 6 },
 		{ hash = 899381934,  name = 'Flashlight', cash = 1900, rank = 7 },
-		{ hash = 2805810788, name = 'Suppressor', cash = 12150, rank = 9 },
 		{ hash = 2637152041, name = 'Scope', cash = 10800, rank = 8 },
+		{ hash = 2805810788, name = 'Suppressor', cash = 12150, rank = 9 },
 		{ hash = 1215999497, name = 'Yusuf Amir Luxury Finish', cash = 37750, rank = 95 },
 	},
 	cash = 3750,
@@ -583,13 +583,6 @@ Weapon.WEAPON_RAILGUN = {
 	unique = true,
 }
 
-Weapon.WEAPON_RAYPISTOL = {
-	name = 'Up-n-Atomizer',
-	components = { },
-	cash = 39900,
-	prestige = 4,
-}
-
 Weapon.WEAPON_RAYCARBINE = {
 	name = 'Unholy Hellbringer',
 	components = { },
@@ -610,8 +603,6 @@ Weapon.WEAPON_HEAVYSNIPER = {
 		{ hash = 3527687644, name = 'Scope', cash = 0 },
 		{ hash = 3159677559, name = 'Advanced Scope', cash = 12500, rank = 91 },
 	},
-	cash = 69900,
-	prestige = 5,
 }
 
 Weapon.WEAPON_FIREWORK = {
@@ -619,6 +610,20 @@ Weapon.WEAPON_FIREWORK = {
 	components = { },
 	cash = 0,
 	rank = 1,
+}
+
+Weapon.WEAPON_PISTOL_MK2 = {
+	name = 'Pistol Mk II',
+	components = {
+		{ hash = 0x94F42D62, name = 'Default Clip', cash = 0 },
+		{ hash = 0x5ED6C128, name = 'Extended Clip', cash = 15250, rank = 1 },
+		{ hash = 0x43FD595B, name = 'Flashlight', cash = 7500, rank = 2 },
+		{ hash = 0x65EA7EBB, name = 'Suppressor', cash = 28750, rank = 3 },
+		{ hash = 0x8ED4BB70, name = 'Mounted Scope', cash = 16250, rank = 4 },
+		{ hash = 0x21E34793, name = 'Compensator', cash = 21250, rank = 5 },
+	},
+	cash = 73750,
+	prestige = 1,
 }
 
 Weapon.WEAPON_SMG_MK2 = {
@@ -631,7 +636,21 @@ Weapon.WEAPON_SMG_MK2 = {
 		{ hash = 0x4DB62ABE, name = 'Muzzle Brake', cash = 33025, rank = 15 },
 	},
 	cash = 85500,
-	prestige = 1,
+	prestige = 2,
+}
+
+Weapon.WEAPON_PUMPSHOTGUN_MK2 = {
+	name = 'Pump Shotgun Mk II',
+	components = {
+		{ hash = 0x7BC4CDDC, name = 'Flashlight', cash = 10500, rank = 18 },
+		{ hash = 0x420FD713, name = 'Holographic Sight', cash = 29260, rank = 19 },
+		{ hash = 0x49B2945, name = 'Small Scope', cash = 39920, rank = 20 },
+		{ hash = 0xAC42DF71, name = 'Suppressor', cash = 45860, rank = 21 },
+		{ hash = 0x3F3C8181, name = 'Medium Scope', cash = 50785, rank = 22 },
+		{ hash = 0x5F7DCE4D, name = 'Muzzle Brake', cash = 37650, rank = 23 },
+	},
+	cash = 82500,
+	prestige = 3,
 }
 
 Weapon.WEAPON_ASSAULTRIFLE_MK2 = {
@@ -646,7 +665,49 @@ Weapon.WEAPON_ASSAULTRIFLE_MK2 = {
 		{ hash = 0x4DB62ABE, name = 'Muzzle Brake', cash = 38530, rank = 31 },
 	},
 	cash = 98750,
-	prestige = 3,
+	prestige = 4,
+}
+
+Weapon.WEAPON_RAYPISTOL = {
+	name = 'Up-n-Atomizer',
+	components = { },
+	cash = 39900,
+}
+
+Weapon.WEAPON_CARBINERIFLE_MK2 = {
+	name = 'Carbine Rifle Mk II',
+	components = {
+		{ hash = 0x4C7A391E, name = 'Default Clip', cash = 0 },
+		{ hash = 0x5DD5DBD5, name = 'Extended Clip', cash = 25925, rank = 43 },
+		{ hash = 0x7BC4CDDC, name = 'Flashlight', cash = 10500, rank = 44 },
+		{ hash = 0x420FD713, name = 'Holographic Sight', cash = 19600, rank = 45 },
+		{ hash = 0x49B2945, name = 'Small Scope', cash = 23730, rank = 46 },
+		{ hash = 0x837445AA, name = 'Suppressor', cash = 40250, rank = 47 },
+		{ hash = 0xC66B6542, name = 'Large Scope', cash = 34020, rank = 48 },
+		{ hash = 0x9D65907A,  name = 'Grip', cash = 14080, rank = 49 },
+		{ hash = 0x8B3C480B, name = 'Heavy Barrel', cash = 49000, rank = 50 },
+		{ hash = 0x4DB62ABE, name = 'Muzzle Brake', cash = 38530, rank = 51 },
+	},
+	cash = 107500,
+	prestige = 5,
+}
+
+Weapon.WEAPON_BULLPUPRIFLE_MK2 = {
+	name = 'Bullpup Rifle Mk II',
+	components = {
+		{ hash = 0x18929DA, name = 'Default Clip', cash = 0 },
+		{ hash = 0xEFB00628, name = 'Extended Clip', cash = 22100, rank = 55 },
+		{ hash = 0x7BC4CDDC, name = 'Flashlight', cash = 10500, rank = 56 },
+		{ hash = 0x420FD713, name = 'Holographic Sight', cash = 19600, rank = 57 },
+		{ hash = 0xC7ADD105, name = 'Small Scope', cash = 23730, rank = 58 },
+		{ hash = 0x837445AA, name = 'Suppressor', cash = 40250, rank = 59 },
+		{ hash = 0x3F3C8181, name = 'Medium Scope', cash = 34020, rank = 60 },
+		{ hash = 0x9D65907A,  name = 'Grip', cash = 14080, rank = 61 },
+		{ hash = 0x3BF26DC7, name = 'Heavy Barrel', cash = 49000, rank = 62 },
+		{ hash = 0x4DB62ABE, name = 'Muzzle Brake', cash = 38530, rank = 63 },
+	},
+	cash = 105750,
+	prestige = 6,
 }
 
 Weapon.WEAPON_COMBATMG_MK2 = {
@@ -676,56 +737,6 @@ Weapon.WEAPON_SPECIALCARBINE_MK2 = {
 	},
 	cash = 135000,
 	prestige = 8,
-}
-
-Weapon.WEAPON_PUMPSHOTGUN_MK2 = {
-	name = 'Pump Shotgun Mk II',
-	components = {
-		{ hash = 0x7BC4CDDC, name = 'Flashlight', cash = 10500, rank = 18 },
-		{ hash = 0x420FD713, name = 'Holographic Sight', cash = 29260, rank = 19 },
-		{ hash = 0x49B2945, name = 'Small Scope', cash = 39920, rank = 20 },
-		{ hash = 0xAC42DF71, name = 'Suppressor', cash = 45860, rank = 21 },
-		{ hash = 0x3F3C8181, name = 'Medium Scope', cash = 50785, rank = 22 },
-		{ hash = 0x5F7DCE4D, name = 'Muzzle Brake', cash = 37650, rank = 23 },
-	},
-	cash = 82500,
-	prestige = 2,
-}
-
-Weapon.WEAPON_BULLPUPRIFLE_MK2 = {
-	name = 'Bullpup Rifle Mk II',
-	components = {
-		{ hash = 0x18929DA, name = 'Default Clip', cash = 0 },
-		{ hash = 0xEFB00628, name = 'Extended Clip', cash = 22100, rank = 55 },
-		{ hash = 0x7BC4CDDC, name = 'Flashlight', cash = 10500, rank = 56 },
-		{ hash = 0x420FD713, name = 'Holographic Sight', cash = 19600, rank = 57 },
-		{ hash = 0xC7ADD105, name = 'Small Scope', cash = 23730, rank = 58 },
-		{ hash = 0x837445AA, name = 'Suppressor', cash = 40250, rank = 59 },
-		{ hash = 0x3F3C8181, name = 'Medium Scope', cash = 34020, rank = 60 },
-		{ hash = 0x9D65907A,  name = 'Grip', cash = 14080, rank = 61 },
-		{ hash = 0x3BF26DC7, name = 'Heavy Barrel', cash = 49000, rank = 62 },
-		{ hash = 0x4DB62ABE, name = 'Muzzle Brake', cash = 38530, rank = 63 },
-	},
-	cash = 105750,
-	prestige = 6,
-}
-
-Weapon.WEAPON_CARBINERIFLE_MK2 = {
-	name = 'Carbine Rifle Mk II',
-	components = {
-		{ hash = 0x4C7A391E, name = 'Default Clip', cash = 0 },
-		{ hash = 0x5DD5DBD5, name = 'Extended Clip', cash = 25925, rank = 43 },
-		{ hash = 0x7BC4CDDC, name = 'Flashlight', cash = 10500, rank = 44 },
-		{ hash = 0x420FD713, name = 'Holographic Sight', cash = 19600, rank = 45 },
-		{ hash = 0x49B2945, name = 'Small Scope', cash = 23730, rank = 46 },
-		{ hash = 0x837445AA, name = 'Suppressor', cash = 40250, rank = 47 },
-		{ hash = 0xC66B6542, name = 'Large Scope', cash = 34020, rank = 48 },
-		{ hash = 0x9D65907A,  name = 'Grip', cash = 14080, rank = 49 },
-		{ hash = 0x8B3C480B, name = 'Heavy Barrel', cash = 49000, rank = 50 },
-		{ hash = 0x4DB62ABE, name = 'Muzzle Brake', cash = 38530, rank = 51 },
-	},
-	cash = 107500,
-	prestige = 5,
 }
 
 Weapon.WEAPON_HEAVYSNIPER_MK2 = {

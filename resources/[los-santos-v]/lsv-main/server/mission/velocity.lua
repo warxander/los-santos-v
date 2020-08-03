@@ -1,8 +1,11 @@
 local _players = { }
 
-RegisterNetEvent('lsv:velocityFinished')
-AddEventHandler('lsv:velocityFinished', function()
+RegisterNetEvent('lsv:finishVelocity')
+AddEventHandler('lsv:finishVelocity', function()
 	local player = source
+	if not MissionManager.IsPlayerOnMission(player) then
+		return
+	end
 
 	local cash = Settings.velocity.rewards.cash.max
 	local exp = Settings.velocity.rewards.exp.max
@@ -14,8 +17,9 @@ AddEventHandler('lsv:velocityFinished', function()
 
 	PlayerData.UpdateCash(player, cash)
 	PlayerData.UpdateExperience(player, exp)
+	PlayerData.GiveDrugBusinessSupply(player)
 
-	TriggerClientEvent('lsv:velocityFinished', player, true, '')
+	TriggerClientEvent('lsv:finishVelocity', player, true, '')
 
 	_players[player] = nil
 end)

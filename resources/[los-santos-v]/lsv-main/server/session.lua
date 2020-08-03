@@ -17,6 +17,11 @@ logger:info('Next server restart at '.._serverRestartDate.hour..':'.._serverRest
 local _maxPlayersCount = GetConvarInt('sv_maxclients', 32)
 local _playersQueue = { }
 
+local _isOneSyncEnabled = false
+Citizen.CreateThread(function()
+	_isOneSyncEnabled = GetConvar('onesync', '') == 'on'
+end)
+
 local function sortPlayersQueue(l, r)
 	if l.isPatreon and not r.isPatreon then return true end
 	if not l.isPatreon and r.isPatreon then return false end
@@ -28,7 +33,7 @@ local function sortPlayersQueue(l, r)
 end
 
 local function getPlayerPositionInQueue(playerId)
-	local _, position = table.ifind_if(_playersQueue, function(data)
+	local unk, position = table.ifind_if(_playersQueue, function(data)
 		return data.id == playerId
 	end)
 
@@ -88,6 +93,12 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 		playerStats.Vehicles = json.decode(playerStats.Vehicles)
 	end
 
+	if not playerStats.DrugBusiness then
+		playerStats.DrugBusiness = { }
+	else
+		playerStats.DrugBusiness = json.decode(playerStats.DrugBusiness)
+	end
+
 	if not playerStats.Records then
 		playerStats.Records = { }
 	else
@@ -103,6 +114,10 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 	PlayerData.Add(player, playerStats)
 
 	TriggerClientEvent('lsv:playerLoaded', player, playerStats, isRegistered)
+
+	if _isOneSyncEnabled then
+		TriggerClientEvent('lsv:oneSyncEnabled', player)
+	end
 end
 
 RegisterNetEvent('lsv:playerInitialized')
@@ -176,6 +191,18 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 	if string.len(playerName) > Settings.maxPlayerNameLength then
 		deferrals.done('Your name is too long (limit of '..Settings.maxPlayerNameLength..' characters)')
 		return
+	end
+
+	if string.match(playerName, '[^%w%s._]') then
+		deferrals.done('Using non-alphanumeric characters for username is prohibited.')
+		return
+	end
+
+	if not Settings.allowMultipleAccounts then
+		if PlayerData.IsExistsById(playerId) then
+			deferrals.done('Using multiple accounts at the same time is prohibited.')
+			return
+		end
 	end
 
 	deferrals.update('Checking player profile...')

@@ -63,6 +63,7 @@ AddEventHandler('lsv:startHuntTheBeast', function()
 
 				PlayerData.UpdateCash(_beastData.beast, Settings.huntTheBeast.rewards.beast.landmark.cash * _beastData.landmarksPicked)
 				PlayerData.UpdateExperience(_beastData.beast, Settings.huntTheBeast.rewards.beast.landmark.exp * _beastData.landmarksPicked)
+				PlayerData.GiveDrugBusinessSupply(_beastData.beast)
 				PlayerData.UpdateEventsWon(_beastData.beast)
 
 				TriggerClientEvent('lsv:finishHuntTheBeast', -1, _beastData.beast)

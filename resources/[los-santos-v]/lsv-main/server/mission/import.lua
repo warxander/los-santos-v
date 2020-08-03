@@ -1,7 +1,7 @@
 local _players = { }
 
-RegisterNetEvent('lsv:vehicleImportFinished')
-AddEventHandler('lsv:vehicleImportFinished', function(vehicle)
+RegisterNetEvent('lsv:finishVehicleImport')
+AddEventHandler('lsv:finishVehicleImport', function(vehicle)
 	local player = source
 	if not _players[player] or table.length(PlayerData.GetVehicles(player)) >= PlayerData.GetGaragesCapacity(player) then
 		return
@@ -10,7 +10,7 @@ AddEventHandler('lsv:vehicleImportFinished', function(vehicle)
 	PlayerData.AddVehicle(player, vehicle)
 	_players[player] = nil
 
-	TriggerClientEvent('lsv:vehicleImportFinished', player, true, '')
+	TriggerClientEvent('lsv:finishVehicleImport', player, true, '')
 end)
 
 RegisterNetEvent('lsv:purchaseVehicleImport')

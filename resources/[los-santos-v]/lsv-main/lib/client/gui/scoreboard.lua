@@ -130,7 +130,7 @@ function Scoreboard.DisplayThisFrame()
 	local tablePosition = { ['y'] = tablePositionHeader.y + _tableHeight + _headerTableSpacing }
 	local tableAvatarPositionWidth = (_tableHeight * 9 / 16)
 
-	table.foreach(_scoreboard, function(player)
+	table.iforeach(_scoreboard, function(player)
 		local avatarPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth / 2, ['y'] = tablePosition.y }
 		local playerPosition = { ['x'] = avatarPosition.x + _tablePositionWidth / 2, ['y'] = tablePosition.y }
 		local voiceIndicatorPosition = { ['x'] = (scoreboardPosition.x + tableAvatarPositionWidth / 2) + 0.015, ['y'] = tablePosition.y }

@@ -95,7 +95,6 @@ AddEventHandler('lsv:init', function()
 				SetMpGamerTagAlpha(gamerTag, 4, 255)
 				SetMpGamerTagAlpha(gamerTag, 7, 255)
 
-				-- TODO: Add distance check?
 				local isGamerTagVisible = isHealthBarVisible or HasEntityClearLosToEntity(playerPed, ped, 17)
 
 				SetMpGamerTagVisibility(gamerTag, 0, isGamerTagVisible) -- GAMER_NAME

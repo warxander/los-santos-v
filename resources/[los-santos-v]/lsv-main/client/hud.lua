@@ -152,6 +152,16 @@ AddEventHandler('lsv:tebexPackagePurchased', function()
 	Gui.DisplayNotification('Thank You For Your Purchase!', 'CHAR_SOCIAL_CLUB', 'Los Santos V', 'Tebex Webstore', 4)
 end)
 
+RegisterNetEvent('lsv:oneSyncEnabled')
+AddEventHandler('lsv:oneSyncEnabled', function()
+	while true do
+		Citizen.Wait(0)
+
+		Gui.SetTextParams(0, { r = Color.WHITE.r, g = Color.WHITE.g, b = Color.WHITE.b, a = 16 }, 0.45, false, false, true)
+		Gui.DrawText('ONESYNC ENABLED', { x = 0.5, y = SafeZone.Top() })
+	end
+end)
+
 Citizen.CreateThread(function()
 	local eventTimer = Timer.New()
 
@@ -381,10 +391,10 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if Player.PatreonTier == 0 and _discordUrl and not Player.Settings.disableTips then
-			Gui.SetTextParams(4, { r = 255, g = 255, b = 255, a = 255 }, 0.45, true)
+			Gui.SetTextParams(4, Color.WHITE, 0.45, true)
 			Gui.DrawText(_discordUrl, { x = SafeZone.Left() + 0.85, y = SafeZone.Top() }, 1.0)
 
-			Gui.SetTextParams(4, { r = 255, g = 255, b = 255, a = 255 }, 0.45, true)
+			Gui.SetTextParams(4, Color.WHITE, 0.45, true)
 			Gui.DrawText('~c~Use ~w~/help~c~ command to learn more', { x = SafeZone.Left() + 0.85, y = SafeZone.Top() + 0.025 }, 1.0)
 		end
 
@@ -411,9 +421,9 @@ AddEventHandler('lsv:init', function()
 			if Player.IsActive() and not WarMenu.IsAnyMenuOpened() then
 				if needToResetScaleform then
 					scaleform:call('CLEAR_ALL')
-					scaleform:call('SET_DATA_SLOT', 0, '~INPUT_MP_TEXT_CHAT_TEAM~', 'Personal Vehicle Menu')
-					scaleform:call('SET_DATA_SLOT', 1, '~INPUT_INTERACTION_MENU~', 'Interaction Menu')
-					scaleform:call('SET_DATA_SLOT', 2, '~INPUT_REPLAY_STARTPOINT~', Player.Moderator and 'Moderator Menu' or 'Report Player')
+					scaleform:call('SET_DATA_SLOT', 0, '~INPUT_REPLAY_STARTPOINT~', Player.Moderator and 'Moderator Menu' or 'Report Player')
+					scaleform:call('SET_DATA_SLOT', 1, '~INPUT_MP_TEXT_CHAT_TEAM~', 'Personal Vehicle Menu')
+					scaleform:call('SET_DATA_SLOT', 2, '~INPUT_INTERACTION_MENU~', 'Interaction Menu')
 					scaleform:call('DRAW_INSTRUCTIONAL_BUTTONS')
 					needToResetScaleform = false
 				end
@@ -428,13 +438,22 @@ end)
 
 AddEventHandler('lsv:init', function()
 	local isBigMapEnabled = false
+	local showFullMap = false
 
 	while true do
-		if IsControlJustReleased(0, 243) then
-			isBigMapEnabled = not isBigMapEnabled
-			Citizen.InvokeNative(0x231C8F89D0539D8F, isBigMapEnabled, false)
-		end
-
 		Citizen.Wait(0)
+
+		if IsControlJustReleased(0, 243) then -- `
+			if isBigMapEnabled then
+				showFullMap = not showFullMap
+				if not showFullMap then
+					isBigMapEnabled = false
+				end
+			else
+				isBigMapEnabled = true
+			end
+
+			SetBigmapActive(isBigMapEnabled, showFullMap)
+		end
 	end
 end)

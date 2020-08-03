@@ -6,15 +6,11 @@ local _playerPositions = { '1st: ', '2nd: ', '3rd: ' }
 local _pennedData = nil
 
 local function getPlayerPoints()
-	local player = table.find_if(_pennedData.players, function(player)
+	local player = table.ifind_if(_pennedData.players, function(player)
 		return player.id == Player.ServerId()
 	end)
 
-	if not player then
-		return nil
-	end
-
-	return player.points
+	return player and player.points or nil
 end
 
 RegisterNetEvent('lsv:startPennedIn')
@@ -54,9 +50,9 @@ AddEventHandler('lsv:startPennedIn', function(data, passedTime)
 
 				local barPosition = 3
 				for i = barPosition, 1, -1 do
-					if _pennedData.players[i] then
-						Gui.DrawBar(_playerPositions[i]..GetPlayerName(GetPlayerFromServerId(_pennedData.players[i].id)), _pennedData.players[i].points,
-							barPosition, _playerColors[i], true)
+					local data = _pennedData.players[i]
+					if data then
+						Gui.DrawBar(_playerPositions[i]..GetPlayerName(GetPlayerFromServerId(data.id)), data.points, barPosition, _playerColors[i], true)
 						barPosition = barPosition + 1
 					end
 				end
@@ -86,25 +82,25 @@ AddEventHandler('lsv:finishPennedIn', function(winners)
 	local playerPoints = getPlayerPoints()
 	_pennedData = nil
 
-	local isPlayerWinner = false
+	local playerPosition = nil
 	for i = 1, math.min(3, #winners) do
 		if winners[i] == Player.ServerId() then
-			isPlayerWinner = i
+			playerPosition = i
 			break
 		end
 	end
 
-	local messageText = isPlayerWinner and 'You have won Penned In with a score of '..playerPoints or Gui.GetPlayerName(winners[1], '~p~')..' has won Penned In.'
+	local messageText = playerPosition and 'You have won Penned In with a score of '..playerPoints or Gui.GetPlayerName(winners[1], '~p~')..' has won Penned In.'
 
 	if Player.IsInFreeroam() and playerPoints then
-		if isPlayerWinner then
+		if playerPosition then
 			PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
 		else
 			PlaySoundFrontend(-1, 'ScreenFlash', 'MissionFailedSounds', true)
 		end
 
 		local scaleform = Scaleform.NewAsync('MIDSIZED_MESSAGE')
-		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', isPlayerWinner and _titles[isPlayerWinner] or 'YOU LOSE', messageText, 21)
+		scaleform:call('SHOW_SHARD_MIDSIZED_MESSAGE', playerPosition and _titles[playerPosition] or 'YOU LOSE', messageText, 21)
 		scaleform:renderFullscreenTimed(10000)
 	else
 		Gui.DisplayNotification(messageText)

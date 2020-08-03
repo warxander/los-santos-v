@@ -20,9 +20,33 @@ AddEventHandler('lsv:rerollVehicleColors', function(vehicleIndex)
 		vehicle.rerollColorsCount = rerollColorsCount
 
 		PlayerData.ReplaceVehicle(player, vehicleIndex, vehicle)
-		TriggerClientEvent('lsv:rerollVehicleColors', player, vehicleIndex)
+		TriggerClientEvent('lsv:vehicleCustomized', player, vehicleIndex)
 	else
-		TriggerClientEvent('lsv:rerollVehicleColors', player, nil)
+		TriggerClientEvent('lsv:vehicleCustomized', player, nil)
+	end
+end)
+
+RegisterNetEvent('lsv:customizeVehicle')
+AddEventHandler('lsv:customizeVehicle', function(vehicleIndex, vehicleMods)
+	local player = source
+	if not PlayerData.IsExists(player) or vehicleIndex > table.length(PlayerData.GetVehicles(player)) then
+		return
+	end
+
+	local price = table.length(vehicleMods) * Settings.personalVehicle.customizePricePerMod
+	if PlayerData.GetCash(player) >= price then
+		PlayerData.UpdateCash(player, -price)
+
+		local vehicle = PlayerData.GetVehicle(player, vehicleIndex)
+
+		table.foreach(vehicleMods, function(modIndex, modType)
+			vehicle.mods[modType] = modIndex ~= -1 and modIndex or nil
+		end)
+
+		PlayerData.ReplaceVehicle(player, vehicleIndex, vehicle)
+		TriggerClientEvent('lsv:vehicleCustomized', player, vehicleIndex)
+	else
+		TriggerClientEvent('lsv:vehicleCustomized', player, nil)
 	end
 end)
 

@@ -3,8 +3,40 @@ local _vehicleAccessCurrentIndex = 1
 local _vehiclePosition = { }
 
 local _vehicleIndex = nil
+local _vehicleData = nil
 
 local _rentTimer = nil
+
+local _vehicleCustomizableMods = {
+	['0'] = 'Spoilers',
+	['1'] = 'Front Bumpers',
+	['2'] = 'Rear Bumpers',
+	['3'] = 'Skirts',
+	['4'] = 'Exhausts',
+	['5'] = 'Roll Cage',
+	['6'] = 'Grille',
+	['7'] = 'Hood',
+	['8'] = 'Fenders',
+	['23'] = 'Wheels',
+	['24'] = 'Back Wheels',
+	['25'] = 'Plate Holders',
+	['26'] = 'Vanity Plates',
+	['27'] = 'Trim Design',
+	['28'] = 'Ornaments',
+	['29'] = 'Dashboard',
+	['30'] = 'Dials',
+	['31'] = 'Door Speakers',
+	['32'] = 'Seats',
+	['33'] = 'Steering Wheels',
+	['34'] = 'Shifter Leavers',
+	['35'] = 'Plaques',
+	['36'] = 'Speakers',
+	['42'] = 'Arch Cover',
+	['43'] = 'Aerials',
+	['44'] = 'Roof Scoops',
+	['46'] = 'Doors',
+	['48'] = 'Liveries',
+}
 
 local function updateDoorsLock(vehicle)
 	SetVehicleDoorsLockedForAllPlayers(vehicle, _vehicleAccessCurrentIndex ~= 3)
@@ -41,20 +73,12 @@ local function requestVehicle(vehicleData)
 	Player.DestroyPersonalVehicle()
 
 	Player.VehicleHandle = Network.CreateVehicleAsync(GetHashKey(vehicleData.model), _vehiclePosition.position, _vehiclePosition.heading, { personal = true })
-	if not Player.VehicleHandle then
-		return --TODO:
-	end
 
 	local vehicle = NetToVeh(Player.VehicleHandle)
 
 	Vehicle.ApplyMods(vehicle, vehicleData)
 	updateVehicle(vehicle)
 	SetVehicleNumberPlateText(vehicle, GetPlayerName(PlayerId()))
-
-	if GetNumVehicleMods(vehicle, 16) ~= 0 then
-		SetVehicleMod(vehicle, 16, 1) -- Armor 40%
-	end
-
 	SetVehicleTyresCanBurst(vehicle, false)
 	SetVehicleOnGroundProperly(vehicle)
 
@@ -69,9 +93,9 @@ RegisterNetEvent('lsv:vehicleRented')
 AddEventHandler('lsv:vehicleRented', function(vehicleIndex)
 	if vehicleIndex then
 		_vehicleIndex = vehicleIndex
+		_vehicleData = Player.Vehicles[_vehicleIndex]
 
-		local vehicleData = Player.Vehicles[vehicleIndex]
-		requestVehicle(vehicleData)
+		requestVehicle(_vehicleData)
 		Prompt.Hide()
 
 		WarMenu.SetSubTitle('vehicle', Player.GetVehicleName(vehicleIndex))
@@ -89,8 +113,8 @@ AddEventHandler('lsv:vehicleRented', function(vehicleIndex)
 	end
 end)
 
-RegisterNetEvent('lsv:rerollVehicleColors')
-AddEventHandler('lsv:rerollVehicleColors', function(vehicleIndex)
+RegisterNetEvent('lsv:vehicleCustomized')
+AddEventHandler('lsv:vehicleCustomized', function(vehicleIndex)
 	WarMenu.CloseMenu()
 	Prompt.Hide()
 
@@ -135,7 +159,8 @@ AddEventHandler('lsv:init', function()
 				RemoveBlip(blip)
 			end
 
-			Network.DeleteVehicle(netId)
+			Network.DeleteVehicle(netId, 5000)
+
 			Gui.DisplayPersonalNotification('Your Personal Vehicle has been destroyed.')
 
 			if Player.VehicleHandle == netId then
@@ -154,11 +179,16 @@ AddEventHandler('lsv:init', function()
 	WarMenu.SetTitleBackgroundColor('vehicle', 255, 255, 255)
 	WarMenu.SetTitleBackgroundSprite('vehicle', 'shopui_title_carmod', 'shopui_title_carmod')
 
+	WarMenu.CreateSubMenu('vehicle_customize', 'vehicle', 'Customize')
+	WarMenu.SetMenuButtonPressedSound('vehicle_customize', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
+
 	WarMenu.CreateSubMenu('rerollColors_confirm', 'vehicle', '')
 	WarMenu.SetMenuButtonPressedSound('rerollColors_confirm', 'WEAPON_PURCHASE', 'HUD_AMMO_SHOP_SOUNDSET')
 
 	local needToUpdateSlots = true
 	local showVehicleList = false
+
+	local vehicleMods = nil
 
 	while true do
 		Citizen.Wait(0)
@@ -183,6 +213,8 @@ AddEventHandler('lsv:init', function()
 							updateDoorsLock(NetToVeh(Player.VehicleHandle))
 						end
 					end) then
+					elseif WarMenu.MenuButton('Customize', 'vehicle_customize') then
+						vehicleMods = { }
 					elseif WarMenu.MenuButton('Reroll Vehicle Colors', 'rerollColors_confirm', getRerollColorsPrice()) then
 						WarMenu.SetSubTitle('rerollColors_confirm', 'Reroll Vehicle Colors for '..getRerollColorsPrice()..'?')
 					end
@@ -205,6 +237,39 @@ AddEventHandler('lsv:init', function()
 								else
 									Gui.DisplayPersonalNotification('Unable to deliver Personal Vehicle to your location.')
 								end
+							end
+						end
+					end
+				end)
+			end
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('vehicle_customize') then
+			local vehicle = NetToVeh(Player.VehicleHandle)
+			local price = table.length(vehicleMods) * Settings.personalVehicle.customizePricePerMod
+
+			if WarMenu.Button('~r~Confirm', '$'..price) then
+				if price == 0 then
+					Gui.DisplayPersonalNotification('Nothing to change.')
+				else
+					TriggerServerEvent('lsv:customizeVehicle', _vehicleIndex, vehicleMods)
+					Prompt.ShowAsync()
+				end
+			else
+				table.foreach(_vehicleCustomizableMods, function(name, modTypeStr)
+					local modType = tonumber(modTypeStr)
+					local modNum = GetNumVehicleMods(vehicle, modType)
+					if modNum ~= 0 then
+						local modIndex = GetVehicleMod(vehicle, modType)
+						if WarMenu.Button(name, modIndex) then
+							modIndex = modIndex + 1
+							SetVehicleMod(vehicle, modType, modIndex)
+
+							modIndex = GetVehicleMod(vehicle, modType)
+							if modIndex == -1 then
+								vehicleMods[modTypeStr] = _vehicleData.mods[modTypeStr] and modIndex or nil
+							else
+								vehicleMods[modTypeStr] = _vehicleData.mods[modTypeStr] ~= modIndex and modIndex or nil
 							end
 						end
 					end

@@ -10,7 +10,7 @@ local _wantedEnabled = true
 local _pedHandlers = { }
 local _vehicleHandlers = { }
 
-local function enumerateEntities(initFunc, moveFunc, disposeFunc, func, handlers)
+local function enumerateEntitiesAsync(initFunc, moveFunc, disposeFunc, func, handlers)
 	local iter, entity = initFunc()
 
 	if iter == -1 or not entity or entity == 0 then
@@ -21,6 +21,7 @@ local function enumerateEntities(initFunc, moveFunc, disposeFunc, func, handlers
 	local finished = false
 	repeat
 		func(entity)
+		Citizen.Wait(0)
 		finished, entity = moveFunc(iter)
 	until not finished
 
@@ -115,9 +116,7 @@ end
 AddEventHandler('lsv:init', function()
 	Citizen.CreateThread(function()
 		while true do
-			Citizen.Wait(0)
-
-			enumerateEntities(FindFirstPed, FindNextPed, EndFindPed, function(ped)
+			enumerateEntitiesAsync(FindFirstPed, FindNextPed, EndFindPed, function(ped)
 				processHandlers(ped, _pedHandlers)
 			end)
 		end
@@ -125,9 +124,7 @@ AddEventHandler('lsv:init', function()
 
 	Citizen.CreateThread(function()
 		while true do
-			Citizen.Wait(0)
-
-			enumerateEntities(FindFirstVehicle, FindNextVehicle, EndFindVehicle, function(vehicle)
+			enumerateEntitiesAsync(FindFirstVehicle, FindNextVehicle, EndFindVehicle, function(vehicle)
 				processHandlers(vehicle, _vehicleHandlers)
 			end)
 		end

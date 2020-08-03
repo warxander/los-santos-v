@@ -13,6 +13,8 @@ Color.BLIP_BROWN = 21
 Color.BLIP_PINK = 23
 Color.BLIP_LIME = 24
 Color.BLIP_LIGHT_BLUE = 26
+Color.BLIP_LIGHT_GREY = 45
+Color.BLIP_DARK_GREEN = 52
 Color.BLIP_DARK_BLUE = 54
 
 local _blipColors = {
@@ -50,6 +52,8 @@ local _blipColors = {
 	{ r = 186, g = 157, b = 125, a = 255 },
 	{ r = 201, g = 225, b = 255, a = 255 },
 	{ r = 240, g = 240, b = 150, a = 255 },
+	[46] = { r = 240, g = 240, b = 240, a = 255 }, -- Lazy bitch
+	[53] = { r = 66, g = 109, b = 66, a = 255 }, -- Lazy bitch
 	[55] = { r = 57, g = 100, b = 121, a = 255 }, -- Lazy bitch
 }
 
@@ -241,4 +245,6 @@ Color.BROWN = blipToHudColor(Color.BLIP_BROWN)
 Color.PINK = blipToHudColor(Color.BLIP_PINK)
 Color.LIME = blipToHudColor(Color.BLIP_LIME)
 Color.LIGHT_BLUE = blipToHudColor(Color.BLIP_LIGHT_BLUE)
+Color.LIGHT_GREY = blipToHudColor(Color.BLIP_LIGHT_GREY)
+Color.DARK_GREEN = blipToHudColor(Color.BLIP_DARK_GREEN)
 Color.DARK_BLUE = blipToHudColor(Color.BLIP_DARK_BLUE)

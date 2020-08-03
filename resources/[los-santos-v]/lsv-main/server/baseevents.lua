@@ -77,7 +77,7 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 		table.insert(killDetails, 'HEADSHOT')
 	end
 
-	if killData.weaponGroup == 2685387236 then -- MELEE
+	if killData.weaponGroup == -1609580060 or killData.weaponGroup == -728555052 then -- MELEE
 		killerCash = killerCash + Settings.cashPerMelee
 		killerExp = killerExp + Settings.expPerMelee
 		table.insert(killDetails, 'MELEE KILL')

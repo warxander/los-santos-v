@@ -66,6 +66,7 @@ AddEventHandler('lsv:startHighway', function()
 
 						PlayerData.UpdateCash(_highwayData.players[i].id, Settings.highway.rewards[i].cash)
 						PlayerData.UpdateExperience(_highwayData.players[i].id, Settings.highway.rewards[i].exp)
+						PlayerData.GiveDrugBusinessSupply(_highwayData.players[i].id)
 						PlayerData.UpdateEventsWon(_highwayData.players[i].id)
 
 						table.insert(winners, _highwayData.players[i].id)

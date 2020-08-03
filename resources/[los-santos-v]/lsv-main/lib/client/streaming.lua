@@ -1,7 +1,7 @@
 Streaming = { }
 Streaming.__index = Streaming
 
-function Streaming.RequestAnimSet(animSet)
+function Streaming.RequestAnimSetAsync(animSet)
 	if not HasAnimSetLoaded(animSet) then
 		RequestAnimSet(animSet)
 		while not HasAnimSetLoaded(animSet) do

@@ -46,6 +46,7 @@ function PlayerData.Add(player, playerStats)
 		longestKillDistance = playerStats.LongestKillDistance,
 		garages = playerStats.Garages,
 		vehicles = playerStats.Vehicles,
+		drugBusiness = playerStats.DrugBusiness,
 		records = playerStats.Records,
 		settings = playerStats.Settings,
 	}
@@ -72,17 +73,18 @@ function PlayerData.Remove(player)
 	TriggerClientEvent('lsv:removePlayerData', -1, player)
 end
 
--- TODO: Iterate over local data as well
-function PlayerData.ForEach(func)
-	table.foreach(_playerSharedData, func)
-end
-
 function PlayerData.GetCount()
 	return table.length(_playerSharedData)
 end
 
 function PlayerData.IsExists(player)
 	return _playerSharedData[player]
+end
+
+function PlayerData.IsExistsById(playerId)
+	return table.find_if(_playerLocalData, function(_, player)
+		return PlayerData.GetIdentifier(player) == playerId
+	end)
 end
 
 function PlayerData.GetIdentifier(player)
@@ -161,7 +163,7 @@ function PlayerData.UpdateRecord(player, id, record)
 end
 
 function PlayerData.HasGarage(player, garage)
-	return _playerLocalData[player].garages[garage]
+	return _playerLocalData[player].garages[garage] ~= nil
 end
 
 function PlayerData.GetGaragesCapacity(player)
@@ -196,7 +198,7 @@ function PlayerData.UpdateGarage(player, garage)
 end
 
 function PlayerData.HasVehicle(player, vehicleIndex)
-	return _playerLocalData[player].vehicles[vehicleIndex]
+	return _playerLocalData[player].vehicles[vehicleIndex] ~= nil
 end
 
 function PlayerData.AddVehicle(player, vehicle)
@@ -230,6 +232,45 @@ function PlayerData.RemoveVehicle(player, vehicleIndex)
 	table.remove(playerData.vehicles, vehicleIndex)
 	Db.UpdateVehicles(player, playerData.vehicles)
 	TriggerClientEvent('lsv:vehicleRemoved', player, vehicleIndex)
+end
+
+function PlayerData.HasDrugBusiness(player, type)
+	return _playerLocalData[player].drugBusiness[type] ~= nil
+end
+
+function PlayerData.GetDrugBusiness(player, type)
+	return _playerLocalData[player].drugBusiness[type]
+end
+
+function PlayerData.UpdateDrugBusiness(player, type, data)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local playerLocalData = _playerLocalData[player]
+	playerLocalData.drugBusiness[type] = data
+	Db.UpdateDrugBusiness(player, playerLocalData.drugBusiness)
+	TriggerClientEvent('lsv:drugBusinessUpdated', player, type, data)
+end
+
+function PlayerData.GiveDrugBusinessSupply(player)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local playerLocalData = _playerLocalData[player]
+
+	local data, type = table.find_if(playerLocalData.drugBusiness, function(data)
+		return data.supplies ~= Settings.drugBusiness.limits.supplies
+	end)
+	if not data then
+		return
+	end
+
+	data.supplies = data.supplies + 1
+	Db.UpdateDrugBusiness(player, playerLocalData.drugBusiness)
+	TriggerClientEvent('lsv:drugBusinessUpdated', player, type, data)
+	TriggerClientEvent('lsv:drugBusinessSupplyRewarded', player, type)
 end
 
 function PlayerData.UpdateCash(player, cash, killDetails, notPayToLeader)

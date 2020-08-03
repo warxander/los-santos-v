@@ -37,6 +37,17 @@ local _vehicleMods = {
 		},
 	},
 
+	['15'] = {
+		name = 'Suspension',
+		values = {
+			[-1] = 'Stock (1 of 5)',
+			[0] = 'Lowered (2 of 5)',
+			[1] = 'Street (3 of 5)',
+			[2] = 'Sport (4 of 5)',
+			[3] = 'Competition (5 of 5)',
+		},
+	},
+
 	['18'] = {
 		name = 'Turbo',
 		values = {
@@ -128,7 +139,7 @@ AddEventHandler('lsv:init', function()
 
 			if WarMenu.Button('Export', '$'..Settings.vehicleExport.rewards[vehicleTier].cash) then
 				WarMenu.CloseMenu()
-				MissionManager.StartMission('vehicleExport', Settings.vehicleExport.missionName)
+				MissionManager.StartMission('VehicleExport', Settings.vehicleExport.missionName)
 				TriggerEvent('lsv:startVehicleExport', selectedVehicleIndex, vehicleTier, _garageId)
 			elseif WarMenu.Button('Rename') then
 				local name = Gui.GetTextInputResultAsync(16, vehicle.userName)
