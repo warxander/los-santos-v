@@ -19,6 +19,11 @@ function Streaming.RequestModelAsync(modelHash)
 	end
 end
 
+function Streaming.RequestModel(modelHash)
+	RequestModel(modelHash)
+	return HasModelLoaded(modelHash)
+end
+
 function Streaming.RequestEntityCollisionAsync(entity)
 	local coords = GetEntityCoords(entity)
 	if not HasCollisionLoadedAroundEntity(entity) then

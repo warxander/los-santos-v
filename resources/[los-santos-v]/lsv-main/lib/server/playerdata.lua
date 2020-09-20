@@ -29,6 +29,7 @@ function PlayerData.Add(player, playerStats)
 		deathstreak = 0,
 		rank = playerStats.Rank,
 		prestige = playerStats.Prestige,
+		crewLeader = nil,
 	}
 
 	local localData = {
@@ -90,13 +91,19 @@ end
 function PlayerData.GetIdentifier(player)
 	local playerData = _playerLocalData[player]
 
-	if not playerData then
-		return table.ifind_if(GetPlayerIdentifiers(player), function(id)
-			return string.find(id, 'license')
-		end)
-	else
+	if playerData and playerData.identifier then
 		return playerData.identifier
 	end
+
+	local identifier = table.ifind_if(GetPlayerIdentifiers(player), function(id)
+		return string.find(id, 'license')
+	end)
+
+	if playerData then
+		playerData.identifier = identifier
+	end
+
+	return identifier
 end
 
 function PlayerData.GetRandom()
@@ -141,6 +148,22 @@ end
 
 function PlayerData.GetKills(player)
 	return _playerSharedData[player].kills
+end
+
+function PlayerData.GetCrewLeader(player)
+	return _playerSharedData[player].crewLeader
+end
+
+function PlayerData.UpdateCrewLeader(player, crewLeader)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local playerData = _playerSharedData[player]
+	if playerData.crewLeader ~= crewLeader then
+		playerData.crewLeader = crewLeader
+		TriggerClientEvent('lsv:updatePlayerData', -1, player, { crewLeader = crewLeader or false })
+	end
 end
 
 function PlayerData.GetRecord(player, id)
@@ -288,11 +311,11 @@ function PlayerData.UpdateCash(player, cash, killDetails, notPayToLeader)
 
 		local prestige = PlayerData.GetPrestige(player)
 		if prestige ~= 0 then
-			cash = cash + math.floor(basicCash * prestige * Settings.prestigeBonus)
+			cash = cash + math.floor(basicCash * prestige * Settings.prestige.rewardMultiplier)
 		end
 
 		if not notPayToLeader then
-			local crewLeader = Crew.GetLeader(player)
+			local crewLeader = PlayerData.GetCrewLeader(player)
 			if crewLeader and crewLeader ~= player then
 				PlayerData.UpdateCash(crewLeader, math.floor(basicCash * Settings.crew.rewardBonus.cash))
 			end
@@ -304,7 +327,7 @@ function PlayerData.UpdateCash(player, cash, killDetails, notPayToLeader)
 
 	if cash ~= 0 then
 		local playerData = _playerSharedData[player]
-		playerData.cash = playerData.cash + cash
+		playerData.cash = math.floor(playerData.cash + cash)
 		TriggerClientEvent('lsv:updatePlayerData', -1, player, { cash = playerData.cash })
 		Db.UpdateCash(player, playerData.cash)
 		TriggerClientEvent('lsv:cashUpdated', player, cash, killDetails)
@@ -325,12 +348,12 @@ function PlayerData.UpdateExperience(player, experience, notPayToLeader)
 
 	local prestige = PlayerData.GetPrestige(player)
 	if prestige ~= 0 then
-		experience = experience + math.floor(basicExperience * prestige * Settings.prestigeBonus)
+		experience = experience + math.floor(basicExperience * prestige * Settings.prestige.rewardMultiplier)
 	end
 
 	if experience ~= 0 then
 		if not notPayToLeader then
-			local crewLeader = Crew.GetLeader(player)
+			local crewLeader = PlayerData.GetCrewLeader(player)
 			if crewLeader and crewLeader ~= player then
 				PlayerData.UpdateExperience(crewLeader, math.floor(basicExperience * Settings.crew.rewardBonus.exp))
 			end
@@ -338,7 +361,7 @@ function PlayerData.UpdateExperience(player, experience, notPayToLeader)
 
 		local playerData = _playerSharedData[player]
 		local playerLocalData = _playerLocalData[player]
-		playerLocalData.experience = playerLocalData.experience + experience
+		playerLocalData.experience = math.floor(playerLocalData.experience + experience)
 		local rank = Rank.CalculateRank(playerLocalData.experience)
 		if rank ~= playerData.rank then
 			if rank % Settings.crate.nthRank == 0 then

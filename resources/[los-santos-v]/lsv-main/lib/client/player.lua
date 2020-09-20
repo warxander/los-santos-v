@@ -353,16 +353,6 @@ function Player.GetVehicleName(vehicleIndex)
 end
 
 function Player.LeaveVehicle(vehicle, exitFlag)
-	if not vehicle then
-		if Player.VehicleHandle then
-			vehicle = NetToVeh(Player.VehicleHandle)
-		end
-
-		if not vehicle then
-			return
-		end
-	end
-
 	local playerPed = PlayerPedId()
 	if DoesEntityExist(vehicle) and IsPedInVehicle(playerPed, vehicle, false) then
 		TaskLeaveVehicle(playerPed, vehicle, exitFlag or 0)
@@ -374,9 +364,11 @@ function Player.DestroyPersonalVehicle()
 		return
 	end
 
-	local blip = GetBlipFromEntity(NetToVeh(Player.VehicleHandle))
-	if DoesBlipExist(blip) then
-		RemoveBlip(blip)
+	if NetworkDoesEntityExistWithNetworkId(Player.VehicleHandle) then
+		local blip = GetBlipFromEntity(NetToVeh(Player.VehicleHandle))
+		if DoesBlipExist(blip) then
+			RemoveBlip(blip)
+		end
 	end
 
 	Network.DeleteVehicle(Player.VehicleHandle)

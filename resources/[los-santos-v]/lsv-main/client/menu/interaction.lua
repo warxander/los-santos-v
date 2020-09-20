@@ -306,7 +306,7 @@ AddEventHandler('lsv:init', function()
 					WarMenu.CloseMenu()
 					killYourselfTimer:restart()
 				end
-			elseif Player.Rank >= Settings.minPrestigeRank and Player.Prestige < Settings.maxPrestige and WarMenu.MenuButton('~y~Up Prestige To Level '..(Player.Prestige + 1), 'interaction_confirm') then
+			elseif Player.Rank >= Settings.prestige.minRank and WarMenu.MenuButton('~o~Up Prestige Level To '..(Player.Prestige + 1), 'interaction_confirm') then
 			elseif MissionManager.Mission and WarMenu.Button('~r~Abort Mission') then
 				MissionManager.AbortMission()
 				WarMenu.CloseMenu()
@@ -345,16 +345,14 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('interaction_confirm') then
-			if WarMenu.Button('Yes') then
-				if Player.Rank < Settings.minPrestigeRank then
-					Gui.DisplayPersonalNotification('You need to be at least Rank '..Settings.minPrestigeRank..'.')
-				elseif Player.Prestige >= Settings.maxPrestige then
-					Gui.DisplayPersonalNotification('You already have maximum Prestige level. Wow.')
+			if WarMenu.MenuButton('No', 'interaction') then
+			elseif WarMenu.Button('~r~Yes') then
+				if Player.Rank < Settings.prestige.minRank then
+					Gui.DisplayPersonalNotification('You need to be at least Rank '..Settings.prestige.minRank..'.')
 				else
 					TriggerServerEvent('lsv:upPrestigeLevel')
 					Prompt.ShowAsync()
 				end
-			elseif WarMenu.MenuButton('No', 'interaction') then
 			end
 
 			WarMenu.Display()

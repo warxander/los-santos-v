@@ -12,7 +12,7 @@ local _events = {
 	{ id = 'HotProperty', name = 'Hot Property' },
 	{ id = 'PennedIn', name = 'Penned In' },
 	{ id = 'Highway', name = 'Highway' },
-	{ id = 'SimeonExport', name = 'Simeon Export' },
+	-- { id = 'SimeonExport', name = 'Simeon Export' },
 	{ id = 'GangWars', name = 'Gang Wars' },
 }
 

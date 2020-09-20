@@ -2,19 +2,18 @@ Crew = { }
 Crew.__index = Crew
 
 local _crews = { }
-local _crewMembers = { }
 
 local _crewRaces = { }
 local _crewSalaries = { }
 
 local function addToCrew(player, leader)
-	_crewMembers[player] = leader
+	PlayerData.UpdateCrewLeader(player, leader)
 	table.insert(_crews[leader], player)
 end
 
 local function disbandCrew(leader)
 	table.iforeach(_crews[leader], function(member)
-		_crewMembers[member] = nil
+		PlayerData.UpdateCrewLeader(member, nil)
 		TriggerClientEvent('lsv:crewDisbanded', member)
 	end)
 	TriggerSignal('lsv:crewDisbanded', leader)
@@ -24,7 +23,7 @@ local function disbandCrew(leader)
 end
 
 local function leaveCrew(player, disconnected)
-	local leader = _crewMembers[player]
+	local leader = PlayerData.GetCrewLeader(player)
 	local memberIndex = nil
 	table.iforeach(_crews[leader], function(member, index)
 		if member == player then
@@ -33,15 +32,11 @@ local function leaveCrew(player, disconnected)
 		TriggerClientEvent('lsv:crewMemberLeft', member, player, disconnected)
 	end)
 	table.remove(_crews[leader], memberIndex)
-	_crewMembers[player] = nil
+	PlayerData.UpdateCrewLeader(player, nil)
 end
 
 function Crew.IsCrewLeader(player)
 	return _crews[player]
-end
-
-function Crew.GetLeader(player)
-	return _crewMembers[player]
 end
 
 function Crew.ForEachMember(leader, func)
@@ -65,8 +60,11 @@ end)
 RegisterNetEvent('lsv:finishCrewRace')
 AddEventHandler('lsv:finishCrewRace', function()
 	local player = source
-	local leader = _crewMembers[player]
+	if not PlayerData.IsExists(player) then
+		return
+	end
 
+	local leader = PlayerData.GetCrewLeader(player)
 	if not leader or not _crewRaces[leader] then
 		return
 	end
@@ -80,7 +78,11 @@ end)
 RegisterNetEvent('lsv:formCrew')
 AddEventHandler('lsv:formCrew', function()
 	local player = source
-	if not _crews[player] and not _crewMembers[player] then
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	if not _crews[player] and not PlayerData.GetCrewLeader(player) then
 		_crews[player] = { }
 		_crewSalaries[player] = Timer.New()
 		addToCrew(player, player)
@@ -99,15 +101,24 @@ end)
 RegisterServerEvent('lsv:leaveCrew')
 AddEventHandler('lsv:leaveCrew', function()
 	local player = source
-	if _crewMembers[player] then
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	if PlayerData.GetCrewLeader(player) then
 		leaveCrew(player)
 	end
 end)
 
 RegisterServerEvent('lsv:inviteToCrew')
 AddEventHandler('lsv:inviteToCrew', function(player)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
 	local leader = source
-	if _crewMembers[player] or table.length(_crews[leader]) == Settings.crew.memberLimit then
+
+	if PlayerData.GetCrewLeader(player) or table.length(_crews[leader]) == Settings.crew.memberLimit then
 		TriggerClientEvent('lsv:crewInvitationDeclined', leader, player)
 		return
 	end
@@ -124,6 +135,10 @@ end)
 RegisterServerEvent('lsv:acceptCrewInvitation')
 AddEventHandler('lsv:acceptCrewInvitation', function(leader)
 	local player = source
+	if not PlayerData.IsExists(player) or not PlayerData.IsExists(leader) then
+		return
+	end
+
 	local crewMembers = _crews[leader]
 	if crewMembers then
 		table.iforeach(crewMembers, function(member)
@@ -154,9 +169,13 @@ Citizen.CreateThread(function()
 end)
 
 AddSignalHandler('lsv:playerDropped', function(player)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
 	if _crews[player] then
 		disbandCrew(player)
-	elseif _crewMembers[player] then
+	elseif PlayerData.GetCrewLeader(player) then
 		leaveCrew(player, true)
 	end
 end)

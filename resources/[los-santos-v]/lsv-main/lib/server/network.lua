@@ -5,8 +5,7 @@ local logger = Logger.New('Network')
 
 local _netIds = { }
 
-local _warned = false
-local _netIdCountToWarn = 150
+local _netIdCountToWarn = 75
 
 RegisterNetEvent('lsv:netIdCreated')
 AddEventHandler('lsv:netIdCreated', function(netId, netData)
@@ -15,11 +14,8 @@ AddEventHandler('lsv:netIdCreated', function(netId, netData)
 	if not _netIds[netId] then
 		_netIds[netId] = netData
 
-		if not _warned then
-			if table.length(_netIds) > _netIdCountToWarn then
-				logger:warn('Too many network ids, there\'s probably a leak!')
-				_warned = true
-			end
+		if table.length(_netIds) > _netIdCountToWarn then
+			logger:warn('Too many network ids, there\'s probably a leak!')
 		end
 
 		TriggerClientEvent('lsv:netIdCreated', -1, netId, netData)
@@ -36,7 +32,7 @@ end)
 
 RegisterNetEvent('lsv:removeNetId')
 AddEventHandler('lsv:removeNetId', function(netId)
-	if _netIds[netId] then
+	if _netIds[netId] and not _netIds[netId].delete then
 		_netIds[netId].delete = true
 		TriggerClientEvent('lsv:removeNetIds', -1, { netId })
 	end
@@ -50,7 +46,7 @@ AddSignalHandler('lsv:playerDropped', function(player)
 	local netIdsToRemove = { }
 
 	table.foreach(_netIds, function(netData, netId)
-		if netData.creator == player then
+		if netData.creator == player and not netData.delete then
 			table.insert(netIdsToRemove, netId)
 		end
 	end)

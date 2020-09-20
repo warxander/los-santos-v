@@ -1,13 +1,18 @@
 RegisterNetEvent('lsv:finishHeadhunter')
-AddEventHandler('lsv:finishHeadhunter', function(targetsLeft)
+AddEventHandler('lsv:finishHeadhunter', function(targetsKilled)
 	local player = source
-	if not MissionManager.IsPlayerOnMission(player) or targetsLeft < 0 then
+	if not MissionManager.IsPlayerOnMission(player) then
 		return
 	end
 
-	PlayerData.UpdateCash(player, Settings.headhunter.reward.cash * (Settings.headhunter.count - targetsLeft))
-	PlayerData.UpdateExperience(player, Settings.headhunter.reward.exp * (Settings.headhunter.count - targetsLeft))
-	PlayerData.GiveDrugBusinessSupply(player)
+	local rewardMultiplier = 1 + (math.floor(targetsKilled / Settings.headhunter.minTargetCount) * Settings.headhunter.rewardMultiplier)
+
+	PlayerData.UpdateCash(player, Settings.headhunter.reward.cash * targetsKilled * rewardMultiplier)
+	PlayerData.UpdateExperience(player, Settings.headhunter.reward.exp * targetsKilled * rewardMultiplier)
+
+	if targetsKilled >= Settings.headhunter.minTargetCount then
+		PlayerData.GiveDrugBusinessSupply(player)
+	end
 
 	TriggerClientEvent('lsv:headhunterFinished', player, true, '')
 end)

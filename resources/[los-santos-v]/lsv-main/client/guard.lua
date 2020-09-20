@@ -33,7 +33,7 @@ AddEventHandler('lsv:autoBanPlayer', function(reason, message)
 	CancelEvent()
 end)
 
-Citizen.CreateThread(function()
+AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
@@ -49,12 +49,21 @@ Citizen.CreateThread(function()
 
 		-- Infinite ammo
 		SetPedInfiniteAmmoClip(PlayerPedId(), false)
+
+		-- Player modifiers
+		SetPlayerWeaponDamageModifier(PlayerId(), 1. + (Player.Prestige * Settings.prestige.damageMultiplier))
+		SetPlayerWeaponDefenseModifier(PlayerId(), 1. + (Player.Prestige * Settings.prestige.defenseMultiplier))
+		SetPlayerWeaponDefenseModifier_2(PlayerId(), 1. + (Player.Prestige * Settings.prestige.defenseMultiplier))
 	end
 end)
 
 AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(250)
+
+		if _banned then
+			return
+		end
 
 		-- Check global variables
 		for _, var in ipairs(_globalVars) do
@@ -70,12 +79,6 @@ AddEventHandler('lsv:init', function()
 				TriggerEvent('lsv:autoBanPlayer', 'God Mode')
 				return
 			end
-		end
-
-		-- Player modifiers
-		if math.ceil(GetPlayerWeaponDamageModifier(PlayerId())) > 1 or math.ceil(GetPlayerWeaponDefenseModifier(PlayerId())) > 1 then
-			TriggerEvent('lsv:autoBanPlayer', 'Cheating', 'PlayerModifier')
-			return
 		end
 
 		-- Explosive ammo

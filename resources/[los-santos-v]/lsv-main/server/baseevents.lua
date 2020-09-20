@@ -95,6 +95,14 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 		table.insert(killDetails, 'BOUNTY HUNTER')
 	end
 
+	if PlayerData.GetCrewLeader(killer) then
+		if PlayerData.GetCrewLeader(victim) == victim then
+			killerCash = killerCash + Settings.cashPerCrewLeader
+			killerExp = killerExp + Settings.expPerCrewLeader
+			table.insert(killDetails, 'KINGSLAYER')
+		end
+	end
+
 	local patreonTier = PlayerData.GetPatreonTier(killer)
 	if patreonTier ~= 0 then
 		table.insert(killDetails, 'PATREON BONUS x'..Settings.patreon.reward[patreonTier])

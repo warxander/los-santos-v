@@ -6,6 +6,88 @@ Weapon.__index = Weapon
 Weapon.WEAPON_KNIFE = {
 	name = 'Knife',
 	components = { },
+	cash = 0,
+	rank = 1,
+}
+
+Weapon.WEAPON_HAMMER = {
+	name = 'Hammer',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 1,
+}
+
+Weapon.WEAPON_SWITCHBLADE = {
+	name = 'Switchblade',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 2,
+}
+
+Weapon.WEAPON_BAT = {
+	name = 'Baseball Bat',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 3,
+}
+
+Weapon.WEAPON_POOLCUE = {
+	name = 'Pool Cue',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 4,
+}
+
+Weapon.WEAPON_MACHETE = {
+	name = 'Machete',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 5,
+}
+
+Weapon.WEAPON_BATTLEAXE = {
+	name = 'Battle Axe',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 6,
+}
+
+Weapon.WEAPON_GOLFCLUB = {
+	name = 'Golf Club',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 7,
+}
+
+Weapon.WEAPON_HATCHET = {
+	name = 'Hatchet',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 8,
+}
+
+Weapon.WEAPON_CROWBAR = {
+	name = 'Crowbar',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 9,
+}
+
+Weapon.WEAPON_KNUCKLE = {
+	name = 'Knuckle Dusters',
+	components = { },
+	cash = 125000,
+	rank = 1,
+	prestige = 10,
 }
 
 Weapon.WEAPON_STUNGUN = {
@@ -24,30 +106,6 @@ Weapon.WEAPON_NIGHTSTICK = {
 	name = 'Nightstick',
 	components = { },
 	cash = 500,
-}
-
-Weapon.WEAPON_HAMMER = {
-	name = 'Hammer',
-	components = { },
-	cash = 500,
-}
-
-Weapon.WEAPON_BAT = {
-	name = 'Bat',
-	components = { },
-	cash = 500,
-}
-
-Weapon.WEAPON_GOLFCLUB = {
-	name = 'Golf Club',
-	components = { },
-	cash = 600,
-}
-
-Weapon.WEAPON_CROWBAR = {
-	name = 'Crowbar',
-	components = { },
-	cash = 700,
 }
 
 Weapon.WEAPON_SAWNOFFSHOTGUN = {
@@ -148,30 +206,6 @@ Weapon.WEAPON_MARKSMANPISTOL = {
 	cash = 4350,
 }
 
-Weapon.WEAPON_KNUCKLE = {
-	name = 'Knuckle Dusters',
-	components = { },
-	cash = 7500,
-}
-
-Weapon.WEAPON_HATCHET = {
-	name = 'Hatchet',
-	components = { },
-	cash = 7500,
-}
-
-Weapon.WEAPON_MACHETE = {
-	name = 'Machete',
-	components = { },
-	cash = 890,
-}
-
-Weapon.WEAPON_SWITCHBLADE = {
-	name = 'Switchblade',
-	components = { },
-	cash = 1950,
-}
-
 Weapon.WEAPON_REVOLVER = {
 	name = 'Heavy Revolver',
 	components = { },
@@ -182,6 +216,7 @@ Weapon.WEAPON_DBSHOTGUN = {
 	name = 'Double Barrel Shotgun',
 	components = { },
 	cash = 15450,
+	rank = 16,
 }
 
 Weapon.WEAPON_AUTOSHOTGUN = {
@@ -189,12 +224,6 @@ Weapon.WEAPON_AUTOSHOTGUN = {
 	components = { },
 	cash = 6900,
 	rank = 24,
-}
-
-Weapon.WEAPON_BATTLEAXE = {
-	name = 'Battle Axe',
-	components = { },
-	cash = 950,
 }
 
 Weapon.WEAPON_COMPACTLAUNCHER = {
@@ -207,12 +236,6 @@ Weapon.WEAPON_PIPEBOMB = {
 	name = 'Pipe Bomb',
 	components = { },
 	cash = 5000,
-}
-
-Weapon.WEAPON_POOLCUE = {
-	name = 'Pool Cue',
-	components = { },
-	cash = 625,
 }
 
 Weapon.WEAPON_WRENCH = {
@@ -238,9 +261,10 @@ Weapon.WEAPON_MINISMG = {
 	name = 'Mini SMG',
 	components = {
 		{ hash = 2227745491, name = 'Default Clip', cash = 0 },
-		{ hash = 2474561719, name = 'Extended Clip', cash = 6670 },
+		{ hash = 2474561719, name = 'Extended Clip', cash = 6670, rank = 76 },
 	},
 	cash = 8900,
+	rank = 64,
 }
 
 Weapon.WEAPON_MACHINEPISTOL = {

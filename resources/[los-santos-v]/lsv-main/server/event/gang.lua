@@ -80,11 +80,12 @@ AddEventHandler('lsv:startGangWars', function()
 end)
 
 AddEventHandler('lsv:onPlayerKilled', function(killData)
-	if not _gangData then
+	local victim = source
+	if not _gangData or not PlayerData.IsExists(killData.killer) or not PlayerData.IsExists(victim) or not PlayerData.GetCrewLeader(victim) then
 		return
 	end
 
-	local leader = Crew.GetLeader(killData.killer)
+	local leader = PlayerData.GetCrewLeader(killData.killer)
 	if not leader then
 		return
 	end

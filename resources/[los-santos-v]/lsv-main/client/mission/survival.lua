@@ -222,7 +222,8 @@ AddEventHandler('lsv:startSurvival', function(id)
 					local isBoss = bossCount < _location.bossCount
 					local modelHash = isBoss and _bossSettings.model or table.random(_location.pedModels)
 
-					local netId = Network.CreatePedAsync(11, modelHash, location, nil, { survival = true, isBoss = isBoss })
+					Streaming.RequestModelAsync(modelHash)
+					local netId = Network.CreatePed(11, modelHash, location, nil, { survival = true, isBoss = isBoss })
 
 					local ped = NetToPed(netId)
 
@@ -239,6 +240,7 @@ AddEventHandler('lsv:startSurvival', function(id)
 					end
 					SetPedArmour(ped, armour)
 
+					SetPedSuffersCriticalHits(ped, false)
 					SetPedDropsWeaponsWhenDead(ped, false)
 					SetPedFleeAttributes(ped, 0, false)
 					SetPedCombatRange(ped, 2)
@@ -273,7 +275,7 @@ AddEventHandler('lsv:startSurvival', function(id)
 		if enemyWaveSpawned then
 			local enemyCount = table.icount_if(_location.enemies, function(pedNet)
 				local ped = NetToPed(pedNet)
-				return not IsPedDeadOrDying(ped, true)
+				return not IsEntityDead(ped)
 			end)
 
 			_location.enemiesLeft = enemyCount
@@ -345,17 +347,17 @@ AddEventHandler('lsv:init', function()
 		end
 
 		local netId = PedToNet(ped)
-		if not Network.IsRegistered(netId) or not Network.GetData(netId, 'survival') then
+		if not Network.DoesEntityExistWithNetworkId(netId) or not Network.GetData(netId, 'survival') then
 			return
 		end
 
-		local creator = Network.GetData(netId, 'creator')
+		local creator = Network.GetCreator(netId)
 		if creator ~= Player.ServerId() and not Player.CrewMembers[creator] then
 			return
 		end
 
 		local blip = GetBlipFromEntity(ped)
-		if IsPedDeadOrDying(ped, true) then
+		if IsEntityDead(ped) then
 			if DoesBlipExist(blip) then
 				RemoveBlip(blip)
 			end

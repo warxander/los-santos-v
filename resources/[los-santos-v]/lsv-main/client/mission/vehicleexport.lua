@@ -51,7 +51,10 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 	local vehicleMods = Player.Vehicles[vehicleIndex]
 	local position = Settings.garages[garageId].exportPos
 
-	_vehicleNet = Network.CreateVehicleAsync(GetHashKey(vehicleMods.model), position, position.heading)
+	local modelHash = GetHashKey(vehicleMods.model)
+	Streaming.RequestModelAsync(modelHash)
+
+	_vehicleNet = Network.CreateVehicle(modelHash, position, position.heading)
 
 	local vehicle = NetToVeh(_vehicleNet)
 

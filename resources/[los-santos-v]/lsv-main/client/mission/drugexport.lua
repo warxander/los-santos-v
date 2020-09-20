@@ -36,7 +36,9 @@ end)
 AddEventHandler('lsv:startDrugExport', function(data)
 	local vehicleModel = table.random(Settings.drugBusiness.export.vehicles[data.type])
 	local vehiclePosition = Settings.drugBusiness.businesses[Player.DrugBusiness[data.type].id].vehicleLocation
-	_vehicleNet = Network.CreateVehicleAsync(vehicleModel, vehiclePosition, vehiclePosition.heading)
+
+	Streaming.RequestModelAsync(vehicleModel)
+	_vehicleNet = Network.CreateVehicle(vehicleModel, vehiclePosition, vehiclePosition.heading)
 
 	local vehicle = NetToVeh(_vehicleNet)
 	SetVehicleModKit(vehicle, 0)

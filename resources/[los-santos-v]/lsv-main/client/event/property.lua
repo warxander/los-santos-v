@@ -77,7 +77,7 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 					if World.HotPropertyPlayer == Player.ServerId() then
 						eventObjectiveText = 'Hold on to the briefcase for as long as possible.'
 					else
-						eventObjectiveText = Gui.GetPlayerName(World.HotPropertyPlayer, '~w~')..' has the ~r~briefcase~w~. Take it from him.'
+						eventObjectiveText = Gui.GetPlayerName(World.HotPropertyPlayer, '~w~')..'<C> has the ~r~briefcase~w~. Take it from him.</C>'
 					end
 				end
 				Gui.DisplayObjectiveText(eventObjectiveText)
@@ -121,7 +121,7 @@ AddEventHandler('lsv:startHotProperty', function(data, passedTime)
 			if World.HotPropertyPlayer == Player.ServerId() then
 				local playerPed = PlayerPedId()
 
-				if IsPedInAnyPlane(playerPed) or IsPedInAnyHeli(playerPed) then
+				if IsPedInAnyPlane(playerPed) or IsPedInAnyHeli(playerPed) or (IsPedInAnyVehicle(playerPed) and GetEntityModel(GetVehiclePedIsIn(playerPed)) == `oppressor`) then
 					TriggerServerEvent('lsv:hotPropertyDropped', Player.Position())
 					World.HotPropertyPlayer = nil
 				else

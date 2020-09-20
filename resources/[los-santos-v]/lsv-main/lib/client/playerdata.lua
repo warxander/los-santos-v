@@ -31,6 +31,10 @@ function PlayerData.GetDeathstreak(player)
 	return _playerData[player].deathstreak
 end
 
+function PlayerData.GetCrewLeader(player)
+	return _playerData[player].crewLeader
+end
+
 RegisterNetEvent('lsv:initPlayerData')
 AddEventHandler('lsv:initPlayerData', function(data)
 	_playerData = data

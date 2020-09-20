@@ -69,10 +69,13 @@ local function getRentTimer()
 	return nil
 end
 
-local function requestVehicle(vehicleData)
+local function requestVehicleAsync(vehicleData)
 	Player.DestroyPersonalVehicle()
 
-	Player.VehicleHandle = Network.CreateVehicleAsync(GetHashKey(vehicleData.model), _vehiclePosition.position, _vehiclePosition.heading, { personal = true })
+	local modelHash = GetHashKey(vehicleData.model)
+	Streaming.RequestModelAsync(modelHash)
+
+	Player.VehicleHandle = Network.CreateVehicle(modelHash, _vehiclePosition.position, _vehiclePosition.heading, { personal = true })
 
 	local vehicle = NetToVeh(Player.VehicleHandle)
 
@@ -95,7 +98,7 @@ AddEventHandler('lsv:vehicleRented', function(vehicleIndex)
 		_vehicleIndex = vehicleIndex
 		_vehicleData = Player.Vehicles[_vehicleIndex]
 
-		requestVehicle(_vehicleData)
+		requestVehicleAsync(_vehicleData)
 		Prompt.Hide()
 
 		WarMenu.SetSubTitle('vehicle', Player.GetVehicleName(vehicleIndex))
@@ -148,7 +151,7 @@ AddEventHandler('lsv:init', function()
 		end
 
 		local netId = VehToNet(vehicle)
-		if not Network.IsRegistered(netId) or not Network.GetData(netId, 'personal') or Network.GetData(netId, 'creator') ~= Player.ServerId() then
+		if not Network.DoesEntityExistWithNetworkId(netId) or not Network.GetData(netId, 'personal') or Network.GetCreator(netId) ~= Player.ServerId() then
 			return
 		end
 
@@ -202,7 +205,7 @@ AddEventHandler('lsv:init', function()
 			end
 
 			if Player.VehicleHandle and not showVehicleList then
-				if WarMenu.Button('Deliver Another Vehicle', getRentTimer()) then
+				if WarMenu.Button('Request Personal Vehicle', getRentTimer()) then
 					if not _rentTimer or _rentTimer:elapsed() >= Settings.personalVehicle.rentTimeout then
 						showVehicleList = true
 					end

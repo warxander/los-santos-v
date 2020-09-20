@@ -162,16 +162,11 @@ end)
 RegisterNetEvent('lsv:upPrestigeLevel')
 AddEventHandler('lsv:upPrestigeLevel', function()
 	local player = source
-	if not PlayerData.IsExists(player) or PlayerData.GetRank(player) < Settings.minPrestigeRank then
+	if not PlayerData.IsExists(player) or PlayerData.GetRank(player) < Settings.prestige.minRank then
 		return
 	end
 
-	local prestige = PlayerData.GetPrestige(player)
-	if prestige >= Settings.maxPrestige then
-		return
-	end
-
-	prestige = prestige + 1
+	local prestige = PlayerData.GetPrestige(player) + 1
 	Db.UpdatePrestige(player, function()
 		logger:info('Prestige { '..player..', '..prestige..' }')
 		DropPlayer(player, 'Congratulations, you have earned Prestige '..prestige..'!\nPlease, re-login to the server and sorry for inconvenience.')
@@ -260,6 +255,10 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 
 				while true do
 					local position = getPlayerPositionInQueue(playerId)
+					if not position then
+						deferrals.done()
+						return
+					end
 
 					if PlayerData.GetCount() < _maxPlayersCount and position == 1 then
 						table.remove(_playersQueue, position)

@@ -44,24 +44,26 @@ Settings.player = {
 	['disableKillFeed'] = 'Disable Kill Feed',
 	['disableTips'] = 'Disable Tips',
 	['disableEventTimer'] = 'Disable Event Timer',
-	['useMetricSystem'] = 'Use Metric System',
 }
 
 -- Killstreak
 Settings.killstreakTimeout = 5000
 
 -- Prestige
-Settings.minPrestigeRank = 100
-Settings.maxPrestige = 10
-Settings.prestigeBonus = 0.02
+Settings.prestige = {
+	minRank = 100,
+	rewardMultiplier = 0.005,
+	damageMultiplier = 0.0025,
+	defenseMultiplier = 0.0025,
+}
 
 -- Crew
 Settings.crew = {
 	rewardBonus = { cash = 0.25, exp = 0.25 },
 	salary = {
 		timeout = 300000,
-		cash = 5000,
-		exp = 500,
+		cash = 3000,
+		exp = 250,
 	},
 	memberLimit = 8,
 	invitationTimeout = 10000,
@@ -293,6 +295,7 @@ Settings.maxCashPerKillstreak = 500
 Settings.cashPerHeadshot = 25
 Settings.cashPerMission = 125
 Settings.cashPerMelee = 200
+Settings.cashPerCrewLeader = 125
 
 -- Experience
 Settings.expPerKill = 100
@@ -300,7 +303,8 @@ Settings.expPerKillstreak = 50
 Settings.maxExpPerKillstreak = 1000
 Settings.expPerHeadshot = 50
 Settings.expPerMission = 200
-Settings.expPerMelee = 500
+Settings.expPerMelee = 300
+Settings.expPerCrewLeader = 200
 
 -- Bounty
 Settings.bounty = {
@@ -388,7 +392,7 @@ Settings.event = {
 
 -- Gang Wars
 Settings.gangWars = {
-	duration = 1200000,
+	duration = 900000,
 	rewards = {
 		top = {
 			{ cash = 30000, exp = 15000 },
@@ -400,7 +404,7 @@ Settings.gangWars = {
 
 -- Simeon Export
 Settings.simeon = {
-	duration = 1200000,
+	duration = 900000,
 	vehicles = {
 		{ hash = `bagger`, name = 'Bagger' },
 		{ hash = `penumbra`, name = 'Maibatsu Penumbra' },
@@ -426,8 +430,8 @@ Settings.simeon = {
 
 -- Gun Game
 Settings.gun = {
-	duration = 900000,
-	categories = { 'Handguns', 'Shotguns', 'Submachine & Lightmachine Guns', 'Assault Rifles' },
+	duration = 600000,
+	categories = { 'Melee', 'Handguns', 'Shotguns', 'Submachine & Lightmachine Guns', 'Assault Rifles' },
 	rewards = {
 		top = {
 			{ cash = 30000, exp = 15000 },
@@ -554,7 +558,7 @@ Settings.stockPiling = {
 
 -- Sharpshooter
 Settings.sharpShooter = {
-	duration = 900000,
+	duration = 600000,
 	rewards = {
 		top = {
 			{ cash = 30000, exp = 15000 },
@@ -596,7 +600,7 @@ Settings.castle = {
 
 -- Penned In
 Settings.penned = {
-	duration = 900000,
+	duration = 600000,
 	rewards = {
 		top = {
 			{ cash = 30000, exp = 15000 },
@@ -608,7 +612,7 @@ Settings.penned = {
 
 -- Highway
 Settings.highway = {
-	duration = 900000,
+	duration = 600000,
 	rewards = {
 		{ cash = 30000, exp = 15000 },
 		{ cash = 20000, exp = 10000 },
@@ -703,6 +707,19 @@ Settings.huntTheBeast = {
 
 -- AmmuNation weapons
 Settings.ammuNationWeapons = {
+	['Melee'] = {
+		'WEAPON_KNIFE',
+		'WEAPON_HAMMER',
+		'WEAPON_SWITCHBLADE',
+		'WEAPON_BAT',
+		'WEAPON_POOLCUE',
+		'WEAPON_MACHETE',
+		'WEAPON_BATTLEAXE',
+		'WEAPON_GOLFCLUB',
+		'WEAPON_HATCHET',
+		'WEAPON_CROWBAR',
+		'WEAPON_KNUCKLE',
+	},
 	['Handguns'] = {
 		'WEAPON_PISTOL',
 		'WEAPON_COMBATPISTOL',
@@ -716,6 +733,7 @@ Settings.ammuNationWeapons = {
 	},
 	['Shotguns'] = {
 		'WEAPON_SAWNOFFSHOTGUN',
+		'WEAPON_DBSHOTGUN',
 		'WEAPON_PUMPSHOTGUN',
 		'WEAPON_AUTOSHOTGUN',
 		'WEAPON_ASSAULTSHOTGUN',
@@ -726,6 +744,7 @@ Settings.ammuNationWeapons = {
 		'WEAPON_SMG',
 		'WEAPON_MACHINEPISTOL',
 		'WEAPON_MG',
+		'WEAPON_MINISMG',
 		'WEAPON_COMBATMG',
 		'WEAPON_SMG_MK2',
 		'WEAPON_COMBATMG_MK2',
@@ -779,6 +798,7 @@ Settings.ammuNationRefillAmmo = {
 		weapons = {
 			'WEAPON_ASSAULTSHOTGUN',
 			'WEAPON_AUTOSHOTGUN',
+			'WEAPON_DBSHOTGUN',
 			'WEAPON_PUMPSHOTGUN',
 			'WEAPON_SAWNOFFSHOTGUN',
 			'WEAPON_PUMPSHOTGUN_MK2',
@@ -792,6 +812,7 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_SMG',
 			'WEAPON_MICROSMG',
 			'WEAPON_MACHINEPISTOL',
+			'WEAPON_MINISMG',
 			'WEAPON_COMPACTRIFLE',
 			'WEAPON_SMG_MK2',
 		},
@@ -1295,6 +1316,7 @@ Settings.vehicleImport = {
 		['kuruma2'] = 15000,
 		['barrage'] = 15000,
 		['jb700'] = 25000,
+		['tezeract'] = 15000,
 	},
 	tiers = {
 		{
@@ -1431,8 +1453,6 @@ Settings.vehicleImport = {
 				['t20'] = { name = 'Progen T20' },
 				['xa21'] = { name = 'Ocelot XA-21' },
 				['gp1'] = { name = 'Progen GP1' },
-				['tezeract'] = { name = 'Pegassi Tezeract' },
-
 
 				['bati'] = { name = 'Pegassi Bati 801', isBike = true },
 				['bati2'] = { name = 'Pegassi Bati 801RR', isBike = true },
@@ -1793,11 +1813,12 @@ Settings.velocity = {
 
 -- Most Wanted Mission
 Settings.mostWanted = {
-	time = 480000,
-	rewards = {
-		maxCash = 25000,
-		maxExp = 15000,
+	minTime = 480000,
+	rewardPerSecond = {
+		cash = 40,
+		exp = 25,
 	},
+	rewardMultiplier = 0.25,
 }
 
 -- Asset Recovery Mission
@@ -1847,8 +1868,7 @@ Settings.assetRecovery = {
 
 -- Headhunter Mission
 Settings.headhunter = {
-	time = 1200000,
-	count = 4,
+	minTargetCount = 4,
 	locations = {
 		{ x = -40.054077148438, y = -2701.1606445312, z = 6.1575679779053 },
 		{ x = 877.66772460938, y = -2184.248046875, z = 30.519348144531 },
@@ -1875,6 +1895,7 @@ Settings.headhunter = {
 	},
 	vehicles = { `baller5`, `cog552` },
 	reward = { cash = 6000, exp = 3750 },
+	rewardMultiplier = 0.25,
 }
 
 -- Crates
@@ -1958,217 +1979,66 @@ Settings.crate = {
 -- Skins
 Settings.skins = {
 	['Regular'] = {
-		{
-			model = 'a_m_y_hipster_01',
-			name = 'Hipster',
-			rank = 1,
-		},
+		{ model = 'a_m_y_hipster_01', name = 'Hipster 1 (M)', rank = 1 },
+		{ model = 'a_f_y_hipster_01', name = 'Hipster 1 (F)', rank = 1 },
+		{ model = 'a_m_y_hipster_02', name = 'Hipster 2 (M)', rank = 1 },
+		{ model = 'a_f_y_hipster_02', name = 'Hipster 2 (F)', rank = 1 },
+		{ model = 'a_m_y_hipster_03', name = 'Hipster 3 (M)', rank = 1 },
+		{ model = 'a_f_y_hipster_03', name = 'Hipster 3 (F)', rank = 1 },
+		{ model = 's_m_y_cop_01', name = 'Cop (M)', rank = 1 },
+		{ model = 's_f_y_cop_01', name = 'Cop (F)', rank = 1 },
+		{ model = 's_m_m_paramedic_01', name = 'Medic (M)', rank = 1 },
+		{ model = 'g_m_y_ballaorig_01', name = 'Ballas 1 (M)', rank = 1 },
+		{ model = 'g_m_y_ballasout_01', name = 'Ballas 2 (M)', rank = 1 },
+		{ model = 'g_m_y_ballaeast_01', name = 'Ballas 3 (M)', rank = 1 },
+		{ model = 'g_f_y_ballas_01', name = 'Ballas 4 (F)', rank = 1 },
+		{ model = 'g_m_y_famca_01', name = 'Families 1 (M)', rank = 1 },
+		{ model = 'g_m_y_famfor_01', name = 'Families 2 (M)', rank = 1 },
+		{ model = 'g_m_y_famdnf_01', name = 'Families 3 (M)', rank = 1 },
+		{ model = 'g_f_y_families_01', name = 'Families 4 (F)', rank = 1 },
+		{ model = 'a_m_m_bevhills_01', name = 'Casual 1 (M)', rank = 1 },
+		{ model = 'a_f_m_bevhills_01', name = 'Casual 1 (F)', rank = 1 },
+		{ model = 'a_m_y_bevhills_01', name = 'Casual 2 (M)', rank = 1 },
+		{ model = 'a_f_y_bevhills_01', name = 'Casual 2 (F)', rank = 1 },
+		{ model = 'a_m_m_bevhills_02', name = 'Casual 3 (M)', rank = 1 },
+		{ model = 'a_m_y_bevhills_02', name = 'Casual 4 (M)', rank = 1 },
+		{ model = 'a_f_y_bevhills_03', name = 'Casual 5 (F)', rank = 1 },
+		{ model = 'a_f_y_bevhills_04', name = 'Casual 6 (F)', rank = 1 },
+		{ model = 'a_m_m_business_01', name = 'Businessman 1 (M)', rank = 1 },
+		{ model = 'a_m_y_business_01', name = 'Businessman 2 (M)', rank = 1 },
+		{ model = 'a_f_y_business_01', name = 'Businessman 2 (F)', rank = 1 },
+		{ model = 'a_m_y_business_02', name = 'Businessman 3 (M)', rank = 1 },
+		{ model = 'a_m_y_business_03', name = 'Businessman 4 (M)', rank = 1 },
+		{ model = 'a_f_y_business_04', name = 'Businessman 5 (F)', rank = 1 },
+		{ model = 'g_m_m_chigoon_01', name = 'Chigoon 1 (M)', rank = 1 },
+		{ model = 'g_m_m_chigoon_02', name = 'Chigoon 2 (M)', rank = 1 },
+		{ model = 'a_m_y_hippy_01', name = 'Hippie (M)', rank = 1 },
+		{ model = 'a_f_y_hippie_01', name = 'Hippie (F)', rank = 1 },
+	},
 
-		{
-			model = 's_m_y_cop_01',
-			name = 'Cop',
-			rank = 1,
-		},
-
-		{
-			model = 's_m_m_paramedic_01',
-			name = 'Medic',
-			rank = 1,
-		},
-
-		{
-			model = 'g_m_y_ballaorig_01',
-			name = 'Ballas #1',
-			rank = 1,
-		},
-
-		{
-			model = 'g_m_y_ballasout_01',
-			name = 'Ballas #2',
-			rank = 1,
-		},
-
-		{
-			model = 'g_m_y_famca_01',
-			name = 'Families #1',
-			rank = 1,
-		},
-
-		{
-			model = 'g_m_y_famfor_01',
-			name = 'Families #2',
-			rank = 1,
-		},
-
-		{
-			model = 'a_m_m_bevhills_01',
-			name = 'Middle Class #1',
-			rank = 5,
-		},
-
-		{
-			model = 'a_m_m_business_01',
-			name = 'Businessman #1',
-			rank = 10,
-		},
-
-		{
-			model = 'a_m_y_bevhills_01',
-			name = 'Middle Class #2',
-			rank = 15,
-		},
-
-		{
-			model = 'a_m_y_business_01',
-			name = 'Businessman #2',
-			rank = 20,
-		},
-
-		{
-			model = 'a_m_m_bevhills_02',
-			name = 'Middle Class #3',
-			rank = 25,
-		},
-
-		{
-			model = 'a_m_y_business_02',
-			name = 'Businessman #3',
-			rank = 30,
-		},
-
-		{
-			model = 'a_m_y_bevhills_02',
-			name = 'Middle Class #4',
-			rank = 35,
-		},
-
-		{
-			model = 'a_m_y_business_03',
-			name = 'Businessman #4',
-			rank = 40,
-		},
-
-		{
-			model = 'g_m_m_chigoon_01',
-			name = 'Chigoon',
-			rank = 45,
-		},
-
-		{
-			model = 'g_m_m_chemwork_01',
-			name = 'Chemist',
-			rank = 50,
-		},
-
-		{
-			model = 's_m_y_fireman_01',
-			name = 'Fireman',
-			rank = 55,
-		},
-
-		{
-			model = 's_m_m_fibsec_01',
-			name = 'FIB Security',
-			rank = 60,
-		},
-
-		{
-			model = 's_m_y_clown_01',
-			name = 'Clown',
-			rank = 65,
-		},
-
-		{
-			model = 'u_m_y_zombie_01',
-			name = 'Zombie',
-			rank = 70,
-		},
-
-		{
-			model = 's_m_m_strperf_01',
-			name = 'Street Performer',
-			rank = 75,
-		},
-
-		{
-			model = 'u_m_y_pogo_01',
-			name = 'Pogo',
-			rank = 80,
-		},
-
-		{
-			model = 's_m_m_movalien_01',
-			name = 'Alien',
-			rank = 85,
-		},
-
-		{
-			model = 'u_m_y_rsranger_01',
-			name = 'RS Ranger',
-			rank = 90,
-		},
+	['Unlockable'] = {
+		{ model = 'g_m_m_chemwork_01', name = 'Chemist', rank = 10 },
+		{ model = 's_m_y_fireman_01', name = 'Fireman', rank = 20 },
+		{ model = 's_m_m_fibsec_01', name = 'FIB Security', rank = 30 },
+		{ model = 's_m_y_clown_01', name = 'Clown', rank = 40 },
+		{ model = 'u_m_y_zombie_01', name = 'Zombie', rank = 50 },
+		{ model = 's_m_m_strperf_01', name = 'Street Performer', rank = 60 },
+		{ model = 'u_m_y_pogo_01', name = 'Pogo', rank = 70 },
+		{ model = 's_m_m_movalien_01', name = 'Alien', rank = 80 },
+		{ model = 'u_m_y_rsranger_01', name = 'RS Ranger', rank = 90 },
 	},
 
 	['Prestige'] = {
-		{
-			model = 's_m_m_doctor_01',
-			name = 'Doctor',
-			prestige = 1,
-		},
-
-		{
-			model = 's_m_y_mime',
-			name = 'Mime',
-			prestige = 2,
-		},
-
-		{
-			model = 'u_m_y_mani',
-			name = 'Mani',
-			prestige = 3,
-		},
-
-		{
-			model = 's_m_m_movspace_01',
-			name = 'Spaceman',
-			prestige = 4,
-		},
-
-		{
-			model = 'u_m_y_imporage',
-			name = 'Imporage',
-			prestige = 5,
-		},
-
-		{
-			model = 'u_m_m_griff_01',
-			name = 'Griff?',
-			prestige = 6,
-		},
-
-		{
-			model = 'u_m_y_babyd',
-			name = 'Baby',
-			prestige = 7,
-		},
-
-		{
-			model = 's_m_y_factory_01',
-			name = 'Factory Man',
-			prestige = 8,
-		},
-
-		{
-			model = 'u_m_m_jesus_01',
-			name = 'That Guy',
-			prestige = 9,
-		},
-
-		{
-			model = 'u_m_o_filmnoir',
-			name = 'Dominus',
-			prestige = 10,
-		},
+		{ model = 's_m_m_doctor_01', name = 'Doctor', prestige = 1 },
+		{ model = 's_m_y_mime', name = 'Mime', prestige = 2 },
+		{ model = 'u_m_y_mani', name = 'Mani', prestige = 3 },
+		{ model = 's_m_m_movspace_01', name = 'Spaceman', prestige = 4 },
+		{ model = 'u_m_y_imporage', name = 'Imporage', prestige = 5 },
+		{ model = 'u_m_m_griff_01', name = 'Griff?', prestige = 6 },
+		{ model = 'u_m_y_babyd', name = 'Baby', prestige = 7 },
+		{ model = 's_m_y_factory_01', name = 'Factory Man', prestige = 8 },
+		{ model = 'u_m_m_jesus_01', name = 'That Guy', prestige = 9 },
+		{ model = 'u_m_o_filmnoir', name = 'Dominus', prestige = 10 },
 	},
 }
 

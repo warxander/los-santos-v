@@ -95,17 +95,19 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 				return
 			end
 
-			if Player.DistanceTo(_castleData.place, true) <= Settings.castle.radius and not IsPlayerDead(PlayerId()) then
-				if World.KingOfTheCastlePlayer == Player.ServerId() then
-					if not pointTimer then
-						pointTimer = Timer.New()
-					elseif pointTimer:elapsed() >= 1000 then
-						TriggerServerEvent('lsv:castleAddPointToKing')
-						pointTimer:restart()
+			if Player.DistanceTo(_castleData.place, true) <= Settings.castle.radius then
+				if Player.IsActive() then
+					if World.KingOfTheCastlePlayer == Player.ServerId() then
+						if not pointTimer then
+							pointTimer = Timer.New()
+						elseif pointTimer:elapsed() >= 1000 then
+							pointTimer:restart()
+							TriggerServerEvent('lsv:castleAddPointToKing')
+						end
+					elseif not isInCastleArea then
+						isInCastleArea = true
+						TriggerServerEvent('lsv:playerInCastleArea')
 					end
-				elseif not isInCastleArea then
-					TriggerServerEvent('lsv:playerInCastleArea')
-					isInCastleArea = true
 				end
 			else
 				isInCastleArea = false

@@ -23,6 +23,9 @@ AddEventHandler('lsv:init', function()
 				local isPlayerDead = IsPlayerDead(id)
 
 				local isPlayerCrewMember = false
+				local isPlayerCrewLeader = false
+				local isPlayerEnemyCrewMember = false
+				local isPlayerEnemyCrewLeader = false
 				local isPlayerBeast = false
 				local isPlayerHotProperty = false
 				local isPlayerKingOfTheCastle = false
@@ -38,6 +41,21 @@ AddEventHandler('lsv:init', function()
 
 				if isPlayerActive then
 					isPlayerCrewMember = Player.CrewMembers[serverId]
+
+					if Player.CrewLeader then
+						if isPlayerCrewMember then
+							isPlayerCrewLeader = serverId == Player.CrewLeader
+						else
+							local leader = PlayerData.GetCrewLeader(serverId)
+							if leader then
+								isPlayerEnemyCrewMember = leader ~= Player.CrewLeader
+								if isPlayerEnemyCrewMember then
+									isPlayerEnemyCrewLeader = leader == serverId
+								end
+							end
+						end
+					end
+
 					isPlayerBeast = serverId == World.BeastPlayer
 					isPlayerHotProperty = serverId == World.HotPropertyPlayer
 					isPlayerKingOfTheCastle = serverId == World.KingOfTheCastlePlayer
@@ -77,6 +95,8 @@ AddEventHandler('lsv:init', function()
 					color = 10
 				elseif isPlayerHotProperty or isPlayerBeast or isPlayerKingOfTheCastle or isPlayerHasBounty or isPlayerOnMission then
 					color = 6
+				elseif isPlayerEnemyCrewMember then
+					color = 7
 				elseif patreonTier ~= 0 then
 					color = 15
 				end
@@ -121,6 +141,7 @@ AddEventHandler('lsv:init', function()
 						elseif isPlayerHasBounty then blipSprite = Blip.BOUNTY_HIT
 						elseif isPlayerInPlane then blipSprite = Blip.PLANE
 						elseif isPlayerInHeli then blipSprite = Blip.HELI
+						elseif isPlayerCrewLeader or isPlayerEnemyCrewLeader then blipSprite = Blip.CREW_LEADER
 						end
 					end
 					if GetBlipSprite(blip) ~= blipSprite then
@@ -146,6 +167,8 @@ AddEventHandler('lsv:init', function()
 						blipColor = Color.BLIP_BLUE
 					elseif isPlayerHotProperty or isPlayerKingOfTheCastle or isPlayerBeast or isPlayerHasBounty or isPlayerOnMission then
 						blipColor = Color.BLIP_RED
+					elseif isPlayerEnemyCrewMember then
+						blipColor = Color.BLIP_LIGHT_RED
 					end
 					SetBlipColour(blip, blipColor)
 
