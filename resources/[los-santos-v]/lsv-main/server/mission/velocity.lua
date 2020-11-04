@@ -35,6 +35,6 @@ AddEventHandler('lsv:velocityAboutToDetonate', function()
 	_players[player] = _players[player] + 1
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	_players[player] = nil
 end)

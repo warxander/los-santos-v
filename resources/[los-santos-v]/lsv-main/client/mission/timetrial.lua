@@ -262,7 +262,7 @@ AddEventHandler('lsv:init', function()
 		local isPlayerInFreeroam = Player.IsInFreeroam()
 		local playerPosition = Player.Position()
 
-		table.foreach(Settings.timeTrial.tracks, function(track, trialId)
+		for trialId, track in pairs(Settings.timeTrial.tracks) do
 			SetBlipAlpha(_trialBlips[trialId], isPlayerInFreeroam and 255 or 0)
 
 			if isPlayerInFreeroam then
@@ -291,7 +291,7 @@ AddEventHandler('lsv:init', function()
 					WarMenu.CloseMenu()
 				end
 			end
-		end)
+		end
 
 		if WarMenu.IsMenuOpened('timeTrial') then
 			if WarMenu.Button('Start') then

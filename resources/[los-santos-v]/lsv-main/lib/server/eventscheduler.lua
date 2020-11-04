@@ -12,7 +12,7 @@ local _events = {
 	{ id = 'HotProperty', name = 'Hot Property' },
 	{ id = 'PennedIn', name = 'Penned In' },
 	{ id = 'Highway', name = 'Highway' },
-	-- { id = 'SimeonExport', name = 'Simeon Export' },
+	{ id = 'SimeonExport', name = 'Simeon Export' },
 	{ id = 'GangWars', name = 'Gang Wars' },
 }
 
@@ -52,7 +52,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if _lastEventTimer then
 		TriggerClientEvent('lsv:updateLastEventTime', player, _lastEventTimer:elapsed())
 	end

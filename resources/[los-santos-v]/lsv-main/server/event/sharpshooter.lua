@@ -90,7 +90,7 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 	TriggerClientEvent('lsv:updateSharpShooterPlayers', -1, _sharpShooterData.players)
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if not _sharpShooterData then
 		return
 	end
@@ -98,7 +98,7 @@ AddSignalHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:startSharpShooter', player, _sharpShooterData, _sharpShooterData.eventStartTimer:elapsed())
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	if not _sharpShooterData then
 		return
 	end

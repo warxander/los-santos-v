@@ -78,28 +78,28 @@ end
 
 AddEventHandler('lsv:init', function()
 	World.AddVehicleHandler(function(vehicle)
-		table.foreach(_vehicleHandlers, function(handlerData, decorName)
+		for decorName, handlerData in pairs(_vehicleHandlers) do
 			if DecorExistOn(vehicle, decorName) then
 				local value = _decorGetters[handlerData.decorType](vehicle, decorName)
 				if value == handlerData.expectedValue then
-					table.iforeach(handlerData.handlers, function(handlerFunc)
+					for _, handlerFunc in ipairs(handlerData.handlers) do
 						handlerFunc(vehicle)
-					end)
+					end
 				end
 			end
-		end)
+		end
 	end)
 
 	World.AddPedHandler(function(ped)
-		table.foreach(_pedHandlers, function(handlerData, decorName)
+		for decorName, handlerData in pairs(_pedHandlers) do
 			if DecorExistOn(ped, decorName) then
 				local value = _decorGetters[handlerData.decorType](ped, decorName)
 				if value == handlerData.expectedValue then
-					table.iforeach(handlerData.handlers, function(handlerFunc)
+					for _, handlerFunc in ipairs(handlerData.handlers) do
 						handlerFunc(ped)
-					end)
+					end
 				end
 			end
-		end)
+		end
 	end)
 end)

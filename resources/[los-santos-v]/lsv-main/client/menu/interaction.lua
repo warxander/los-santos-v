@@ -315,7 +315,7 @@ AddEventHandler('lsv:init', function()
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('actions') then
 			local playerPed = PlayerPedId()
-			table.iforeach(_actions, function(actionData)
+			for _, actionData in ipairs(_actions) do
 				if WarMenu.Button(actionData.name) then
 					if IsPedInAnyVehicle(playerPed, true) or not IsPedStill(playerPed) then
 						Gui.DisplayPersonalNotification('You can\'t play any action right now.')
@@ -324,7 +324,7 @@ AddEventHandler('lsv:init', function()
 						WarMenu.CloseMenu()
 					end
 				end
-			end)
+			end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('manageCrew') then
@@ -452,7 +452,7 @@ AddEventHandler('lsv:init', function()
 		elseif WarMenu.IsMenuOpened('ammunation_weapons') then
 			local playerPed = PlayerPedId()
 
-			table.iforeach(Settings.ammuNationWeapons[selectedWeaponCategory], function(weapon)
+			for _, weapon in ipairs(Settings.ammuNationWeapons[selectedWeaponCategory]) do
 				local weaponData = Weapon[weapon]
 				local weaponHash = GetHashKey(weapon)
 				if HasPedGotWeapon(playerPed, weaponHash, false) then
@@ -475,7 +475,7 @@ AddEventHandler('lsv:init', function()
 						end
 					end
 				end
-			end)
+			end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('ammunation_weaponUpgrades') then
@@ -484,7 +484,7 @@ AddEventHandler('lsv:init', function()
 			else
 				local playerPed = PlayerPedId()
 
-				table.iforeach(Weapon[selectedWeapon].components, function(component, componentIndex)
+				for componentIndex, component in ipairs(Weapon[selectedWeapon].components) do
 					if HasPedGotWeaponComponent(playerPed, selectedWeaponHash, component.hash) then
 						if WarMenu.MenuButton(component.name, 'ammunation_removeUpgradeConfirm') then
 							selectedWeaponComponent = component.hash
@@ -498,10 +498,10 @@ AddEventHandler('lsv:init', function()
 							Prompt.ShowAsync()
 						end
 					end
-				end)
+				end
 
 				if GetWeaponTintCount(selectedWeaponHash) == table.length(Settings.weaponTints) then
-					table.iforeach(Settings.weaponTints, function(tint, tintIndex)
+					for tintIndex, tint in ipairs(Settings.weaponTints) do
 						if WarMenu.Button(tint.name or Settings.weaponTintNames[tint.index], weaponTintPrice(tint, selectedWeaponHash)) then
 							if GetPedWeaponTintIndex(playerPed, selectedWeaponHash) == tint.index then
 								Gui.DisplayPersonalNotification('You already use this tint.')
@@ -512,7 +512,7 @@ AddEventHandler('lsv:init', function()
 								Prompt.ShowAsync()
 							end
 						end
-					end)
+					end
 				end
 			end
 
@@ -562,6 +562,6 @@ AddEventHandler('lsv:init', function()
 	end
 end)
 
-AddSignalHandler('lsv:settingUpdated', function()
+AddEventHandler('lsv:settingUpdated', function()
 		Prompt.Hide()
 end)

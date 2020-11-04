@@ -119,7 +119,7 @@ AddEventHandler('lsv:startCastle', function()
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if not _castleData then
 		return
 	end
@@ -127,7 +127,7 @@ AddSignalHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:startCastle', player, _castleData, _castleData.eventStartTimer:elapsed())
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	if not _castleData then
 		return
 	end

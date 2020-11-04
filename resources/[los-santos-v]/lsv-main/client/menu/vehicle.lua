@@ -83,6 +83,7 @@ local function requestVehicleAsync(vehicleData)
 	updateVehicle(vehicle)
 	SetVehicleNumberPlateText(vehicle, GetPlayerName(PlayerId()))
 	SetVehicleTyresCanBurst(vehicle, false)
+	SetEntityLoadCollisionFlag(vehicle, true)
 	SetVehicleOnGroundProperly(vehicle)
 
 	local vehicleBlip = AddBlipForEntity(vehicle)
@@ -225,7 +226,7 @@ AddEventHandler('lsv:init', function()
 			else
 				local rentElapsed = getRentTimer()
 
-				table.iforeach(Player.Vehicles, function(vehicle, vehicleIndex)
+				for vehicleIndex, vehicle in ipairs(Player.Vehicles) do
 					local vehicleTier = Vehicle.GetTier(vehicle.model)
 
 					if WarMenu.Button(Player.GetVehicleName(vehicleIndex), rentElapsed or '$'..Settings.personalVehicle.rentPrice[vehicleTier]) then
@@ -243,7 +244,7 @@ AddEventHandler('lsv:init', function()
 							end
 						end
 					end
-				end)
+				end
 			end
 
 			WarMenu.Display()

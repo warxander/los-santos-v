@@ -4,7 +4,9 @@ PlayerData.__index = PlayerData
 local _playerData = { }
 
 function PlayerData.ForEach(func)
-	table.foreach(_playerData, func)
+	for k, v in pairs(_playerData) do
+		func(v, k)
+	end
 end
 
 function PlayerData.IsExists(player)

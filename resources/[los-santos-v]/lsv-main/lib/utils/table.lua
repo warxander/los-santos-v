@@ -96,9 +96,9 @@ end
 function table.random(t)
 	local keys = { }
 
-	table.foreach(t, function(_, k)
+	for k, _ in pairs(t) do
 		table.insert(keys, k)
-	end)
+	end
 
 	local i = keys[math.random(#keys)]
 	return t[i], i
@@ -152,6 +152,18 @@ function table.try_remove(t, value)
 	return false
 end
 
+function table.iremove_if(t, func, removeFunc)
+	for i = #t, 1, -1 do
+		local v = t[i]
+		if func(v, i) then
+			if removeFunc then
+				removeFunc(v, i)
+			end
+			table.remove(t, i)
+		end
+	end
+end
+
 function table.find_if(t, func)
 	for k, v in pairs(t) do
 		if func(v, k) then
@@ -175,11 +187,11 @@ end
 function table.filter(t, func)
 	local result = { }
 
-	table.foreach(t, function(v, k)
+	for k, v in pairs(t) do
 		if func(v, k) then
 			result[k] = v
 		end
-	end)
+	end
 
 	return result
 end
@@ -187,11 +199,11 @@ end
 function table.ifilter(t, func)
 	local result = { }
 
-	table.iforeach(t, function(v, k)
+	for k, v in ipairs(t) do
 		if func(v, k) then
 			table.insert(result, v)
 		end
-	end)
+	end
 
 	return result
 end
@@ -199,9 +211,9 @@ end
 function table.map(t, func)
 	local result = { }
 
-	table.foreach(t, function(v, k)
+	for k, v in pairs(t) do
 		result[k] = func(v, k)
-	end)
+	end
 
 	return result
 end

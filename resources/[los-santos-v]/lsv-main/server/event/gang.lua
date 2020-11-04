@@ -101,7 +101,7 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 	TriggerClientEvent('lsv:updateGangWarsCrews', -1, _gangData.crews)
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if not _gangData then
 		return
 	end
@@ -109,7 +109,7 @@ AddSignalHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:startGangWars', player, _gangData, _gangData.eventStartTimer:elapsed())
 end)
 
-AddSignalHandler('lsv:crewDisbanded', function(leader)
+AddEventHandler('lsv:crewDisbanded', function(leader)
 	if not _gangData then
 		return
 	end

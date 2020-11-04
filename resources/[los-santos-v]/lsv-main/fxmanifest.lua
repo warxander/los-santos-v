@@ -12,7 +12,6 @@ server_script '@vSql/vSql.lua'
 
 -- Server files
 server_scripts {
-	'lib/utils/signal.lua',
 	'lib/utils/table.lua',
 	'lib/utils/math.lua',
 	'lib/utils/string.lua',
@@ -85,7 +84,6 @@ server_scripts {
 
 -- Client files
 client_scripts {
-	'lib/utils/signal.lua',
 	'lib/utils/table.lua',
 	'lib/utils/math.lua',
 	'lib/utils/string.lua',

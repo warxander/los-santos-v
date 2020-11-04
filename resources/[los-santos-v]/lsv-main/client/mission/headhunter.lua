@@ -122,6 +122,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 
 					SetEntityHealth(ped, 200)
 					SetPedArmour(ped, 100)
+					SetEntityLoadCollisionFlag(ped, true)
 					SetPedDropsWeaponsWhenDead(ped, false)
 					SetPedFleeAttributes(ped, 0, false)
 					SetRagdollBlockingFlags(ped, 1)
@@ -146,6 +147,7 @@ AddEventHandler('lsv:startHeadhunter', function()
 						SetVehicleModKit(vehicle, 0)
 						SetVehicleMod(vehicle, 16, 4)
 						SetVehicleTyresCanBurst(vehicle, false)
+						SetEntityLoadCollisionFlag(vehicle, true)
 					end
 
 					-- Brain

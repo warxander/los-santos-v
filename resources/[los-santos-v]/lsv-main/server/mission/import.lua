@@ -49,7 +49,7 @@ AddEventHandler('lsv:purchaseVehicleImport', function(tierIndex, model)
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	local vehiclesToRemove = { }
 
 	table.iforeach(PlayerData.GetVehicles(player), function(vehicle, index)
@@ -68,6 +68,6 @@ AddSignalHandler('lsv:playerConnected', function(player)
 	end
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	_players[player] = nil
 end)

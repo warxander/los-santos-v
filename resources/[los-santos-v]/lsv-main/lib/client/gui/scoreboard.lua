@@ -130,7 +130,7 @@ function Scoreboard.DisplayThisFrame()
 	local tablePosition = { ['y'] = tablePositionHeader.y + _tableHeight + _headerTableSpacing }
 	local tableAvatarPositionWidth = (_tableHeight * 9 / 16)
 
-	table.iforeach(_scoreboard, function(player)
+	for _, player in ipairs(_scoreboard) do
 		local avatarPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth / 2, ['y'] = tablePosition.y }
 		local playerPosition = { ['x'] = avatarPosition.x + _tablePositionWidth / 2, ['y'] = tablePosition.y }
 		local voiceIndicatorPosition = { ['x'] = (scoreboardPosition.x + tableAvatarPositionWidth / 2) + 0.015, ['y'] = tablePosition.y }
@@ -217,7 +217,7 @@ function Scoreboard.DisplayThisFrame()
 
 		-- Update table position
 		tablePosition.y = tablePosition.y + _tableSpacing + _tableHeight
-	end)
+	end
 end
 
 Citizen.CreateThread(function()

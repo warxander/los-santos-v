@@ -302,7 +302,7 @@ function PlayerData.UpdateCash(player, cash, killDetails, notPayToLeader)
 	end
 
 	if cash > 0 then
-		local basicCash = cash
+		local basicCash = math.floor(cash * Settings.cashMultiplier)
 
 		local patreonTier = PlayerData.GetPatreonTier(player)
 		if patreonTier ~= 0 then
@@ -339,7 +339,7 @@ function PlayerData.UpdateExperience(player, experience, notPayToLeader)
 		return
 	end
 
-	local basicExperience = experience
+	local basicExperience = math.floor(experience * Settings.expMultiplier)
 
 	local patreonTier = PlayerData.GetPatreonTier(player)
 	if patreonTier ~= 0 then

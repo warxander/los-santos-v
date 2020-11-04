@@ -21,10 +21,10 @@ AddEventHandler('lsv:reportPlayer', function(target, reason)
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	_reportedPlayers[player] = 0
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	_reportedPlayers[player] = nil
 end)

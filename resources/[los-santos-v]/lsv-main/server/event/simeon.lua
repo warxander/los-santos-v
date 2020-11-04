@@ -92,7 +92,7 @@ AddEventHandler('lsv:startSimeonExport', function()
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if not _simeonData then
 		return
 	end
@@ -100,7 +100,7 @@ AddSignalHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:startSimeonExport', player, _simeonData, _simeonData.eventStartTimer:elapsed())
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	if not _simeonData then
 		return
 	end

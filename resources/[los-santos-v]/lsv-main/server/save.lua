@@ -48,10 +48,10 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	_players[player] = Timer.New()
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	_players[player] = nil
 end)

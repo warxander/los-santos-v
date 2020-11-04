@@ -228,6 +228,7 @@ AddEventHandler('lsv:startSurvival', function(id)
 					local ped = NetToPed(netId)
 
 					SetPedRandomComponentVariation(ped, false)
+					SetEntityLoadCollisionFlag(ped, true)
 					PlaceObjectOnGroundProperly(ped)
 
 					local weaponHash = table.random(isBoss and _bossSettings.weapons or waveData.weapons)
@@ -304,13 +305,13 @@ AddEventHandler('lsv:init', function()
 		local isPlayerInFreeroam = Player.IsInFreeroam()
 		local playerPosition = Player.Position()
 
-		table.foreach(_locations, function(location, survivalId)
+		for survivalId, location in pairs(_locations) do
 			SetBlipAlpha(location.blip, isPlayerInFreeroam and 255 or 0)
 
 			if isPlayerInFreeroam then
 				Gui.DrawPlaceMarker(location.position, Color.ORANGE)
 
-				if World.GetDistance(playerPosition, location.position, true) < Settings.placeMarker.radius then
+				if World.GetDistance(playerPosition, location.position, true) <= Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
 						Gui.DisplayHelpText('Press ~INPUT_TALK~ to start Survival.')
 
@@ -320,11 +321,11 @@ AddEventHandler('lsv:init', function()
 							Gui.OpenMenu('survival')
 						end
 					end
-				elseif WarMenu.IsMenuOpened('survival') and _survivalMenuId == survivalId then
+				elseif _survivalMenuId == survivalId and WarMenu.IsMenuOpened('survival') then
 					WarMenu.CloseMenu()
 				end
 			end
-		end)
+		end
 
 		if WarMenu.IsMenuOpened('survival') then
 			if WarMenu.Button('Start') then

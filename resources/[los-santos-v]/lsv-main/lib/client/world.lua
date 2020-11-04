@@ -9,6 +9,7 @@ local _wantedEnabled = true
 
 local _pedHandlers = { }
 local _vehicleHandlers = { }
+local _objectHandlers = { }
 
 local function enumerateEntitiesAsync(initFunc, moveFunc, disposeFunc, func, handlers)
 	local iter, entity = initFunc()
@@ -30,9 +31,9 @@ end
 
 local function processHandlers(entity, handlers)
 	if DoesEntityExist(entity) then
-		table.iforeach(handlers, function(handlerFunc)
+		for _, handlerFunc in ipairs(handlers) do
 			handlerFunc(entity)
-		end)
+		end
 	end
 end
 
@@ -113,6 +114,10 @@ function World.AddVehicleHandler(handlerFunc)
 	table.insert(_vehicleHandlers, handlerFunc)
 end
 
+function World.AddObjectHandler(handlerFunc)
+	table.insert(_objectHandlers, handlerFunc)
+end
+
 AddEventHandler('lsv:init', function()
 	Citizen.CreateThread(function()
 		while true do
@@ -126,6 +131,14 @@ AddEventHandler('lsv:init', function()
 		while true do
 			enumerateEntitiesAsync(FindFirstVehicle, FindNextVehicle, EndFindVehicle, function(vehicle)
 				processHandlers(vehicle, _vehicleHandlers)
+			end)
+		end
+	end)
+
+	Citizen.CreateThread(function()
+		while true do
+			enumerateEntitiesAsync(FindFirstObject, FindNextObject, EndFindObject, function(object)
+				processHandlers(object, _objectHandlers)
 			end)
 		end
 	end)

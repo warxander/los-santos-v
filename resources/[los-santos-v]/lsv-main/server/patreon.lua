@@ -1,4 +1,4 @@
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	local loginTime = os.time()
 	Db.UpdateLoginTime(player, loginTime)
 

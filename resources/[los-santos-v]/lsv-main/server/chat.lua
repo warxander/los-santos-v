@@ -325,6 +325,6 @@ AddEventHandler('lsv:addMessage', function(from, to, message)
 end)
 
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	_playerMutes[player] = nil
 end)

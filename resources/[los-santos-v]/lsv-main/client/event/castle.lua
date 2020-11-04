@@ -25,6 +25,7 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 	_castleData = { }
 
 	_castleData.place = place
+	_castleData.radius = place.radius or Settings.castle.radius
 
 	_castleData.startTime = GetGameTimer()
 	if passedTime then
@@ -39,7 +40,7 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 			Gui.StartEvent('King of the Castle', _instructionsText)
 		end
 
-		_castleData.zoneBlip = Map.CreateRadiusBlip(place.x, place.y, place.z, Settings.castle.radius, Color.BLIP_PURPLE)
+		_castleData.zoneBlip = Map.CreateRadiusBlip(place.x, place.y, place.z, _castleData.radius, Color.BLIP_PURPLE)
 		_castleData.blip = Map.CreateEventBlip(Blip.CASTLE, place.x, place.y, place.z, nil, Color.BLIP_PURPLE)
 		Map.SetBlipFlashes(_castleData.blip)
 
@@ -95,7 +96,7 @@ AddEventHandler('lsv:startCastle', function(data, passedTime)
 				return
 			end
 
-			if Player.DistanceTo(_castleData.place, true) <= Settings.castle.radius then
+			if Player.DistanceTo(_castleData.place, true) <= _castleData.radius then
 				if Player.IsActive() then
 					if World.KingOfTheCastlePlayer == Player.ServerId() then
 						if not pointTimer then
@@ -135,7 +136,7 @@ AddEventHandler('lsv:updateCastleKing', function(king)
 		_castleData.king = king
 		World.KingOfTheCastlePlayer = king
 
-		if not king and Player.DistanceTo(_castleData.place, true) <= Settings.castle.radius then
+		if not king and Player.DistanceTo(_castleData.place, true) <= _castleData.radius then
 			TriggerServerEvent('lsv:playerInCastleArea')
 		end
 	end

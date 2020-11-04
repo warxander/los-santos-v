@@ -37,23 +37,29 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
+		local player = PlayerId()
+		local playerPed = PlayerPedId()
+
 		if _banned then
 			return
 		end
 
 		-- Player visibility
-		SetEntityVisible(PlayerPedId(), true)
+		SetEntityVisible(playerPed, true)
 		if not Player.InPassiveMode then
-			ResetEntityAlpha(PlayerPedId())
+			ResetEntityAlpha(playerPed)
 		end
 
 		-- Infinite ammo
-		SetPedInfiniteAmmoClip(PlayerPedId(), false)
+		SetPedInfiniteAmmoClip(playerPed, false)
 
 		-- Player modifiers
-		SetPlayerWeaponDamageModifier(PlayerId(), 1. + (Player.Prestige * Settings.prestige.damageMultiplier))
-		SetPlayerWeaponDefenseModifier(PlayerId(), 1. + (Player.Prestige * Settings.prestige.defenseMultiplier))
-		SetPlayerWeaponDefenseModifier_2(PlayerId(), 1. + (Player.Prestige * Settings.prestige.defenseMultiplier))
+		SetPlayerWeaponDamageModifier(player, 1. + (Player.Prestige * Settings.prestige.damageMultiplier))
+		SetPlayerWeaponDefenseModifier(player, 1. + (Player.Prestige * Settings.prestige.defenseMultiplier))
+		SetPlayerWeaponDefenseModifier_2(player, 1. + (Player.Prestige * Settings.prestige.defenseMultiplier))
+
+		-- Run sprint modifiers
+		SetRunSprintMultiplierForPlayer(player, 1.)
 	end
 end)
 
@@ -65,6 +71,9 @@ AddEventHandler('lsv:init', function()
 			return
 		end
 
+		local player = PlayerId()
+		local playerPed = PlayerPedId()
+
 		-- Check global variables
 		for _, var in ipairs(_globalVars) do
 			if _G[var] ~= nil then
@@ -75,14 +84,14 @@ AddEventHandler('lsv:init', function()
 
 		-- Player invincibility, health/armour modifications
 		if Player.IsActive() and not Player.InPassiveMode then
-			if GetPlayerInvincible(PlayerId()) or GetEntityHealth(PlayerPedId()) > 200 or GetPedArmour(PlayerId()) > Settings.armour.max then
+			if GetPlayerInvincible(player) or GetEntityHealth(playerPed) > 200 or GetPedArmour(player) > Settings.armour.max then
 				TriggerEvent('lsv:autoBanPlayer', 'God Mode')
 				return
 			end
 		end
 
 		-- Explosive ammo
-		local weaponHash = GetSelectedPedWeapon(PlayerPedId())
+		local weaponHash = GetSelectedPedWeapon(playerPed)
 		if weaponHash ~= 0 then
 			local weaponTypeGroup = GetWeapontypeGroup(weaponHash) -- https://wiki.rage.mp/index.php?title=Weapon::getWeapontypeGroup
 			if weaponTypeGroup == 2685387236 or weaponTypeGroup == 416676503 or
@@ -97,14 +106,31 @@ AddEventHandler('lsv:init', function()
 		end
 
 		-- Max speed
-		if IsPedInAnyVehicle(PlayerPedId(), false) then
-			local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-			if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+		if IsPedInAnyVehicle(playerPed, false) then
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
+			if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
 				SetEntityMaxSpeed(vehicle, GetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fInitialDriveMaxFlatVel'))
 			end
 		else
-			local maxSpeed = (IsPedFalling(PlayerPedId()) or IsPedRagdoll(PlayerPedId()) or GetPedParachuteState(PlayerPedId()) >= 0) and 80.0 or 7.1
-			SetEntityMaxSpeed(PlayerPedId(), maxSpeed)
+			SetPedMoveRateOverride(playerPed, 1.)
 		end
 	end
+end)
+
+AddEventHandler('lsv:init', function()
+	World.AddObjectHandler(function(object)
+		if not NetworkGetEntityIsNetworked(object) then
+			return
+		end
+
+		local netId = ObjToNet(object)
+
+		if Network.DoesEntityExistWithNetworkId(netId) then
+			return
+		end
+
+		if NetworkDoesEntityExistWithNetworkId(netId) and NetworkHasControlOfNetworkId(netId) then
+			World.DeleteEntity(object)
+		end
+	end)
 end)

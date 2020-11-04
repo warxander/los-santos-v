@@ -60,6 +60,6 @@ Citizen.CreateThread(function()
 	end)
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:initSurvivalRecords', player, _survivalRecords)
 end)

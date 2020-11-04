@@ -62,6 +62,7 @@ AddEventHandler('lsv:startVehicleExport', function(vehicleIndex, vehicleTier, ga
 
 	SetVehicleMod(vehicle, 16, 2)
 	SetVehicleTyresCanBurst(vehicle, false)
+	SetEntityLoadCollisionFlag(vehicle, true)
 
 	_vehicleName = vehicleMods.name
 

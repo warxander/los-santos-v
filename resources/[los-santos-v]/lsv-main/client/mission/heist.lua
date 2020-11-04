@@ -84,7 +84,7 @@ AddEventHandler('lsv:startHeist', function()
 		if not stealTimer then
 			Gui.DrawPlaceMarker(location, Color.YELLOW)
 
-			if Player.DistanceTo(location, true) < Settings.placeMarker.radius then
+			if Player.DistanceTo(location, true) <= Settings.placeMarker.radius then
 				stealTimer = Timer.New()
 				World.SetWantedLevel(2, 3, true)
 			end

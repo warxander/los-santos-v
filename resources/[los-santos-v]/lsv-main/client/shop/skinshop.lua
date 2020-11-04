@@ -153,10 +153,12 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if Player.IsActive() then
-			table.iforeach(_skinshops, function(skinshop, skinshopIndex)
+			local playerPos = Player.Position()
+
+			for skinshopIndex, skinshop in ipairs(_skinshops) do
 				Gui.DrawPlaceMarker(skinshop, skinshopColor)
 
-				if Player.DistanceTo(skinshop, true) < Settings.placeMarker.radius then
+				if World.GetDistance(playerPos, skinshop, true) <= Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
 						Gui.DisplayHelpText('Press ~INPUT_TALK~ to browse characters.')
 
@@ -175,7 +177,7 @@ AddEventHandler('lsv:init', function()
 						Prompt.Hide()
 					end
 				end
-			end)
+			end
 		end
 	end
 end)

@@ -64,10 +64,10 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:updateMissions', player, _missions, _players)
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	_players[player] = nil
 end)

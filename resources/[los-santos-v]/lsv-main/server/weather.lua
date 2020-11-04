@@ -27,6 +27,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:updateWeather', player, _weather)
 end)

@@ -254,7 +254,7 @@ AddEventHandler('lsv:init', function()
 			if isPlayerInFreeroam then
 				Gui.DrawPlaceMarker(place, Color.LIME)
 
-				if World.GetDistance(playerPosition, place, true) < Settings.placeMarker.radius then
+				if World.GetDistance(playerPosition, place, true) <= Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
 						Gui.DisplayHelpText('Press ~INPUT_TALK~ to start '.._missionName..'.')
 

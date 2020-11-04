@@ -1,6 +1,6 @@
 local _hud = nil
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if not _hud then
 		_hud = { }
 

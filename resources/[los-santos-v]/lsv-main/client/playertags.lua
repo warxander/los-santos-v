@@ -14,14 +14,15 @@ AddEventHandler('lsv:init', function()
 	while true do
 		local playerPed = PlayerPedId()
 
-		for _, id in ipairs(GetActivePlayers()) do
+		local players = GetActivePlayers()
+		for _, id in ipairs(players) do
 			if id ~= PlayerId() then
 				local ped = GetPlayerPed(id)
 
 				local serverId = GetPlayerServerId(id)
 				local isPlayerActive = PlayerData.IsExists(serverId)
-				local isPlayerDead = IsPlayerDead(id)
 
+				local isPlayerDead = false
 				local isPlayerCrewMember = false
 				local isPlayerCrewLeader = false
 				local isPlayerEnemyCrewMember = false
@@ -39,7 +40,10 @@ AddEventHandler('lsv:init', function()
 
 				local playerWeapon = 0
 
+				local gamerTag = _gamerTags[id]
+
 				if isPlayerActive then
+					isPlayerDead = IsPlayerDead(id)
 					isPlayerCrewMember = Player.CrewMembers[serverId]
 
 					if Player.CrewLeader then
@@ -77,18 +81,26 @@ AddEventHandler('lsv:init', function()
 					playerWeapon = GetSelectedPedWeapon(ped)
 				end
 
-				if not _gamerTags[id] or _gamerTags[id].ped ~= ped or not IsMpGamerTagActive(_gamerTags[id].tag) then
-					if _gamerTags[id] then
-						RemoveMpGamerTag(_gamerTags[id].tag)
+				if not gamerTag or gamerTag.ped ~= ped or not IsMpGamerTagActive(gamerTag.tag) then
+					if gamerTag then
+						RemoveMpGamerTag(gamerTag.tag)
 					end
 
-					_gamerTags[id] = {
+					gamerTag = {
 						tag = CreateMpGamerTag(ped, '', false, false, '', 0),
-						ped = ped
+						ped = ped,
 					}
+
+					local tag = gamerTag.tag
+					SetMpGamerTagAlpha(tag, 0, 255)
+					SetMpGamerTagAlpha(tag, 2, 255)
+					SetMpGamerTagAlpha(tag, 4, 255)
+					SetMpGamerTagAlpha(tag, 7, 255)
+
+					_gamerTags[id] = gamerTag
 				end
 
-				local gamerTag = _gamerTags[id].tag
+				local tag = gamerTag.tag
 
 				local color = 0
 				if isPlayerCrewMember then
@@ -102,25 +114,20 @@ AddEventHandler('lsv:init', function()
 				end
 
 				-- https://runtime.fivem.net/doc/reference.html#_0x63BB75ABEDC1F6A0
-				SetMpGamerTagName(gamerTag, GetPlayerName(id))
+				SetMpGamerTagName(tag, GetPlayerName(id))
 
-				SetMpGamerTagColour(gamerTag, 0, color)
-				SetMpGamerTagColour(gamerTag, 2, 0)
-				SetMpGamerTagColour(gamerTag, 4, color)
-				SetMpGamerTagColour(gamerTag, 7, color)
-				SetMpGamerTagHealthBarColour(gamerTag, 0)
-
-				SetMpGamerTagAlpha(gamerTag, 0, 255)
-				SetMpGamerTagAlpha(gamerTag, 2, 255)
-				SetMpGamerTagAlpha(gamerTag, 4, 255)
-				SetMpGamerTagAlpha(gamerTag, 7, 255)
+				SetMpGamerTagColour(tag, 0, color)
+				SetMpGamerTagColour(tag, 2, 0)
+				SetMpGamerTagColour(tag, 4, color)
+				SetMpGamerTagColour(tag, 7, color)
+				SetMpGamerTagHealthBarColour(tag, 0)
 
 				local isGamerTagVisible = isHealthBarVisible or HasEntityClearLosToEntity(playerPed, ped, 17)
 
-				SetMpGamerTagVisibility(gamerTag, 0, isGamerTagVisible) -- GAMER_NAME
-				SetMpGamerTagVisibility(gamerTag, 2, isHealthBarVisible) -- HEALTH/ARMOR
-				SetMpGamerTagVisibility(gamerTag, 4, isGamerTagVisible and isPlayerTalking) -- AUDIO_ICON
-				SetMpGamerTagVisibility(gamerTag, 7, isGamerTagVisible and patreonTier ~= 0) -- WANTED_STARS
+				SetMpGamerTagVisibility(tag, 0, isGamerTagVisible) -- GAMER_NAME
+				SetMpGamerTagVisibility(tag, 2, isHealthBarVisible) -- HEALTH/ARMOR
+				SetMpGamerTagVisibility(tag, 4, isGamerTagVisible and isPlayerTalking) -- AUDIO_ICON
+				SetMpGamerTagVisibility(tag, 7, isGamerTagVisible and patreonTier ~= 0) -- WANTED_STARS
 
 				if ped ~= 0 then
 					local blip = GetBlipFromEntity(ped)
@@ -176,7 +183,7 @@ AddEventHandler('lsv:init', function()
 					if not isPlayerCrewMember then
 						if not isPlayerHotProperty and not isPlayerBeast and not isPlayerKingOfTheCastle and not isPlayerHasBounty and not isPlayerOnMission and GetWeapontypeGroup(playerWeapon) ~= -1212426201 then
 							if GetPedStealthMovement(ped) or GetPlayerInvincible(id) then
-								blipAlpha = 25
+								blipAlpha = 0
 							end
 						end
 					end
@@ -188,12 +195,12 @@ AddEventHandler('lsv:init', function()
 
 					SetBlipNameToPlayerName(blip, id)
 				end
-			elseif _gamerTags[id] then
-				RemoveMpGamerTag(_gamerTags[id].tag)
+			elseif gamerTag then
+				RemoveMpGamerTag(gamerTag.tag)
 				_gamerTags[id] = nil
 			end
 		end
 
-		Citizen.Wait(0)
+		Citizen.Wait(10)
 	end
 end)

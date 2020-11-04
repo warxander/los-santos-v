@@ -124,6 +124,7 @@ function Network.CreatePed(pedType, modelHash, position, heading, data)
 		return nil
 	end
 
+	RequestCollisionAtCoord(position.x, position.y, position.z)
 	local ped = CreatePed(pedType, modelHash, position.x, position.y, position.z, heading or GetRandomFloatInRange(0., 360.), true, true)
 
 	local netId = PedToNet(ped)
@@ -159,6 +160,7 @@ function Network.CreateVehicle(modelHash, position, heading, data)
 		return nil
 	end
 
+	RequestCollisionAtCoord(position.x, position.y, position.z)
 	local vehicle = CreateVehicle(modelHash, position.x, position.y, position.z, heading or GetRandomFloatInRange(0., 360.), true, true)
 
 	local netId = VehToNet(vehicle)

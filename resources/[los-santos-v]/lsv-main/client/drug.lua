@@ -92,7 +92,7 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(100)
 
-		table.foreach(Player.DrugBusiness, function(business, type)
+		for type, business in pairs(Player.DrugBusiness) do
 			if business.supplies == 0 or business.stockMax == Settings.drugBusiness.limits.stock then
 				business.timer = nil
 				return
@@ -107,7 +107,7 @@ AddEventHandler('lsv:init', function()
 				TriggerServerEvent('lsv:drugBusinessProduced', type)
 				business.timer:restart()
 			end
-		end)
+		end
 	end
 end)
 
@@ -131,11 +131,11 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		local blipAlpha = Player.IsInFreeroam() and 255 or 0
-		table.foreach(_businessBlips, function(blip)
+		for _, blip in pairs(_businessBlips) do
 			if GetBlipAlpha(blip) ~= blipAlpha then
 				SetBlipAlpha(blip, blipAlpha)
 			end
-		end)
+		end
 	end
 end)
 
@@ -196,7 +196,7 @@ AddEventHandler('lsv:init', function()
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('drug_business_upgrades') then
-			table.foreach(Settings.drugBusiness.upgrades, function(data, id)
+			for id, data in pairs(Settings.drugBusiness.upgrades) do
 				local isOwned = Player.DrugBusiness[_businessType].upgrades[id] ~= nil
 				if WarMenu.Button(data.name, isOwned and 'Owned' or '$'..data.prices[_businessType]) then
 					if not isOwned then
@@ -204,7 +204,7 @@ AddEventHandler('lsv:init', function()
 						Prompt.ShowAsync()
 					end
 				end
-			end)
+			end
 
 			WarMenu.Display()
 		end
@@ -217,7 +217,7 @@ AddEventHandler('lsv:init', function()
 
 		local isPlayerInFreeroam = Player.IsInFreeroam()
 
-		table.foreach(Settings.drugBusiness.businesses, function(business, id)
+		for id, business in pairs(Settings.drugBusiness.businesses) do
 			local isOwnedBusiness = Player.HasDrugBusiness(business.type)
 			if isOwnedBusiness and Player.DrugBusiness[business.type].id ~= id then
 				return
@@ -226,7 +226,7 @@ AddEventHandler('lsv:init', function()
 			if isPlayerInFreeroam then
 				Gui.DrawPlaceMarker(business.location, _businessData[business.type].color)
 
-				if Player.DistanceTo(business.location, true) < Settings.placeMarker.radius then
+				if Player.DistanceTo(business.location, true) <= Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
 						Gui.DisplayHelpText('Press ~INPUT_TALK~ to open '..Settings.drugBusiness.types[business.type].name..' menu.')
 
@@ -253,6 +253,6 @@ AddEventHandler('lsv:init', function()
 					Prompt.Hide()
 				end
 			end
-		end)
+		end
 	end
 end)

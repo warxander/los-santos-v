@@ -16,7 +16,7 @@ local function disbandCrew(leader)
 		PlayerData.UpdateCrewLeader(member, nil)
 		TriggerClientEvent('lsv:crewDisbanded', member)
 	end)
-	TriggerSignal('lsv:crewDisbanded', leader)
+	TriggerEvent('lsv:crewDisbanded', leader)
 	_crews[leader] = nil
 	_crewRaces[leader] = nil
 	_crewSalaries[leader] = nil
@@ -168,7 +168,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	if not PlayerData.IsExists(player) then
 		return
 	end

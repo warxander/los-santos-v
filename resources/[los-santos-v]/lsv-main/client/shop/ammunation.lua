@@ -198,10 +198,12 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if Player.IsActive() then
-			table.iforeach(_ammunations, function(ammunation, ammunationIndex)
+			local playerPos = Player.Position()
+
+			for ammunationIndex, ammunation in ipairs(_ammunations) do
 				Gui.DrawPlaceMarker(ammunation, ammunationColor)
 
-				if Player.DistanceTo(ammunation, true) < Settings.placeMarker.radius then
+				if World.GetDistance(playerPos, ammunation, true) <= Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
 						Gui.DisplayHelpText('Press ~INPUT_TALK~ to browse Special Weapons ammunition.')
 
@@ -211,12 +213,12 @@ AddEventHandler('lsv:init', function()
 							Gui.OpenMenu('ammunation_special')
 						end
 					end
-				elseif (WarMenu.IsMenuOpened('ammunation_special') or WarMenu.IsMenuOpened('ammunation_special_ammunition') or WarMenu.IsMenuOpened('ammunation_special_ammo')) and ammunationIndex == ammunationOpenedMenuIndex then
+				elseif ammunationIndex == ammunationOpenedMenuIndex and (WarMenu.IsMenuOpened('ammunation_special') or WarMenu.IsMenuOpened('ammunation_special_ammunition') or WarMenu.IsMenuOpened('ammunation_special_ammo')) then
 					WarMenu.CloseMenu()
 					Player.SaveWeapons()
 					Prompt.Hide()
 				end
-			end)
+			end
 		end
 	end
 end)

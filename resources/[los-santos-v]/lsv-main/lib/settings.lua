@@ -2,7 +2,7 @@ Settings = { }
 Settings.__index = Settings
 
 -- General
-Settings.worldModifierDistance = 500.
+Settings.worldModifierDistance = 350.
 Settings.allowMultipleAccounts = false
 Settings.afkTimeout = 300 -- in seconds
 Settings.autoSavingInterval = 180000
@@ -289,6 +289,7 @@ Settings.patreon = {
 -- Cash
 Settings.rewardNotificationTime = 5000
 
+Settings.cashMultiplier = 1.
 Settings.cashPerKill = 175
 Settings.cashPerKillstreak = 25
 Settings.maxCashPerKillstreak = 500
@@ -298,6 +299,7 @@ Settings.cashPerMelee = 200
 Settings.cashPerCrewLeader = 125
 
 -- Experience
+Settings.expMultiplier = 1.
 Settings.expPerKill = 100
 Settings.expPerKillstreak = 50
 Settings.maxExpPerKillstreak = 1000
@@ -425,6 +427,7 @@ Settings.simeon = {
 	vehiclesCount = 3,
 	rewards = { cash = 10000, exp = 5000 },
 	dropRadius = 1.5,
+	blipRadius = 50.,
 	location = { x = 1204.4508056641, y = -3116.7836914062, z = 5.5403265953064 },
 }
 
@@ -587,6 +590,7 @@ Settings.castle = {
 		{ x = 1665.9049072266, y = -15.893600463867, z = 173.77449035645 },
 		{ x = -367.48580932617, y = 6076.2182617188, z = 31.478071212769 },
 		{ x = -531.49578857422, y = 5322.77734375, z = 91.377044677734 },
+		{ x = 249.20080566406, y = 217.67642211914, z = 106.28646850586, radius = 20. },
 	},
 	radius = 50.0,
 	rewards = {
@@ -1485,6 +1489,7 @@ Settings.vehicleImport = {
 				['swinger'] = { name = 'Ocelot Swinger' },
 				['tornado6'] = { name = 'Tornado Rat Rod' },
 				['ztype'] = { name = 'Z-Type' },
+				['lurcher'] = { name = 'Albany Lurcher' },
 			},
 		},
 

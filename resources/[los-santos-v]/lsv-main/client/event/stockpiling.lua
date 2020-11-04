@@ -92,17 +92,15 @@ AddEventHandler('lsv:startStockPiling', function(data, passedTime)
 				checkPoint.picked = true
 				TriggerServerEvent('lsv:stockPilingCheckPointCollected', index)
 			else
-				table.iforeach(_stockData.checkPoints, function(checkPoint)
-					if checkPoint.picked then
-						return
-					end
+				for _, checkPoint in ipairs(_stockData.checkPoints) do
+					if not checkPoint.picked then
+						Gui.DrawPlaceMarker(checkPoint.position, _markerColor, Settings.stockPiling.radius)
 
-					Gui.DrawPlaceMarker(checkPoint.position, _markerColor, Settings.stockPiling.radius)
-
-					if IsSphereVisible(checkPoint.position.x, checkPoint.position.y, checkPoint.position.z, Settings.stockPiling.radius) then
-						DrawMarker(29, checkPoint.position.x, checkPoint.position.y, checkPoint.position.z + 1, 0., 0., 0., 0., 0.,0., 2.5, 2.5, 2.5, _markerColor.r, _markerColor.g, _markerColor.b, Settings.placeMarker.opacity, false, true)
+						if IsSphereVisible(checkPoint.position.x, checkPoint.position.y, checkPoint.position.z, Settings.stockPiling.radius) then
+							DrawMarker(29, checkPoint.position.x, checkPoint.position.y, checkPoint.position.z + 1, 0., 0., 0., 0., 0.,0., 2.5, 2.5, 2.5, _markerColor.r, _markerColor.g, _markerColor.b, Settings.placeMarker.opacity, false, true)
+						end
 					end
-				end)
+				end
 			end
 		end
 	end)

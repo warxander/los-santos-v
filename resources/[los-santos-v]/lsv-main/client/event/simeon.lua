@@ -1,4 +1,4 @@
-local _instructionsText = 'Find and deliver the required vehicles to Simeon.'
+local _instructionsText = 'Find and deliver the requested vehicles to Simeon.'
 local _titles = { 'WINNER', '2ND PLACE', '3RD PLACE' }
 local _playerColors = { Color.YELLOW, Color.GREY, Color.BROWN }
 local _playerPositions = { '1st: ', '2nd: ', '3rd: ' }
@@ -33,6 +33,8 @@ AddEventHandler('lsv:startSimeonExport', function(data, passedTime)
 	SetBlipAsShortRange(_simeonData.blip, false)
 	Map.SetBlipFlashes(_simeonData.blip)
 
+	_simeonData.vehicleBlips = { }
+
 	local currentVehicleName = nil
 
 	-- GUI
@@ -56,9 +58,9 @@ AddEventHandler('lsv:startSimeonExport', function(data, passedTime)
 					Gui.DisplayObjectiveText('Deliver '..currentVehicleName..' to Simeon.')
 				else
 					local vehicles = { }
-					table.iforeach(_simeonData.vehicles, function(vehicle)
+					for _, vehicle in ipairs(_simeonData.vehicles) do
 						table.insert(vehicles, vehicle.name)
-					end)
+					end
 
 					Gui.DisplayObjectiveText('Find '..table.concat(vehicles, ' or ')..'.')
 				end
@@ -89,6 +91,12 @@ AddEventHandler('lsv:startSimeonExport', function(data, passedTime)
 				return
 			end
 
+			local playerPos = Player.Position()
+
+			table.iremove_if(_simeonData.vehicleBlips, function(blip)
+				return World.GetDistance(playerPos, GetBlipCoords(blip), true) > Settings.simeon.blipRadius
+			end, RemoveBlip)
+
 			local playerPed = PlayerPedId()
 			currentVehicleName = nil
 
@@ -105,7 +113,7 @@ AddEventHandler('lsv:startSimeonExport', function(data, passedTime)
 						currentVehicleName = vehicleData.name
 						Gui.DrawPlaceMarker(Settings.simeon.location, Color.YELLOW, Settings.simeon.dropRadius)
 
-						if Player.DistanceTo(Settings.simeon.location, true) <= Settings.simeon.dropRadius then
+						if World.GetDistance(playerPos, Settings.simeon.location, true) <= Settings.simeon.dropRadius then
 							PlaySoundFrontend(-1, 'Mission_Pass_Notify', 'DLC_HEISTS_GENERAL_FRONTEND_SOUNDS', true)
 							table.remove(_simeonData.vehicles, vehicleIndex)
 							World.DeleteEntity(vehicle)
@@ -139,6 +147,10 @@ AddEventHandler('lsv:finishSimeonExport', function(winners)
 
 	RemoveBlip(_simeonData.blip)
 
+	table.iforeach(_simeonData.vehicleBlips, function(blip)
+		RemoveBlip(blip)
+	end)
+
 	local playerPoints = getPlayerPoints()
 	_simeonData = nil
 
@@ -169,4 +181,28 @@ AddEventHandler('lsv:finishSimeonExport', function(winners)
 	else
 		Gui.DisplayNotification(messageText)
 	end
+end)
+
+AddEventHandler('lsv:init', function()
+	World.AddVehicleHandler(function(vehicle)
+		if not _simeonData or not IsVehicleDriveable(vehicle) or IsEntityAMissionEntity(vehicle) then
+			return
+		end
+
+		local driver = GetPedInVehicleSeat(vehicle, -1)
+		if IsPedAPlayer(driver) or DoesBlipExist(GetBlipFromEntity(vehicle)) then
+			return
+		end
+
+		local vehicleHash = GetEntityModel(vehicle)
+		if not table.ifind_if(_simeonData.vehicles, function(vehicleData)
+			return vehicleData.hash == vehicleHash
+		end) then
+			return
+		end
+
+		local blip = Map.CreateEntityBlip(vehicle, Blip.SIMEON_VEHICLE, 'Simeon Target', Color.BLIP_PURPLE)
+		Map.SetBlipFlashes(blip)
+		table.insert(_simeonData.vehicleBlips, blip)
+	end)
 end)

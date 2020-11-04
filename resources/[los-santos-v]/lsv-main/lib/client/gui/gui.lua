@@ -132,7 +132,7 @@ function Gui.DrawTextEntry(entry, position, ...)
 	BeginTextCommandDisplayText(entry)
 
 	local params = { ... }
-	table.iforeach(params, function(param)
+	for _, param in ipairs(params) do
 		local paramType = type(param)
 		if paramType == 'string' then
 			AddTextComponentString(param)
@@ -143,7 +143,7 @@ function Gui.DrawTextEntry(entry, position, ...)
 				AddTextComponentFloat(param, 2)
 			end
 		end
-	end)
+	end
 
 	EndTextCommandDisplayText(position.x, position.y)
 end

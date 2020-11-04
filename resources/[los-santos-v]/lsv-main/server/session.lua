@@ -112,8 +112,8 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 	end
 
 	PlayerData.Add(player, playerStats)
-
 	TriggerClientEvent('lsv:playerLoaded', player, playerStats, isRegistered)
+	logger:info('Loaded { '..playerName..', '..player..', '..PlayerData.GetIdentifier(player)..', '..tostring(isRegistered)..' }')
 
 	if _isOneSyncEnabled then
 		TriggerClientEvent('lsv:oneSyncEnabled', player)
@@ -127,7 +127,7 @@ AddEventHandler('lsv:playerInitialized', function()
 		return
 	end
 
-	TriggerSignal('lsv:playerConnected', player)
+	TriggerEvent('lsv:playerConnected', player)
 	TriggerClientEvent('lsv:playerConnected', -1, player)
 end)
 
@@ -135,17 +135,14 @@ RegisterNetEvent('lsv:loadPlayer')
 AddEventHandler('lsv:loadPlayer', function()
 	local player = source
 	local playerName = GetPlayerName(player)
-	local identifier = PlayerData.GetIdentifier(player)
 
 	Db.FindPlayer(player, function(data)
 		if not data then
 			Db.RegisterPlayer(player, function(data)
 				initPlayer(player, playerName, data, true)
-				logger:info('Register { '..playerName..', '..player..', '..identifier..' }')
 			end)
 		else
 			initPlayer(player, playerName, data, false)
-			logger:info('Loaded { '..playerName..', '..player..', '..identifier..' }')
 		end
 	end)
 end)
@@ -182,6 +179,7 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 	local license = playerId and '\n\nCopy and provide your identifier for ban appeal in Discord:\n'..playerId or ''
 
 	deferrals.defer()
+	Citizen.Wait(0) -- mandatory (omfg)
 
 	if string.len(playerName) > Settings.maxPlayerNameLength then
 		deferrals.done('Your name is too long (limit of '..Settings.maxPlayerNameLength..' characters)')
@@ -252,8 +250,11 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 					isPatreon = patreonTier,
 				})
 				table.sort(_playersQueue, sortPlayersQueue)
+				logger:info('Added to login queue { '..getPlayerPositionInQueue(playerId)..', '..#_playersQueue..' }')
 
 				while true do
+					Citizen.Wait(1000)
+
 					local position = getPlayerPositionInQueue(playerId)
 					if not position then
 						deferrals.done()
@@ -261,16 +262,14 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 					end
 
 					if PlayerData.GetCount() < _maxPlayersCount and position == 1 then
-						table.remove(_playersQueue, position)
 						deferrals.done()
 						return
 					else
-						deferrals.update('Server is Full\nPosition in Queue: '..position)
+						deferrals.update('Server is Full\nPosition in Queue: '..position..' ('..#_playersQueue..')')
 					end
-
-					Citizen.Wait(1000)
 				end
 			else
+				Citizen.Wait(0) --mandatory (omfg)
 				deferrals.done()
 			end
 		end)
@@ -289,10 +288,18 @@ AddEventHandler('playerDropped', function(reason)
 		end
 	end
 
-	TriggerSignal('lsv:playerDropped', player)
+	TriggerEvent('lsv:playerDropped', player)
 
 	PlayerData.Remove(player)
 	TriggerClientEvent('lsv:playerDisconnected', -1, playerName, player, reason)
 
-	logger:info('Dropped { '..playerName..', '..player..', '..reason..' }')
+	logger:info('Dropped { '..playerName..', '..player..', '..tostring(position)..', '..reason..' }')
+end)
+
+AddEventHandler('lsv:playerConnected', function(player)
+	local position = getPlayerPositionInQueue(PlayerData.GetIdentifier(player))
+	if position then
+		logger:info('Removed from login queue { '..position..', '..#_playersQueue..' }')
+		table.remove(_playersQueue, position)
+	end
 end)

@@ -113,9 +113,9 @@ end
 function Player.GetGaragesCapacity()
 	local capacity = 0
 
-	table.foreach(Player.Garages, function(_, garage)
+	for garage, _ in pairs(Player.Garages) do
 		capacity = capacity + Settings.garages[garage].capacity
-	end)
+	end
 
 	return capacity
 end
@@ -157,8 +157,6 @@ function Player.GetPlayerWeapons()
 			if ammoTypes[ammoType] == nil then
 				ammoTypes[ammoType] = true
 				playerWeapon.ammo = GetAmmoInPedWeapon(player, weaponHash)
-			else
-				playerWeapon.ammo = 0
 			end
 
 			if weaponHash == GetSelectedPedWeapon(player) then
@@ -166,11 +164,16 @@ function Player.GetPlayerWeapons()
 			end
 
 			playerWeapon.components = { }
+			local hasComponents = false
 			table.iforeach(weapon.components, function(component)
 				if HasPedGotWeaponComponent(player, weaponHash, component.hash) then
 					table.insert(playerWeapon.components, component.hash)
+					hasComponents = true
 				end
 			end)
+			if not hasComponents then
+				playerWeapon.components = nil
+			end
 
 			playerWeapon.tintIndex = GetPedWeaponTintIndex(player, weaponHash)
 
@@ -187,11 +190,13 @@ function Player.GiveWeapons(weapons)
 	table.foreach(weapons, function(weapon)
 		local weaponHash = GetHashKey(weapon.id)
 
-		GiveWeaponToPed(player, weaponHash, weapon.ammo, false, weapon.selected or false)
+		GiveWeaponToPed(player, weaponHash, weapon.ammo or 0, false, weapon.selected or false)
 
-		table.foreach(weapon.components, function(component)
-			GiveWeaponComponentToPed(player, GetHashKey(weapon.id), component)
-		end)
+		if weapon.components then
+			table.foreach(weapon.components, function(component)
+				GiveWeaponComponentToPed(player, GetHashKey(weapon.id), component)
+			end)
+		end
 
 		SetPedWeaponTintIndex(player, weaponHash, weapon.tintIndex)
 	end)
@@ -463,7 +468,7 @@ end)
 RegisterNetEvent('lsv:settingUpdated')
 AddEventHandler('lsv:settingUpdated', function(key, value)
 	Player.Settings[key] = value
-	TriggerSignal('lsv:settingUpdated', key, value)
+	TriggerEvent('lsv:settingUpdated', key, value)
 end)
 
 RegisterNetEvent('lsv:savePlayer')

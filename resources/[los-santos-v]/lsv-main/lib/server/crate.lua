@@ -68,7 +68,7 @@ AddEventHandler('lsv:specialCratePickedUp', function()
 	TriggerClientEvent('lsv:specialCratePickedUp', player, crate)
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	_players[player] = nil
 	_lastWeaponIndexes[player] = nil
 end)

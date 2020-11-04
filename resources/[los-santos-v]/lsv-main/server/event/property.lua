@@ -159,7 +159,7 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 	TriggerClientEvent('lsv:hotPropertyDropped', -1, player, _propertyData.position)
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if not _propertyData then
 		return
 	end
@@ -167,7 +167,7 @@ AddSignalHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:startHotProperty', player, _propertyData, _propertyData.eventStartTimer:elapsed())
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	if not _propertyData then
 		return
 	end

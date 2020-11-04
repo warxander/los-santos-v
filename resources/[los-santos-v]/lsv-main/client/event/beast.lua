@@ -50,11 +50,11 @@ AddEventHandler('lsv:startHuntTheBeast', function(data, passedTime)
 			end
 
 			local isPlayerInFreeroam = Player.IsInFreeroam()
-			table.iforeach(_beastData.landmarks, function(landmark)
+			for _, landmark in ipairs(_beastData.landmarks) do
 				if not landmark.picked then
 					SetBlipAlpha(landmark.blip, isPlayerInFreeroam and 255 or 0)
 				end
-			end)
+			end
 
 			if isPlayerInFreeroam then
 				Gui.DisplayObjectiveText(World.BeastPlayer == Player.ServerId() and 'Go to each ~y~Landmark~w~.' or 'Hunt the ~r~Beast~w~.')

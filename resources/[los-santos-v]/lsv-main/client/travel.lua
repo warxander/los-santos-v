@@ -46,7 +46,7 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if WarMenu.IsMenuOpened('fastTravel') then
-			table.iforeach(Settings.travel.places, function(place, travelIndex)
+			for travelIndex, place in ipairs(Settings.travel.places) do
 				local isHere = _currentTravelIndex == travelIndex
 				if WarMenu.Button(place.name, isHere and 'Here' or '$'..Settings.travel.cash) then
 					if isHere then
@@ -56,7 +56,7 @@ AddEventHandler('lsv:init', function()
 						Prompt.ShowAsync()
 					end
 				end
-			end)
+			end
 
 			WarMenu.Display()
 		end
@@ -72,13 +72,13 @@ AddEventHandler('lsv:init', function()
 		local isPlayerInFreeroam = Player.IsInFreeroam()
 		local playerPosition = Player.Position()
 
-		table.iforeach(Settings.travel.places, function(place, travelIndex)
+		for travelIndex, place in ipairs(Settings.travel.places) do
 			SetBlipAlpha(_travelBlips[travelIndex], isPlayerInFreeroam and 255 or 0)
 
 			if isPlayerInFreeroam and World.HotPropertyPlayer ~= Player.ServerId() and World.BeastPlayer ~= Player.ServerId() and World.KingOfTheCastlePlayer ~= Player.ServerId() then
 				Gui.DrawPlaceMarker(place.inPosition, fastTravelColor)
 
-				if World.GetDistance(playerPosition, place.inPosition, true) < Settings.placeMarker.radius then
+				if World.GetDistance(playerPosition, place.inPosition, true) <= Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
 						Gui.DisplayHelpText('Press ~INPUT_TALK~ to open Fast Travel menu.')
 
@@ -92,6 +92,6 @@ AddEventHandler('lsv:init', function()
 					Prompt.Hide()
 				end
 			end
-		end)
+		end
 	end
 end)

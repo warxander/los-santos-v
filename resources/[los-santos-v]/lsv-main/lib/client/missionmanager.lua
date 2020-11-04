@@ -109,7 +109,7 @@ AddEventHandler('lsv:init', function()
 		local closestBlip = nil
 		local closestBlipDistance = nil
 
-		table.iforeach(_missionPlaces, function(mission)
+		for _, mission in ipairs(_missionPlaces) do
 			SetBlipAlpha(mission.blip, isPlayerInFreeroam and 255 or 0)
 
 			if isPlayerInFreeroam and not mission.finished then
@@ -122,7 +122,7 @@ AddEventHandler('lsv:init', function()
 
 				Gui.DrawPlaceMarker(mission, missionColor)
 
-				if missionDistance < Settings.placeMarker.radius then
+				if missionDistance <= Settings.placeMarker.radius then
 					Gui.DisplayHelpText('Press ~INPUT_TALK~ to start '.._missionNames[mission.id]..'.')
 
 					if IsControlJustReleased(0, 46) then
@@ -134,7 +134,7 @@ AddEventHandler('lsv:init', function()
 					end
 				end
 			end
-		end)
+		end
 
 		if closestBlip then
 			if closestMissionBlip ~= closestBlip then

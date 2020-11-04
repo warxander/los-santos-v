@@ -38,11 +38,11 @@ AddEventHandler('lsv:removeNetId', function(netId)
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:initNetworkIds', player, _netIds)
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	local netIdsToRemove = { }
 
 	table.foreach(_netIds, function(netData, netId)

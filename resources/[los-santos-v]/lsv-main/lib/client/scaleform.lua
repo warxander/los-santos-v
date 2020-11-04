@@ -58,7 +58,7 @@ function Scaleform:call(func, ...)
 	PushScaleformMovieFunction(self._scaleform, func)
 
 	local params = { ... }
-	table.iforeach(params, function(param)
+	for _, param in ipairs(params) do
 		local paramType = type(param)
 
 		if paramType == 'string' then
@@ -72,7 +72,7 @@ function Scaleform:call(func, ...)
 		elseif paramType == 'boolean' then
 			PushScaleformMovieFunctionParameterBool(param)
 		end
-	end)
+	end
 
 	PopScaleformMovieFunctionVoid()
 end

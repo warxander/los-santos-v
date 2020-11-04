@@ -120,7 +120,7 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 	TriggerClientEvent('lsv:huntTheBeastKilled', -1)
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if not _beastData then
 		return
 	end
@@ -128,7 +128,7 @@ AddSignalHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:startHuntTheBeast', player, _beastData, _beastData.eventStartTimer:elapsed())
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	if not _beastData or _beastData.beast ~= player then
 		return
 	end

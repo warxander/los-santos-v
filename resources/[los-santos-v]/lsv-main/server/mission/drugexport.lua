@@ -45,6 +45,6 @@ AddEventHandler('lsv:startDrugExport', function(type)
 	TriggerClientEvent('lsv:drugExportStarted', player, data)
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	_players[player] = nil
 end)

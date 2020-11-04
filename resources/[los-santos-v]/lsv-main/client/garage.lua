@@ -124,13 +124,13 @@ AddEventHandler('lsv:init', function()
 		Citizen.Wait(0)
 
 		if WarMenu.IsMenuOpened('garage') then
-			table.iforeach(Player.Vehicles, function(vehicle, vehicleIndex)
+			for vehicleIndex, vehicle in ipairs(Player.Vehicles) do
 				local name = Player.GetVehicleName(vehicleIndex)
 				if WarMenu.MenuButton(name, 'garage_vehicle') then
 					selectedVehicleIndex = vehicleIndex
 					WarMenu.SetSubTitle('garage_vehicle', name)
 				end
-			end)
+			end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('garage_vehicle') then
@@ -195,12 +195,14 @@ AddEventHandler('lsv:init', function()
 		local closestBlipDistance = nil
 		local isPlayerInFreeroam = Player.IsInFreeroam()
 
-		table.foreach(Settings.garages, function(garage, id)
+		local playerPos = Player.Position()
+
+		for id, garage in pairs(Settings.garages) do
 			SetBlipAlpha(_garageBlips[id], isPlayerInFreeroam and 255 or 0)
 
 			local isOwnedGarage =  Player.HasGarage(id)
 
-			local garageDistance = Player.DistanceTo(garage.location, true)
+			local garageDistance = World.GetDistance(playerPos, garage.location, true)
 
 			if isOwnedGarage and (not closestBlipDistance or garageDistance < closestBlipDistance) then
 				closestBlipDistance = garageDistance
@@ -210,7 +212,7 @@ AddEventHandler('lsv:init', function()
 			if isPlayerInFreeroam then
 				Gui.DrawPlaceMarker(garage.location, isOwnedGarage and _ownedGarage.color or _lockedGarage.color)
 
-				if garageDistance < Settings.placeMarker.radius then
+				if garageDistance <= Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
 						Gui.DisplayHelpText('Press ~INPUT_TALK~ to open Garage menu.')
 
@@ -226,13 +228,13 @@ AddEventHandler('lsv:init', function()
 							end
 						end
 					end
-				elseif (WarMenu.IsMenuOpened('garage_purchase') or WarMenu.IsMenuOpened('garage') or WarMenu.IsMenuOpened('garage_vehicle') or WarMenu.IsMenuOpened('garage_vehicle_inspect')) and _garageId == id then
+				elseif _garageId == id and (WarMenu.IsMenuOpened('garage_purchase') or WarMenu.IsMenuOpened('garage') or WarMenu.IsMenuOpened('garage_vehicle') or WarMenu.IsMenuOpened('garage_vehicle_inspect')) then
 					ForceCloseTextInputBox()
 					WarMenu.CloseMenu()
 					Prompt.Hide()
 				end
 			end
-		end)
+		end
 
 		if closestBlip then
 			if closestGarageBlip ~= closestBlip then

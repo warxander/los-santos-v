@@ -105,7 +105,7 @@ AddEventHandler('lsv:startStockPiling', function()
 	end
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if not _stockData then
 		return
 	end
@@ -113,7 +113,7 @@ AddSignalHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:startStockPiling', player, _stockData, _stockData.eventStartTimer:elapsed())
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	if not _stockData then
 		return
 	end

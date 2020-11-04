@@ -94,7 +94,7 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 	TriggerClientEvent('lsv:updateGunGamePlayers', -1, _gunGameData.players)
 end)
 
-AddSignalHandler('lsv:playerConnected', function(player)
+AddEventHandler('lsv:playerConnected', function(player)
 	if not _gunGameData then
 		return
 	end
@@ -102,7 +102,7 @@ AddSignalHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:startGunGame', player, _gunGameData, _gunGameData.eventStartTimer:elapsed())
 end)
 
-AddSignalHandler('lsv:playerDropped', function(player)
+AddEventHandler('lsv:playerDropped', function(player)
 	if not _gunGameData then
 		return
 	end
