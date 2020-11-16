@@ -95,17 +95,16 @@ AddEventHandler('lsv:init', function()
 		for type, business in pairs(Player.DrugBusiness) do
 			if business.supplies == 0 or business.stockMax == Settings.drugBusiness.limits.stock then
 				business.timer = nil
-				return
-			end
+			else
+				if not business.timer then
+					business.timer = Timer.New()
+				end
 
-			if not business.timer then
-				business.timer = Timer.New()
-			end
-
-			local productionTime = business.upgrades.security and Settings.drugBusiness.types[type].time.upgraded or Settings.drugBusiness.types[type].time.default
-			if business.timer:elapsed() >= productionTime then
-				TriggerServerEvent('lsv:drugBusinessProduced', type)
-				business.timer:restart()
+				local productionTime = business.upgrades.security and Settings.drugBusiness.types[type].time.upgraded or Settings.drugBusiness.types[type].time.default
+				if business.timer:elapsed() >= productionTime then
+					TriggerServerEvent('lsv:drugBusinessProduced', type)
+					business.timer:restart()
+				end
 			end
 		end
 	end
@@ -219,11 +218,8 @@ AddEventHandler('lsv:init', function()
 
 		for id, business in pairs(Settings.drugBusiness.businesses) do
 			local isOwnedBusiness = Player.HasDrugBusiness(business.type)
-			if isOwnedBusiness and Player.DrugBusiness[business.type].id ~= id then
-				return
-			end
 
-			if isPlayerInFreeroam then
+			if (not isOwnedBusiness or Player.DrugBusiness[business.type].id == id) and isPlayerInFreeroam then
 				Gui.DrawPlaceMarker(business.location, _businessData[business.type].color)
 
 				if Player.DistanceTo(business.location, true) <= Settings.placeMarker.radius then

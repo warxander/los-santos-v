@@ -25,6 +25,8 @@ local _killedMessages = {
 	'scrapped',
 }
 
+local _lastKillers = { }
+
 RegisterNetEvent('lsv:onPlayerDied')
 AddEventHandler('lsv:onPlayerDied', function(isSuicide)
 	local player = source
@@ -51,6 +53,10 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 	PlayerData.UpdateKills(killer)
 	PlayerData.UpdateLongestKillDistance(killer, killData.killDistance)
 
+	if killData.weaponHash then
+		PlayerData.UpdateWeaponStats(killer, killData.weaponHash)
+	end
+
 	if killData.isKillerInVehicle then
 		PlayerData.UpdateVehicleKills(killer)
 	end
@@ -62,7 +68,7 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 	if killerKillstreak > 1 then
 		killerCash = killerCash + math.min(Settings.maxCashPerKillstreak, Settings.cashPerKillstreak * (killerKillstreak - 1))
 		killerExp = killerExp + math.min(Settings.maxExpPerKillstreak, Settings.expPerKillstreak * (killerKillstreak - 1))
-		table.insert(killDetails, 'KILLSTREAK x'..killerKillstreak)
+		killDetails.killstreak = killerKillstreak
 
 		if killerKillstreak == Settings.bounty.killstreak then
 			TriggerClientEvent('lsv:bountyWasSet', -1, killer)
@@ -74,45 +80,63 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 
 		killerCash = killerCash + Settings.cashPerHeadshot
 		killerExp = killerExp + Settings.expPerHeadshot
-		table.insert(killDetails, 'HEADSHOT')
+
+		killDetails.headshot = true
 	end
 
 	if killData.weaponGroup == -1609580060 or killData.weaponGroup == -728555052 then -- MELEE
 		killerCash = killerCash + Settings.cashPerMelee
 		killerExp = killerExp + Settings.expPerMelee
-		table.insert(killDetails, 'MELEE KILL')
+
+		killDetails.meleeKill = true
 	end
 
 	if MissionManager.IsPlayerOnMission(victim) then
 		killerCash = killerCash + Settings.cashPerMission
 		killerExp = killerExp + Settings.expPerMission
-		table.insert(killDetails, 'BROKEN DEAL')
+
+		killDetails.brokenDeal = true
 	end
 
 	if PlayerData.GetKillstreak(victim) >= Settings.bounty.killstreak then
 		killerCash = killerCash + Settings.bounty.reward.cash
 		killerExp = killerExp + Settings.bounty.reward.exp
-		table.insert(killDetails, 'BOUNTY HUNTER')
+
+		killDetails.bountyHunter = true
 	end
 
 	if PlayerData.GetCrewLeader(killer) then
 		if PlayerData.GetCrewLeader(victim) == victim then
 			killerCash = killerCash + Settings.cashPerCrewLeader
 			killerExp = killerExp + Settings.expPerCrewLeader
-			table.insert(killDetails, 'KINGSLAYER')
+
+			killDetails.kingSlayer = true
 		end
 	end
 
+	local lastKiller = _lastKillers[killer]
+	if lastKiller == victim then
+		killerCash = killerCash + Settings.cashPerRevenge
+		killerExp = killerExp + Settings.expPerRevenge
+
+		killDetails.revenge = true
+
+		_lastKillers[killer] = nil
+	end
+
+	_lastKillers[victim] = killer
+
 	local patreonTier = PlayerData.GetPatreonTier(killer)
 	if patreonTier ~= 0 then
-		table.insert(killDetails, 'PATREON BONUS x'..Settings.patreon.reward[patreonTier])
+		killDetails.patreonBonus = Settings.patreon.reward[patreonTier]
 	end
 
-	if #killDetails == 0 then
-		table.insert(killDetails, 'PLAYER KILL')
+	if killData.isKillerInVehicle and not killData.isVictimInVehicle then
+		killerCash = math.floor(killerCash * Settings.cashVehicleMultiplier)
+		killerExp = math.floor(killerExp * Settings.expVehicleMultiplier)
 	end
 
-	PlayerData.UpdateCash(killer, killerCash, killDetails)
+	PlayerData.UpdateCash(killer, killerCash)
 	PlayerData.UpdateExperience(killer, killerExp)
 
 	local deathMessage = killData.headshot and 'headshot' or table.random(_killedMessages)
@@ -121,7 +145,13 @@ AddEventHandler('lsv:onPlayerKilled', function(killData)
 	if killerKillstreak >= Settings.minKillstreakNotification then
 		killstreak = killerKillstreak
 	end
+
 	TriggerClientEvent('lsv:onPlayerKilled', -1, victim, killer, deathMessage, killstreak)
+	TriggerClientEvent('lsv:updateLastKillDetails', killer, killDetails)
 
 	PlayerData.UpdateDeaths(victim)
+end)
+
+AddEventHandler('lsv:playerDropped', function(player)
+	_lastKillers[player] = nil
 end)

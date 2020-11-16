@@ -32,6 +32,8 @@ Player.LongestKillDistance = 0
 Player.MissionsDone = 0
 Player.EventsWon = 0
 
+Player.WeaponStats = { }
+
 Player.Garages = { }
 Player.Vehicles = { }
 
@@ -83,6 +85,8 @@ function Player.Init(playerData)
 	Player.EventsWon = playerData.EventsWon
 
 	Player.Records = playerData.Records
+
+	Player.WeaponStats = playerData.WeaponStats
 
 	Player.Garages = playerData.Garages
 	Player.Vehicles = playerData.Vehicles
@@ -435,6 +439,11 @@ AddEventHandler('lsv:playerRankChanged', function(rank, skillStats)
 	setSkillStats(skillStats)
 end)
 
+RegisterNetEvent('lsv:weaponStatsUpdated')
+AddEventHandler('lsv:weaponStatsUpdated', function(weaponHash, count)
+	Player.WeaponStats[weaponHash] = count
+end)
+
 RegisterNetEvent('lsv:garageUpdated')
 AddEventHandler('lsv:garageUpdated', function(garage)
 	Player.Garages[garage] = true
@@ -468,7 +477,6 @@ end)
 RegisterNetEvent('lsv:settingUpdated')
 AddEventHandler('lsv:settingUpdated', function(key, value)
 	Player.Settings[key] = value
-	TriggerEvent('lsv:settingUpdated', key, value)
 end)
 
 RegisterNetEvent('lsv:savePlayer')

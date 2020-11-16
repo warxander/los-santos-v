@@ -162,6 +162,57 @@ AddEventHandler('lsv:oneSyncEnabled', function()
 	end
 end)
 
+RegisterNetEvent('lsv:updateLastKillDetails')
+AddEventHandler('lsv:updateLastKillDetails', function(killDetails)
+	_lastKillDetails = nil
+
+	if killDetails then
+		if table.length(killDetails) == 0 then
+			_lastKillDetails = 'PLAYER KILL'
+		else
+			_lastKillDetails = { }
+
+			if killDetails.killstreak then
+				table.insert(_lastKillDetails, 'KILLSTREAK x'..killDetails.killstreak)
+			end
+
+			if killDetails.headshot then
+				table.insert(_lastKillDetails, 'HEADSHOT')
+			end
+
+			if killDetails.meleeKill then
+				table.insert(_lastKillDetails, 'MELEE KILL')
+			end
+
+			if killDetails.brokenDeal then
+				table.insert(_lastKillDetails, 'BROKEN DEAL')
+			end
+
+			if killDetails.bountyHunter then
+				table.insert(_lastKillDetails, 'BOUNTY HUNTER')
+			end
+
+			if killDetails.kingSlayer then
+				table.insert(_lastKillDetails, 'KINGSLAYER')
+			end
+
+			if killDetails.revenge then
+				table.insert(_lastKillDetails, 'REVENGE')
+			end
+
+			if killDetails.patreonBonus then
+				table.insert(_lastKillDetails, 'PATREON BONUS x'..killDetails.patreonBonus)
+			end
+
+			_lastKillDetails = table.concat(_lastKillDetails, '\n')
+		end
+
+		_killDetailsTimer:restart()
+		_killDetailsAlpha:restart()
+		_killDetailsScale:restart()
+	end
+end)
+
 Citizen.CreateThread(function()
 	local eventTimer = Timer.New()
 
@@ -307,21 +358,13 @@ AddEventHandler('lsv:init', function()
 	end
 end)
 
-AddEventHandler('lsv:cashUpdated', function(cash, killDetails)
+AddEventHandler('lsv:cashUpdated', function(cash)
 	local backgroundColor = nil
 	if cash < 0 then
 		backgroundColor = 6
 	end
 
 	Gui.DisplayPersonalNotification('<C> $'..math.abs(cash)..'</C>', nil, nil, nil, nil, backgroundColor)
-
-	_lastKillDetails = nil
-	if killDetails and #killDetails ~= 0 then
-		_lastKillDetails = table.concat(killDetails, '\n')
-		_killDetailsTimer:restart()
-		_killDetailsAlpha:restart()
-		_killDetailsScale:restart()
-	end
 end)
 
 AddEventHandler('lsv:showExperience', function(exp)

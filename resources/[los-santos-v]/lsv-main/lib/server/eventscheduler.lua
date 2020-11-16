@@ -16,7 +16,7 @@ local _events = {
 	{ id = 'GangWars', name = 'Gang Wars' },
 }
 
-table.shuffle(_events)
+table.ishuffle(_events)
 
 local _lastEventTimer = nil
 local _isEventInProgress = false

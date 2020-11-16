@@ -40,6 +40,7 @@ function PlayerData.Add(player, playerStats)
 		headshots = playerStats.Headshots,
 		vehicleKills = playerStats.VehicleKills,
 		deaths = playerStats.Deaths,
+		weaponStats = playerStats.WeaponStats,
 		maxKillstreak = playerStats.MaxKillstreak,
 		experience = playerStats.Experience,
 		missionsDone = playerStats.MissionsDone,
@@ -148,6 +149,25 @@ end
 
 function PlayerData.GetKills(player)
 	return _playerSharedData[player].kills
+end
+
+function PlayerData.UpdateWeaponStats(player, weaponHash)
+	if not PlayerData.IsExists(player) then
+		return
+	end
+
+	local weaponStats = _playerLocalData[player].weaponStats
+	local newCount = nil
+
+	if not weaponStats[weaponHash] then
+		newCount = 1
+	else
+		newCount = weaponStats[weaponHash] + 1
+	end
+
+	weaponStats[weaponHash] = newCount
+	Db.UpdateWeaponStats(player, weaponStats)
+	TriggerClientEvent('lsv:weaponStatsUpdated', player, weaponHash, newCount)
 end
 
 function PlayerData.GetCrewLeader(player)
@@ -296,7 +316,7 @@ function PlayerData.GiveDrugBusinessSupply(player)
 	TriggerClientEvent('lsv:drugBusinessSupplyRewarded', player, type)
 end
 
-function PlayerData.UpdateCash(player, cash, killDetails, notPayToLeader)
+function PlayerData.UpdateCash(player, cash, notPayToLeader)
 	if not PlayerData.IsExists(player) then
 		return
 	end
@@ -330,7 +350,7 @@ function PlayerData.UpdateCash(player, cash, killDetails, notPayToLeader)
 		playerData.cash = math.floor(playerData.cash + cash)
 		TriggerClientEvent('lsv:updatePlayerData', -1, player, { cash = playerData.cash })
 		Db.UpdateCash(player, playerData.cash)
-		TriggerClientEvent('lsv:cashUpdated', player, cash, killDetails)
+		TriggerClientEvent('lsv:cashUpdated', player, cash)
 	end
 end
 

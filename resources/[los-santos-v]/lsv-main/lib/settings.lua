@@ -6,7 +6,7 @@ Settings.worldModifierDistance = 350.
 Settings.allowMultipleAccounts = false
 Settings.afkTimeout = 300 -- in seconds
 Settings.autoSavingInterval = 180000
-Settings.pingThreshold = 250
+Settings.pingThreshold = 200
 Settings.maxPlayerNameLength = 24
 Settings.enableVoiceChat = false
 Settings.discordNotificationInterval = 900000
@@ -290,6 +290,7 @@ Settings.patreon = {
 Settings.rewardNotificationTime = 5000
 
 Settings.cashMultiplier = 1.
+Settings.cashVehicleMultiplier = 0.75
 Settings.cashPerKill = 175
 Settings.cashPerKillstreak = 25
 Settings.maxCashPerKillstreak = 500
@@ -297,9 +298,11 @@ Settings.cashPerHeadshot = 25
 Settings.cashPerMission = 125
 Settings.cashPerMelee = 200
 Settings.cashPerCrewLeader = 125
+Settings.cashPerRevenge = 75
 
 -- Experience
 Settings.expMultiplier = 1.
+Settings.expVehicleMultiplier = 0.75
 Settings.expPerKill = 100
 Settings.expPerKillstreak = 50
 Settings.maxExpPerKillstreak = 1000
@@ -307,6 +310,7 @@ Settings.expPerHeadshot = 50
 Settings.expPerMission = 200
 Settings.expPerMelee = 300
 Settings.expPerCrewLeader = 200
+Settings.expPerRevenge = 150
 
 -- Bounty
 Settings.bounty = {
@@ -1818,12 +1822,11 @@ Settings.velocity = {
 
 -- Most Wanted Mission
 Settings.mostWanted = {
-	minTime = 480000,
-	rewardPerSecond = {
-		cash = 40,
-		exp = 25,
+	time = 480000,
+	rewards = {
+		maxCash = 25000,
+		maxExp = 15000,
 	},
-	rewardMultiplier = 0.25,
 }
 
 -- Asset Recovery Mission

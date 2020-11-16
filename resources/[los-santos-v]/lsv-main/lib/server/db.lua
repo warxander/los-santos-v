@@ -29,6 +29,10 @@ function Db.UpdateWeapons(player, weapons)
 	setValue(player, 'Weapons', toDbString(json.encode(weapons)))
 end
 
+function Db.UpdateWeaponStats(player, weaponStats)
+	setValue(player, 'WeaponStats', toDbString(json.encode(weaponStats)))
+end
+
 function Db.UpdateGarages(player, garages)
 	setValue(player, 'Garages', toDbString(json.encode(garages)))
 end

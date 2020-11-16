@@ -3,6 +3,7 @@ local _privateMessageColor = { 232, 142, 155 }
 local _emoteMessageColor = { 240, 200, 80 }
 
 local _playerMutes = { }
+local _playerMessages = { }
 
 local function registerEmote(command, soloMessage, targetMessage)
 	RegisterCommand(command, function(source, args)
@@ -44,6 +45,14 @@ AddEventHandler('_chat:messageEntered', function(author, color, message)
 	if not message or not author or message == '' then
 		return
 	end
+
+	local lastMessage = _playerMessages[source]
+	if lastMessage and lastMessage == message then
+		CancelEvent()
+		return
+	end
+
+	_playerMessages[source] = message
 
 	local sourceName = GetPlayerName(source)
 	if sourceName and sourceName ~= author then
@@ -327,4 +336,5 @@ end)
 
 AddEventHandler('lsv:playerDropped', function(player)
 	_playerMutes[player] = nil
+	_playerMessages[player] = nil
 end)

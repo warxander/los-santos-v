@@ -1,14 +1,14 @@
 function table.range(n, begin)
 	local t = { }
 
-	for i = begin or 0, n do
+	for i = begin or 1, n do
 		table.insert(t, i)
 	end
 
 	return t
 end
 
-function table.shuffle(t)
+function table.ishuffle(t)
 	for i = #t, 2, -1 do
 		local j = math.random(i)
 		t[i], t[j] = t[j], t[i]
@@ -105,22 +105,18 @@ function table.random(t)
 end
 
 function table.irandom_n(t, n)
+	local keys = table.range(#t)
+
+	table.ishuffle(keys)
+
 	local result = { }
 
-	local keys = { }
-	local count = #t
-
-	while #result ~= n do
-		local k = math.random(count)
-		if not keys[k] then
-			table.insert(result, t[k])
-			keys[k] = true
-		end
+	for i = 1, n do
+		table.insert(result, t[keys[i]])
 	end
 
 	return result
 end
-
 
 function table.find(t, value)
 	for k, v in pairs(t) do
@@ -248,7 +244,7 @@ function table.isome(t, func)
 	return false
 end
 
-function table.reduce(t, func, initialValue)
+function table.ireduce(t, func, initialValue)
 	local result = initialValue or t[1]
 	local index = initialValue and 1 or 2
 
@@ -259,7 +255,7 @@ function table.reduce(t, func, initialValue)
 	return result
 end
 
-function table.slice(t, i, j)
+function table.islice(t, i, j)
 	local result = { }
 
 	for k = i, j do

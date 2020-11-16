@@ -254,6 +254,8 @@ AddEventHandler('lsv:init', function()
 
 	WarMenu.CreateSubMenu('stats', 'interaction', 'Statistics')
 	WarMenu.CreateSubMenu('stats_drug_business', 'stats', 'Drug Business (Supplies/Stock)')
+	WarMenu.CreateSubMenu('stats_weapons', 'stats', 'Weapon Kills')
+	WarMenu.CreateSubMenu('stats_prestige', 'stats', 'Prestige Bonuses')
 
 	WarMenu.CreateSubMenu('settings', 'interaction', 'Player Settings')
 
@@ -360,6 +362,8 @@ AddEventHandler('lsv:init', function()
 			local timePlayedMin = Player.TimePlayed / (1000 * 60);
 
 			if WarMenu.MenuButton('Drug Business', 'stats_drug_business') then
+			elseif WarMenu.MenuButton('Weapon Kills', 'stats_weapons') then
+			elseif Player.Prestige ~= 0 and WarMenu.MenuButton('Prestige Bonuses', 'stats_prestige') then
 			elseif WarMenu.Button('Time Played', string.format('%02d:%02d', math.floor(timePlayedMin / 60), math.floor(timePlayedMin % 60))) then
 			elseif WarMenu.Button('Money Wasted', '$'..Player.MoneyWasted) then
 			elseif WarMenu.Button('Kills', Player.Kills) then
@@ -382,6 +386,19 @@ AddEventHandler('lsv:init', function()
 				if WarMenu.Button(data.name, Player.DrugBusiness[type].supplies..'/'..Player.DrugBusiness[type].stock) then
 				end
 			end)
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('stats_weapons') then
+			table.foreach(Player.WeaponStats, function(count, weaponHash)
+				WarMenu.Button(WeaponUtility.GetNameByHash(tonumber(weaponHash)), count)
+			end)
+
+			WarMenu.Display()
+		elseif WarMenu.IsMenuOpened('stats_prestige') then
+			WarMenu.Button('Prestige Level', Player.Prestige)
+			WarMenu.Button('Reward Multiplier', string.format('%02.1f', Player.Prestige * Settings.prestige.rewardMultiplier * 100)..'%')
+			WarMenu.Button('Damage Multiplier', string.format('%02.2f', Player.Prestige * Settings.prestige.damageMultiplier * 100)..'%')
+			WarMenu.Button('Defense Multiplier', string.format('%02.2f', Player.Prestige * Settings.prestige.defenseMultiplier * 100)..'%')
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('settings') then
@@ -563,5 +580,5 @@ AddEventHandler('lsv:init', function()
 end)
 
 AddEventHandler('lsv:settingUpdated', function()
-		Prompt.Hide()
+	Prompt.Hide()
 end)

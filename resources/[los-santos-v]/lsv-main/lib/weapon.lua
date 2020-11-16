@@ -3,6 +3,11 @@
 Weapon = { }
 Weapon.__index = Weapon
 
+Weapon.WEAPON_UNARMED = {
+	name = 'Fist',
+	components = { },
+}
+
 Weapon.WEAPON_KNIFE = {
 	name = 'Knife',
 	components = { },

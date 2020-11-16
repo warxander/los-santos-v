@@ -73,16 +73,16 @@ local function getPlayerSurvivalBest(survivalId)
 	end
 end
 
-local function finishMission(success, reason)
+AddEventHandler('lsv:finishSurvival', function(success, reason)
 	if success or _location.waveIndex > _location.waveCount then
 		TriggerServerEvent('lsv:finishSurvival', _survivalId, math.max(0, _location.waveIndex - _location.waveCount - 1), _location.waveIndex - 1)
 	else
-		TriggerEvent('lsv:finishSurvival', false, reason or '')
+		TriggerEvent('lsv:survivalFinished', false, reason or '')
 	end
-end
+end)
 
-RegisterNetEvent('lsv:finishSurvival')
-AddEventHandler('lsv:finishSurvival', function(success, reason)
+RegisterNetEvent('lsv:survivalFinished')
+AddEventHandler('lsv:survivalFinished', function(success, reason)
 	MissionManager.FinishMission(success)
 
 	table.iforeach(_location.pedModels, function(model)
@@ -161,7 +161,7 @@ AddEventHandler('lsv:startSurvival', function(id)
 				Gui.DrawTimerBar('NEXT WAVE IN', Settings.survival.waveInterval - nextWaveTimer:elapsed(), 1)
 			else
 				Gui.DisplayObjectiveText('Take out the ~r~enemies~w~.')
-				Gui.DrawProgressBar('WAVE '..tostring(_location.waveIndex), (_location.totalEnemyCount - _location.enemiesLeft) / _location.totalEnemyCount, 1)
+				Gui.DrawProgressBar('WAVE '.._location.waveIndex..' OF '..#_waveSettings, (_location.totalEnemyCount - _location.enemiesLeft) / _location.totalEnemyCount, 1)
 			end
 		end
 	end)
@@ -170,17 +170,16 @@ AddEventHandler('lsv:startSurvival', function(id)
 		Citizen.Wait(0)
 
 		if not MissionManager.Mission then
-			finishMission(false)
 			return
 		end
 
 		if IsPlayerDead(PlayerId()) then
-			finishMission(false)
+			TriggerEvent('lsv:finishSurvival', false)
 			return
 		end
 
 		if Player.DistanceTo(_location.position, true) > Settings.survival.radius then
-			finishMission(false, 'You have left the mission area.')
+			TriggerEvent('lsv:finishSurvival', false, 'You have left the mission area.')
 			return
 		end
 

@@ -48,7 +48,7 @@ AddEventHandler('lsv:finishSurvival', function(survivalId, extraWaveCount, lastW
 	PlayerData.UpdateCash(player, reward.cash)
 	PlayerData.UpdateExperience(player, reward.exp)
 
-	TriggerClientEvent('lsv:finishSurvival', player, true, rewardMessage)
+	TriggerClientEvent('lsv:survivalFinished', player, true, rewardMessage)
 end)
 
 Citizen.CreateThread(function()

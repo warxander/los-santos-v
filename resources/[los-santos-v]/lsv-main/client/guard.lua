@@ -13,6 +13,21 @@ local _blockedEvents = {
 
 local _globalVars = {
 	'oTable',
+	'fESX',
+	'Plane',
+	'TiagoMenu',
+	'Outcasts666',
+	'dexMenu',
+	'Cience',
+	'LynxEvo',
+	'zzzt',
+	'AKTeam',
+	'gaybuild',
+	'ariesMenu',
+	'SwagMenu',
+	'Dopamine',
+	'Gatekeeper',
+	'MIOddhwuie',
 }
 
 local _banned = false
@@ -37,12 +52,12 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		local player = PlayerId()
-		local playerPed = PlayerPedId()
-
 		if _banned then
 			return
 		end
+
+		local player = PlayerId()
+		local playerPed = PlayerPedId()
 
 		-- Player visibility
 		SetEntityVisible(playerPed, true)
@@ -73,14 +88,6 @@ AddEventHandler('lsv:init', function()
 
 		local player = PlayerId()
 		local playerPed = PlayerPedId()
-
-		-- Check global variables
-		for _, var in ipairs(_globalVars) do
-			if _G[var] ~= nil then
-				TriggerEvent('lsv:autoBanPlayer', 'Cheating', '_G['..var..']')
-				return
-			end
-		end
 
 		-- Player invincibility, health/armour modifications
 		if Player.IsActive() and not Player.InPassiveMode then
@@ -118,6 +125,24 @@ AddEventHandler('lsv:init', function()
 end)
 
 AddEventHandler('lsv:init', function()
+	-- Check global variables
+	while true do
+		for _, var in ipairs(_globalVars) do
+			if _G[var] ~= nil then
+				TriggerEvent('lsv:autoBanPlayer', 'Cheating', '_G['..var..']')
+				return
+			else
+				Citizen.Wait(250)
+
+				if _banned then
+					return
+				end
+			end
+		end
+	end
+end)
+
+AddEventHandler('lsv:init', function()
 	World.AddObjectHandler(function(object)
 		if not NetworkGetEntityIsNetworked(object) then
 			return
@@ -133,4 +158,9 @@ AddEventHandler('lsv:init', function()
 			World.DeleteEntity(object)
 		end
 	end)
+end)
+
+AddEventHandler('esx:getSharedObject', function()
+	TriggerEvent('lsv:autoBanPlayer', 'Cheating', 'esx:getSharedObject')
+	CancelEvent()
 end)

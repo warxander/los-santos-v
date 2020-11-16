@@ -33,6 +33,12 @@ Citizen.CreateThread(function()
 			end
 		end
 	end)
+
+	World.AddVehicleHandler(function(vehicle)
+		if NetworkGetEntityIsNetworked(vehicle) and GetVehicleEngineHealth(vehicle) <= -4000 then
+			Network.DeleteVehicle(VehToNet(vehicle), 10000)
+		end
+	end)
 end)
 
 Citizen.CreateThread(function()

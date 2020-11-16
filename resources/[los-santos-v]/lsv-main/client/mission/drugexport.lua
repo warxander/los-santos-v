@@ -121,7 +121,7 @@ AddEventHandler('lsv:startDrugExport', function(data)
 					routeBlip = _buyerBlip
 				end
 
-				if Player.DistanceTo(data.location, true) < Settings.drugBusiness.export.dropRadius and GetPlayerWantedLevel(PlayerId()) == 0 then
+				if Player.DistanceTo(data.location, true) <= Settings.drugBusiness.export.dropRadius and GetPlayerWantedLevel(PlayerId()) == 0 then
 					TriggerServerEvent('lsv:finishDrugExport')
 					return
 				end

@@ -34,7 +34,14 @@ AddEventHandler('lsv:init', function()
 					killData.killer = GetPlayerServerId(killer)
 					killData.position = playerPos
 					killData.killerPosition = GetEntityCoords(deathSource)
-					killData.isKillerInVehicle = IsPedInAnyVehicle(deathSource, false)
+
+					if IsPedInAnyVehicle(deathSource, false) then
+						killData.isKillerInVehicle = true
+					end
+
+					if IsPedInAnyVehicle(playerPed, false) then
+						killData.isVictimInVehicle = true
+					end
 
 					killData.killDistance = math.floor(World.GetDistance(playerPos, killData.killerPosition, true))
 					deathDetails = string.format('Distance: %dm', killData.killDistance)

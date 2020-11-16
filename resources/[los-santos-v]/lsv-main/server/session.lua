@@ -53,6 +53,12 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 		playerStats.Weapons = json.decode(playerStats.Weapons)
 	end
 
+	if not playerStats.WeaponStats then
+		playerStats.WeaponStats = { }
+	else
+		playerStats.WeaponStats = json.decode(playerStats.WeaponStats)
+	end
+
 	playerStats.Rank = Rank.CalculateRank(playerStats.Experience)
 	playerStats.SkillStats = Stat.CalculateStats(playerStats.Rank)
 
@@ -73,7 +79,7 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 
 	local spawnPoints = Settings.spawn.points
 	if _lastSpawnPointIndex then
-		spawnPoints = table.filter(spawnPoints, function(_, i)
+		spawnPoints = table.ifilter(spawnPoints, function(_, i)
 			return i ~= _lastSpawnPointIndex
 		end)
 	end

@@ -158,7 +158,7 @@ Citizen.CreateThread(function()
 			if timer:elapsed() >= Settings.crew.salary.timeout then
 				Crew.ForEachMember(leader, function(member)
 					if member ~= leader then
-						PlayerData.UpdateCash(member, Settings.crew.salary.cash, nil, true)
+						PlayerData.UpdateCash(member, Settings.crew.salary.cash, true)
 						PlayerData.UpdateExperience(member, Settings.crew.salary.exp, true)
 					end
 				end)

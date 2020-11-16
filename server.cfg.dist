@@ -6,7 +6,6 @@ ensure chat-theme-gtao
 
 ensure vSql
 ensure warmenu
-ensure warmoji
 
 ensure lsv-main
 ensure lsv-map
