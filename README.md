@@ -12,4 +12,4 @@ FiveM Freeroam Deathmatch game mode
 
 ## Links
 * [Discord](https://discord.gg/32NhU6B)
-* [FiveM Forum Thread](https://forum.fivem.net/t/release-los-santos-v-deathmatch-now-fully-open-source)
+* [FiveM Forum Thread](https://forum.cfx.re/t/release-los-santos-v-freeroam-deathmatch-now-fully-open-source/58237)
