@@ -368,7 +368,7 @@ AddEventHandler('lsv:init', function()
 			elseif WarMenu.Button('Money Wasted', '$'..Player.MoneyWasted) then
 			elseif WarMenu.Button('Kills', Player.Kills) then
 			elseif WarMenu.Button('Deaths', Player.Deaths) then
-			elseif WarMenu.Button('Headshots', Player.Headshots..' ('..string.format('%02.2f', (Player.Headshots / Player.Kills) * 100)..'%)') then
+			elseif WarMenu.Button('Headshots', Player.Headshots..' ('..string.format('%02.2f', (Player.Kills ~= 0 and (Player.Headshots / Player.Kills) or 0) * 100)..'%)') then
 			elseif WarMenu.Button('Max Killstreak', Player.MaxKillstreak) then
 			elseif WarMenu.Button('Vehicle Kills', Player.VehicleKills) then
 			elseif WarMenu.Button('Longest Kill Distance', string.format('%dm', Player.LongestKillDistance)) then

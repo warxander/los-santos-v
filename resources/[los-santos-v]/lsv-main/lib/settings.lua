@@ -1044,24 +1044,27 @@ Settings.drugBusiness = {
 	},
 
 	upgrades = {
-		['security'] = {-- Remove cops from missions
+		['security'] = {
 			name = 'Security Upgrade',
+			toolTip = 'Disable cops during Drug Export mission.',
 			prices = {
 				['weed'] = 627000,
 				['cocaine'] = 1026000,
 				['meth'] = 1140000,
 			},
 		},
-		['staff'] = { -- Increase value of product
+		['staff'] = {
 			name = 'Staff Upgrade',
+			toolTip = 'Increase value of product.',
 			prices = {
 				['weed'] = 546000,
 				['cocaine'] = 663000,
 				['meth'] = 780000,
 			},
 		},
-		['equip'] = { -- Increase production rate
+		['equip'] = {
 			name = 'Equipment Upgrade',
+			toolTip = 'Speed up production rate.',
 			prices = {
 				['weed'] = 935000,
 				['cocaine'] = 990000,
@@ -1286,7 +1289,7 @@ Settings.survival = {
 		cashPerWave = 5000, expPerWave = 3000,
 	},
 	personalReward = { cash = 5000, exp = 1500 },
-	recordReward = { cash = 25000, exp = 10000 },
+	recordReward = { cash = 15000, exp = 10000 },
 }
 
 -- Vehicle Import Mission
@@ -1731,7 +1734,7 @@ Settings.timeTrial = {
 		{ cash = 2500, exp = 1000 },
 	},
 	personalReward = { cash = 5000, exp = 1500 },
-	recordReward = { cash = 25000, exp = 10000 },
+	recordReward = { cash = 15000, exp = 10000, timeout = 900000 },
 }
 
 -- Vehicle Export Mission

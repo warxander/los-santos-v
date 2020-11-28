@@ -169,6 +169,20 @@ AddEventHandler('lsv:init', function()
 			local profitPerUnit = Player.DrugBusiness[_businessType].upgrades.staff and Settings.drugBusiness.types[_businessType].price.upgraded or Settings.drugBusiness.types[_businessType].price.default
 			local stockCount = Player.DrugBusiness[_businessType].stock
 
+			WarMenu.Button('Export '..Settings.drugBusiness.types[_businessType].productName, '$'..(profitPerUnit * stockCount))
+			if WarMenu.IsItemHovered() then
+				Gui.ToolTip('Deliver product to the Buyer.')
+
+				if WarMenu.IsItemSelected() then
+					if stockCount == 0 then
+						Gui.DisplayPersonalNotification('Nothing to export.')
+					else
+						TriggerServerEvent('lsv:startDrugExport', _businessType)
+						Prompt.ShowAsync()
+					end
+				end
+			end
+
 			if WarMenu.Button('Buy 1 Supply Unit', '$'..Settings.drugBusiness.types[_businessType].price.supply) then
 				if Player.DrugBusiness[_businessType].supplies == Settings.drugBusiness.limits.supplies then
 					Gui.DisplayPersonalNotification('Supplies is full.')
@@ -176,31 +190,38 @@ AddEventHandler('lsv:init', function()
 					TriggerServerEvent('lsv:purchaseDrugBusinessSupply', _businessType)
 					Prompt.ShowAsync()
 				end
-			elseif WarMenu.Button('Export '..Settings.drugBusiness.types[_businessType].productName, '$'..(profitPerUnit * stockCount)) then
-				if stockCount == 0 then
-					Gui.DisplayPersonalNotification('Nothing to export.')
-				else
-					TriggerServerEvent('lsv:startDrugExport', _businessType)
-					Prompt.ShowAsync()
-				end
-			elseif WarMenu.MenuButton('Buy Upgrades', 'drug_business_upgrades') then
+			end
+
+			if WarMenu.MenuButton('Buy Upgrades', 'drug_business_upgrades') then
 				local businessColor = _businessData[_businessType].color
 				WarMenu.SetTitleBackgroundColor('drug_business_upgrades', businessColor.r, businessColor.g, businessColor.b, businessColor.a)
 				WarMenu.SetSubTitle('drug_business_upgrades', Settings.drugBusiness.types[_businessType].name..' UPGRADES')
-			elseif WarMenu.Button('Supplies Level', Player.DrugBusiness[_businessType].supplies..' of '..Settings.drugBusiness.limits.supplies) then
-			elseif WarMenu.Button('Stock Level', Player.DrugBusiness[_businessType].stock..' of '..Settings.drugBusiness.limits.stock) then
+			end
+
+			WarMenu.Button('Supplies Level', Player.DrugBusiness[_businessType].supplies..' of '..Settings.drugBusiness.limits.supplies)
+			if WarMenu.IsItemHovered() then
+				Gui.ToolTip('You need Supplies to make a product.\nBuy it or participate in game activities.')
+			end
+
+			WarMenu.Button('Stock Level', Player.DrugBusiness[_businessType].stock..' of '..Settings.drugBusiness.limits.stock)
+			if WarMenu.IsItemHovered() then
 				local productionTime = Player.DrugBusiness[_businessType].upgrades.security and Settings.drugBusiness.types[_businessType].time.upgraded or Settings.drugBusiness.types[_businessType].time.default
-				Gui.DisplayPersonalNotification('Production rate is 1 '..Settings.drugBusiness.types[_businessType].productName..' in '..math.floor(productionTime / 1000)..' seconds.')
+				Gui.ToolTip('Production rate is 1 '..Settings.drugBusiness.types[_businessType].productName..' in '..math.floor(productionTime / 1000)..' seconds.')
 			end
 
 			WarMenu.Display()
 		elseif WarMenu.IsMenuOpened('drug_business_upgrades') then
 			for id, data in pairs(Settings.drugBusiness.upgrades) do
 				local isOwned = Player.DrugBusiness[_businessType].upgrades[id] ~= nil
-				if WarMenu.Button(data.name, isOwned and 'Owned' or '$'..data.prices[_businessType]) then
-					if not isOwned then
-						TriggerServerEvent('lsv:upgradeDrugBusiness', _businessType, id)
-						Prompt.ShowAsync()
+				WarMenu.Button(data.name, isOwned and 'Owned' or '$'..data.prices[_businessType])
+				if WarMenu.IsItemHovered() then
+					Gui.ToolTip(data.toolTip)
+
+					if WarMenu.IsItemSelected() then
+						if not isOwned then
+							TriggerServerEvent('lsv:upgradeDrugBusiness', _businessType, id)
+							Prompt.ShowAsync()
+						end
 					end
 				end
 			end

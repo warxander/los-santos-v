@@ -35,6 +35,14 @@ function Gui.OpenMenu(id)
 	end
 end
 
+function Gui.ToolTip(text, width, flipHorizontal)
+	if Player.Settings.disableTips then
+		return
+	end
+
+	WarMenu.ToolTip(text, width, flipHorizontal)
+end
+
 function Gui.GetTextInputResultAsync(maxInputLength, defaultText)
 	DisplayOnscreenKeyboard(1, 'FMMC_MPM_NA', '', defaultText or '', '', '', '', maxInputLength)
 

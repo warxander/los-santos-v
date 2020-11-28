@@ -1,6 +1,7 @@
 local logger = Logger.New('TimeTrial')
 
 local _trialRecords = { }
+local _playerRecords = { }
 
 RegisterNetEvent('lsv:finishTimeTrial')
 AddEventHandler('lsv:finishTimeTrial', function(trialId, time, place)
@@ -36,12 +37,23 @@ AddEventHandler('lsv:finishTimeTrial', function(trialId, time, place)
 		logger:info('New record { '..trialId..', '..recordData.PlayerName..', '..recordData.Time..' }')
 	end
 
-	local cash = isNewRecord and Settings.timeTrial.recordReward.cash or Settings.timeTrial.reward[place].cash
-	local exp = isNewRecord and Settings.timeTrial.recordReward.exp or Settings.timeTrial.reward[place].exp
+	local cash = Settings.timeTrial.reward[place].cash
+	local exp = Settings.timeTrial.reward[place].exp
 
-	if isNewPersonal then
-		cash = cash + Settings.timeTrial.personalReward.cash
-		exp = exp + Settings.timeTrial.personalReward.exp
+	if isNewRecord or isNewPersonal then
+		if not _playerRecords[player] or _playerRecords[player]:elapsed() >= Settings.timeTrial.recordReward.timeout then
+			if isNewRecord then
+				cash = Settings.timeTrial.recordReward.cash
+				exp = Settings.timeTrial.recordReward.exp
+			end
+
+			if isNewPersonal then
+				cash = cash + Settings.timeTrial.personalReward.cash
+				exp = exp + Settings.timeTrial.personalReward.exp
+			end
+
+			_playerRecords[player] = Timer.New()
+		end
 	end
 
 	PlayerData.UpdateCash(player, cash)
@@ -67,4 +79,8 @@ end)
 
 AddEventHandler('lsv:playerConnected', function(player)
 	TriggerClientEvent('lsv:initTimeTrialRecords', player, _trialRecords)
+end)
+
+AddEventHandler('lsv:playerDropped', function(player)
+	_playerRecords[player] = nil
 end)

@@ -75,8 +75,6 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 
 	playerStats.ServerRestartIn = os.time(_serverRestartDate) - nowTime
 
-	playerStats.PlayerName = playerName
-
 	local spawnPoints = Settings.spawn.points
 	if _lastSpawnPointIndex then
 		spawnPoints = table.ifilter(spawnPoints, function(_, i)
@@ -117,6 +115,20 @@ local function initPlayer(player, playerName, playerStats, isRegistered)
 		playerStats.Settings = json.decode(playerStats.Settings)
 	end
 
+	if not isRegistered then
+		if not playerStats.PlayerName or playerStats.PlayerName ~= playerName then
+			Db.UpdatePlayerName(player, playerName)
+			playerStats.PlayerName = playerName
+		end
+	end
+
+	if not playerStats.DiscordID then
+		local discordId = Discord.GetIdentifier(player)
+		if discordId then
+			Db.UpdateDiscordId(player, discordId)
+		end
+	end
+
 	PlayerData.Add(player, playerStats)
 	TriggerClientEvent('lsv:playerLoaded', player, playerStats, isRegistered)
 	logger:info('Loaded { '..playerName..', '..player..', '..PlayerData.GetIdentifier(player)..', '..tostring(isRegistered)..' }')
@@ -144,7 +156,7 @@ AddEventHandler('lsv:loadPlayer', function()
 
 	Db.FindPlayer(player, function(data)
 		if not data then
-			Db.RegisterPlayer(player, function(data)
+			Db.RegisterPlayer(player, playerName, function(data)
 				initPlayer(player, playerName, data, true)
 			end)
 		else
@@ -249,14 +261,16 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 			end
 
 			if PlayerData.GetCount() >= _maxPlayersCount then
-				table.insert(_playersQueue, {
-					id = playerId,
-					loginTime = loginTime,
-					isModerator = moderatorLevel,
-					isPatreon = patreonTier,
-				})
-				table.sort(_playersQueue, sortPlayersQueue)
-				logger:info('Added to login queue { '..getPlayerPositionInQueue(playerId)..', '..#_playersQueue..' }')
+				if not getPlayerPositionInQueue(playerId) then
+					table.insert(_playersQueue, {
+						id = playerId,
+						loginTime = loginTime,
+						isModerator = moderatorLevel,
+						isPatreon = patreonTier,
+					})
+					table.sort(_playersQueue, sortPlayersQueue)
+					logger:info('Added to login queue { '..getPlayerPositionInQueue(playerId)..', '..#_playersQueue..' }')
+				end
 
 				while true do
 					Citizen.Wait(1000)
@@ -275,7 +289,6 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
 					end
 				end
 			else
-				Citizen.Wait(0) --mandatory (omfg)
 				deferrals.done()
 			end
 		end)
@@ -305,7 +318,7 @@ end)
 AddEventHandler('lsv:playerConnected', function(player)
 	local position = getPlayerPositionInQueue(PlayerData.GetIdentifier(player))
 	if position then
-		logger:info('Removed from login queue { '..position..', '..#_playersQueue..' }')
 		table.remove(_playersQueue, position)
+		logger:info('Removed from login queue { '..position..', '..#_playersQueue..' }')
 	end
 end)

@@ -44,7 +44,7 @@ AddEventHandler('lsv:startDrugExport', function(data)
 	SetVehicleModKit(vehicle, 0)
 	SetVehicleMod(vehicle, 16, 4)
 	SetVehicleTyresCanBurst(vehicle, false)
-	SetEntityLoadCollisionFlag(vehicle, true)
+	SetEntityLoadCollisionFlag(vehicle, true, 1)
 
 	_productName = Settings.drugBusiness.types[data.type].productName
 

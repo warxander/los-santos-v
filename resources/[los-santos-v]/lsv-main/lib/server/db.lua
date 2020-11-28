@@ -17,6 +17,14 @@ local function toDbString(value)
 	return '\''..tostring(value)..'\''
 end
 
+function Db.UpdatePlayerName(player, playerName)
+	setValue(player, 'PlayerName', toDbString(playerName))
+end
+
+function Db.UpdateDiscordId(player, discordId)
+	setValue(player, 'DiscordID', toDbString(discordId))
+end
+
 function Db.UpdateTimePlayed(player, timePlayed)
 	setValue(player, 'TimePlayed', timePlayed)
 end
@@ -132,10 +140,10 @@ function Db.GetFields(playerId, fields, callback)
 	end)
 end
 
-function Db.RegisterPlayer(player, callback)
+function Db.RegisterPlayer(player, playerName, callback)
 	local playerId = PlayerData.GetIdentifier(player)
 
-	vSql.Async.execute('INSERT INTO Players (PlayerID) VALUES (@playerId)', { ['@playerId'] = playerId }, function()
+	vSql.Async.execute('INSERT INTO Players (PlayerID, PlayerName) VALUES (@playerId, @playerName)', { ['@playerId'] = playerId, ['@playerName'] = playerName }, function()
 		Db.FindPlayer(player, callback)
 	end)
 end

@@ -3,6 +3,8 @@ SET AUTOCOMMIT = 0;
 
 CREATE TABLE Players (
 	PlayerID varchar(50) NOT NULL,
+	PlayerName varchar(50) NOT NULL,
+	DiscordID varchar(50) DEFAULT NULL,
 	TimePlayed INT UNSIGNED NOT NULL DEFAULT 0,
 	Banned TINYINT(1) NOT NULL DEFAULT 0,
 	BanExpiresDate INT DEFAULT NULL,

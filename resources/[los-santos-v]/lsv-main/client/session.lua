@@ -118,9 +118,13 @@ AddEventHandler('lsv:init', function()
 			local pedArmour = GetPedArmour(ped)
 			local pedHealth = GetEntityHealth(ped)
 
-			local wasPedDamaged = pedArmour < lastPedArmour
-			if not wasPedDamaged then
-				wasPedDamaged = pedHealth < lastPedHealth
+			local wasPedDamaged = false
+			if not IsPedInAnyVehicle(ped, false) then
+				wasPedDamaged = pedArmour < lastPedArmour
+
+				if not wasPedDamaged then
+					wasPedDamaged = pedHealth < lastPedHealth
+				end
 			end
 
 			if not wasPedDamaged then

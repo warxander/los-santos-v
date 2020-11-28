@@ -227,7 +227,7 @@ AddEventHandler('lsv:startSurvival', function(id)
 					local ped = NetToPed(netId)
 
 					SetPedRandomComponentVariation(ped, false)
-					SetEntityLoadCollisionFlag(ped, true)
+					SetEntityLoadCollisionFlag(ped, true, 1)
 					PlaceObjectOnGroundProperly(ped)
 
 					local weaponHash = table.random(isBoss and _bossSettings.weapons or waveData.weapons)

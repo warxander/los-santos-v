@@ -208,31 +208,66 @@ AddEventHandler('lsv:init', function()
 
 	local _tierIndex = nil
 
+	local _vehicle = nil
+	local _vehicleModel = nil
+
 	while true do
 		Citizen.Wait(0)
 
-		if WarMenu.IsMenuOpened('vehicle_import') then
-			table.iforeach(Settings.vehicleImport.tiers, function(tier, tierIndex)
-				if WarMenu.MenuButton(tier.name, 'vehicle_import_list', '$'..tier.price) then
-					_tierIndex = tierIndex
-					WarMenu.SetSubTitle('vehicle_import_list', tier.name..' Vehicles')
-				end
-			end)
-
-			WarMenu.Display()
-		elseif WarMenu.IsMenuOpened('vehicle_import_list') then
+		if WarMenu.IsMenuOpened('vehicle_import_list') then
 			table.foreach(Settings.vehicleImport.tiers[_tierIndex].models, function(data, model)
-				if WarMenu.Button(data.name, getModelRequirements(data)) then
-					if data.prestige and Player.Prestige < data.prestige then
-						Gui.DisplayPersonalNotification('Your Prestige is too low.')
-					else
-						TriggerServerEvent('lsv:purchaseVehicleImport', _tierIndex, model)
-						Prompt.ShowAsync()
+				WarMenu.Button(data.name, getModelRequirements(data))
+
+				if WarMenu.IsItemHovered() then
+					if not _vehicle or _vehicleModel ~= model then
+						if _vehicle then
+							DeleteEntity(_vehicle)
+							_vehicle = nil
+						end
+
+						local modelHash = GetHashKey(model)
+						if not HasModelLoaded(modelHash) then
+							RequestModel(modelHash)
+						else
+							local playerCoords = Player.Position()
+							_vehicle = CreateVehicle(modelHash, playerCoords.x, playerCoords.y, playerCoords.z, GetRandomFloatInRange(0., 360.), false, false)
+							SetEntityInvincible(_vehicle, true)
+							SetEntityCollision(_vehicle, false, false)
+							FreezeEntityPosition(_vehicle, true)
+							SetEntityAlpha(_vehicle, 228)
+
+							_vehicleModel = model
+						end
+					end
+
+					if WarMenu.IsItemSelected() then
+						if data.prestige and Player.Prestige < data.prestige then
+							Gui.DisplayPersonalNotification('Your Prestige is too low.')
+						else
+							TriggerServerEvent('lsv:purchaseVehicleImport', _tierIndex, model)
+							Prompt.ShowAsync()
+						end
 					end
 				end
 			end)
 
 			WarMenu.Display()
+		else
+			if _vehicle then
+				DeleteEntity(_vehicle)
+				_vehicle = nil
+			end
+
+			if WarMenu.IsMenuOpened('vehicle_import') then
+				table.iforeach(Settings.vehicleImport.tiers, function(tier, tierIndex)
+					if WarMenu.MenuButton(tier.name, 'vehicle_import_list', '$'..tier.price) then
+						_tierIndex = tierIndex
+						WarMenu.SetSubTitle('vehicle_import_list', tier.name..' Vehicles')
+					end
+				end)
+
+				WarMenu.Display()
+			end
 		end
 	end
 end)
@@ -252,7 +287,9 @@ AddEventHandler('lsv:init', function()
 			SetBlipAlpha(place.blip, isPlayerInFreeroam and 255 or 0)
 
 			if isPlayerInFreeroam then
-				Gui.DrawPlaceMarker(place, Color.LIME)
+				if not WarMenu.IsAnyMenuOpened() then
+					Gui.DrawPlaceMarker(place, Color.LIME)
+				end
 
 				if World.GetDistance(playerPosition, place, true) <= Settings.placeMarker.radius then
 					if not WarMenu.IsAnyMenuOpened() then
