@@ -156,6 +156,8 @@ function PlayerData.UpdateWeaponStats(player, weaponHash)
 		return
 	end
 
+	weaponHash = tostring(weaponHash)
+
 	local weaponStats = _playerLocalData[player].weaponStats
 	local newCount = nil
 

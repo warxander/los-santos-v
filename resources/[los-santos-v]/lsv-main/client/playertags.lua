@@ -16,11 +16,14 @@ AddEventHandler('lsv:init', function()
 
 		local players = GetActivePlayers()
 		for _, id in ipairs(players) do
-			if id ~= PlayerId() then
+			Citizen.Wait(0)
+
+			if id ~= PlayerId() and NetworkIsPlayerActive(id) then
 				local ped = GetPlayerPed(id)
 
 				local serverId = GetPlayerServerId(id)
-				local isPlayerActive = PlayerData.IsExists(serverId)
+				local playerData = PlayerData.Get(serverId)
+				local isPlayerActive = playerData ~= nil
 
 				local isPlayerDead = false
 				local isPlayerCrewMember = false
@@ -50,7 +53,7 @@ AddEventHandler('lsv:init', function()
 						if isPlayerCrewMember then
 							isPlayerCrewLeader = serverId == Player.CrewLeader
 						else
-							local leader = PlayerData.GetCrewLeader(serverId)
+							local leader = playerData.crewLeader
 							if leader then
 								isPlayerEnemyCrewMember = leader ~= Player.CrewLeader
 								if isPlayerEnemyCrewMember then
@@ -63,7 +66,7 @@ AddEventHandler('lsv:init', function()
 					isPlayerBeast = serverId == World.BeastPlayer
 					isPlayerHotProperty = serverId == World.HotPropertyPlayer
 					isPlayerKingOfTheCastle = serverId == World.KingOfTheCastlePlayer
-					isPlayerHasBounty = PlayerData.GetKillstreak(serverId) >= Settings.bounty.killstreak
+					isPlayerHasBounty = playerData.killstreak >= Settings.bounty.killstreak
 					isPlayerOnMission = MissionManager.IsPlayerOnMission(serverId)
 					isHealthBarVisible = not isPlayerDead and (IsPlayerFreeAimingAtEntity(PlayerId(), ped) or isPlayerCrewMember or isPlayerCrewMemberAimingAt(ped))
 					isPlayerTalking = NetworkIsPlayerTalking(id)
@@ -71,12 +74,7 @@ AddEventHandler('lsv:init', function()
 					if not isPlayerInPlane then
 						isPlayerInHeli = IsPedInAnyHeli(ped)
 					end
-					patreonTier = PlayerData.GetPatreonTier(serverId)
-
-					-- https://runtime.fivem.net/doc/natives/?_0x5927F96A78577363
-					if GetEntityLodDist(ped) ~= 0xFFFF then
-						SetEntityLodDist(ped, 0xFFFF)
-					end
+					patreonTier = playerData.patreonTier
 
 					playerWeapon = GetSelectedPedWeapon(ped)
 				end

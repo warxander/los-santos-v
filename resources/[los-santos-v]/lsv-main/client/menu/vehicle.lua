@@ -99,7 +99,6 @@ AddEventHandler('lsv:vehicleRented', function(vehicleIndex)
 		_vehicleData = Player.Vehicles[_vehicleIndex]
 
 		requestVehicleAsync(_vehicleData)
-		Prompt.Hide()
 
 		WarMenu.SetSubTitle('vehicle', Player.GetVehicleName(vehicleIndex))
 
@@ -114,6 +113,8 @@ AddEventHandler('lsv:vehicleRented', function(vehicleIndex)
 	else
 		Gui.DisplayPersonalNotification('You don\'t have enough cash.')
 	end
+
+	Prompt.Hide()
 end)
 
 RegisterNetEvent('lsv:vehicleCustomized')

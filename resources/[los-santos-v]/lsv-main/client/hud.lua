@@ -40,11 +40,6 @@ AddEventHandler('lsv:updateLastEventTime', function(time)
 	_lastEventTime = time
 end)
 
-RegisterNetEvent('lsv:patreonDailyRewarded')
-AddEventHandler('lsv:patreonDailyRewarded', function()
-	Gui.DisplayPersonalNotification('Please accept this small gift as a token of my appreciation.', 'CHAR_MP_STRIPCLUB_PR', 'Welcome back', '', 2)
-end)
-
 RegisterNetEvent('lsv:playerDisconnected')
 AddEventHandler('lsv:playerDisconnected', function(name, player, reason)
 	Gui.DisplayNotification('<C>'..name..'</C> left ~m~('..reason..')')
@@ -364,7 +359,7 @@ AddEventHandler('lsv:cashUpdated', function(cash)
 		backgroundColor = 6
 	end
 
-	Gui.DisplayPersonalNotification('<C> $'..math.abs(cash)..'</C>', nil, nil, nil, nil, backgroundColor)
+	Gui.DisplayPersonalNotification('<C>$'..math.abs(cash)..'</C>', nil, nil, nil, nil, backgroundColor)
 end)
 
 AddEventHandler('lsv:showExperience', function(exp)
@@ -480,23 +475,11 @@ AddEventHandler('lsv:init', function()
 end)
 
 AddEventHandler('lsv:init', function()
-	local isBigMapEnabled = false
-	local showFullMap = false
-
 	while true do
 		Citizen.Wait(0)
 
 		if IsControlJustReleased(0, 243) then -- `
-			if isBigMapEnabled then
-				showFullMap = not showFullMap
-				if not showFullMap then
-					isBigMapEnabled = false
-				end
-			else
-				isBigMapEnabled = true
-			end
-
-			SetBigmapActive(isBigMapEnabled, showFullMap)
+			SetBigmapActive(not IsBigmapActive(), false)
 		end
 	end
 end)

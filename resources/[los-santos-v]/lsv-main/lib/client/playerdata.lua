@@ -10,6 +10,10 @@ function PlayerData.ForEach(func)
 end
 
 function PlayerData.IsExists(player)
+	return _playerData[player] ~= nil
+end
+
+function PlayerData.Get(player)
 	return _playerData[player]
 end
 

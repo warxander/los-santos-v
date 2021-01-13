@@ -111,20 +111,18 @@ AddEventHandler('lsv:init', function()
 	while true do
 		Citizen.Wait(0)
 
-		if not IsPlayerDead(PlayerId()) then
+		local ped = PlayerPedId()
+
+		if not IsPlayerDead(PlayerId()) and not IsPedInAnyVehicle(ped, false) then
 			needToResetState = true
 
 			local ped = PlayerPedId()
 			local pedArmour = GetPedArmour(ped)
 			local pedHealth = GetEntityHealth(ped)
 
-			local wasPedDamaged = false
-			if not IsPedInAnyVehicle(ped, false) then
-				wasPedDamaged = pedArmour < lastPedArmour
-
-				if not wasPedDamaged then
-					wasPedDamaged = pedHealth < lastPedHealth
-				end
+			local wasPedDamaged = pedArmour < lastPedArmour
+			if not wasPedDamaged then
+				wasPedDamaged = pedHealth < lastPedHealth
 			end
 
 			if not wasPedDamaged then

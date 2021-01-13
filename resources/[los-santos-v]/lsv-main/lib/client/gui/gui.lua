@@ -225,11 +225,14 @@ function Gui.FinishMission(name, success, reason)
 	else
 		local message = name
 		if success then
-			message = message..' Completed\n'
+			message = message..' Completed'
 		else
-			message = message..' Failed\n'
+			message = message..' Failed'
 		end
-		message = message..reason
+
+		if string.len(reason) ~= 0 then
+			message = message..'\n'..reason
+		end
 
 		Gui.DisplayPersonalNotification(message)
 	end

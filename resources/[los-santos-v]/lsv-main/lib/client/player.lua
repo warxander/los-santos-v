@@ -230,13 +230,9 @@ function Player.Teleport(position)
 	local playerPed = PlayerPedId()
 
 	ClearPedTasksImmediately(playerPed)
-	SetEntityCoords(playerPed, position.x, position.y, position.z - 1.0)
 
 	RequestCollisionAtCoord(position.x, position.y, position.z)
-	while not HasCollisionLoadedAroundEntity(playerPed) do
-		Citizen.Wait(0)
-		RequestCollisionAtCoord(position.x, position.y, position.z)
-	end
+	SetPedCoordsKeepVehicle(playerPed, position.x, position.y, position.z - 1.0)
 
 	PlaceObjectOnGroundProperly(playerPed)
 end

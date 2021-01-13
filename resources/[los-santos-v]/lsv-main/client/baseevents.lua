@@ -57,7 +57,7 @@ AddEventHandler('lsv:init', function()
 
 						local weaponName = WeaponUtility.GetNameByHash(weaponHash)
 						if weaponName then
-							local tint = GetPedWeaponTintIndex(killer, weaponHash)
+							local tint = GetPedWeaponTintIndex(deathSource, weaponHash)
 							local tintName = Settings.weaponTintNames[tint]
 							if tintName then
 								weaponName = weaponName..' ('..tintName..')'

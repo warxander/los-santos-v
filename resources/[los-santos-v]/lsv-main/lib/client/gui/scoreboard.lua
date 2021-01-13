@@ -60,9 +60,7 @@ function Scoreboard.DisplayThisFrame()
 		table.clear(_scoreboard)
 
 		PlayerData.ForEach(function(data, id)
-			if NetworkIsPlayerActive(GetPlayerFromServerId(id)) then
-				table.insert(_scoreboard, data)
-			end
+			table.insert(_scoreboard, data)
 		end)
 
 		table.sort(_scoreboard, function(l, r)

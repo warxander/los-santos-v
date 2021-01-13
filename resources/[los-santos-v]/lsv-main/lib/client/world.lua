@@ -38,7 +38,7 @@ local function processHandlers(entity, handlers)
 end
 
 function World.GetDistance(pos1, pos2, useZ)
-	return GetDistanceBetweenCoords(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, useZ)
+	return math.sqrt((pos1.x - pos2.x)^2 + (pos1.y - pos2.y)^2 + (useZ and ((pos1.z - pos2.z)^2) or 0))
 end
 
 function World.TryGetClosestVehicleNode(entity, maxDistance)

@@ -12,7 +12,7 @@ local _missionNames = {
 	['Sightseer'] = 'Sightseer',
 }
 
-local _missionPlaces = Settings.mission.places
+local _missionPlaces = { }
 
 local _players = { }
 
@@ -74,6 +74,8 @@ end)
 
 RegisterNetEvent('lsv:updateMissions')
 AddEventHandler('lsv:updateMissions', function(missions, players)
+	_missionPlaces = Settings.mission.places
+
 	table.iforeach(_missionPlaces, function(mission, i)
 		mission.id = missions[i].id
 		mission.blip = Map.CreatePlaceBlip(Blip.MISSION, mission.x, mission.y, mission.z, _missionNames[mission.id], Color.BLIP_BLUE)

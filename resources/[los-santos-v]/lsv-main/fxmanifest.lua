@@ -1,6 +1,7 @@
 -- Manifest
 fx_version 'adamant'
 game 'gta5'
+lua54 'yes'
 
 resource_type 'gametype' { name = 'Los Santos V' }
 
@@ -43,7 +44,6 @@ server_scripts {
 	'server/weather.lua',
 	'server/baseevents.lua',
 	'server/session.lua',
-	'server/patreon.lua',
 	'server/guard.lua',
 	'server/chat.lua',
 	'server/report.lua',

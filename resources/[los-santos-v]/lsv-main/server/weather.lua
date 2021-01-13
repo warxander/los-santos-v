@@ -14,16 +14,22 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(math.random(Settings.weather.interval.min, Settings.weather.interval.max) * 60000)
 
+		local weather = nil
+
 		if _weather == 'THUNDER' then
-			_weather = 'RAIN'
+			weather = 'RAIN'
 		elseif _weather == 'RAIN' then
-			_weather = 'CLEARING'
+			weather = 'CLEARING'
 		else
-			_weather = Settings.weather.types[math.random(weatherCount)]
+			weather = Settings.weather.types[math.random(weatherCount)]
 		end
 
-		TriggerClientEvent('lsv:updateWeather', -1, _weather)
-		logger:info('Setting weather to '.._weather)
+		if _weather ~= weather then
+			logger:info('Setting weather to '.._weather)
+
+			_weather = weather
+			TriggerClientEvent('lsv:updateWeather', -1, _weather)
+		end
 	end
 end)
 

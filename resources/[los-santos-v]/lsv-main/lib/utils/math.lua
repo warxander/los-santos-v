@@ -1,11 +1,11 @@
 function math.average(t)
 	local sum = 0
 
-	table.foreach(t, function(v)
+	for _, v in ipairs(t) do
 		sum = sum + v
-	end)
+	end
 
-	return sum / table.length(t)
+	return sum / #t
 end
 
 function math.is_integer(value)

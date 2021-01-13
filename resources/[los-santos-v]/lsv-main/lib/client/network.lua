@@ -103,8 +103,12 @@ function Network.DoesEntityExistWithNetworkId(netId)
 end
 
 function Network.RequestEntityControl(netId)
-	NetworkRequestControlOfNetworkId(netId)
-	return NetworkHasControlOfNetworkId(netId)
+	if not NetworkHasControlOfNetworkId(netId) then
+		NetworkRequestControlOfNetworkId(netId)
+		return false
+	end
+
+	return true
 end
 
 function Network.GetData(netId, dataKey)

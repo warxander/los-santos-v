@@ -279,11 +279,6 @@ Settings.armour = {
 Settings.patreon = {
 	reward = { 1.20, 1.35, 1.50 },
 	rent = { 0.80, 0.65, 0.50 },
-	daily = {
-		{ cash = 10000, exp = 4000 },
-		{ cash = 15000, exp = 6000 },
-		{ cash = 25000, exp = 10000 },
-	},
 }
 
 -- Cash
@@ -821,7 +816,6 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_MICROSMG',
 			'WEAPON_MACHINEPISTOL',
 			'WEAPON_MINISMG',
-			'WEAPON_COMPACTRIFLE',
 			'WEAPON_SMG_MK2',
 		},
 		ammo = 30,
@@ -845,6 +839,7 @@ Settings.ammuNationRefillAmmo = {
 			'WEAPON_SPECIALCARBINE',
 			'WEAPON_BULLPUPRIFLE',
 			'WEAPON_ADVANCEDRIFLE',
+			'WEAPON_COMPACTRIFLE',
 			'WEAPON_ASSAULTRIFLE_MK2',
 			'WEAPON_SPECIALCARBINE_MK2',
 			'WEAPON_BULLPUPRIFLE_MK2',

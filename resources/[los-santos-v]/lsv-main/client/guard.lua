@@ -108,7 +108,11 @@ AddEventHandler('lsv:init', function()
 		end
 
 		-- Infinite ammo
-		SetPedInfiniteAmmoClip(playerPed, false)
+		local weaponHash = GetSelectedPedWeapon(playerPed)
+		if weaponHash ~= 0 then
+			SetPedInfiniteAmmo(playerPed, false, weaponHash)
+			SetPedInfiniteAmmoClip(playerPed, false)
+		end
 
 		-- Player modifiers
 		SetPlayerWeaponDamageModifier(player, 1. + (Player.Prestige * Settings.prestige.damageMultiplier))

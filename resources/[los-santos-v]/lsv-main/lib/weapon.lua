@@ -506,7 +506,7 @@ Weapon.WEAPON_CARBINERIFLE = {
 		{ hash = 2205435306, name = 'Suppressor', cash = 12450, rank = 47 },
 		{ hash = 2698550338, name = 'Scope', cash = 10900, rank = 46 },
 		{ hash = 202788691,  name = 'Grip', cash = 4350, rank = 44 },
-		{ hash = 202788691,  name = 'Yusuf Amir Luxury Finish', cash = 44750, rank = 95 },
+		{ hash = 3634075224,  name = 'Yusuf Amir Luxury Finish', cash = 44750, rank = 95 },
 	},
 	cash = 13000,
 	rank = 42,
